@@ -34,6 +34,22 @@ public class PersonController {
         return personRepository.findAll();
     }
 
+    @RequestMapping(method = GET, value = "/search", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Person> search(@RequestParam(required = false) String name) {
+        log.info("PersonController.search, name={}", name);
+
+        List<Person> persons;
+
+        if (name == null) {
+            persons = personRepository.findAll();
+        } else {
+            persons = personRepository.findByNameLike("%" + name + "%");
+        }
+
+        return persons;
+    }
+
     @RequestMapping(method = POST, value = "/persons", consumes = APPLICATION_FORM_URLENCODED_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public PersonModel create(@RequestParam String name) {
