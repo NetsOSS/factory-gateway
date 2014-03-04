@@ -1,0 +1,12 @@
+target
+logs
+
+# IDEA ignores
+.idea
+*.iml
+*.ipr
+*.iws
+
+# Eclipse ignores
+.classpath
+.project

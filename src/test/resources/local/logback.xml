@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Add debug="true" on the <configuration> element to get more info while Logback loads classes and configures itself.
+-->
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>logs/myapp.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>logs/myapp.log.%d{yyyy-MM}</FileNamePattern>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger level="WARN" name="org.eclipse.jetty"/>
+  <logger level="WARN" name="org.hibernate"/>
+  <logger level="INFO" name="org.springframework"/>
+  <logger level="WARN" name="com.jolbox.bonecp"/>
+
+  <root level="DEBUG">
+    <appender-ref ref="FILE"/>
+  </root>
+</configuration>
