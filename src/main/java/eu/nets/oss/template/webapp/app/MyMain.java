@@ -82,17 +82,16 @@ public class MyMain {
         configurator.setContext(context);
 
         File f = new File("properties/" + env, "logback.xml");
-        System.out.println("f = " + f);
 
         if (f.exists()) {
             configurator.doConfigure(f);
         } else {
             if (!env.equals("local")) {
-                System.err.println("Only 'local' env is allowed to read log config from classpath");
+                System.err.println("Only 'local' env is allowed to read log config from classpath: env" + env);
                 System.exit(1);
             }
 
-            URL url = getClass().getResource(env + "/logback.xml");
+            URL url = getClass().getResource("/" + env + "/logback.xml");
             configurator.doConfigure(url);
         }
     }
