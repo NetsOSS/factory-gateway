@@ -1,0 +1,41 @@
+<assembly>
+  <id>app</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>target/appassembler/repo</directory>
+      <outputDirectory>/repo</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <lineEnding>unix</lineEnding>
+      <directory>target/appassembler/bin</directory>
+      <outputDirectory>/bin</outputDirectory>
+<!--
+      <includes>
+        <include>*</include>
+      </includes>
+-->
+      <excludes>
+        <exclude>*.bat</exclude>
+      </excludes>
+      <fileMode>0744</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+    <fileSet>
+      <lineEnding>unix</lineEnding>
+      <directory>src/main/properties</directory>
+      <outputDirectory>properties</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <lineEnding>unix</lineEnding>
+      <directory>src/main/scripts</directory>
+      <outputDirectory>scripts</outputDirectory>
+      <includes>
+        <include>**/*.sh</include>
+      </includes>
+      <fileMode>0744</fileMode>
+    </fileSet>
+  </fileSets>
+</assembly>

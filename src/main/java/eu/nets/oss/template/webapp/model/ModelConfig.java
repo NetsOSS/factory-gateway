@@ -2,10 +2,11 @@ package eu.nets.oss.template.webapp.model;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.SharedCacheMode;
 import javax.sql.DataSource;
 
 import com.google.common.collect.ImmutableMap;
@@ -26,6 +27,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
@@ -37,7 +39,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import static org.hibernate.cfg.AvailableSettings.CACHE_REGION_FACTORY;
 import static org.hibernate.cfg.AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS;
 import static org.hibernate.cfg.AvailableSettings.DEFAULT_CACHE_CONCURRENCY_STRATEGY;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
@@ -46,11 +47,9 @@ import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
 import static org.hibernate.cfg.AvailableSettings.SHOW_SQL;
 import static org.hibernate.cfg.AvailableSettings.USE_NEW_ID_GENERATOR_MAPPINGS;
-import static org.hibernate.cfg.AvailableSettings.USE_QUERY_CACHE;
 import static org.hibernate.cfg.AvailableSettings.USE_SECOND_LEVEL_CACHE;
 import static org.hibernate.cfg.AvailableSettings.USE_SQL_COMMENTS;
 import static org.hibernate.jpa.AvailableSettings.NAMING_STRATEGY;
-import static org.hibernate.jpa.AvailableSettings.SHARED_CACHE_MODE;
 
 @ComponentScan(basePackageClasses = ModelConfig.class)
 @EnableJpaRepositories(basePackageClasses = ModelConfig.class)
@@ -59,14 +58,23 @@ public class ModelConfig {
 
     @Bean
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(Environment env) throws Exception {
+        List<Resource> resources = new ArrayList<>();
+        Resource envProperties = new ClassPathResource(env.getActiveProfiles()[0] + "/environment.properties");
+        if(envProperties.exists()) {
+            resources.add(envProperties);
+        }
+
+        Resource envPropertiesFile = new FileSystemResource("properties/" + env.getActiveProfiles()[0] + "/environment.properties");
+        if(envPropertiesFile.exists()) {
+            resources.add(envPropertiesFile);
+        }
+
+        resources.add(new ClassPathResource("/build.properties"));
+
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-        configurer.setLocations(new Resource[]{
-                new ClassPathResource(env.getActiveProfiles()[0] + "/environment.properties"),
-                new ClassPathResource("/build.properties")
-        });
+        configurer.setLocations(resources.toArray(new Resource[resources.size()]));
         configurer.setProperties(System.getProperties());
         configurer.setLocalOverride(true);
-
         return configurer;
     }
 
@@ -133,7 +141,6 @@ public class ModelConfig {
                                                                        @Value("${hibernate.hbm2ddl.auto:validate}") String hbm2ddl,
                                                                        @Value("${hibernate.showSql:false}") boolean showSql,
                                                                        @Value("${hibernate.dialect:}") String dialect) throws ClassNotFoundException {
-//        org.springframework.orm.hibernate4.LocalSessionFactoryBean
         LocalContainerEntityManagerFactoryBean x = new LocalContainerEntityManagerFactoryBean();
         x.setDataSource(dataSource);
         if (dialect.equals("")) {
@@ -141,8 +148,7 @@ public class ModelConfig {
         }
         x.setJpaPropertyMap(createJpaMap(hbm2ddl, showSql, dialect));
         x.setPackagesToScan(AbstractEntity.class.getPackage().getName());
-        HibernatePersistenceProvider persistenceProvider = new HibernatePersistenceProvider();
-        x.setPersistenceProvider(persistenceProvider);
+        x.setPersistenceProvider(new HibernatePersistenceProvider());
 
         return x;
     }

@@ -1,5 +1,6 @@
 package eu.nets.oss.template.webapp.app;
 
+import java.io.File;
 import java.net.URL;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -24,12 +25,23 @@ import static org.slf4j.bridge.SLF4JBridgeHandler.install;
 import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
 
 public class MyMain {
+    /**
+     * This requires that the environment name is passed in as an argument. Normally Nets applications will detect
+     * this from a file on disk.
+     */
     public static void main(String[] args) throws Exception {
-        new MyMain().run();
+        if (args.length != 1) {
+            System.err.println("Usage: bin/startapp <env>");
+            System.exit(0);
+        }
+
+        new MyMain().run(args[0]);
     }
 
-    public void run() throws Exception {
-        setupLogging();
+    public void run(String env) throws Exception {
+        installSlf4j();
+
+        configureLogback(env);
 
         boolean onServer = isStartedWithAppassembler();
 
@@ -42,14 +54,12 @@ public class MyMain {
         }
 
         WebApplicationContext spring = EmbeddedSpringBuilder.createApplicationContext("My app", WebConfig.class);
-        ((AnnotationConfigWebApplicationContext) spring).getEnvironment().setActiveProfiles("local");
+        ((AnnotationConfigWebApplicationContext) spring).getEnvironment().setActiveProfiles(env);
         ContextLoaderListener springContextLoader = createSpringContextLoader(spring);
 
         EmbeddedJettyBuilder.ServletContextHandlerBuilder ctx = builder.createRootServletContextHandler("");
         ctx.addEventListener(springContextLoader);
-
-        ctx.addServlet(new DispatcherServlet(spring)).
-                mountAtPath("/*");
+        ctx.addServlet(new DispatcherServlet(spring)).mountAtPath("/*");
 
         try {
             builder.startJetty();
@@ -61,16 +71,29 @@ public class MyMain {
         }
     }
 
-    protected void setupLogging() throws Exception {
+    protected void installSlf4j() throws Exception {
         removeHandlersForRootLogger();
         install();
     }
 
-    protected void configureLogback(String path) throws Exception {
+    protected void configureLogback(String env) throws Exception {
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         GenericConfigurator configurator = new JoranConfigurator();
         configurator.setContext(context);
-        URL url = getClass().getResource(path);
-        configurator.doConfigure(url);
+
+        File f = new File("properties/" + env, "logback.xml");
+        System.out.println("f = " + f);
+
+        if (f.exists()) {
+            configurator.doConfigure(f);
+        } else {
+            if (!env.equals("local")) {
+                System.err.println("Only 'local' env is allowed to read log config from classpath");
+                System.exit(1);
+            }
+
+            URL url = getClass().getResource(env + "/logback.xml");
+            configurator.doConfigure(url);
+        }
     }
 }

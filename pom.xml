@@ -81,24 +81,11 @@
       <artifactId>hibernate-jpamodelgen</artifactId>
       <version>${version.hibernate}</version>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-ehcache</artifactId>
-      <version>${version.hibernate}</version>
-    </dependency>
-    -->
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>5.1.0.Final</version>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>net.sf.ehcache</groupId>
-      <artifactId>ehcache-core</artifactId>
-    </dependency>
-    -->
     <dependency>
       <groupId>com.googlecode.flyway</groupId>
       <artifactId>flyway-core</artifactId>
@@ -109,6 +96,14 @@
       <artifactId>h2</artifactId>
       <version>1.3.175</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.3-1101-jdbc41</version>
+      <!-- Set to 'test' if you don't want to include the PostgreSQL driver in the zip.
+      <scope>test</scope>
+      -->
     </dependency>
 
     <!-- Logging -->
@@ -252,6 +247,44 @@
             <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
           </compilerArguments>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>1.5</version>
+        <configuration>
+          <programs>
+            <program>
+              <mainClass>eu.nets.oss.template.webapp.app.MyMain</mainClass>
+              <name>startapp</name>
+            </program>
+          </programs>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
