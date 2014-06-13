@@ -1,11 +1,13 @@
-Adding a person:
+Create a user in your database:
 
-    http -v -f POST http://localhost:8080/persons name=trygve
+    -- USER SQL
+    ALTER USER "test_bench"  IDENTIFIED BY test_bench
+    ACCOUNT UNLOCK ;
 
-Listing all persons
+    -- ROLES
+    GRANT "RESOURCE" TO "test_bench" ;
+    GRANT "CONNECT" TO "test_bench" ;
 
-    http -v http://localhost:9090/persons
+    -- SYSTEM PRIVILEGES
 
-Searching for a person based on name:
-
-    http -v GET "http://localhost:8080/search?name=Iv"
+    -- QUOTAS

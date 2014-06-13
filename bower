@@ -1,0 +1,21 @@
+#!/bin/bash
+ 
+g=.bower-installed
+ 
+set -e
+ 
+if [ ! -r $g ]
+then
+  echo "Bower is not installed."
+  npm install
+  touch $g
+fi
+ 
+if [ package.json -nt $g ]
+then
+  echo "Bower is outdated, reinstalling"
+  npm install
+  touch $g
+fi
+ 
+exec node_modules/.bin/bower "$@"

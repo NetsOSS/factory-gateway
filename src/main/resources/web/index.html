@@ -1,5 +1,31 @@
 <html>
+<head>
+  <link rel="stylesheet" href="web/css/test-bench.css"/>
+  <script type="text/javascript">
+      (function () {
+          if (!window.console) {
+              var console = window.console = {};
+              console.log = console.debug = console.trace = console.error = console.warn = function () {
+              };
+          }
+      })();
+  </script>
+  <script src="web/bower/requirejs/require.js" data-main="web/test-bench/main.js"></script>
+  <!--
+  <link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap.css"/>
+  <link rel="stylesheet" href="web/test-bench/test-bench.css"/>
+  -->
+</head>
 <body>
-Hello world!
+<div id="wrap">
+    <div class="grid_12">
+        <div class="error" id="errorHolder">
+        </div>
+        <h1>Test Bench <span class="helpToggle" title="test bench help">Test Bench Help</span></h1>
+        <div ng-view>
+
+        </div>
+    </div>
+</div>
 </body>
 </html>

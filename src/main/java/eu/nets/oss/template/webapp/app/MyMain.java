@@ -1,19 +1,25 @@
 package eu.nets.oss.template.webapp.app;
 
 import java.io.File;
-import java.net.URL;
+import java.io.IOException;
+import java.util.Properties;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.GenericConfigurator;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import eu.nets.oss.jetty.ContextPathConfig;
 import eu.nets.oss.jetty.EmbeddedJettyBuilder;
 import eu.nets.oss.jetty.EmbeddedSpringBuilder;
-import eu.nets.oss.jetty.PropertiesFileConfig;
 import eu.nets.oss.jetty.StaticConfig;
 import eu.nets.oss.jetty.StdoutRedirect;
 import eu.nets.oss.template.webapp.web.WebConfig;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -21,31 +27,27 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 import static eu.nets.oss.jetty.EmbeddedJettyBuilder.isStartedWithAppassembler;
 import static eu.nets.oss.jetty.EmbeddedSpringBuilder.createSpringContextLoader;
+import static java.lang.Integer.parseInt;
 import static org.slf4j.bridge.SLF4JBridgeHandler.install;
 import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
+import static org.springframework.core.io.support.PropertiesLoaderUtils.fillProperties;
 
 public class MyMain {
-    /**
-     * This requires that the environment name is passed in as an argument. Normally Nets applications will detect
-     * this from a file on disk.
-     */
     public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.err.println("Usage: bin/startapp <env>");
-            System.exit(0);
-        }
-
-        new MyMain().run(args[0]);
+        new MyMain().run();
     }
 
-    public void run(String env) throws Exception {
+    public void run() throws Exception {
         installSlf4j();
 
-        configureLogback(env);
+        configureLogback();
 
         boolean onServer = isStartedWithAppassembler();
 
-        ContextPathConfig webAppSource = onServer ? new PropertiesFileConfig() : new StaticConfig("/", 8080);
+        Properties properties = loadProperties();
+
+        int port = parseInt(properties.getProperty("port", "9002"));
+        ContextPathConfig webAppSource = new StaticConfig("/", port);
         final EmbeddedJettyBuilder builder = new EmbeddedJettyBuilder(webAppSource, !onServer);
 
         if (onServer) {
@@ -53,8 +55,16 @@ public class MyMain {
             builder.addHttpAccessLogAtRoot();
         }
 
-        WebApplicationContext spring = EmbeddedSpringBuilder.createApplicationContext("My app", WebConfig.class);
-        ((AnnotationConfigWebApplicationContext) spring).getEnvironment().setActiveProfiles(env);
+        WebApplicationContext spring = EmbeddedSpringBuilder.createApplicationContext("App", WebConfig.class);
+
+        String env = properties.getProperty("environment");
+        if (env == null) {
+            System.err.println("Missing required property 'environment' in environment.properties.");
+        }
+        ConfigurableEnvironment environment = ((AnnotationConfigWebApplicationContext) spring).getEnvironment();
+        environment.setActiveProfiles(env);
+        environment.getPropertySources().addFirst(new PropertiesPropertySource("properties", properties));
+
         ContextLoaderListener springContextLoader = createSpringContextLoader(spring);
 
         EmbeddedJettyBuilder.ServletContextHandlerBuilder ctx = builder.createRootServletContextHandler("");
@@ -71,28 +81,46 @@ public class MyMain {
         }
     }
 
+    @SuppressFBWarnings("DM_EXIT")
+    private Properties loadProperties() throws IOException {
+        Properties properties = new Properties();
+        Resource envProperties = new ClassPathResource("/environment.properties");
+        if (envProperties.isReadable()) {
+            fillProperties(properties, envProperties);
+        }
+
+        Resource envPropertiesFile = new FileSystemResource("environment.properties");
+        if (!envPropertiesFile.isReadable()) {
+            System.err.println("Missing required file: " + envPropertiesFile.getFile().getAbsolutePath());
+            System.exit(1);
+        } else {
+            fillProperties(properties, envPropertiesFile);
+        }
+
+        ClassPathResource classPathResource = new ClassPathResource("/build.properties");
+        if (classPathResource.isReadable()) {
+            fillProperties(properties, classPathResource);
+        }
+
+        return properties;
+    }
+
     protected void installSlf4j() throws Exception {
         removeHandlersForRootLogger();
         install();
     }
 
-    protected void configureLogback(String env) throws Exception {
+    protected void configureLogback() throws Exception {
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         GenericConfigurator configurator = new JoranConfigurator();
         configurator.setContext(context);
 
-        File f = new File("properties/" + env, "logback.xml");
+        File f = new File("logback.xml");
 
         if (f.exists()) {
             configurator.doConfigure(f);
         } else {
-            if (!env.equals("local")) {
-                System.err.println("Only 'local' env is allowed to read log config from classpath: env" + env);
-                System.exit(1);
-            }
-
-            URL url = getClass().getResource("/" + env + "/logback.xml");
-            configurator.doConfigure(url);
+            throw new RuntimeException("Logback properties file: " + f + " not found");
         }
     }
 }

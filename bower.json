@@ -1,0 +1,20 @@
+{
+  "name": "test-bench",
+  "version": "1.0.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/main/resources/web/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.2.16",
+    "angular-route": "1.2.16",
+    "bootstrap": "~3.1.1",
+    "requirejs": "~2.1.11",
+    "requirejs-domready": "~2.0.1"
+  }
+}
