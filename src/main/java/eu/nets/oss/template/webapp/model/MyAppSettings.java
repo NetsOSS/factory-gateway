@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 
 @Component
-public class TestBenchSettings {
+public class MyAppSettings {
 
     @Autowired
     private Environment environment;
@@ -63,20 +63,7 @@ public class TestBenchSettings {
     }
     
     
-    public String getPortalWebserviceEndpoint(){
-    	return environment.getRequiredProperty("kundeportal.webservice.endPointAdress");
-    }
-    
     public boolean isLocal() {
         return local;
-    }
-
-    public boolean fakeValidation() {
-        return false;
-    }
-
-    public File fakeFile() {
-        File file = new File("test.xml");
-        return file.canRead() ? file : null;
     }
 }

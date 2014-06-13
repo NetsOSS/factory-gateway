@@ -3,6 +3,7 @@ package eu.nets.oss.template.webapp.model;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,10 @@ import javax.sql.DataSource;
 
 import com.google.common.collect.ImmutableMap;
 import com.jolbox.bonecp.BoneCPDataSource;
+import org.apache.commons.lang.StringUtils;
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.MigrationInfo;
+import org.flywaydb.core.api.MigrationInfoService;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.cfg.ImprovedNamingStrategy;
@@ -39,6 +44,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import static java.lang.String.format;
+import static org.apache.commons.lang.StringUtils.trimToEmpty;
 import static org.hibernate.cfg.AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS;
 import static org.hibernate.cfg.AvailableSettings.DEFAULT_CACHE_CONCURRENCY_STRATEGY;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
@@ -85,19 +92,17 @@ public class ModelConfig {
 
 
     @Bean(destroyMethod = "close")
-    BoneCPDataSource innerDataSource(@Value("${database.url}") String jdbcUrl,
-                                     @Value("${database.username}") String username,
-                                     @Value("${database.password}") String password,
+    BoneCPDataSource innerDataSource(MyAppSettings settings,
                                      @Value("${database.testOnStart:true}") boolean testOnStart,
                                      @Value("${bonecp.partitionCount:1}") int partitionCount,
                                      @Value("${bonecp.acquireIncrement:1}") int acquireIncrement,
                                      @Value("${bonecp.minConnectionsPerPartition:1}") int minConnectionsPerPartition,
                                      @Value("${bonecp.maxConnectionsPerPartition:40}") int maxConnectionsPerPartition) {
         BoneCPDataSource ds = new BoneCPDataSource();
-        ds.setJdbcUrl(jdbcUrl);
-        ds.setUsername(username);
+        ds.setJdbcUrl(settings.getDatabaseUrl());
+        ds.setUsername(settings.getDatabaseUsername());
+        ds.setPassword(settings.getDatabasePassword());
 
-        ds.setPassword(password);
         ds.setIdleConnectionTestPeriodInSeconds(60);
         ds.setIdleMaxAgeInSeconds(240);
         ds.setMaxConnectionsPerPartition(maxConnectionsPerPartition);
@@ -107,12 +112,11 @@ public class ModelConfig {
         ds.setStatementsCacheSize(1000);
         ds.setStatisticsEnabled(true);
 
-        /*
-        if (testOnStart) {
-            testConnection(ds, jdbcUrl);
-        }
+//        if (testOnStart) {
+//            testConnection(ds, jdbcUrl);
+//        }
 
-        if (jdbcUrl.startsWith("jdbc:postgresql:")) {
+        if (settings.migrateDatabase()) {
             log.info("Running migrations");
             Flyway flyway = new Flyway();
             flyway.setDataSource(ds);
@@ -124,14 +128,13 @@ public class ModelConfig {
                 log.info(format("%-15s %-10s %-19s %s",
                         mi.getVersion(),
                         trimToEmpty(mi.getState().getDisplayName()),
-                        installedOn != null ? formatter.print(installedOn.getTime()) : "",
+                        installedOn != null ? installedOn.getTime() : "",
                         StringUtils.substring(trimToEmpty(mi.getDescription()), 0, 20)));
             }
             flyway.migrate();
         } else {
             log.info("Skipping migrations");
         }
-        */
 
         return ds;
     }
