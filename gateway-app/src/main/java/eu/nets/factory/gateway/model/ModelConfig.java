@@ -65,22 +65,9 @@ public class ModelConfig {
 
     @Bean
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(Environment env) throws Exception {
-        List<Resource> resources = new ArrayList<>();
-        Resource envProperties = new ClassPathResource(env.getActiveProfiles()[0] + "/environment.properties");
-        if(envProperties.exists()) {
-            resources.add(envProperties);
-        }
-
-        Resource envPropertiesFile = new FileSystemResource("properties/" + env.getActiveProfiles()[0] + "/environment.properties");
-        if(envPropertiesFile.exists()) {
-            resources.add(envPropertiesFile);
-        }
-
-        resources.add(new ClassPathResource("/build.properties"));
-
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-        configurer.setLocations(resources.toArray(new Resource[resources.size()]));
         configurer.setProperties(System.getProperties());
+        configurer.setEnvironment(env);
         configurer.setLocalOverride(true);
         return configurer;
     }

@@ -38,10 +38,6 @@ public class MyAppSettings {
         switch (userName) {
             case "tlaug":
                 return "jdbc:oracle:thin:@//vm-udb-95:1521/u04efak";
-            case "rnord":
-                return "jdbc:oracle:thin:@//vm-udb-95:1521/u16efak";
-            case "arama":
-                return "jdbc:oracle:thin:@//vm-udb-95:1521/u16efak";
         }
 
         throw new IllegalStateException("Could not find database URL for user " + userName);
@@ -49,14 +45,14 @@ public class MyAppSettings {
 
     public String getDatabaseUsername() {
         if (local) {
-            return "test_bench";
+            return "gateway";
         }
         return environment.getRequiredProperty("database.username");
     }
 
     public String getDatabasePassword() {
         if (local) {
-            return "test_bench";
+            return "gateway";
         }
         return environment.getRequiredProperty("database.password");
     }
