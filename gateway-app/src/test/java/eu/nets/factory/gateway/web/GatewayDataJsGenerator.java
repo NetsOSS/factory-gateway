@@ -9,7 +9,7 @@ import org.junit.Test;
 public class GatewayDataJsGenerator {
     public static void main(String[] args) throws Exception {
         try (GeneratorWriter writer = getWriter(false)) {
-            new eu.nets.factory.gateway.web.DataJsGenerator("AdminWebData", "adminWebData", "eu.nets.efaktura.adminweb").
+            new eu.nets.factory.gateway.web.DataJsGenerator("GatewayData", "GatewayData", MiscController.class).
                     withDataMethodFilter(dataMethod -> dataMethod.url.startsWith("/data")).
                     generateJs(writer);
         }

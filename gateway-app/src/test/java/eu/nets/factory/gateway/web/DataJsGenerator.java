@@ -29,7 +29,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.collections.CollectionUtils.union;
+import static org.apache.commons.collections.ListUtils.union;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -46,18 +46,18 @@ public class DataJsGenerator {
 
     private final String serviceName;
 
-    private final String packageName;
+    private final Class<?> packageName;
 
     private final Optional<Function<DataMethod, Boolean>> methodFilter;
 
-    public DataJsGenerator(String objectName, String serviceName, String packageName) {
+    public DataJsGenerator(String objectName, String serviceName, Class<?> packageName) {
         this.objectName = objectName;
         this.serviceName = serviceName;
         this.packageName = packageName;
         this.methodFilter = Optional.empty();
     }
 
-    private DataJsGenerator(String objectName, String serviceName, String packageName,
+    private DataJsGenerator(String objectName, String serviceName, Class<?> packageName,
                             Optional<Function<DataMethod, Boolean>> methodFilter) {
         this.objectName = objectName;
         this.serviceName = serviceName;
@@ -70,7 +70,7 @@ public class DataJsGenerator {
     }
 
     public void generateJs(GeneratorWriter writer) throws Exception {
-        Reflections reflections = new Reflections(packageName);
+        Reflections reflections = new Reflections(packageName.getPackage().getName());
 
         Set<Class<?>> controllers = new TreeSet<>((o1, o2) -> o1.getName().compareTo(o2.getName()));
         Set<Class<?>> x = reflections.getTypesAnnotatedWith(Controller.class);
