@@ -1,0 +1,77 @@
+h3.block_header.caption {
+    border-left: 0 none;
+    border-right: 0 none;
+    display: block;
+    font: bold 13px Arial,sans-serif !important;
+    overflow: hidden;
+    padding: 7px 10px 5px 10px !important;
+}
+
+ul.w-list {
+    padding-left: 1px !important;
+}
+
+ul.w-list li {
+    display: block;
+    height: 35px;
+    text-align: left;
+    border-bottom: 1px solid #CDCDCD;
+}
+
+ul.w-list li span {
+    margin-top: 15px;
+    vertical-align: middle;
+    display: block;
+    padding-left: 5px;
+    width: 250px;
+}
+
+ul.w-list li span a,
+.proceed a{
+    text-decoration: none;
+}
+
+ul.w-list li span a {
+    float: right;
+    clear: left;
+    display: block;
+    font-size: 1.1em;
+}
+
+.proceed-container {
+    margin-top: 40px;
+    font-size: 1.1em;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.big-font {
+    font-size: 1.1em;
+}
+
+.error-container {
+    margin-top: 20px;
+    display: block;
+}
+
+.error-container .error-container-item {
+    display: block;
+    margin-top: 5px;
+}
+
+.error-container .error-msg {
+    color: #CC0404;
+}
+
+pre.report {
+    overflow-wrap: break-word;
+    font-size: 1.3em;
+    border: 1px solid #cdcdcd;
+    padding: 6px;
+}

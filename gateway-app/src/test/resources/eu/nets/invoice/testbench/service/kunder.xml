@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fakturaPortalCustomers>
+  <fakturaPortalCustomer>
+    <addressLine1>Sars gt12</addressLine1>
+    <b2bService>
+      <serviceProvider>
+        <serviceGroup>9001</serviceGroup>
+        <serviceProvider>9001</serviceProvider>
+      </serviceProvider>
+      <klikkOgBetal>false</klikkOgBetal>
+      <print>true</print>
+      <receiver>true</receiver>
+      <sender>true</sender>
+      <webfaktura>true</webfaktura>
+    </b2bService>
+    <b2cService>
+      <serviceProvider>
+        <serviceGroup>6001</serviceGroup>
+        <serviceProvider>6001</serviceProvider>
+      </serviceProvider>
+      <archiving>LONG</archiving>
+      <print>false</print>
+    </b2cService>
+    <bic>LABANOKK</bic>
+    <city>OSLO</city>
+    <contactPerson>Jacob Jacobsen</contactPerson>
+    <country>NO</country>
+    <emailAddress1>test@nets.no</emailAddress1>
+    <emailAddress2>test@nets.no</emailAddress2>
+    <emailAddress3>test@nets.no</emailAddress3>
+    <filpostkasseService>
+      <serviceProvider>
+        <serviceGroup>9001</serviceGroup>
+        <serviceProvider>9001</serviceProvider>
+      </serviceProvider>
+      <fileFormats>5202</fileFormats>
+      <fileFormats>5701</fileFormats>
+      <fileFormats>5703</fileFormats>
+      <fileFormats>6008</fileFormats>
+      <fileFormats>6023</fileFormats>
+    </filpostkasseService>
+    <iban>NO6790011265234</iban>
+    <mva_pliktig>false</mva_pliktig>
+    <name>Binh Oil AS</name>
+    <notificationSubscriptions>
+      <emailSubscription>
+        <address>liv.marie.holtmoen@nets.eu</address>
+      </emailSubscription>
+    </notificationSubscriptions>
+    <orgNumber>982529743</orgNumber>
+    <phone1>905 49 600</phone1>
+    <postalCode>0562</postalCode>
+  </fakturaPortalCustomer>
+</fakturaPortalCustomers>

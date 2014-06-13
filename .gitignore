@@ -10,3 +10,5 @@ logs
 # Eclipse ignores
 .classpath
 .project
+
+node_modules

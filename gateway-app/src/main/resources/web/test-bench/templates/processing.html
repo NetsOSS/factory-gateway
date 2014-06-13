@@ -1,0 +1,72 @@
+<h3 class="block_header caption">
+    <span>Processing Result</span>
+</h3>
+
+<div ng-show="state == 'ready'">
+  <button ng-click="startProcessing()">Start processing</button>
+</div>
+
+<div ng-show="state == 'processing'" class="proceed-container">
+  Please wait while the file is being processed...
+</div>
+
+<div ng-show="state == 'done'">
+    <h3>SUMMARY</h3>
+    <p>
+        <span class="bold">File Status: </span> {{result.status}}
+    </p>
+	
+	<h3>View Receipt</h3>
+	<p class="big-font">
+	    Your receipt format is UBL and you will receive one receipt file for each file sent. For each invoice there will be a DocumentResponse.
+	    The mapping between an invoice and the receipt is done with the DocumentReference.</br>
+        ID field which is the same as the invoice-number in the receipt.
+	    {{result.invoiceNum}} The description will show any rejection reasons if your invoice is rejected.
+	</p>
+
+    <ul class="w-list">
+        <li>
+              <a target="_self" ng-href="scenario/VALID_INVOICE/{{result.receiptInfo.receiptFileId}}/download"> Download
+                  Receipt</a>
+        </li>
+    </ul>
+	
+	 	
+	<h3>View Report</h3>
+    <p class="big-font">
+        Your agreement is set up with daily invoice report which is sent to the email address setup in your
+        agreement.The email address for your account is <span class="bold"> {{result.email}} </span>.
+        If this is incorrect,Please contact XXXXX.
+        <br/>
+        Please check your email account that you have received the report below.
+    </p>
+
+
+    <pre class="report">
+        {{result.notificationInfo.msgBody}}
+    </pre>
+
+    <p>
+        <button ng-click="resendReport(result.notificationInfo.notificationId)" ng-hide="updateStatus">Resend Report
+        </button>
+    </p>
+
+    <div ng-if="updateStatus">
+        Report Resent Successfully
+    </div>
+
+    <h3>View Invoice Details</h3>
+
+    <p class="big-font">
+        Your File is now processed and will be available to your B2C Receivers.
+        To see how the invoice details will apprear in the Hotel,Click the URL below.
+    </p>
+
+    <div ng-if="result.documentURL">
+        <ul class="w-list">
+            <li ng-repeat="url in result.documentURL">
+                <a target="_blank" href="{{url}}"> Download PDF</a>
+            </li>
+        </ul>
+    </div>
+</div>

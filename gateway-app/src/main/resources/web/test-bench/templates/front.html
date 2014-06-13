@@ -1,0 +1,11 @@
+<h3 class="block_header caption">
+    <span>Scenarios</span>
+</h3>
+
+<ul class="w-list">
+  <li ng-repeat="s in scenarios">
+      <span>
+          {{s.type}} <a ng-href="#/scenario/{{s.type}}">start</a>
+      </span>
+  </li>
+</ul>
