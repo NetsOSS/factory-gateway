@@ -13,6 +13,7 @@ logs
 
 node_modules
 
-gateway-requirements-test/FitNesseRoot/files/
+gateway-requirements-test/FitNesseRoot/files/testResults/
+gateway-requirements-test/FitNesseRoot/files/testProgress/
 gateway-requirements-test/FitNesseRoot/ErrorLogs/
 
