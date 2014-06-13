@@ -18,7 +18,6 @@ com.google.code.findbugs:bcel:2.0.1:jar
 com.google.code.findbugs:findbugs:2.0.3:jar
 com.google.code.findbugs:jFormatString:2.0.1:jar
 com.google.code.findbugs:jsr305:2.0.1:jar
-com.google.guava:guava:11.0.2:jar
 com.google.guava:guava:17.0:jar
 com.jolbox:bonecp:0.8.0.RELEASE:jar
 com.jolbox:bonecp-spring:0.8.0.RELEASE:jar

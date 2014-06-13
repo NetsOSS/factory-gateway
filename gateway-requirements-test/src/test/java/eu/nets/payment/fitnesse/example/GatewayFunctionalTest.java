@@ -2,6 +2,8 @@ package eu.nets.payment.fitnesse.example;
 
 import eu.nets.payment.fitnesse.NetsFitNesseSuite;
 import fitnesse.junit.FitNesseSuite;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,5 +22,4 @@ public class GatewayFunctionalTest {
     public void runAllTests() throws Exception {
         //Should be empty
     }
-
 }

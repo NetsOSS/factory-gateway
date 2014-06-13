@@ -42,6 +42,10 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -106,6 +110,12 @@
                             <includes>
                                 <include>**/ExampleFunctionalTest.java</include>
                             </includes>
+                            <!--systemProperties>
+                                <datasource.url>jdbc:oracle:thin:@vm-udb-7:1521:u7utv</datasource.url>
+                            </systemProperties>
+                            <environmentVariables>
+                                <datasource.url>jdbc:oracle:thin:@vm-udb-7:1521:u7utv</datasource.url>
+                            </environmentVariables-->
                         </configuration>
                     </plugin>
                 </plugins>

@@ -12,3 +12,7 @@ logs
 .project
 
 node_modules
+
+gateway-requirements-test/FitNesseRoot/files/
+gateway-requirements-test/FitNesseRoot/ErrorLogs/
+
