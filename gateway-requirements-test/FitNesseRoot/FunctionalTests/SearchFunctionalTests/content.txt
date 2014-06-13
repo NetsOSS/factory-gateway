@@ -1,0 +1,19 @@
+!-
+<form method="GET" action="" style="display: inline">
+<input type="hidden" name="responder" value="executeSearchProperties"/>
+<input type="hidden" name="PageType" value="Suite"/>
+<input type="hidden" name="PageType" value="Test"/>
+<input type="hidden" name="PageType" value="Static"/>
+<input type="hidden" name="Search" value="Search+Properties"/>
+<input type="hidden" name="Action" value="Any"/>
+<input type="hidden" name="Security" value="Any"/>
+<input type="hidden" name="Special" value="Any"/>
+<input type="text" name="Suites" value=""/>
+<input type="submit" value="Vis alle tester for ..."/>
+</form>
+<form method="GET" action="" style="display: inline">
+<input type="hidden" name="responder" value="suite"/>
+<input type="text" name="suiteFilter" value=""/>
+<input type="submit" value="Kjør alle tester for ..."/>
+</form>
+-!

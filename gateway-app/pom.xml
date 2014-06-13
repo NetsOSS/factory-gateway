@@ -9,7 +9,8 @@
   </parent>
 
   <artifactId>gateway-app</artifactId>
-  <packaging>war</packaging>
+  <name>Gateway :: App</name>
+  <!--<packaging>war</packaging>-->
 
   <dependencies>
     <!-- Embedded Jetty -->
@@ -23,7 +24,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>${version.spring}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

@@ -1,0 +1,11 @@
+!2 !-<font color="blue">Testing Bootstrap</font>-!
+
+!****> Fixture Initialisation
+!|eu.nets.payment.fitnesse.example.ExampleFixture|
+!include .FunctionalTests.DatabaseSetUp
+*****!
+!2 !-<font color="green">story</font>-!
+
+!|test config|
+
+|roll back|true|

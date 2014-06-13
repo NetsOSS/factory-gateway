@@ -1,4 +1,4 @@
-eu.nets.oss.template:nets-template-webapp-angular:develop-SNAPSHOT:jar
+eu.nets.factory:gateway-app:develop-SNAPSHOT:jar
 antlr:antlr:2.7.7:jar
 aopalliance:aopalliance:1.0:jar
 asm:asm:3.3:jar
@@ -18,8 +18,7 @@ com.google.code.findbugs:bcel:2.0.1:jar
 com.google.code.findbugs:findbugs:2.0.3:jar
 com.google.code.findbugs:jFormatString:2.0.1:jar
 com.google.code.findbugs:jsr305:2.0.1:jar
-com.google.guava:guava:15.0:jar
-com.googlecode.flyway:flyway-core:2.3.1:jar
+com.google.guava:guava:17.0:jar
 com.jolbox:bonecp:0.8.0.RELEASE:jar
 com.jolbox:bonecp-spring:0.8.0.RELEASE:jar
 com.oracle:ojdbc6:11.2.0.3.0:jar
@@ -44,6 +43,7 @@ org.eclipse.jetty:jetty-servlet:9.1.0.v20131115:jar
 org.eclipse.jetty:jetty-util:9.1.0.v20131115:jar
 org.eclipse.jetty:jetty-webapp:9.1.0.v20131115:jar
 org.eclipse.jetty:jetty-xml:9.1.0.v20131115:jar
+org.flywaydb:flyway-core:3.0:jar
 org.hibernate:hibernate-core:4.3.3.Final:jar
 org.hibernate:hibernate-entitymanager:4.3.3.Final:jar
 org.hibernate:hibernate-jpamodelgen:4.3.3.Final:jar

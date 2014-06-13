@@ -1,0 +1,6 @@
+@import url( "/files/css/fitnesse_base.css" );
+
+h1, h2, h3, h4 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}

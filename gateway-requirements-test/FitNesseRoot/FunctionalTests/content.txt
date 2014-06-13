@@ -1,0 +1,2 @@
+!define REMOTE_DEBUG_COMMAND {java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1050 -cp %p %m}
+!contents -R -g -p -f -h

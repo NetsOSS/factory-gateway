@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<testResults>
+  <FitNesseVersion>v20111024</FitNesseVersion>
+  <rootPath>DummyTest</rootPath>
+    <result>
+    <counts>
+      <right>0</right>
+      <wrong>0</wrong>
+      <ignores>0</ignores>
+      <exceptions>0</exceptions>
+    </counts>
+    <runTimeInMillis>4</runTimeInMillis>
+    <content><![CDATA[<br/><br/><div class="collapse_rim">
+	<div style="float: right;" class="meta">
+		<a href="javascript:expandAll();">Expand All</a>
+ | 
+		<a href="javascript:collapseAll();">Collapse All</a>
+	</div>
+	<a href="javascript:toggleCollapsable('7');">
+		<img src="/files/images/collapsableClosed.gif" class="left" id="img7"/>
+	</a>
+&nbsp;
+	<span class="meta">Oppsett av Fixture</span>
+	<div class="hidden" id="7"><table border="1" cellspacing="0">
+	<tr>
+		<td>eu.nets.intraday.fitnesse.fixture.IntradayFitnesseKravtestFixture</td>
+	</tr>
+</table>
+<br/></div>
+</div>
+<br/><br/>!dummy!]]></content>
+    <relativePageName>DummyTest</relativePageName>
+    
+    
+    
+  </result>
+  
+    <finalCounts>
+    <right>0</right>
+    <wrong>0</wrong>
+    <ignores>0</ignores>
+    <exceptions>0</exceptions>
+  </finalCounts>
+  <totalRunTimeInMillis>0</totalRunTimeInMillis>
+  
+</testResults>
+

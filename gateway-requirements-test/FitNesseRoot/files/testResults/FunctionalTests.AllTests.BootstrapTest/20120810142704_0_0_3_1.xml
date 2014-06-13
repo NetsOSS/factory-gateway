@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<testResults>
+  <FitNesseVersion>v20111024</FitNesseVersion>
+  <rootPath>BootstrapTest</rootPath>
+    <result>
+    <counts>
+      <right>0</right>
+      <wrong>0</wrong>
+      <ignores>3</ignores>
+      <exceptions>1</exceptions>
+    </counts>
+    <runTimeInMillis>372</runTimeInMillis>
+    <content><![CDATA[
+<form method="GET" action="javascript:(function() {window.open(location.href.split('?')[0]+'?responder=test&remote_debug=true');})();" align="right">
+<input type="submit" value="Debug" align="right" style="float:right"/>
+</form>
+<h2><font color="blue">Testing Bootstrap</font></h2>
+<br/><br/><div class="collapse_rim">
+	<div style="float: right;" class="meta">
+		<a href="javascript:expandAll();">Expand All</a>
+ | 
+		<a href="javascript:collapseAll();">Collapse All</a>
+	</div>
+	<a href="javascript:toggleCollapsable('2');">
+		<img src="/files/images/collapsableClosed.gif" class="left" id="img2"/>
+	</a>
+&nbsp;
+	<span class="meta">Fixture Initialisation</span>
+	<div class="hidden" id="2"><table border="1" cellspacing="0">
+	<tr>
+		<td>eu.nets.payment.fitnesse.example.ExampleFixture</td>
+	</tr>
+</table>
+<div class="collapse_rim">
+	<div style="float: right;" class="meta">
+		<a href="javascript:expandAll();">Expand All</a>
+ | 
+		<a href="javascript:collapseAll();">Collapse All</a>
+	</div>
+	<a href="javascript:toggleCollapsable('1');">
+		<img src="/files/images/collapsableOpen.gif" class="left" id="img1"/>
+	</a>
+&nbsp;
+	<span class="meta">Included page: <a href="FunctionalTests.DatabaseSetUp">.FunctionalTests.DatabaseSetUp</a> <a href="FunctionalTests.DatabaseSetUp?edit&amp;redirectToReferer=true&amp;redirectAction=">(edit)</a></span>
+	<div class="collapsable" id="1"><table border="1" cellspacing="0">
+	<tr>
+		<td colspan="2">fitnesse.fixtures.SystemPropertySetterFixture</td>
+	</tr>
+	<tr>
+		<td>key</td>
+		<td>value</td>
+	</tr>
+	<tr>
+		<td>datasource.username</td>
+		<td>rpb</td>
+	</tr>
+	<tr>
+		<td>datasource.password</td>
+		<td>rpb</td>
+	</tr>
+	<tr>
+		<td>datasource.url</td>
+		<td>jdbc:oracle:thin:@vm-udb-6:1521/u1dkclr</td>
+	</tr>
+</table>
+<br/><br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">init test<hr><pre><div class="fit_stacktrace">java.lang.IllegalStateException: CGLIB is required to process @Configuration classes. Either add CGLIB to the classpath or remove the following @Configuration bean definitions: [functionalTestConfiguration, proxyTransactionManagementConfiguration]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.enhanceConfigurationClasses(ConfigurationClassPostProcessor.java:327)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanFactory(ConfigurationClassPostProcessor.java:222)
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:686)
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:625)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:451)
+	at org.springframework.context.annotation.AnnotationConfigApplicationContext.<init>(AnnotationConfigApplicationContext.java:73)
+	at eu.nets.payment.fitnesse.Autowirer.getApplicationContext(Autowirer.java:26)
+	at eu.nets.payment.fitnesse.Autowirer.wire(Autowirer.java:43)
+	at eu.nets.payment.fitnesse.fixture.SpringAnnotationDoFixture.initTest(SpringAnnotationDoFixture.java:21)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at fitlibrary.closure.MethodClosure.invoke(MethodClosure.java:49)
+	at fitlibrary.closure.MethodClosure.invokeTyped(MethodClosure.java:35)
+	at fitlibrary.closure.CalledMethodTarget.invokeTyped(CalledMethodTarget.java:83)
+	at fitlibrary.closure.CalledMethodTarget.invokeTyped(CalledMethodTarget.java:103)
+	at fitlibrary.traverse.workflow.caller.DoActionCaller.run(DoActionCaller.java:40)
+	at fitlibrary.traverse.workflow.DispatchRowInFlow.pickAndRunValidCaller(DispatchRowInFlow.java:98)
+	at fitlibrary.traverse.workflow.DispatchRowInFlow.interpretRow(DispatchRowInFlow.java:53)
+	at fitlibrary.traverse.workflow.DoTraverse.interpretRowBeforeWrapping(DoTraverse.java:99)
+	at fitlibrary.traverse.workflow.DoTraverse.interpretRow(DoTraverse.java:96)
+	at fitlibrary.flow.DoFlowOnTable.runTable(DoFlowOnTable.java:80)
+	at fitlibrary.flow.DoFlowOnTable.runTable(DoFlowOnTable.java:56)
+	at fitlibrary.flow.DoFlow.runTable(DoFlow.java:104)
+	at fitlibrary.flow.DoFlow.runSingleTable(DoFlow.java:89)
+	at fitlibrary.flow.DoFlowWithExtraTableAddedWhenNeeded.runStorytest(DoFlowWithExtraTableAddedWhenNeeded.java:33)
+	at fitlibrary.suite.BatchFitLibrary.doTables(BatchFitLibrary.java:92)
+	at fitlibrary.suite.BatchFitLibrary.doStorytest(BatchFitLibrary.java:50)
+	at fitlibrary.suite.BatchFitLibrary.doTables(BatchFitLibrary.java:107)
+	at fitlibrary.suite.FitLibraryServer.doTables(FitLibraryServer.java:36)
+	at fitlibrary.suite.FitLibraryServer.doTables(FitLibraryServer.java:28)
+	at fit.FitServerBridge.process(FitServerBridge.java:76)
+	at fit.FitServerBridge.run(FitServerBridge.java:60)
+	at fitlibrary.suite.FitLibraryServer.main(FitLibraryServer.java:54)
+</div></pre></td>
+	</tr>
+</table>
+</div>
+</div>
+<br/></div>
+</div>
+<br/><h2><font color="green">story</font></h2>
+<br/><br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="ignore">test config</td>
+	</tr>
+</table>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="ignore">roll back</td>
+		<td class="ignore">true</td>
+	</tr>
+</table>
+]]></content>
+    <relativePageName>BootstrapTest</relativePageName>
+    
+    
+    
+  </result>
+  
+    <finalCounts>
+    <right>0</right>
+    <wrong>0</wrong>
+    <ignores>0</ignores>
+    <exceptions>0</exceptions>
+  </finalCounts>
+  <totalRunTimeInMillis>0</totalRunTimeInMillis>
+  
+</testResults>
+

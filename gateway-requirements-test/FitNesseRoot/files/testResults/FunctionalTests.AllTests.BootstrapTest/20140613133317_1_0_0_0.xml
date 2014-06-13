@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<testResults>
+  <FitNesseVersion>v20140418</FitNesseVersion>
+  <rootPath>FunctionalTests.AllTests.BootstrapTest</rootPath>
+    <result>
+    <counts>
+      <right>2</right>
+      <wrong>0</wrong>
+      <ignores>0</ignores>
+      <exceptions>0</exceptions>
+    </counts>
+    <runTimeInMillis>1131</runTimeInMillis>
+    <content>
+&lt;form method="GET" action="javascript:(function() {window.open(location.href.split('?')[0]+'?responder=test&amp;remote_debug=true');})();" align="right"&gt;
+&lt;input type="submit" value="Debug" align="right" style="float:right"/&gt;
+&lt;/form&gt;
+&lt;br/&gt;&lt;h2&gt;&lt;font color="blue"&gt;Testing Bootstrap&lt;/font&gt;&lt;/h2&gt;
+&lt;br/&gt;&lt;div class="collapsible closed"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='#' class='expandall'&gt;Expand All&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href='#' class='collapseall'&gt;Collapse All&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+	&lt;p class="title"&gt;Fixture Initialisation&lt;/p&gt;
+	&lt;div&gt;&lt;table&gt;
+	&lt;tr&gt;
+		&lt;td&gt;eu.nets.payment.fitnesse.example.ExampleFixture&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;
+&lt;div class="collapsible"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='#' class='expandall'&gt;Expand All&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href='#' class='collapseall'&gt;Collapse All&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+	&lt;p class="title"&gt;Included page: &lt;a href="FunctionalTests.DatabaseSetUp"&gt;.FunctionalTests.DatabaseSetUp&lt;/a&gt; &lt;a href="FunctionalTests.DatabaseSetUp?edit&amp;amp;redirectToReferer=true&amp;amp;redirectAction=" class="edit"&gt;(edit)&lt;/a&gt;&lt;/p&gt;
+	&lt;div&gt;&lt;table&gt;
+	&lt;tr&gt;
+		&lt;td colspan="2"&gt;fitnesse.fixtures.SystemPropertySetterFixture&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;key&lt;/td&gt;
+		&lt;td&gt;value&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;datasource.username&lt;/td&gt;
+		&lt;td&gt;rpbjo&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;datasource.password&lt;/td&gt;
+		&lt;td&gt;rpbjo&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;datasource.url&lt;/td&gt;
+		&lt;td&gt;jdbc:oracle:thin:@vm-udb-7:1521:u7utv&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;
+&lt;br/&gt;&lt;br/&gt;&lt;table&gt;
+	&lt;tr&gt;
+		&lt;td&gt;init test&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h2&gt;&lt;font color="green"&gt;story&lt;/font&gt;&lt;/h2&gt;
+&lt;br/&gt;&lt;table&gt;
+	&lt;tr&gt;
+		&lt;td class="pass"&gt;test config&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;
+&lt;br/&gt;&lt;table&gt;
+	&lt;tr&gt;
+		&lt;td class="pass"&gt;roll back&lt;/td&gt;
+		&lt;td&gt;true&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;
+</content>
+    <relativePageName>BootstrapTest</relativePageName>
+    
+    
+    
+  </result>
+  
+    <finalCounts>
+    <right>1</right>
+    <wrong>0</wrong>
+    <ignores>0</ignores>
+    <exceptions>0</exceptions>
+  </finalCounts>
+  <totalRunTimeInMillis>1948</totalRunTimeInMillis>
+  
+</testResults>
+

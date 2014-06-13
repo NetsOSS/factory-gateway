@@ -1,0 +1,424 @@
+<?xml version="1.0"?>
+<testResults>
+  <FitNesseVersion>v20111024</FitNesseVersion>
+  <rootPath>EnkelPacs008UtenFeil</rootPath>
+    <result>
+    <counts>
+      <right>0</right>
+      <wrong>0</wrong>
+      <ignores>0</ignores>
+      <exceptions>20</exceptions>
+    </counts>
+    <runTimeInMillis>98</runTimeInMillis>
+    <content><![CDATA[<h2><font color="blue">Tester mottak av enkel PACS.008 uten feil, med enkel menes at kun mandatory elementer er med i leveransene</font></h2>
+<br/><br/><br/><div class="collapse_rim">
+	<div style="float: right;" class="meta">
+		<a href="javascript:expandAll();">Expand All</a>
+ | 
+		<a href="javascript:collapseAll();">Collapse All</a>
+	</div>
+	<a href="javascript:toggleCollapsable('3');">
+		<img src="/files/images/collapsableClosed.gif" class="left" id="img3"/>
+	</a>
+&nbsp;
+	<span class="meta">Oppsett av Fixture</span>
+	<div class="hidden" id="3"><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">eu.nets.intraday.fitnesse.fixture.IntradayFitnesseKravtestFixture<hr><pre><div class="fit_stacktrace">java.lang.RuntimeException: Please use FitLibraryServer instead of FitServer.
+	at fitlibrary.DoFixture.interpretTables(DoFixture.java:41)
+	at fit.Fixture.doTables(Fixture.java:81)
+	at fit.FitServer.process(FitServer.java:84)
+	at fit.FitServer.run(FitServer.java:57)
+	at fit.FitServer.main(FitServer.java:42)
+</div></pre></td>
+	</tr>
+</table>
+<br/><span class="meta">Page include failed because the page .IntradayKravtester.DatabaseSetUp does not exist.
+</span><br/><br/></div>
+</div>
+<br/><br/><br/><h2><font color="green">story</font></h2>
+<br/><br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">STORY<hr/> <span class="fit_label">Could not find fixture: STORY.</span></td>
+		<td>REFERANSE TIL KRAV</td>
+	</tr>
+	<tr>
+		<td>Datasentral sender inn en ICF fil uten feil og gyldig pacs.002 genereres</td>
+		<td>I-BU2, DANICH CGI MIG</td>
+	</tr>
+</table>
+<br/><h2><font color="green">krav</font></h2>
+<br/><br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">KRAV<hr/> <span class="fit_label">Could not find fixture: KRAV.</span></td>
+	</tr>
+	<tr>
+		<td>Det skal genereres en positiv pacs.002 for hver mottatte pacs.008</td>
+	</tr>
+	<tr>
+		<td>Når en leveranse med innhold av flere pacs.008 mottas skal det genereres en leveranse for tilhørende pacs.002</td>
+	</tr>
+	<tr>
+		<td>Generert pacs.002 skal være iht Dansk MIG for pacs.002</td>
+	</tr>
+</table>
+<br/><h2><font color="green">testvarianter og forventet resultat</font></h2>
+<br/><br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">NÅR<hr/> <span class="fit_label">Could not find fixture: NÅR.</span></td>
+		<td>SÅ</td>
+		<td>REF</td>
+	</tr>
+	<tr>
+		<td>mottar en leveranse uten feil, en bulk og en trans</td>
+		<td>en leveranse med en positiv pacs.002 skal genereres</td>
+		<td>001</td>
+	</tr>
+	<tr>
+		<td>mottar en leveranse uten feil, en bulk og flere transer</td>
+		<td>en leveranse med en positiv pacs.002 skal genereres</td>
+		<td>002</td>
+	</tr>
+	<tr>
+		<td>mottar en leveranse uten feil, to bulk og flere transer i hver bulk</td>
+		<td>en leveranse med to positive pacs.002 skal genereres</td>
+		<td>003</td>
+	</tr>
+	<tr>
+		<td>mottar to leveranser fra samme sentral uten feil</td>
+		<td>to leveranser med tilhøende positive pacs.002 skal genereres</td>
+		<td>004</td>
+	</tr>
+</table>
+<br/><h2><font color="green">teststatus</font></h2>
+<br/><br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">COMMENT<hr/> <span class="fit_label">Could not find fixture: COMMENT.</span></td>
+		<td>GODKJENNINGSTABELL</td>
+	</tr>
+	<tr>
+		<td>Status</td>
+		<td>@UnderArbeid("nn")</td>
+	</tr>
+</table>
+<br/><br/><hr size="29"/>
+<br/><br/><h2><font color="green">forberedelser til kjøring</font></h2>
+<br/><br/><br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">setClearingDate<hr/> <span class="fit_label">Could not find fixture: setClearingDate.</span></td>
+		<td>16.03.2012</td>
+	</tr>
+</table>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td colspan="6" class="error">createBankregistry<hr/> <span class="fit_label">Could not find fixture: createBankregistry.</span></td>
+	</tr>
+	<tr>
+		<td>registernumber</td>
+		<td>regnrClearingdeltager</td>
+		<td>edbCentralnumber</td>
+		<td>regnrHovedsete</td>
+		<td>kreditBelopsgrense</td>
+		<td>ikrafttredelsesdato</td>
+	</tr>
+	<tr>
+		<td>3000</td>
+		<td>3000</td>
+		<td>03</td>
+		<td>3015</td>
+		<td>000000000010000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>3015</td>
+		<td>3000</td>
+		<td>03</td>
+		<td>3015</td>
+		<td>000000000010000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>4065</td>
+		<td>3000</td>
+		<td>03</td>
+		<td>3015</td>
+		<td>000000000010000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>6771</td>
+		<td>3000</td>
+		<td>10</td>
+		<td>6771</td>
+		<td>000000000020000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>2000</td>
+		<td>2000</td>
+		<td>07</td>
+		<td>5648</td>
+		<td>000000000030000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>5648</td>
+		<td>2000</td>
+		<td>07</td>
+		<td>5648</td>
+		<td>000000000030000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>0059</td>
+		<td>2000</td>
+		<td>07</td>
+		<td>5648</td>
+		<td>000000000030000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>5301</td>
+		<td>5301</td>
+		<td>10</td>
+		<td>5301</td>
+		<td>000000000040000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>5330</td>
+		<td>5301</td>
+		<td>10</td>
+		<td>5301</td>
+		<td>000000000040000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>9960</td>
+		<td>5301</td>
+		<td>10</td>
+		<td>9960</td>
+		<td>000000000050000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>8117</td>
+		<td>8117</td>
+		<td>06</td>
+		<td>8117</td>
+		<td>000000000060000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>5470</td>
+		<td>8117</td>
+		<td>10</td>
+		<td>8117</td>
+		<td>000000000060000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>8079</td>
+		<td>8079</td>
+		<td>09</td>
+		<td>8079</td>
+		<td>000000000070000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>7971</td>
+		<td>8079</td>
+		<td>09</td>
+		<td>8079</td>
+		<td>000000000070000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>6140</td>
+		<td>8079</td>
+		<td>10</td>
+		<td>6140</td>
+		<td>000000000080000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>6850</td>
+		<td>8079</td>
+		<td>09</td>
+		<td>6850</td>
+		<td>000000000090000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>6851</td>
+		<td>8079</td>
+		<td>09</td>
+		<td>6850</td>
+		<td>000000000090000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>9070</td>
+		<td>9070</td>
+		<td>12</td>
+		<td>9070</td>
+		<td>000000000100000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>9224</td>
+		<td>9070</td>
+		<td>12</td>
+		<td>9070</td>
+		<td>000000000100000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>9335</td>
+		<td>9335</td>
+		<td>12</td>
+		<td>9335</td>
+		<td>000000000110000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>9334</td>
+		<td>9335</td>
+		<td>12</td>
+		<td>9335</td>
+		<td>000000000110000</td>
+		<td>150312</td>
+	</tr>
+	<tr>
+		<td>0544</td>
+		<td>9335</td>
+		<td>12</td>
+		<td>0544</td>
+		<td>000000000120000</td>
+		<td>150312</td>
+	</tr>
+</table>
+<table border="1" cellspacing="0">
+	<tr>
+		<td class="error">validateAndSaveBankregistry<hr/> <span class="fit_label">Could not find fixture: validateAndSaveBankregistry.</span></td>
+	</tr>
+	<tr>
+		<td>message</td>
+	</tr>
+</table>
+<br/><hr size="15"/>
+<br/><br/><h2><font color="green">test</font></h2>
+<br/><br/><h3>REF 001 send inn fil, pacs.008</h3>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">input SCTInputBlkFile<hr/> <span class="fit_label">Could not find fixture: InputSCTInputBlkFile.</span></td>
+		<td>pacs.008.enkel.uten.feil.en.bulk.en.trans.xml</td>
+	</tr>
+</table>
+<br/><h3>kontroller generert svarfil, pacs.002</h3>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">sammenlign generert svarfilmot forventet resultat i<hr/> <span class="fit_label">Could not find fixture: SammenlignGenerertSvarfilmotForventetResultatI.</span></td>
+		<td>intraday-kravtest/forventet/svarfil001</td>
+	</tr>
+	<tr>
+		<td colspan="2">All pacs stemmer</td>
+	</tr>
+</table>
+<br/><h3>REF 002 send inn fil, pacs.008</h3>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">input SCTInputBlkFile<hr/> <span class="fit_label">Could not find fixture: InputSCTInputBlkFile.</span></td>
+		<td>pacs.008.enkel.uten.feil.en.bulk.flere.transer.xml</td>
+	</tr>
+</table>
+<br/><h3>kontroller generert svarfil, pacs.002</h3>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">sammenlign generert svarfilmot forventet resultat i<hr/> <span class="fit_label">Could not find fixture: SammenlignGenerertSvarfilmotForventetResultatI.</span></td>
+		<td>intraday-kravtest/forventet/svarfil002</td>
+	</tr>
+	<tr>
+		<td colspan="2">All pacs stemmer</td>
+	</tr>
+</table>
+<br/><h3>REF 003 send inn fil, pacs.008</h3>
+<br/>Denne leveransen inneholder 2 pacs.008 fra samme hovedsete<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">input SCTInputBlkFile<hr/> <span class="fit_label">Could not find fixture: InputSCTInputBlkFile.</span></td>
+		<td>pacs.008.enkel.uten.feil.to.bulk.flere.transer_1.xml</td>
+	</tr>
+</table>
+<br/><h3>kontroller generert svarfil, pacs.002</h3>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">sammenlign generert svarfilmot forventet resultat i<hr/> <span class="fit_label">Could not find fixture: SammenlignGenerertSvarfilmotForventetResultatI.</span></td>
+		<td>intraday-kravtest/forventet/svarfil003</td>
+	</tr>
+	<tr>
+		<td colspan="2">All pacs stemmer</td>
+	</tr>
+</table>
+<br/><h3>REF 003 send inn fil, pacs.008</h3>
+<br/>Denne leveransen inneholder 2 pacs.008 fra forskjellige hovedseter<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">input SCTInputBlkFile<hr/> <span class="fit_label">Could not find fixture: InputSCTInputBlkFile.</span></td>
+		<td>pacs.008.enkel.uten.feil.to.bulk.flere.transer_2.xml</td>
+	</tr>
+</table>
+<br/><h3>kontroller generert svarfil, pacs.002</h3>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">sammenlign generert svarfilmot forventet resultat i<hr/> <span class="fit_label">Could not find fixture: SammenlignGenerertSvarfilmotForventetResultatI.</span></td>
+		<td>intraday-kravtest/forventet/svarfil004</td>
+	</tr>
+	<tr>
+		<td colspan="2">All pacs stemmer</td>
+	</tr>
+</table>
+<br/><h3>REF 004 send inn fil, pacs.008</h3>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">input SCTInputBlkFile<hr/> <span class="fit_label">Could not find fixture: InputSCTInputBlkFile.</span></td>
+		<td>pacs.008.enkel.uten.feil.to.leveranser.samme.sentral_1.xml</td>
+	</tr>
+</table>
+<table border="1" cellspacing="0">
+	<tr>
+		<td class="error">input SCTInputBlkFile<hr/> <span class="fit_label">Could not find fixture: InputSCTInputBlkFile.</span></td>
+		<td>pacs.008.enkel.uten.feil.to.leveranser.samme.sentral_2.xml</td>
+	</tr>
+</table>
+<br/><h3>kontroller generert svarfil, pacs.002</h3>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">sammenlign generert svarfilmot forventet resultat i<hr/> <span class="fit_label">Could not find fixture: SammenlignGenerertSvarfilmotForventetResultatI.</span></td>
+		<td>intraday-kravtest/forventet/svarfil005</td>
+	</tr>
+	<tr>
+		<td colspan="2">All pacs stemmer</td>
+	</tr>
+</table>
+<br/><table border="1" cellspacing="0">
+	<tr>
+		<td class="error">roll back<hr/> <span class="fit_label">Could not find fixture: RollBack.</span></td>
+		<td>true</td>
+	</tr>
+</table>
+<br/><br/>]]></content>
+    <relativePageName>EnkelPacs008UtenFeil</relativePageName>
+    
+    
+    
+  </result>
+  
+    <finalCounts>
+    <right>0</right>
+    <wrong>0</wrong>
+    <ignores>0</ignores>
+    <exceptions>0</exceptions>
+  </finalCounts>
+  <totalRunTimeInMillis>0</totalRunTimeInMillis>
+  
+</testResults>
+

@@ -1,0 +1,71 @@
+!3 !-fit-!
+|'''Date: '''|!-1:05:02 PM (CEST) on fredag, august 10, 2012-!|
+|'''Test Page: '''|.AvtaleGiroFunctionalTests.AllTests.BootstrapTest|
+|'''Command: '''|!-java -Xmx2000m -cp "C:\Program Files\Java\jdk1.7.0_02\jre\lib\alt-rt.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\jce.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\resources.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\rt.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.7.0_02\jre\lib\ext\zipfs.jar;C:\devel\workspace\nets\git\payment\avtalegiro\atg\atg-kravtest\target\test-classes;C:\devel\workspace\nets\git\payment\avtalegiro\atg\atg-kravtest\target\classes;C:\devel\workspace\nets\git\payment\avtalegiro\atg\atg-domain\target\classes;C:\Users\rpb\.m2\repository\eu\nets\payment\platform-core\1.0-SNAPSHOT\platform-core-1.0-SNAPSHOT.jar;C:\devel\workspace\nets\git\payment\avtalegiro\atg\iso20022-dd-core\target\classes;C:\Users\rpb\.m2\repository\eu\nets\payment\payment-iso20022-core\1.1-SNAPSHOT\payment-iso20022-core-1.1-SNAPSHOT.jar;C:\Users\rpb\.m2\repository\com\google\guava\guava\13.0\guava-13.0.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-context\3.1.2.RELEASE\spring-context-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-aop\3.1.2.RELEASE\spring-aop-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\aopalliance\aopalliance\1.0\aopalliance-1.0.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-asm\3.1.2.RELEASE\spring-asm-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-beans\3.1.2.RELEASE\spring-beans-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-core\3.1.2.RELEASE\spring-core-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\commons-logging\commons-logging\1.1.1\commons-logging-1.1.1.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-expression\3.1.2.RELEASE\spring-expression-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-jdbc\3.1.2.RELEASE\spring-jdbc-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-tx\3.1.2.RELEASE\spring-tx-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-orm\3.1.2.RELEASE\spring-orm-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\org\hsqldb\hsqldb\2.2.8\hsqldb-2.2.8.jar;C:\Users\rpb\.m2\repository\org\hibernate\hibernate-core\4.1.1.Final\hibernate-core-4.1.1.Final.jar;C:\Users\rpb\.m2\repository\antlr\antlr\2.7.7\antlr-2.7.7.jar;C:\Users\rpb\.m2\repository\org\jboss\logging\jboss-logging\3.1.0.GA\jboss-logging-3.1.0.GA.jar;C:\Users\rpb\.m2\repository\org\jboss\spec\javax\transaction\jboss-transaction-api_1.1_spec\1.0.0.Final\jboss-transaction-api_1.1_spec-1.0.0.Final.jar;C:\Users\rpb\.m2\repository\dom4j\dom4j\1.6.1\dom4j-1.6.1.jar;C:\Users\rpb\.m2\repository\xml-apis\xml-apis\1.0.b2\xml-apis-1.0.b2.jar;C:\Users\rpb\.m2\repository\org\hibernate\javax\persistence\hibernate-jpa-2.0-api\1.0.1.Final\hibernate-jpa-2.0-api-1.0.1.Final.jar;C:\Users\rpb\.m2\repository\org\javassist\javassist\3.15.0-GA\javassist-3.15.0-GA.jar;C:\Users\rpb\.m2\repository\org\hibernate\common\hibernate-commons-annotations\4.0.1.Final\hibernate-commons-annotations-4.0.1.Final.jar;C:\Users\rpb\.m2\repository\cglib\cglib\2.2.2\cglib-2.2.2.jar;C:\Users\rpb\.m2\repository\asm\asm\3.1\asm-3.1.jar;C:\Users\rpb\.m2\repository\joda-time\joda-time\2.0\joda-time-2.0.jar;C:\Users\rpb\.m2\repository\eu\nets\dbmq\dbmq\2.2-SNAPSHOT\dbmq-2.2-SNAPSHOT.jar;C:\Users\rpb\.m2\repository\org\jadira\usertype\usertype.jodatime\2.0.1\usertype.jodatime-2.0.1.jar;C:\Users\rpb\.m2\repository\org\jadira\usertype\usertype.spi\2.0.1\usertype.spi-2.0.1.jar;C:\Users\rpb\.m2\repository\javassist\javassist\3.12.1.GA\javassist-3.12.1.GA.jar;C:\Users\rpb\.m2\repository\eu\nets\nets-gisadapter\2.1-SNAPSHOT\nets-gisadapter-2.1-SNAPSHOT.jar;C:\Users\rpb\.m2\repository\ch\ethz\ganymed\ganymed-ssh2\build251beta1\ganymed-ssh2-build251beta1.jar;C:\Users\rpb\.m2\repository\com\oracle\ojdbc6\11.2.0.1.0\ojdbc6-11.2.0.1.0.jar;C:\Users\rpb\.m2\repository\org\apache\wicket\wicket-core\1.5.6\wicket-core-1.5.6.jar;C:\Users\rpb\.m2\repository\org\apache\wicket\wicket-util\1.5.6\wicket-util-1.5.6.jar;C:\Users\rpb\.m2\repository\org\slf4j\slf4j-api\1.6.2\slf4j-api-1.6.2.jar;C:\Users\rpb\.m2\repository\org\apache\wicket\wicket-request\1.5.6\wicket-request-1.5.6.jar;C:\Users\rpb\.m2\repository\org\apache\wicket\wicket-spring\1.5.6\wicket-spring-1.5.6.jar;C:\Users\rpb\.m2\repository\org\apache\wicket\wicket-ioc\1.5.6\wicket-ioc-1.5.6.jar;C:\Users\rpb\.m2\repository\org\apache\wicket\wicket-extensions\1.5.6\wicket-extensions-1.5.6.jar;C:\Users\rpb\.m2\repository\org\apache\wicket\wicket-datetime\1.5.6\wicket-datetime-1.5.6.jar;C:\Users\rpb\.m2\repository\com\google\code\findbugs\jsr305\1.3.9\jsr305-1.3.9.jar;C:\Users\rpb\.m2\repository\eu\nets\dbmq\dbmq-scheduler\2.2-SNAPSHOT\dbmq-scheduler-2.2-SNAPSHOT.jar;C:\Users\rpb\.m2\repository\org\springframework\spring-test\3.1.2.RELEASE\spring-test-3.1.2.RELEASE.jar;C:\Users\rpb\.m2\repository\commons-io\commons-io\2.3\commons-io-2.3.jar;C:\Users\rpb\.m2\repository\org\slf4j\jcl-over-slf4j\1.6.2\jcl-over-slf4j-1.6.2.jar;C:\Users\rpb\.m2\repository\org\slf4j\slf4j-log4j12\1.6.2\slf4j-log4j12-1.6.2.jar;C:\Users\rpb\.m2\repository\log4j\log4j\1.2.16\log4j-1.2.16.jar;C:\Users\rpb\.m2\repository\org\fitnesse\fitlibrary\2.0\fitlibrary-2.0.jar;C:\Users\rpb\.m2\repository\org\fitnesse\fitnesse\20111025\fitnesse-20111025.jar;C:\Users\rpb\.m2\repository\junit\junit\4.9\junit-4.9.jar;C:\Users\rpb\.m2\repository\org\hamcrest\hamcrest-core\1.1\hamcrest-core-1.1.jar;C:\Program Files (x86)\JetBrains\IntelliJ IDEA 11.1.1\lib\idea_rt.jar;target/test-classes" fitlibrary.suite.FitLibraryServer RPB3 6010 1-!|
+|'''Exit code: '''|!-1-!|
+|'''Time elapsed: '''|!-1.238 seconds-!|
+----'''Standard Output:'''
+{{{[DataSourceTester] - Testing connection (user=${datasource.username}, url=${datasource.url})...
+[DataSourceTester] - Failed: Invalid Oracle URL specified
+}}}----'''Standard Error:'''
+{{{org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'databaseConfiguration': Invocation of init method failed; nested exception is java.lang.RuntimeException: Could not aquire connection to ${datasource.username} at ${datasource.url}
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:394)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1448)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:519)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:294)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:225)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:193)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:609)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:469)
+	at org.springframework.context.annotation.AnnotationConfigApplicationContext.<init>(AnnotationConfigApplicationContext.java:73)
+	at eu.nets.payment.atg.fitnesse.Autowirer.getApplicationContext(Autowirer.java:26)
+	at eu.nets.payment.atg.fitnesse.Autowirer.wire(Autowirer.java:43)
+	at eu.nets.payment.atg.fitnesse.fixture.SpringAnnotationDoFixture.initTest(SpringAnnotationDoFixture.java:21)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at fitlibrary.closure.MethodClosure.invoke(MethodClosure.java:49)
+	at fitlibrary.closure.MethodClosure.invokeTyped(MethodClosure.java:35)
+	at fitlibrary.closure.CalledMethodTarget.invokeTyped(CalledMethodTarget.java:83)
+	at fitlibrary.closure.CalledMethodTarget.invokeTyped(CalledMethodTarget.java:103)
+	at fitlibrary.traverse.workflow.caller.DoActionCaller.run(DoActionCaller.java:40)
+	at fitlibrary.traverse.workflow.DispatchRowInFlow.pickAndRunValidCaller(DispatchRowInFlow.java:98)
+	at fitlibrary.traverse.workflow.DispatchRowInFlow.interpretRow(DispatchRowInFlow.java:53)
+	at fitlibrary.traverse.workflow.DoTraverse.interpretRowBeforeWrapping(DoTraverse.java:99)
+	at fitlibrary.traverse.workflow.DoTraverse.interpretRow(DoTraverse.java:96)
+	at fitlibrary.flow.DoFlowOnTable.runTable(DoFlowOnTable.java:80)
+	at fitlibrary.flow.DoFlowOnTable.runTable(DoFlowOnTable.java:56)
+	at fitlibrary.flow.DoFlow.runTable(DoFlow.java:104)
+	at fitlibrary.flow.DoFlow.runSingleTable(DoFlow.java:89)
+	at fitlibrary.flow.DoFlowWithExtraTableAddedWhenNeeded.runStorytest(DoFlowWithExtraTableAddedWhenNeeded.java:33)
+	at fitlibrary.suite.BatchFitLibrary.doTables(BatchFitLibrary.java:92)
+	at fitlibrary.suite.BatchFitLibrary.doStorytest(BatchFitLibrary.java:50)
+	at fitlibrary.suite.BatchFitLibrary.doTables(BatchFitLibrary.java:107)
+	at fitlibrary.suite.FitLibraryServer.doTables(FitLibraryServer.java:36)
+	at fitlibrary.suite.FitLibraryServer.doTables(FitLibraryServer.java:28)
+	at fit.FitServerBridge.process(FitServerBridge.java:76)
+	at fit.FitServerBridge.run(FitServerBridge.java:60)
+	at fitlibrary.suite.FitLibraryServer.main(FitLibraryServer.java:54)
+Caused by: java.lang.RuntimeException: Could not aquire connection to ${datasource.username} at ${datasource.url}
+	at eu.nets.payment.atg.config.DataSourceTester.testConnection(DataSourceTester.java:32)
+	at eu.nets.payment.atg.config.DatabaseConfiguration.testDataSource(DatabaseConfiguration.java:118)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:346)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:299)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:132)
+	... 41 more
+Caused by: java.sql.SQLException: Invalid Oracle URL specified
+	at oracle.jdbc.pool.OracleDataSource.getPhysicalConnection(OracleDataSource.java:286)
+	at oracle.jdbc.pool.OracleDataSource.getConnection(OracleDataSource.java:207)
+	at oracle.jdbc.pool.OracleDataSource.getConnection(OracleDataSource.java:157)
+	at eu.nets.payment.atg.config.DataSourceTester.testConnection(DataSourceTester.java:22)
+	... 49 more
+}}}
