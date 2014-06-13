@@ -1,4 +1,4 @@
-package eu.nets.oss.template.webapp.model;
+package eu.nets.factory.gateway.model;
 
 import java.sql.Connection;
 import java.sql.SQLException;

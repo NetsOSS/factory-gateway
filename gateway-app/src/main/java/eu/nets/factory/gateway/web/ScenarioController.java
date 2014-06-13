@@ -1,4 +1,4 @@
-package eu.nets.oss.template.webapp.web;
+package eu.nets.factory.gateway.web;
 
 import java.util.ArrayList;
 import java.util.List;

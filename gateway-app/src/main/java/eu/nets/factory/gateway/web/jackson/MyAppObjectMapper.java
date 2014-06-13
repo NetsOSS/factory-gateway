@@ -1,4 +1,4 @@
-package eu.nets.oss.template.webapp.web.jackson;
+package eu.nets.factory.gateway.web.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

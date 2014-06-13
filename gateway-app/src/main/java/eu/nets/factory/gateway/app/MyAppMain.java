@@ -1,4 +1,4 @@
-package eu.nets.oss.template.webapp.app;
+package eu.nets.factory.gateway.app;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import eu.nets.oss.jetty.EmbeddedJettyBuilder;
 import eu.nets.oss.jetty.EmbeddedSpringBuilder;
 import eu.nets.oss.jetty.StaticConfig;
 import eu.nets.oss.jetty.StdoutRedirect;
-import eu.nets.oss.template.webapp.web.WebConfig;
+import eu.nets.factory.gateway.web.WebConfig;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
@@ -32,9 +32,9 @@ import static org.slf4j.bridge.SLF4JBridgeHandler.install;
 import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
 import static org.springframework.core.io.support.PropertiesLoaderUtils.fillProperties;
 
-public class MyMain {
+public class MyAppMain {
     public static void main(String[] args) throws Exception {
-        new MyMain().run();
+        new MyAppMain().run();
     }
 
     public void run() throws Exception {

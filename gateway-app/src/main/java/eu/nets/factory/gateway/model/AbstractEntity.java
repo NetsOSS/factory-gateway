@@ -1,4 +1,4 @@
-package eu.nets.oss.template.webapp.model;
+package eu.nets.factory.gateway.model;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
