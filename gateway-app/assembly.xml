@@ -12,11 +12,6 @@
       <lineEnding>unix</lineEnding>
       <directory>target/appassembler/bin</directory>
       <outputDirectory>/bin</outputDirectory>
-<!--
-      <includes>
-        <include>*</include>
-      </includes>
--->
       <excludes>
         <exclude>*.bat</exclude>
       </excludes>
@@ -25,7 +20,7 @@
     </fileSet>
     <fileSet>
       <lineEnding>unix</lineEnding>
-      <directory>src/main/properties</directory>
+      <directory>src/main/zip</directory>
       <outputDirectory>properties</outputDirectory>
     </fileSet>
     <fileSet>
