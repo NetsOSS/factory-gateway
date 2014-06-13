@@ -9,8 +9,6 @@
   </parent>
 
   <artifactId>gateway-app</artifactId>
-  <name>Gateway :: App</name>
-  <!--<packaging>war</packaging>-->
 
   <dependencies>
     <!-- Embedded Jetty -->
@@ -121,6 +119,23 @@
       <artifactId>jackson-dataformat-xml</artifactId>
       <version>${version.jackson2}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.9-RC1</version>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -146,4 +161,16 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArguments>
+            <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

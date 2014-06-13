@@ -1,11 +1,10 @@
-package eu.nets.oss.template.webapp.model;
+package eu.nets.factory.gateway.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 
 @Component
 public class MyAppSettings {

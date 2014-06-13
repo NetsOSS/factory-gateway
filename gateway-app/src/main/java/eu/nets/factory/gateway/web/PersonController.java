@@ -1,9 +1,9 @@
-package eu.nets.oss.template.webapp.web;
+package eu.nets.factory.gateway.web;
 
 import java.util.List;
 
-import eu.nets.oss.template.webapp.model.Person;
-import eu.nets.oss.template.webapp.model.PersonRepository;
+import eu.nets.factory.gateway.model.Person;
+import eu.nets.factory.gateway.model.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

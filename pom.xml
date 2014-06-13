@@ -24,7 +24,6 @@
     <version.flyway>3.0</version.flyway>
     <version.hibernate>4.3.3.Final</version.hibernate>
     <version.httpcomponents>4.3.3</version.httpcomponents>
-    <version.jackson1>1.9.13</version.jackson1>
     <version.jackson2>2.3.3</version.jackson2>
     <version.logback>1.1.1</version.logback>
     <version.slf4j>1.7.6</version.slf4j>
@@ -100,31 +99,6 @@
         <version>${version.slf4j}</version>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.jackson</groupId>
-        <artifactId>jackson-core-asl</artifactId>
-        <version>${version.jackson1}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.jackson</groupId>
-        <artifactId>jackson-jaxrs</artifactId>
-        <version>${version.jackson1}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.jackson</groupId>
-        <artifactId>jackson-mapper</artifactId>
-        <version>${version.jackson1}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.jackson</groupId>
-        <artifactId>jackson-mapper-asl</artifactId>
-        <version>${version.jackson1}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.jackson</groupId>
-        <artifactId>jackson-xc</artifactId>
-        <version>${version.jackson1}</version>
-      </dependency>
-      <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
         <version>1.8</version>
@@ -158,6 +132,12 @@
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
         <version>${version.logback}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.18.1-GA</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -237,7 +217,7 @@
         <configuration>
           <programs>
             <program>
-              <mainClass>eu.nets.oss.template.webapp.app.MyMain</mainClass>
+              <mainClass>eu.nets.factory.gateway.app.MyMain</mainClass>
               <name>startapp</name>
             </program>
           </programs>
