@@ -9,7 +9,7 @@ import org.junit.Test;
 public class GatewayDataJsGenerator {
     public static void main(String[] args) throws Exception {
         try (GeneratorWriter writer = getWriter(false)) {
-            new eu.nets.factory.gateway.web.DataJsGenerator("GatewayData", "GatewayData", MiscController.class).
+            new DataJsGenerator("GatewayData", "GatewayData", MiscController.class).
                     withDataMethodFilter(dataMethod -> dataMethod.url.startsWith("/data")).
                     generateJs(writer);
         }
@@ -24,7 +24,7 @@ public class GatewayDataJsGenerator {
         Class<GatewayDataJsGenerator> c = GatewayDataJsGenerator.class;
 
         File dir = findModuleDirectory(c);
-        File file = new File(dir, "src/main/webapp/resources/js/Data.js");
+        File file = new File(dir, "src/main/resources/web/shared/GatewayData.js");
         return new GeneratorWriter(silent, file);
     }
 

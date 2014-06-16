@@ -12,8 +12,4 @@ logs
 .project
 
 node_modules
-
-gateway-requirements-test/FitNesseRoot/files/testResults/
-gateway-requirements-test/FitNesseRoot/files/testProgress/
-gateway-requirements-test/FitNesseRoot/ErrorLogs/
-
+.bower-installed

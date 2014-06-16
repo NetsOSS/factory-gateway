@@ -5,7 +5,6 @@ import java.util.List;
 import eu.nets.factory.gateway.model.Person;
 import eu.nets.factory.gateway.model.PersonRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -22,19 +22,19 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Transactional
 public class PersonController {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = getLogger(getClass());
 
     @Autowired
     private PersonRepository personRepository;
 
-    @RequestMapping(method = GET, value = "/persons", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = GET, value = "/data/persons", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Person> list() {
         log.info("PersonController.list");
         return personRepository.findAll();
     }
 
-    @RequestMapping(method = GET, value = "/search", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = GET, value = "/data/search", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Person> search(@RequestParam(required = false) String name) {
         log.info("PersonController.search, name={}", name);
@@ -50,7 +50,7 @@ public class PersonController {
         return persons;
     }
 
-    @RequestMapping(method = POST, value = "/persons", consumes = APPLICATION_FORM_URLENCODED_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = POST, value = "/data/persons", consumes = APPLICATION_FORM_URLENCODED_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public PersonModel create(@RequestParam String name) {
         log.info("PersonController.create");
