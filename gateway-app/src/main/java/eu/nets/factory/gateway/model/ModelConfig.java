@@ -136,6 +136,9 @@ public class ModelConfig {
         if (dialect.equals("")) {
             dialect = guessDialect(dataSource);
         }
+        if(dialect.equals(H2Dialect.class.getName())) {
+            hbm2ddl = "create";
+        }
         x.setJpaPropertyMap(createJpaMap(hbm2ddl, showSql, dialect));
         x.setPackagesToScan(AbstractEntity.class.getPackage().getName());
         x.setPersistenceProvider(new HibernatePersistenceProvider());

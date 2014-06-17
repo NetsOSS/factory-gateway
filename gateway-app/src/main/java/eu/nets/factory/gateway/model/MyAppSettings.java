@@ -27,7 +27,7 @@ public class MyAppSettings {
     }
 
     public boolean migrateDatabase() {
-        return environment.acceptsProfiles("local");
+        return environment.acceptsProfiles("local") && !getDatabaseUrl().contains("h2");
     }
 
     public String getDatabaseUrl() {
@@ -37,7 +37,11 @@ public class MyAppSettings {
 
         switch (userName) {
             case "tlaug":
-                return "jdbc:oracle:thin:@//vm-udb-95:1521/u04efak";
+            case "sleru":
+            case "kwlar":
+            case "ofbje":
+            case "ogamm":
+                return "jdbc:oracle:thin:@vm-udb-7:1521:u7utv";
         }
 
         throw new IllegalStateException("Could not find database URL for user " + userName);
@@ -45,19 +49,18 @@ public class MyAppSettings {
 
     public String getDatabaseUsername() {
         if (local) {
-            return "gateway";
+            return userName;
         }
         return environment.getRequiredProperty("database.username");
     }
 
     public String getDatabasePassword() {
         if (local) {
-            return "gateway";
+            return userName;
         }
         return environment.getRequiredProperty("database.password");
     }
-    
-    
+
     public boolean isLocal() {
         return local;
     }
