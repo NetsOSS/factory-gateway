@@ -8,13 +8,12 @@ define([], function () {
       return res.data;
     };
     this.PersonController = {};
-    this.PersonController.create = function (name, payload) {
+    this.PersonController.create = function (personModel) {
       var req = {};
       req.method = 'POST';
       req.url = prefix + '/data/persons';
-      req.data = payload;
+      req.data = personModel;
       req.params = {};
-      req.params.name = name;
       return $http(req).then(getData);
     };
     this.PersonController.list = function () {

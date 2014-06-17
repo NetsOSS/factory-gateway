@@ -7,15 +7,22 @@ define([
   var templatePrefix = require.toUrl("./");
   var gateway = angular.module('gateway', ['ngRoute', 'shared.services']);
 
-  gateway.config(function($routeProvider) {
+  gateway.config(function ($routeProvider) {
     $routeProvider.
-      when('/', {
-        controller: 'FrontPageCtrl',
-        templateUrl: templatePrefix + "gateway.html"
-      });
+        when('/', {
+          controller: 'FrontPageCtrl',
+          templateUrl: templatePrefix + "gateway.html"
+        });
   });
 
-  gateway.controller('FrontPageCtrl', function($scope, GatewayData) {
-    $scope.persons = GatewayData.PersonController.list();
+  gateway.controller('FrontPageCtrl', function ($scope, GatewayData) {
+    GatewayData.PersonController.list().then(function (data) {
+      $scope.persons =data;
+    });
+    $scope.savePerson = function(){
+       GatewayData.PersonController.create($scope.person);
+      console.log("",$scope.person);
+
+    }
   });
 });

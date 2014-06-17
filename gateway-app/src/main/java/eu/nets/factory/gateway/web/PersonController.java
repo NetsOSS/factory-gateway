@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -61,7 +62,7 @@ public class PersonController {
 
     @RequestMapping(method = POST, value = "/data/persons", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public PersonModel create(@RequestParam PersonModel personModel) {
+    public PersonModel create(@RequestBody PersonModel personModel) {
         log.info("PersonController.create");
         Person person = new Person(personModel.name);
         person = personRepository.save(person);
@@ -72,6 +73,9 @@ public class PersonController {
         public Long id;
 
         public String name;
+
+        public PersonModel() {
+        }
 
         public PersonModel(Person person) {
             this(person.getId(), person.getName());
