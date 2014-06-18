@@ -31,22 +31,25 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/find", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ApplicationInstance createApp(@RequestBody AppModel appModel) {
-        ApplicationInstance app = new ApplicationInstance(appModel.name);
+    public ApplicationInstance create(@RequestBody AppInstModel appModel) {
+        //log.info("ApplicationInstanceController.create");
+        ApplicationInstance appInst = new ApplicationInstance(appModel.name);
+        //appInst = applicationInstanceRepository.save(appInst);
+        //return new AppInstModel(appInst.getId(), appInst.getName());
         return null;
     }
 
-    public static class AppModel {
+    public static class AppInstModel {
 
         public Long id;
         public String name;
         public ApplicationInstance app;
 
-        public AppModel(ApplicationInstance app) {
+        public AppInstModel(ApplicationInstance app) {
             this.app = app;
         }
 
-        public AppModel(Long id, String name) {
+        public AppInstModel(Long id, String name) {
             this.id = id;
             this.name = name;
         }
