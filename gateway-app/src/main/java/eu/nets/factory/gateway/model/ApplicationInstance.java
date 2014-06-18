@@ -6,14 +6,14 @@ import javax.persistence.Entity;
  * Created by sleru on 18.06.2014.
  */
 @Entity
-public class Application extends AbstractEntity{
+public class ApplicationInstance extends AbstractEntity{
 
     private String name;
     private String host;
     private int  port;
     private String path;
 
-    public Application(String n) {
+    public ApplicationInstance(String n) {
         this.name = n;
     }
 
