@@ -6,7 +6,30 @@
 
 
     <div class="row">
-        <div class="col-md-6"> <h3>New person</h3>
+        <div class="col-sm-6"> <h3>New Application Instance</h3>
+            <form role="form" ng-submit="saveAppInst()">
+
+                <div class="form-group">
+                    <label for="n">Name</label>
+                    <input type="text" ng-model="appInst.name" class="form-control" id="n" placeholder="Enter name">
+                </div>
+
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form></div>
+
+        <div class="col-sm-6">
+
+            <h3>All Application Instances</h3>
+
+
+        </div>
+    </div>
+
+    <hr>
+
+    <h1>Person </h1>
+    <div class="row">
+        <div class="col-sm-6"> <h3>New person</h3>
             <form role="form" ng-submit="savePerson()">
 
                 <div class="form-group">
@@ -15,16 +38,41 @@
                 </div>
 
                 <button type="submit" class="btn btn-default">Submit</button>
-            </form></div>
-        <div class="col-md-6">
+            </form>
+            <hr>
+            <h4>Search</h4>
+
+            <form role="form" ng-submit="savePerson()">
+
+                <div class="form-group">
+                    <label for="n">Name</label>
+                    <input type="text" ng-model="searchInput"  class="form-control" placeholder="Keywords..." ng-change="search()">
+                </div>
+
+
+            </form>
+
+
+
+            <pre>{{searchRes|json}}</pre>
+
+        </div>
+        <div class="col-sm-6">
+
+            <h3>All persons</h3>
+
             <ul>
                 <li ng-repeat="p in persons">
                     {{p.id}} {{p.name}}
                 </li>
             </ul>
 
-            <h3>All persons</h3>
+            <h4>Raw</h4>
             <pre>{{persons|json}}</pre>
+
+
+
+
         </div>
     </div>
 
