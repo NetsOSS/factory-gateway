@@ -31,7 +31,7 @@ public class ApplicationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/find", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Application ceateApp(@RequestBody AppModel appModel) {
+    public Application createApp(@RequestBody AppModel appModel) {
         Application app = new Application(appModel.name);
         return null;
     }

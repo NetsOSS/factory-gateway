@@ -6,11 +6,12 @@ import javax.persistence.Entity;
  * Created by sleru on 18.06.2014.
  */
 @Entity
-public class Application {
+public class Application extends AbstractEntity{
 
     private String name;
-    private String version;
-    private String URL;
+    private String host;
+    private int  port;
+    private String path;
 
     public Application(String n) {
         this.name = n;
@@ -20,13 +21,15 @@ public class Application {
         return name;
     }
 
-    public void setVersion(String v) {
-        this.version = v;
-    }
-    public String getVersion() {
-        return version;
-    }
-    public void setURL(String u) {
-        this.URL = u;
-    }
+    public void setHost(String host){this.host = host; }
+
+    public String getHost() {return host; }
+
+    public void setPort(int port) { this.port = port; }
+
+    public int getPort() {return port; }
+
+    public void setPath(String path) {this.path = path; }
+
+    public String getPath() {return path;}
 }

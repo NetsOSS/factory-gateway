@@ -7,39 +7,70 @@ define([], function () {
     var getData = function (res) {
       return res.data;
     };
-    this.PersonController = {};
-    this.PersonController.create = function (personModel) {
+    this.ApplicationController = {};
+    this.ApplicationController.createApp = function (appModel) {
       var req = {};
       req.method = 'POST';
-      req.url = prefix + '/data/persons';
-      req.data = personModel;
+      req.url = prefix + '/data/find';
+      req.data = appModel;
       req.params = {};
       return $http(req).then(getData);
     };
-    this.PersonController.list = function () {
+    this.ApplicationController.findApp = function () {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/persons';
+      req.url = prefix + '/data/find';
       req.params = {};
       return $http(req).then(getData);
     };
-    this.PersonController.search = function (name) {
+    this.ApplicationController.listAllApps = function () {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/search';
+      req.url = prefix + '/data/instances';
       req.params = {};
-      req.params.name = name;
       return $http(req).then(getData);
     };
-    var PersonController = this.PersonController;
-    this.resolve.PersonController = {};
-    this.resolve.PersonController.list = function (GatewayData, $route) {
-      return PersonController.list();
+    var ApplicationController = this.ApplicationController;
+    this.resolve.ApplicationController = {};
+    this.resolve.ApplicationController.findApp = function (GatewayData, $route) {
+      return ApplicationController.findApp();
     };
-    this.resolve.PersonController.search = function (GatewayData, $route) {
-      return PersonController.search($route.current.params.name);
+    this.resolve.ApplicationController.listAllApps = function (GatewayData, $route) {
+      return ApplicationController.listAllApps();
     };
   }
   
   return GatewayData;
 });
+this.PersonController = {};
+this.PersonController.create = function (personModel) {
+  var req = {};
+  req.method = 'POST';
+  req.url = prefix + '/data/persons';
+  req.data = personModel;
+  req.params = {};
+  return $http(req).then(getData);
+};
+this.PersonController.list = function () {
+  var req = {};
+  req.method = 'GET';
+  req.url = prefix + '/data/persons';
+  req.params = {};
+  return $http(req).then(getData);
+};
+this.PersonController.search = function (name) {
+  var req = {};
+  req.method = 'GET';
+  req.url = prefix + '/data/search';
+  req.params = {};
+  req.params.name = name;
+  return $http(req).then(getData);
+};
+var PersonController = this.PersonController;
+this.resolve.PersonController = {};
+this.resolve.PersonController.list = function (GatewayData, $route) {
+  return PersonController.list();
+};
+this.resolve.PersonController.search = function (GatewayData, $route) {
+  return PersonController.search($route.current.params.name);
+};
