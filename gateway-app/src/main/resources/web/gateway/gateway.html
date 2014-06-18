@@ -1,35 +1,52 @@
+
+
 <div class="row">
 
-  <div class="col-lg-12">
-    <h1>Gateway</h1>
-  </div>
+    <div class="col-lg-12">
+        <h1>Gateway</h1>
+    </div>
 
 
     <div class="row">
-        <div class="col-sm-6"> <h3>New Application Instance</h3>
+        <div class="col-sm-6"><h3>New Application Instance</h3>
+
             <form role="form" ng-submit="saveAppInst()">
 
                 <div class="form-group">
-                    <label for="n">Name</label>
-                    <input type="text" ng-model="appInst.name" class="form-control" id="n" placeholder="Enter name">
+                    <label for="inAppInstName">Name</label>
+                    <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName"
+                           placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="inAppInstVersion">Version</label>
+                    <input type="text" ng-model="appInst.version" class="form-control" id="inAppInstVersion"
+                           placeholder="Enter version">
+                </div>
+                <div class="form-group">
+                    <label for="inAppInstUrl">Url / Path</label>
+                    <input type="text" ng-model="appInst.url" class="form-control" id="inAppInstUrl"
+                           placeholder="Enter url">
                 </div>
 
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form></div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
 
         <div class="col-sm-6">
 
             <h3>All Application Instances</h3>
 
-
+            <pre>{{appInstList|json}}</pre>
         </div>
     </div>
 
     <hr>
 
-    <h1>Person </h1>
+    <h1>Person (demo) </h1>
+
     <div class="row">
-        <div class="col-sm-6"> <h3>New person</h3>
+        <div class="col-sm-6"><h3>New person</h3>
+
             <form role="form" ng-submit="savePerson()">
 
                 <div class="form-group">
@@ -39,6 +56,8 @@
 
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
+
+            <div class="alert alert-success" id="newPersonAlertSuccess">Person is added successfully</div>
             <hr>
             <h4>Search</h4>
 
@@ -46,12 +65,12 @@
 
                 <div class="form-group">
                     <label for="n">Name</label>
-                    <input type="text" ng-model="searchInput"  class="form-control" placeholder="Keywords..." ng-change="search()">
+                    <input type="text" ng-model="searchInput" class="form-control" placeholder="Keywords..."
+                           ng-change="search()">
                 </div>
 
 
             </form>
-
 
 
             <pre>{{searchRes|json}}</pre>
@@ -61,21 +80,29 @@
 
             <h3>All persons</h3>
 
-            <ul>
+           <!-- <ul>
                 <li ng-repeat="p in persons">
-                    {{p.id}} {{p.name}}
+                    <a href="#/person/{{p.id}}">{{p.id}} {{p.name}}</a>
+
                 </li>
             </ul>
+-->
+
+
+
+            <div class="list-group" >
+                <a href="#/person/{{p.id}}" class="list-group-item" ng-repeat="p in persons">
+                  <b> {{p.name}}</b> ({{p.id}})
+                </a>
+
+            </div>
 
             <h4>Raw</h4>
             <pre>{{persons|json}}</pre>
 
 
-
-
         </div>
     </div>
-
 
 
 </div>

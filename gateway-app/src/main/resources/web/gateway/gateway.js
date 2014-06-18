@@ -12,37 +12,58 @@ define([
         when('/', {
           controller: 'FrontPageCtrl',
           templateUrl: templatePrefix + "gateway.html"
-        });
+        }).
+        when('/person/:id', {
+          controller: 'PersonCtrl',
+          templateUrl: templatePrefix + "person.html"
+        })
+    ;
   });
 
   gateway.controller('FrontPageCtrl', function ($scope, GatewayData) {
-
-    $scope.hello ="yolo";
+    $('#newPersonAlertSuccess').hide();
+    $scope.hello = "yolo";
 
     GatewayData.PersonController.list().then(function (data) {
-      $scope.persons =data;
+      $scope.persons = data;
     });
-    $scope.savePerson = function(){
-       GatewayData.PersonController.create($scope.person);
-      console.log("",$scope.person);
+    $scope.savePerson = function () {
+      GatewayData.PersonController.create($scope.person);
+      console.log("Save person : ", $scope.person);
+      $('#newPersonAlertSuccess').show();
 
     };
 
-    $scope.search = function(){
-      console.log("Search : ",$scope.searchInput);
+    $scope.search = function () {
+      console.log("Search : ", $scope.searchInput);
       GatewayData.PersonController.search($scope.searchInput).then(function (data) {
-        $scope.searchRes =data;
+        $scope.searchRes = data;
       });
 
     };
 
-
+    //GatewayData.AppInstController.list();
     // ---------------------- App instance
-    $scope.saveAppInst = function(){
+    /*GatewayData.AppInstController.list().then(function (data) {
+      $scope.appInstList = data;
+    });
+  */
+    $scope.saveAppInst = function () {
       //GatewayData.PersonController.create($scope.person);
-      console.log("Saving App Inst : ",$scope.appInst);
+      console.log("Saving App Inst : ", $scope.appInst);
 
     }
 
   });
+
+
+  gateway.controller('PersonCtrl',function($scope,$routeParams){
+    $scope.personId = $routeParams.id;
+  });
+
+
+ /* phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams',
+    function($scope, $routeParams) {
+      $scope.phoneId = $routeParams.phoneId;
+    }]);*/
 });
