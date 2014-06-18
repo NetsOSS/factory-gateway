@@ -7,8 +7,8 @@ define([], function () {
     var getData = function (res) {
       return res.data;
     };
-    this.ApplicationController = {};
-    this.ApplicationController.createApp = function (appModel) {
+    this.ApplicationInstanceController = {};
+    this.ApplicationInstanceController.createApp = function (appModel) {
       var req = {};
       req.method = 'POST';
       req.url = prefix + '/data/find';
@@ -16,27 +16,27 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.ApplicationController.findApp = function () {
+    this.ApplicationInstanceController.findApp = function () {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/find';
       req.params = {};
       return $http(req).then(getData);
     };
-    this.ApplicationController.listAllApps = function () {
+    this.ApplicationInstanceController.listAllApps = function () {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/instances';
       req.params = {};
       return $http(req).then(getData);
     };
-    var ApplicationController = this.ApplicationController;
-    this.resolve.ApplicationController = {};
-    this.resolve.ApplicationController.findApp = function (GatewayData, $route) {
-      return ApplicationController.findApp();
+    var ApplicationInstanceController = this.ApplicationInstanceController;
+    this.resolve.ApplicationInstanceController = {};
+    this.resolve.ApplicationInstanceController.findApp = function (GatewayData, $route) {
+      return ApplicationInstanceController.findApp();
     };
-    this.resolve.ApplicationController.listAllApps = function (GatewayData, $route) {
-      return ApplicationController.listAllApps();
+    this.resolve.ApplicationInstanceController.listAllApps = function (GatewayData, $route) {
+      return ApplicationInstanceController.listAllApps();
     };
     this.PersonController = {};
     this.PersonController.create = function (personModel) {
