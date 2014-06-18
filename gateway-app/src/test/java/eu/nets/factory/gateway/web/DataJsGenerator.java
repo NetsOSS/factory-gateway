@@ -215,14 +215,15 @@ public class DataJsGenerator {
                         println("  return " + ctrl + "." + m.name + "(" + a + ");").
                         println("};");
             }
-            writer.
-                    pop().
-                    println("}").
-                    println("").
-                    println("return " + objectName + ";").
-                    pop().
-                    println("});");
         }
+
+        writer.
+                pop().
+                println("}").
+                println("").
+                println("return " + objectName + ";").
+                pop().
+                println("});");
     }
 
     private static boolean ignored(Class<?> klass) {
