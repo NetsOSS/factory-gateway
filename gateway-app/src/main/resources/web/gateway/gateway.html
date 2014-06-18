@@ -18,14 +18,19 @@
                            placeholder="Enter name">
                 </div>
                 <div class="form-group">
-                    <label for="inAppInstVersion">Version</label>
-                    <input type="text" ng-model="appInst.version" class="form-control" id="inAppInstVersion"
-                           placeholder="Enter version">
+                    <label for="inAppInstHost">Host</label>
+                    <input type="text" ng-model="appInst.host" class="form-control" id="inAppInstHost"
+                           placeholder="Enter host">
                 </div>
                 <div class="form-group">
-                    <label for="inAppInstUrl">Url / Path</label>
-                    <input type="text" ng-model="appInst.url" class="form-control" id="inAppInstUrl"
-                           placeholder="Enter url">
+                    <label for="inAppInstPort">Port</label>
+                    <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
+                           placeholder="Enter port">
+                </div>
+                <div class="form-group">
+                    <label for="inAppInstPath">Path</label>
+                    <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                           placeholder="Enter path / url">
                 </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
