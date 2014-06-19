@@ -11,7 +11,7 @@ define([], function () {
     this.ApplicationInstanceController.create = function (appInstModel) {
       var req = {};
       req.method = 'POST';
-      req.url = prefix + '/data/newApp';
+      req.url = prefix + '/data/instances';
       req.data = appInstModel;
       req.params = {};
       return $http(req).then(getData);

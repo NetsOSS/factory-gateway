@@ -72,18 +72,7 @@ public class ApplicationInstanceController {
     public AppInstModel create(@RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.create");
 
-        ApplicationInstance applicationInstance = null;
-
-        if (appInstModel.getId() != null) {
-            applicationInstance = appInstRep.findOne(appInstModel.getId());
-            applicationInstance.setName(appInstModel.getName());
-            applicationInstance.setPath(appInstModel.getPath());
-            applicationInstance.setHost(appInstModel.getHost());
-            applicationInstance.setPort(appInstModel.getPort());
-        }
-        else {
-            applicationInstance = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path);
-        }
+        ApplicationInstance applicationInstance = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path);
 
         applicationInstance = appInstRep.save(applicationInstance);
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
@@ -93,6 +82,20 @@ public class ApplicationInstanceController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationInstanceController.remove");
         appInstRep.delete(id);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}")
+    public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
+        log.info("ApplicationInstanceController.update");
+
+        ApplicationInstance applicationInstance = appInstRep.findOne(appInstModel.getId());
+        applicationInstance.setName(appInstModel.getName());
+        applicationInstance.setPath(appInstModel.getPath());
+        applicationInstance.setHost(appInstModel.getHost());
+        applicationInstance.setPort(appInstModel.getPort());
+
+        applicationInstance = appInstRep.save(applicationInstance);
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
     }
 
     public static class AppInstModel {
