@@ -16,14 +16,6 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.ApplicationInstanceController.delete = function (id) {
-      var req = {};
-      req.method = 'DELETE';
-      req.url = prefix + '/data/instances/{id}';
-      req.url = req.url.replace(/{id}/, id);
-      req.params = {};
-      return $http(req).then(getData);
-    };
     this.ApplicationInstanceController.findById = function (id) {
       var req = {};
       req.method = 'GET';
@@ -36,6 +28,14 @@ define([], function () {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/instances';
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationInstanceController.remove = function (id) {
+      var req = {};
+      req.method = 'DELETE';
+      req.url = prefix + '/data/instances/{id}';
+      req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
     };

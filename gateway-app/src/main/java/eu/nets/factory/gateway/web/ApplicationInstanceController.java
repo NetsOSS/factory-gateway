@@ -71,9 +71,22 @@ public class ApplicationInstanceController {
     @ResponseBody
     public AppInstModel create(@RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.create");
-        ApplicationInstance appInst = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path);
-        appInst = appInstRep.save(appInst);
-        return new AppInstModel(appInst.getId(), appInst.getName());
+
+        ApplicationInstance applicationInstance = null;
+
+        if (appInstModel.getId() != null) {
+            applicationInstance = appInstRep.findOne(appInstModel.getId());
+            applicationInstance.setName(appInstModel.getName());
+            applicationInstance.setPath(appInstModel.getPath());
+            applicationInstance.setHost(appInstModel.getHost());
+            applicationInstance.setPort(appInstModel.getPort());
+        }
+        else {
+            applicationInstance = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path);
+        }
+
+        applicationInstance = appInstRep.save(applicationInstance);
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
      }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
@@ -102,6 +115,46 @@ public class ApplicationInstanceController {
         public AppInstModel(Long id, String name) {
             this.id = id;
             this.name = name;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public void setHost(String host) {
+            this.host = host;
+        }
+
+        public Integer getPort() {
+            return port;
+        }
+
+        public void setPort(Integer port) {
+            this.port = port;
         }
     }
 }

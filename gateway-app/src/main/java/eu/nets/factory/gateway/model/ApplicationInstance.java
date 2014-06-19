@@ -32,6 +32,10 @@ public class ApplicationInstance extends AbstractEntity {
     public ApplicationInstance() {
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
