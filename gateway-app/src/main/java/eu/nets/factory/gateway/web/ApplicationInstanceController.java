@@ -1,6 +1,8 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.model.ApplicationInstance;
+import eu.nets.factory.gateway.model.ApplicationInstanceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,10 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @Controller
 public class ApplicationInstanceController {
 
+    @Autowired
+    private ApplicationInstanceRepository appInstRep;
+
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<ApplicationInstance> listAllApps() {
@@ -31,12 +37,12 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/find", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ApplicationInstance create(@RequestBody AppInstModel appModel) {
+    public AppInstModel create(@RequestBody AppInstModel appModel) {
         //log.info("ApplicationInstanceController.create");
         ApplicationInstance appInst = new ApplicationInstance(appModel.name);
-        //appInst = applicationInstanceRepository.save(appInst);
-        //return new AppInstModel(appInst.getId(), appInst.getName());
-        return null;
+        appInst = appInstRep.save(appInst);
+        return new AppInstModel(appInst.getId(), appInst.getName());
+        //return null;
     }
 
     public static class AppInstModel {
