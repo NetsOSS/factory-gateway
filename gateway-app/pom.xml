@@ -75,12 +75,6 @@
 			<artifactId>h2</artifactId>
 			<version>1.3.175</version>
 		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.3.175</version>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- Web -->
 		<dependency>
@@ -164,7 +158,12 @@
 			<artifactId>findbugs</artifactId>
 			<version>${version.findbugs}</version>
 		</dependency>
-	</dependencies>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+  </dependencies>
 
 	<build>
 		<plugins>

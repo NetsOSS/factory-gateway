@@ -2,13 +2,12 @@ package eu.nets.factory.gateway.model;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.validation.Validator;
 
 import com.google.common.collect.ImmutableMap;
 import com.jolbox.bonecp.BoneCPDataSource;
@@ -31,9 +30,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
@@ -43,6 +39,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.trimToEmpty;
@@ -77,6 +74,10 @@ public class ModelConfig {
         return new TransactionAwareDataSourceProxy(new LazyConnectionDataSourceProxy(innerDataSource));
     }
 
+    @Bean
+    public Validator validator() {
+        return new LocalValidatorFactoryBean();
+    }
 
     @Bean(destroyMethod = "close")
     BoneCPDataSource innerDataSource(MyAppSettings settings,
