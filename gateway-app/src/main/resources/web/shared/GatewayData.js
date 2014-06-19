@@ -133,6 +133,15 @@ define([], function () {
       req.params.name = name;
       return $http(req).then(getData);
     };
+    this.ApplicationInstanceController.update = function (id, appInstModel) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/instances/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.data = appInstModel;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     var ApplicationInstanceController = this.ApplicationInstanceController;
     this.resolve.ApplicationInstanceController = {};
     this.resolve.ApplicationInstanceController.findById = function (GatewayData, $route) {
@@ -143,6 +152,41 @@ define([], function () {
     };
     this.resolve.ApplicationInstanceController.search = function (GatewayData, $route) {
       return ApplicationInstanceController.search($route.current.params.name);
+    };
+    this.LoadBalancerController = {};
+    this.LoadBalancerController.findLoadBalancerById = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/loadbalancers/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.LoadBalancerController.findLoadBalancerBySshKey = function (sshKey) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/loadbalancers/{sshKey}';
+      req.url = req.url.replace(/{sshKey}/, sshKey);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.LoadBalancerController.listAllLoadBalancers = function () {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/loadbalancers';
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    var LoadBalancerController = this.LoadBalancerController;
+    this.resolve.LoadBalancerController = {};
+    this.resolve.LoadBalancerController.findLoadBalancerById = function (GatewayData, $route) {
+      return LoadBalancerController.findLoadBalancerById($route.current.params.id);
+    };
+    this.resolve.LoadBalancerController.findLoadBalancerBySshKey = function (GatewayData, $route) {
+      return LoadBalancerController.findLoadBalancerBySshKey($route.current.params.sshKey);
+    };
+    this.resolve.LoadBalancerController.listAllLoadBalancers = function (GatewayData, $route) {
+      return LoadBalancerController.listAllLoadBalancers();
     };
     this.PersonController = {};
     this.PersonController.create = function (personModel) {

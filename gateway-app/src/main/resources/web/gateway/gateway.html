@@ -20,12 +20,20 @@
             </div>
             <div class="form-group">
                 <label for="inAppInstPort">Port</label>
-                <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
+                <input type="number" ng-model="appInst.port" min="1" max="65535" class="form-control" id="inAppInstPort"
+                       name="port"
+                       required
+                       integer
                        placeholder="Enter port">
+                <span ng-show="form.port.$error.integer">This is not valid integer!</span>
+                 <span ng-show="form.port.$error.min || form.port.$error.max">
+
+      The value must be in range 1 to 65535!</span>
+
             </div>
             <div class="form-group">
                 <label for="inAppInstPath">Path</label>
-                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath" required
                        placeholder="Enter path / url">
             </div>
 

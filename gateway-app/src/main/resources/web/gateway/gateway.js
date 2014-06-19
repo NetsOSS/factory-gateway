@@ -5,7 +5,7 @@ define([
   'angular'
 ], function (require, angular) {
   var templatePrefix = require.toUrl("./");
-  var gateway = angular.module('gateway', ['ngRoute', 'shared.services']);
+  var gateway = angular.module('gateway', ['ngRoute', 'shared.services','shared.directives']);
 
   gateway.config(function ($routeProvider) {
     $routeProvider.
@@ -90,7 +90,7 @@ define([
     $scope.updateAppInst = function(){
       console.log("Updating: ", $scope.appInst);
       //GatewayData.ApplicationInstanceController.delete($scope.app.id);
-      GatewayData.ApplicationInstanceController.create($scope.appInst);
+      GatewayData.ApplicationInstanceController.update($scope.appInst.id, $scope.appInst);
 
     };
 
