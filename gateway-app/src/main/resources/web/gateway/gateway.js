@@ -26,7 +26,9 @@ define([
   });
 
   gateway.controller('FrontPageCtrl', function ($scope, GatewayData) {
-    $('#newPersonAlertSuccess').hide();
+    //$('#newPersonAlertSuccess').hide();
+
+    $scope.showNewPersonAlert = false;
 
     // ----------------------- Person functions -----------
     GatewayData.PersonController.list().then(function (data) {
@@ -36,7 +38,7 @@ define([
     $scope.savePerson = function () {
       GatewayData.PersonController.create($scope.person);
       console.log("Save person : ", $scope.person);
-      $('#newPersonAlertSuccess').show();
+      $scope.showNewPersonAlert = true;
     };
 
     $scope.search = function () {
@@ -55,6 +57,7 @@ define([
     $scope.saveAppInst = function () {
 
       console.log("Saving App Inst : ", $scope.appInst);
+      $scope.newAppInstAlertSuccess =true;
       GatewayData.ApplicationInstanceController.create($scope.appInst);
     }
 

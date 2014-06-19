@@ -1,116 +1,118 @@
+<h1>Gateway</h1>
+
 <div class="row">
+    <div class="col-sm-6">
+        <h3>New Application Instance</h3>
 
+        <form role="form" ng-submit="saveAppInst()">
 
-    <h1>Gateway</h1>
-
-
-    <div class="row">
-        <div class="col-sm-6"><h3>New Application Instance (Not working)</h3>
-
-            <form role="form" ng-submit="saveAppInst()">
-
-                <div class="form-group">
-                    <label for="inAppInstName">Name</label>
-                    <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName"
-                           placeholder="Enter name">
-                </div>
-                <div class="form-group">
-                    <label for="inAppInstHost">Host</label>
-                    <input type="text" ng-model="appInst.host" class="form-control" id="inAppInstHost"
-                           placeholder="Enter host">
-                </div>
-                <div class="form-group">
-                    <label for="inAppInstPort">Port</label>
-                    <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
-                           placeholder="Enter port">
-                </div>
-                <div class="form-group">
-                    <label for="inAppInstPath">Path</label>
-                    <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                           placeholder="Enter path / url">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
-
-        <div class="col-sm-6">
-
-            <h3>All Application Instances</h3>
-
-            <div class="list-group">
-                <a href="#/app/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
-                    Name: <b> {{a.name}}</b> , id:{{a.id}}
-                </a>
-
+            <div class="form-group">
+                <label for="inAppInstName">Name</label>
+                <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName"
+                       placeholder="Enter name">
             </div>
-            <h4>Raw</h4>
-            <pre>{{allApps|json}}</pre>
+            <div class="form-group">
+                <label for="inAppInstHost">Host</label>
+                <input type="text" ng-model="appInst.host" class="form-control" id="inAppInstHost"
+                       placeholder="Enter host">
+            </div>
+            <div class="form-group">
+                <label for="inAppInstPort">Port</label>
+                <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
+                       placeholder="Enter port">
+            </div>
+            <div class="form-group">
+                <label for="inAppInstPath">Path</label>
+                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                       placeholder="Enter path / url">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div class="alert alert-success" ng-show="newAppInstAlertSuccess">Application is added successfully (refresh
+            browser)
         </div>
     </div>
 
-    <hr>
 
-    <h1>Person (demo) </h1>
+    <div class="col-sm-6">
 
-    <div class="row">
-        <div class="col-sm-6"><h3>New person</h3>
+        <h3>All Application Instances</h3>
 
-            <form role="form" ng-submit="savePerson()">
-
-                <div class="form-group">
-                    <label for="n">Name</label>
-                    <input type="text" ng-model="person.name" class="form-control" id="n" placeholder="Enter name">
-                </div>
-
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-
-            <div class="alert alert-success" id="newPersonAlertSuccess">Person is added successfully</div>
-            <hr>
-            <h4>Search</h4>
-
-            <form role="form" ng-submit="savePerson()">
-
-                <div class="form-group">
-                    <label for="n">Name</label>
-                    <input type="text" ng-model="searchInput" class="form-control" placeholder="Keywords..."
-                           ng-change="search()">
-                </div>
-
-
-            </form>
-
-
-            <pre>{{searchRes|json}}</pre>
+        <div class="list-group">
+            <a href="#/app/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
+                <b> {{a.name}}</b> ({{a.id}}) {{a.host}}/{{a.path}}:{{a.port}}
+            </a>
 
         </div>
-        <div class="col-sm-6">
-
-            <h3>All persons</h3>
-
-            <!-- <ul>
-                 <li ng-repeat="p in persons">
-                     <a href="#/person/{{p.id}}">{{p.id}} {{p.name}}</a>
-
-                 </li>
-             </ul>
- -->
-
-
-            <div class="list-group">
-                <a href="#/person/{{p.id}}" class="list-group-item" ng-repeat="p in persons">
-                    <b> {{p.name}}</b> ({{p.id}})
-                </a>
-
-            </div>
-
-            <h4>Raw</h4>
-            <pre>{{persons|json}}</pre>
-
-
-        </div>
+        <h4>Raw</h4>
+        <pre>{{allApps|json}}</pre>
     </div>
-
 
 </div>
+<hr>
+
+<h1>Person (demo) </h1>
+
+<div class="row">
+    <div class="col-sm-6"><h3>New person</h3>
+
+        <form role="form" ng-submit="savePerson()">
+
+            <div class="form-group">
+                <label for="n">Name</label>
+                <input type="text" ng-model="person.name" class="form-control" id="n" placeholder="Enter name">
+            </div>
+
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+
+        <!-- <div class="alert alert-success" id="newPersonAlertSuccess">Person is added successfully</div>-->
+        <div class="alert alert-success" ng-show="showNewPersonAlert">Person is added successfully</div>
+        <hr>
+        <h4>Search</h4>
+
+        <form role="form" ng-submit="savePerson()">
+
+            <div class="form-group">
+                <label for="n">Name</label>
+                <input type="text" ng-model="searchInput" class="form-control" placeholder="Keywords..."
+                       ng-change="search()">
+            </div>
+
+
+        </form>
+
+
+        <pre>{{searchRes|json}}</pre>
+
+    </div>
+    <div class="col-sm-6">
+
+        <h3>All persons</h3>
+
+        <!-- <ul>
+             <li ng-repeat="p in persons">
+                 <a href="#/person/{{p.id}}">{{p.id}} {{p.name}}</a>
+
+             </li>
+         </ul>
+-->
+
+
+        <div class="list-group">
+            <a href="#/person/{{p.id}}" class="list-group-item" ng-repeat="p in persons">
+                <b> {{p.name}}</b> ({{p.id}})
+            </a>
+
+        </div>
+
+        <h4>Raw</h4>
+        <pre>{{persons|json}}</pre>
+
+
+    </div>
+</div>
+
+
