@@ -1,12 +1,45 @@
 <div >
     <h1>Application Instance Details</h1>
 
-    <p><b>ID:</b> {{app.id}}</p>
-    <p><b>Name:</b> {{app.name}}</p>
-    <p><b>Host:</b> {{app.host}}</p>
-    <p><b>Port:</b> {{app.port}}</p>
-    <p><b>Path:</b> {{app.path}}</p>
+   <!-- <p><b>ID:</b> {{appInst.id}}</p>
+    <p><b>Name:</b> {{appInst.name}}</p>
+    <p><b>Host:</b> {{appInst.host}}</p>
+    <p><b>Port:</b> {{appInst.port}}</p>
+    <p><b>Path:</b> {{appInst.path}}</p>
+-->
 
+
+
+
+    <h3>Update</h3>
+
+    <form role="form" ng-submit="updateAppInst()" >
+
+
+        <div class="form-group">
+            <label for="inAppInstName">Name</label>
+            <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" >
+        </div>
+
+        <div class="form-group">
+            <label for="inAppInstHost">Host</label>
+            <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
+                   required
+                   placeholder="Enter host">
+        </div>
+        <div class="form-group">
+            <label for="inAppInstPort">Port</label>
+            <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
+                   placeholder="Enter port">
+        </div>
+        <div class="form-group">
+            <label for="inAppInstPath">Path</label>
+            <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                   placeholder="Enter path / url">
+        </div>
+
+        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Update</button>
+    </form>
 
     <button type="button" class="btn btn-danger"  ng-click="deleteAppInst()">Delete</button>
 </div>

@@ -77,12 +77,20 @@ define([
   gateway.controller('AppInstCtrl', function ($scope, $routeParams,GatewayData) {
     GatewayData.ApplicationInstanceController.findById($routeParams.id).then(function (data) {
       console.log("Data: ",data);
-      $scope.app=data;
+      $scope.appInst=data;
     });
 
     $scope.deleteAppInst = function(){
       console.log("Deleting id: ", $scope.app.id);
       GatewayData.ApplicationInstanceController.delete($scope.app.id);
+
+    };
+
+
+    $scope.updateAppInst = function(){
+      console.log("Updating: ", $scope.appInst);
+      //GatewayData.ApplicationInstanceController.delete($scope.app.id);
+      GatewayData.ApplicationInstanceController.create($scope.appInst);
 
     };
 
