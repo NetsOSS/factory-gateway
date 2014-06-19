@@ -84,7 +84,7 @@ public class ApplicationInstanceController {
         appInstRep.delete(id);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}", produces = APPLICATION_JSON_VALUE)
     public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.update");
 
