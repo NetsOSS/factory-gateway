@@ -27,7 +27,6 @@ define([
 
   gateway.controller('FrontPageCtrl', function ($scope, GatewayData) {
     $('#newPersonAlertSuccess').hide();
-    $scope.hello = "yolo";
 
     // ----------------------- Person functions -----------
     GatewayData.PersonController.list().then(function (data) {
@@ -38,7 +37,6 @@ define([
       GatewayData.PersonController.create($scope.person);
       console.log("Save person : ", $scope.person);
       $('#newPersonAlertSuccess').show();
-
     };
 
     $scope.search = function () {
@@ -46,8 +44,8 @@ define([
       GatewayData.PersonController.search($scope.searchInput).then(function (data) {
         $scope.searchRes = data;
       });
-
     };
+
 
     // ----------------------- Application Instance functions -----------
     GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
@@ -55,17 +53,22 @@ define([
     });
 
     $scope.saveAppInst = function () {
-      //GatewayData.PersonController.create($scope.person);
+
       console.log("Saving App Inst : ", $scope.appInst);
       GatewayData.ApplicationInstanceController.create($scope.appInst);
-
     }
 
   });
 
 
-  gateway.controller('AppInstCtrl', function ($scope, $routeParams) {
-    $scope.appId = $routeParams.id;
+  gateway.controller('AppInstCtrl', function ($scope, $routeParams,GatewayData) {
+    //$scope.appId = $routeParams.id;
+
+    GatewayData.ApplicationInstanceController.findById($routeParams.id).then(function (data) {
+      console.log("Data: ",data);
+      $scope.app=data;
+    });
+
   });
 
 
