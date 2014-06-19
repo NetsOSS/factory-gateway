@@ -16,6 +16,14 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationInstanceController.findById = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/appInstanceById';
+      req.params = {};
+      req.params.id = id;
+      return $http(req).then(getData);
+    };
     this.ApplicationInstanceController.listAllAppInsts = function () {
       var req = {};
       req.method = 'GET';
@@ -23,20 +31,24 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.ApplicationInstanceController.search = function () {
+    this.ApplicationInstanceController.search = function (name) {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/find';
       req.params = {};
+      req.params.name = name;
       return $http(req).then(getData);
     };
     var ApplicationInstanceController = this.ApplicationInstanceController;
     this.resolve.ApplicationInstanceController = {};
+    this.resolve.ApplicationInstanceController.findById = function (GatewayData, $route) {
+      return ApplicationInstanceController.findById($route.current.params.id);
+    };
     this.resolve.ApplicationInstanceController.listAllAppInsts = function (GatewayData, $route) {
       return ApplicationInstanceController.listAllAppInsts();
     };
     this.resolve.ApplicationInstanceController.search = function (GatewayData, $route) {
-      return ApplicationInstanceController.search();
+      return ApplicationInstanceController.search($route.current.params.name);
     };
     this.PersonController = {};
     this.PersonController.create = function (personModel) {

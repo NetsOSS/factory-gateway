@@ -5,10 +5,8 @@ import eu.nets.factory.gateway.model.ApplicationInstanceRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -42,8 +40,25 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/find", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ApplicationInstance search(String name) {
-        return null;
+    public List<ApplicationInstance> search(@RequestParam(required = false) String name) {
+        log.info("ApplicationInstanceController.search, name={}", name);
+
+        List<ApplicationInstance> applicationInstances;
+
+        if (name == null) {
+            applicationInstances = appInstRep.findAll();
+        } else {
+            applicationInstances = appInstRep.findByNameLike("%" + name + "%");
+        }
+
+        return applicationInstances;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/appInstanceById", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ApplicationInstance findById(@RequestParam(required = false) Long id) {
+        log.info("ApplicationInstanceController.findById, name={}", id);
+        return appInstRep.findOne(id);
     }
 
     /*
