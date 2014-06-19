@@ -8,7 +8,7 @@ define([], function () {
       return res.data;
     };
     this.ApplicationInstanceController = {};
-    this.ApplicationInstanceController.createApp = function (appModel) {
+    this.ApplicationInstanceController.create = function (appModel) {
       var req = {};
       req.method = 'POST';
       req.url = prefix + '/data/find';

@@ -51,6 +51,7 @@ define([
     $scope.saveAppInst = function () {
       //GatewayData.PersonController.create($scope.person);
       console.log("Saving App Inst : ", $scope.appInst);
+      GatewayData.ApplicationInstanceController.create($scope.appInst);
 
     }
 
