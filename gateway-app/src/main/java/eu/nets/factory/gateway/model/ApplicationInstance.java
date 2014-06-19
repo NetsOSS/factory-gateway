@@ -2,15 +2,12 @@ package eu.nets.factory.gateway.model;
 
 import javax.persistence.Entity;
 
-/**
- * Created by sleru on 18.06.2014.
- */
 @Entity
-public class ApplicationInstance extends AbstractEntity{
+public class ApplicationInstance extends AbstractEntity {
 
     private String name;
     private String host;
-    private int  port;
+    private int port;
     private String path;
 
     public ApplicationInstance(String name, String host, int port, String path) {
@@ -19,22 +16,35 @@ public class ApplicationInstance extends AbstractEntity{
         this.port = port;
         this.path = path;
     }
-    public ApplicationInstance(){};
 
+    public ApplicationInstance() {
+    }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public void setHost(String host){this.host = host; }
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-    public String getHost() {return host; }
+    public String getHost() {
+        return host;
+    }
 
-    public void setPort(int port) { this.port = port; }
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-    public int getPort() {return port; }
+    public int getPort() {
+        return port;
+    }
 
-    public void setPath(String path) {this.path = path; }
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-    public String getPath() {return path;}
+    public String getPath() {
+        return path;
+    }
 }
