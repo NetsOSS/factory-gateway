@@ -7,6 +7,92 @@ define([], function () {
     var getData = function (res) {
       return res.data;
     };
+    this.ApplicationController = {};
+    this.ApplicationController.create = function (appModel) {
+      var req = {};
+      req.method = 'POST';
+      req.url = prefix + '/data/applications';
+      req.data = appModel;
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.findById = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/applications/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.listAllApps = function () {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/applications';
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.search = function (name) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/applications/find';
+      req.params = {};
+      req.params.name = name;
+      return $http(req).then(getData);
+    };
+    var ApplicationController = this.ApplicationController;
+    this.resolve.ApplicationController = {};
+    this.resolve.ApplicationController.findById = function (GatewayData, $route) {
+      return ApplicationController.findById($route.current.params.id);
+    };
+    this.resolve.ApplicationController.listAllApps = function (GatewayData, $route) {
+      return ApplicationController.listAllApps();
+    };
+    this.resolve.ApplicationController.search = function (GatewayData, $route) {
+      return ApplicationController.search($route.current.params.name);
+    };
+    this.ApplicationGroupController = {};
+    this.ApplicationGroupController.create = function (appGroupModel) {
+      var req = {};
+      req.method = 'POST';
+      req.url = prefix + '/data/application-group';
+      req.data = appGroupModel;
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationGroupController.findById = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/application-group/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationGroupController.listAllAppGroups = function () {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/application-groups';
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationGroupController.search = function (name) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/application-group/find';
+      req.params = {};
+      req.params.name = name;
+      return $http(req).then(getData);
+    };
+    var ApplicationGroupController = this.ApplicationGroupController;
+    this.resolve.ApplicationGroupController = {};
+    this.resolve.ApplicationGroupController.findById = function (GatewayData, $route) {
+      return ApplicationGroupController.findById($route.current.params.id);
+    };
+    this.resolve.ApplicationGroupController.listAllAppGroups = function (GatewayData, $route) {
+      return ApplicationGroupController.listAllAppGroups();
+    };
+    this.resolve.ApplicationGroupController.search = function (GatewayData, $route) {
+      return ApplicationGroupController.search($route.current.params.name);
+    };
     this.ApplicationInstanceController = {};
     this.ApplicationInstanceController.create = function (appInstModel) {
       var req = {};
