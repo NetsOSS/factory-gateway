@@ -67,7 +67,7 @@ public class ApplicationInstanceController {
     public PersonModel create(@RequestBody PersonModel personModel) {
      */
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/newApp", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/data/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel create(@RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.create");
