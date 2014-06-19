@@ -81,8 +81,8 @@ define([
     });
 
     $scope.deleteAppInst = function(){
-      console.log("Deleting id: ", $scope.app.id);
-      GatewayData.ApplicationInstanceController.delete($scope.app.id);
+      console.log("Deleting id: ", $scope.appInst.id);
+      GatewayData.ApplicationInstanceController.remove($scope.appInst.id);
 
     };
 
