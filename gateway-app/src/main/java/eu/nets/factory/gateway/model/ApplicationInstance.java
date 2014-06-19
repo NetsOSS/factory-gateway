@@ -13,9 +13,14 @@ public class ApplicationInstance extends AbstractEntity{
     private int  port;
     private String path;
 
-    public ApplicationInstance(String n) {
-        this.name = n;
+    public ApplicationInstance(String name, String host, int port, String path) {
+        this.name = name;
+        this.host = host;
+        this.port = port;
+        this.path = path;
     }
+    public ApplicationInstance(){};
+
 
     public String getName(){
         return name;
