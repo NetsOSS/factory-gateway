@@ -76,6 +76,13 @@ public class ApplicationInstanceController {
         return new AppInstModel(appInst.getId(), appInst.getName());
      }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/data/deleteAppInstanceById", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void delete(Long id) {
+        log.info("ApplicationInstanceController.delete");
+        appInstRep.delete(id);
+    }
+
     public static class AppInstModel {
 
         public Long id;
