@@ -88,7 +88,7 @@ public class ApplicationInstanceController {
     public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.update");
 
-        ApplicationInstance applicationInstance = appInstRep.findOne(appInstModel.getId());
+        ApplicationInstance applicationInstance = appInstRep.findOne(id);
         applicationInstance.setName(appInstModel.getName());
         applicationInstance.setPath(appInstModel.getPath());
         applicationInstance.setHost(appInstModel.getHost());
