@@ -59,18 +59,32 @@ define([
       console.log("Saving App Inst : ", $scope.appInst);
       $scope.newAppInstAlertSuccess =true;
       GatewayData.ApplicationInstanceController.create($scope.appInst);
-    }
+    };
+
+    $scope.appInstSearch = function () {
+      console.log("Search appInst : ", $scope.searchAppInstInput);
+      // GatewayData.PersonController.search($scope.searchInput).then(function (data) {
+      // $scope.searchRes = data;
+      //});
+    };
+
 
   });
 
 
-  gateway.controller('AppInstCtrl', function ($scope, $routeParams,GatewayData) {
-    //$scope.appId = $routeParams.id;
 
+
+  gateway.controller('AppInstCtrl', function ($scope, $routeParams,GatewayData) {
     GatewayData.ApplicationInstanceController.findById($routeParams.id).then(function (data) {
       console.log("Data: ",data);
       $scope.app=data;
     });
+
+    $scope.deleteAppInst = function(){
+      console.log("Deleting id: ", $scope.app.id);
+      GatewayData.ApplicationInstanceController.delete($scope.app.id);
+
+    };
 
   });
 
@@ -79,9 +93,4 @@ define([
     $scope.personId = $routeParams.id;
   });
 
-
-  /* phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams',
-   function($scope, $routeParams) {
-   $scope.phoneId = $routeParams.phoneId;
-   }]);*/
 });

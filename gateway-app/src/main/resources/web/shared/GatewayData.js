@@ -16,12 +16,20 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationInstanceController.delete = function (id) {
+      var req = {};
+      req.method = 'DELETE';
+      req.url = prefix + '/data/instances/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationInstanceController.findById = function (id) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/appInstanceById';
+      req.url = prefix + '/data/instances/{id}';
+      req.url = req.url.replace(/{id}/, id);
       req.params = {};
-      req.params.id = id;
       return $http(req).then(getData);
     };
     this.ApplicationInstanceController.listAllAppInsts = function () {

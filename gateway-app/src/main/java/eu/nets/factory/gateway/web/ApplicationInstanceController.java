@@ -54,9 +54,9 @@ public class ApplicationInstanceController {
         return applicationInstances;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/appInstanceById", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/data/instances/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ApplicationInstance findById(@RequestParam(required = false) Long id) {
+    public ApplicationInstance findById(@PathVariable Long id) {
         log.info("ApplicationInstanceController.findById, name={}", id);
         return appInstRep.findOne(id);
     }
@@ -76,9 +76,8 @@ public class ApplicationInstanceController {
         return new AppInstModel(appInst.getId(), appInst.getName());
      }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/deleteAppInstanceById", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public void delete(Long id) {
+    @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
+    public void delete(@PathVariable Long id) {
         log.info("ApplicationInstanceController.delete");
         appInstRep.delete(id);
     }

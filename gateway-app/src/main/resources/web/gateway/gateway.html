@@ -4,16 +4,18 @@
     <div class="col-sm-6">
         <h3>New Application Instance</h3>
 
-        <form role="form" ng-submit="saveAppInst()">
+        <form role="form" ng-submit="saveAppInst()" name="form">
 
-            <div class="form-group">
+            <div class="form-group" ng-class="{'has-error': form.name.$invalid && !form.name.$pristine}">
                 <label for="inAppInstName">Name</label>
-                <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName"
+                <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
+                       required
                        placeholder="Enter name">
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-class="{'has-error': form.host.$invalid && !form.host.$pristine}">
                 <label for="inAppInstHost">Host</label>
-                <input type="text" ng-model="appInst.host" class="form-control" id="inAppInstHost"
+                <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
+                       required
                        placeholder="Enter host">
             </div>
             <div class="form-group">
@@ -27,7 +29,7 @@
                        placeholder="Enter path / url">
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary"  ng-disabled="form.$invalid ">Submit</button>
         </form>
 
         <div class="alert alert-success" ng-show="newAppInstAlertSuccess">Application is added successfully (refresh
@@ -73,7 +75,7 @@
         <hr>
         <h4>Search</h4>
 
-        <form role="form" ng-submit="savePerson()">
+        <form role="form">
 
             <div class="form-group">
                 <label for="n">Name</label>
