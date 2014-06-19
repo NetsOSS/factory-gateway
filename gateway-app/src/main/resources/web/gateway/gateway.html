@@ -1,10 +1,7 @@
-
-
 <div class="row">
 
-    <div class="col-lg-12">
-        <h1>Gateway</h1>
-    </div>
+
+    <h1>Gateway</h1>
 
 
     <div class="row">
@@ -41,13 +38,13 @@
 
             <h3>All Application Instances</h3>
 
-            <div class="list-group" >
-                <a href="#/allApps/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
+            <div class="list-group">
+                <a href="#/app/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
                     Name: <b> {{a.name}}</b> , id:{{a.id}}
                 </a>
 
             </div>
-
+            <h4>Raw</h4>
             <pre>{{allApps|json}}</pre>
         </div>
     </div>
@@ -92,19 +89,18 @@
 
             <h3>All persons</h3>
 
-           <!-- <ul>
-                <li ng-repeat="p in persons">
-                    <a href="#/person/{{p.id}}">{{p.id}} {{p.name}}</a>
+            <!-- <ul>
+                 <li ng-repeat="p in persons">
+                     <a href="#/person/{{p.id}}">{{p.id}} {{p.name}}</a>
 
-                </li>
-            </ul>
--->
+                 </li>
+             </ul>
+ -->
 
 
-
-            <div class="list-group" >
+            <div class="list-group">
                 <a href="#/person/{{p.id}}" class="list-group-item" ng-repeat="p in persons">
-                  <b> {{p.name}}</b> ({{p.id}})
+                    <b> {{p.name}}</b> ({{p.id}})
                 </a>
 
             </div>

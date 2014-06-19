@@ -17,6 +17,11 @@ define([
           controller: 'PersonCtrl',
           templateUrl: templatePrefix + "person.html"
         })
+        .
+        when('/app/:id', {
+          controller: 'AppInstCtrl',
+          templateUrl: templatePrefix + "appInst.html"
+        })
     ;
   });
 
@@ -59,13 +64,18 @@ define([
   });
 
 
-  gateway.controller('PersonCtrl',function($scope,$routeParams){
+  gateway.controller('AppInstCtrl', function ($scope, $routeParams) {
+    $scope.appId = $routeParams.id;
+  });
+
+
+  gateway.controller('PersonCtrl', function ($scope, $routeParams) {
     $scope.personId = $routeParams.id;
   });
 
 
- /* phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams',
-    function($scope, $routeParams) {
-      $scope.phoneId = $routeParams.phoneId;
-    }]);*/
+  /* phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams',
+   function($scope, $routeParams) {
+   $scope.phoneId = $routeParams.phoneId;
+   }]);*/
 });
