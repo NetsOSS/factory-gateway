@@ -8,35 +8,35 @@ define([], function () {
       return res.data;
     };
     this.ApplicationInstanceController = {};
-    this.ApplicationInstanceController.create = function (appModel) {
+    this.ApplicationInstanceController.create = function (appInstModel) {
       var req = {};
       req.method = 'POST';
       req.url = prefix + '/data/newApp';
-      req.data = appModel;
+      req.data = appInstModel;
       req.params = {};
       return $http(req).then(getData);
     };
-    this.ApplicationInstanceController.findApp = function () {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/find';
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.ApplicationInstanceController.listAllApps = function () {
+    this.ApplicationInstanceController.listAllAppInsts = function () {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/instances';
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationInstanceController.search = function () {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/find';
+      req.params = {};
+      return $http(req).then(getData);
+    };
     var ApplicationInstanceController = this.ApplicationInstanceController;
     this.resolve.ApplicationInstanceController = {};
-    this.resolve.ApplicationInstanceController.findApp = function (GatewayData, $route) {
-      return ApplicationInstanceController.findApp();
+    this.resolve.ApplicationInstanceController.listAllAppInsts = function (GatewayData, $route) {
+      return ApplicationInstanceController.listAllAppInsts();
     };
-    this.resolve.ApplicationInstanceController.listAllApps = function (GatewayData, $route) {
-      return ApplicationInstanceController.listAllApps();
+    this.resolve.ApplicationInstanceController.search = function (GatewayData, $route) {
+      return ApplicationInstanceController.search();
     };
     this.PersonController = {};
     this.PersonController.create = function (personModel) {

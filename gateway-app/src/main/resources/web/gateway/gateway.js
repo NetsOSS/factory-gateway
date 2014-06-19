@@ -50,7 +50,7 @@ define([
     };
 
     // ----------------------- Application Instance functions -----------
-    GatewayData.ApplicationInstanceController.listAllApps().then(function (data) {
+    GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
       $scope.allApps = data;
     });
 
