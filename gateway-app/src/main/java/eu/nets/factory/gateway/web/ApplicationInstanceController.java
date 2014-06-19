@@ -79,6 +79,7 @@ public class ApplicationInstanceController {
      }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
+    @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("ApplicationInstanceController.remove");
         appInstRep.delete(id);
