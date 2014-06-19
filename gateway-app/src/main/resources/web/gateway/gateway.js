@@ -24,9 +24,11 @@ define([
     $('#newPersonAlertSuccess').hide();
     $scope.hello = "yolo";
 
+    // ----------------------- Person functions -----------
     GatewayData.PersonController.list().then(function (data) {
       $scope.persons = data;
     });
+
     $scope.savePerson = function () {
       GatewayData.PersonController.create($scope.person);
       console.log("Save person : ", $scope.person);
@@ -42,12 +44,11 @@ define([
 
     };
 
-    //GatewayData.AppInstController.list();
-    // ---------------------- App instance
-    /*GatewayData.AppInstController.list().then(function (data) {
-      $scope.appInstList = data;
+    // ----------------------- Application Instance functions -----------
+    GatewayData.ApplicationInstanceController.listAllApps().then(function (data) {
+      $scope.allApps = data;
     });
-  */
+
     $scope.saveAppInst = function () {
       //GatewayData.PersonController.create($scope.person);
       console.log("Saving App Inst : ", $scope.appInst);

@@ -41,7 +41,14 @@
 
             <h3>All Application Instances</h3>
 
-            <pre>{{appInstList|json}}</pre>
+            <div class="list-group" >
+                <a href="#/allApps/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
+                    Name: <b> {{a.name}}</b> , id:{{a.id}}
+                </a>
+
+            </div>
+
+            <pre>{{allApps|json}}</pre>
         </div>
     </div>
 
