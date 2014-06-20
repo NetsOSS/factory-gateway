@@ -35,14 +35,22 @@ define([
     $scope.showNewPersonAlert = false;
 
     // ----------------------- Person functions ------------------------------------
-    GatewayData.PersonController.list().then(function (data) {
-      $scope.persons = data;
-    });
+    function loadPersonList(){
+      console.log("Loading persons");
+      GatewayData.PersonController.list().then(function (data) {
+        $scope.persons = data;
+      });
+    }
+    loadPersonList();
+
 
     $scope.savePerson = function () {
-      GatewayData.PersonController.create($scope.person);
+       GatewayData.PersonController.create($scope.person);
       console.log("Save person : ", $scope.person);
+      $scope.persons.push($scope.person);
+      //console.log("Response : ", newPersonRsp);
       $scope.showNewPersonAlert = true;
+      loadPersonList();
     };
 
     $scope.search = function () {
@@ -62,8 +70,31 @@ define([
     $scope.createApplication = function () {
       console.log("New application : ", $scope.app);
       GatewayData.ApplicationController.create($scope.app);
+      $scope.allApps.push($scope.app);
 
     };
+
+    // ----------------------- Load balancer functions ------------------------------------
+
+
+    function loadLoadBalancerList(){
+      GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
+        console.log("LB list:",data);
+        $scope.allLBs = data;
+      });
+    }
+    loadLoadBalancerList();
+    $scope.createLoadBalancer = function () {
+      console.log("Creating new LB : ", $scope.lb);
+      GatewayData.LoadBalancerController.create($scope.lb);
+      loadLoadBalancerList();
+      //listAll
+      //$route.reload();
+      //GatewayData.ApplicationController.create($scope.app);
+
+    };
+
+
 
 
   });
