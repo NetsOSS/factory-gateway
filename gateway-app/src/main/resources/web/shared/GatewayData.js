@@ -31,12 +31,29 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationController.remove = function (id) {
+      var req = {};
+      req.method = 'DELETE';
+      req.url = prefix + '/data/applications/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationController.search = function (name) {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/applications/find';
       req.params = {};
       req.params.name = name;
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.update = function (id, appModel) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/applications/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.data = appModel;
+      req.params = {};
       return $http(req).then(getData);
     };
     var ApplicationController = this.ApplicationController;
@@ -54,7 +71,7 @@ define([], function () {
     this.ApplicationGroupController.create = function (appGroupModel) {
       var req = {};
       req.method = 'POST';
-      req.url = prefix + '/data/application-group';
+      req.url = prefix + '/data/application-groups';
       req.data = appGroupModel;
       req.params = {};
       return $http(req).then(getData);
@@ -62,7 +79,7 @@ define([], function () {
     this.ApplicationGroupController.findById = function (id) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/application-group/{id}';
+      req.url = prefix + '/data/application-groups/{id}';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
@@ -74,12 +91,29 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationGroupController.remove = function (id) {
+      var req = {};
+      req.method = 'DELETE';
+      req.url = prefix + '/data/application-groups/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationGroupController.search = function (name) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/application-group/find';
+      req.url = prefix + '/data/application-groups/find';
       req.params = {};
       req.params.name = name;
+      return $http(req).then(getData);
+    };
+    this.ApplicationGroupController.update = function (id, appGroupModel) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/application-groups/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.data = appGroupModel;
+      req.params = {};
       return $http(req).then(getData);
     };
     var ApplicationGroupController = this.ApplicationGroupController;
@@ -128,7 +162,7 @@ define([], function () {
     this.ApplicationInstanceController.search = function (name) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/find';
+      req.url = prefix + '/data/instances/find';
       req.params = {};
       req.params.name = name;
       return $http(req).then(getData);
@@ -157,23 +191,23 @@ define([], function () {
     this.LoadBalancerController.create = function (loadBalancerModel) {
       var req = {};
       req.method = 'POST';
-      req.url = prefix + '/data/loadbalancers';
+      req.url = prefix + '/data/load-balancers';
       req.data = loadBalancerModel;
       req.params = {};
       return $http(req).then(getData);
     };
-    this.LoadBalancerController.findLoadBalancerById = function (id) {
+    this.LoadBalancerController.findById = function (id) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/loadbalancers/{id}';
+      req.url = prefix + '/data/load-balancers/{id}';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
     };
-    this.LoadBalancerController.findLoadBalancerBySshKey = function (sshKey) {
+    this.LoadBalancerController.findBySshKey = function (sshKey) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/loadbalancers/{sshKey}';
+      req.url = prefix + '/data/load-balancers/{sshKey}';
       req.url = req.url.replace(/{sshKey}/, sshKey);
       req.params = {};
       return $http(req).then(getData);
@@ -181,20 +215,48 @@ define([], function () {
     this.LoadBalancerController.listAllLoadBalancers = function () {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/loadbalancers';
+      req.url = prefix + '/data/load-balancers';
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.LoadBalancerController.remove = function (id) {
+      var req = {};
+      req.method = 'DELETE';
+      req.url = prefix + '/data/load-balancers/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.LoadBalancerController.search = function (name) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/load-balancers/find';
+      req.params = {};
+      req.params.name = name;
+      return $http(req).then(getData);
+    };
+    this.LoadBalancerController.update = function (id, loadBalancerModel) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/load-balancers/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.data = loadBalancerModel;
       req.params = {};
       return $http(req).then(getData);
     };
     var LoadBalancerController = this.LoadBalancerController;
     this.resolve.LoadBalancerController = {};
-    this.resolve.LoadBalancerController.findLoadBalancerById = function (GatewayData, $route) {
-      return LoadBalancerController.findLoadBalancerById($route.current.params.id);
+    this.resolve.LoadBalancerController.findById = function (GatewayData, $route) {
+      return LoadBalancerController.findById($route.current.params.id);
     };
-    this.resolve.LoadBalancerController.findLoadBalancerBySshKey = function (GatewayData, $route) {
-      return LoadBalancerController.findLoadBalancerBySshKey($route.current.params.sshKey);
+    this.resolve.LoadBalancerController.findBySshKey = function (GatewayData, $route) {
+      return LoadBalancerController.findBySshKey($route.current.params.sshKey);
     };
     this.resolve.LoadBalancerController.listAllLoadBalancers = function (GatewayData, $route) {
       return LoadBalancerController.listAllLoadBalancers();
+    };
+    this.resolve.LoadBalancerController.search = function (GatewayData, $route) {
+      return LoadBalancerController.search($route.current.params.name);
     };
     this.PersonController = {};
     this.PersonController.create = function (personModel) {
