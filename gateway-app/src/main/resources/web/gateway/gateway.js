@@ -39,22 +39,23 @@ define([
     $scope.showNewPersonAlert = false;
 
     // ----------------------- Person functions ------------------------------------
-    function loadPersonList(){
-      console.log("Loading persons");
-      GatewayData.PersonController.list().then(function (data) {
-        $scope.persons = data;
-      });
-    }
-    loadPersonList();
+
+
+    GatewayData.PersonController.list().then(function (data) {
+      $scope.persons = data;
+    });
 
 
     $scope.savePerson = function () {
-       GatewayData.PersonController.create($scope.person);
+      GatewayData.PersonController.create($scope.person).then(function (data) {
+        console.log("Recived the new person");
+        $scope.persons.push(data);
+
+        $scope.showNewPersonAlert = true;
+      });
       console.log("Save person : ", $scope.person);
-      $scope.persons.push($scope.person);
-      //console.log("Response : ", newPersonRsp);
-      $scope.showNewPersonAlert = true;
-      loadPersonList();
+
+
     };
 
     $scope.search = function () {
@@ -73,32 +74,33 @@ define([
 
     $scope.createApplication = function () {
       console.log("New application : ", $scope.app);
-      GatewayData.ApplicationController.create($scope.app);
-      $scope.allApps.push($scope.app);
+      GatewayData.ApplicationController.create($scope.app).then(function (data) {
+        $scope.allApps.push(data);
+      });
+
 
     };
 
     // ----------------------- Load balancer functions ------------------------------------
 
 
-    function loadLoadBalancerList(){
-      GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
-        console.log("LB list:",data);
-        $scope.allLBs = data;
-      });
-    }
-    loadLoadBalancerList();
+    GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
+      console.log("LB list:", data);
+      $scope.allLBs = data;
+    });
+
+
     $scope.createLoadBalancer = function () {
       console.log("Creating new LB : ", $scope.lb);
-      GatewayData.LoadBalancerController.create($scope.lb);
-      loadLoadBalancerList();
+      GatewayData.LoadBalancerController.create($scope.lb).then(function (data) {
+        $scope.allLBs.push(data);
+      });
+      //loadLoadBalancerList();
       //listAll
       //$route.reload();
       //GatewayData.ApplicationController.create($scope.app);
 
     };
-
-
 
 
   });
@@ -120,7 +122,9 @@ define([
 
       console.log("Saving App Inst : ", $scope.appInst);
       $scope.newAppInstAlertSuccess = true;
-      GatewayData.ApplicationInstanceController.create($scope.appInst);
+      GatewayData.ApplicationInstanceController.create($scope.appInst).then(function (data) {
+        $scope.allInstApps.push(data);
+      });
     };
 
     $scope.removeApp = function () {
@@ -161,7 +165,7 @@ define([
 
   });
 
- //    ----------------------- Load balancer Controller ------------------------------------
+  //    ----------------------- Load balancer Controller ------------------------------------
   gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
 
     GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
