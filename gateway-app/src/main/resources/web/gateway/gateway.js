@@ -163,7 +163,8 @@ define([
 
  //    ----------------------- Load balancer Controller ------------------------------------
   gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
-    GatewayData.LoadBalancerController.findLoadBalancerById($routeParams.id).then(function (data) {
+
+    GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
       console.log("Data: ", data);
       $scope.lb = data;
     });

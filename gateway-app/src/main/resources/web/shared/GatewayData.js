@@ -8,11 +8,11 @@ define([], function () {
       return res.data;
     };
     this.ApplicationController = {};
-    this.ApplicationController.create = function (appModel) {
+    this.ApplicationController.create = function (applicationModel) {
       var req = {};
       req.method = 'POST';
       req.url = prefix + '/data/applications';
-      req.data = appModel;
+      req.data = applicationModel;
       req.params = {};
       return $http(req).then(getData);
     };
@@ -71,7 +71,7 @@ define([], function () {
     this.ApplicationGroupController.create = function (appGroupModel) {
       var req = {};
       req.method = 'POST';
-      req.url = prefix + '/data/application-groups';
+      req.url = prefix + '/data/application-group';
       req.data = appGroupModel;
       req.params = {};
       return $http(req).then(getData);
@@ -79,7 +79,7 @@ define([], function () {
     this.ApplicationGroupController.findById = function (id) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/application-groups/{id}';
+      req.url = prefix + '/data/application-group/{id}';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
@@ -102,7 +102,7 @@ define([], function () {
     this.ApplicationGroupController.search = function (name) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/application-groups/find';
+      req.url = prefix + '/data/application-group/find';
       req.params = {};
       req.params.name = name;
       return $http(req).then(getData);
