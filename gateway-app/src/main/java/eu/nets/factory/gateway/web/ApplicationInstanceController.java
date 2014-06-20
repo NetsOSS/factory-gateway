@@ -38,7 +38,7 @@ public class ApplicationInstanceController {
         return  appInstRep.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/find", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/data/instances/find", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<ApplicationInstance> search(@RequestParam(required = false) String name) {
         log.info("ApplicationInstanceController.search, name={}", name);
@@ -72,10 +72,10 @@ public class ApplicationInstanceController {
     public AppInstModel create(@RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.create");
 
-        ApplicationInstance applicationInstance = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path);
+        ApplicationInstance appInst = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path);
 
-        applicationInstance = appInstRep.save(applicationInstance);
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
+        appInst = appInstRep.save(appInst);
+        return new AppInstModel(appInst.getId(), appInst.getName());
      }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
@@ -114,12 +114,20 @@ public class ApplicationInstanceController {
         public AppInstModel() { }
 
         public AppInstModel(ApplicationInstance appInst) {
-          this(appInst.getId(), appInst.getName());
+          this(appInst.getId(), appInst.getName(), appInst.getPath(), appInst.getHost(), appInst.getPort());
         }
 
         public AppInstModel(Long id, String name) {
             this.id = id;
             this.name = name;
+        }
+
+        public AppInstModel(Long id, String name, String path, String host, Integer port) {
+            this.id = id;
+            this.name = name;
+            this.path = path;
+            this.host = host;
+            this.port = port;
         }
 
         public Long getId() {
