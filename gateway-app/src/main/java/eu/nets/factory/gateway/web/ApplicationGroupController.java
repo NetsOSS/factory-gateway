@@ -18,13 +18,12 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Controller
 public class ApplicationGroupController {
-    private final Logger log = getLogger(getClass());
 
+    private final Logger log = getLogger(getClass());
     @Autowired
-    private ApplicationGroupRepository appGroupRep;
+    private ApplicationGroupRepository applicationGroupRepository;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-groups", produces = APPLICATION_JSON_VALUE)
-
     @ResponseBody
     public List<ApplicationGroup> listAllAppGroups() {
         log.info("ApplicationGroupController.list");
@@ -33,7 +32,7 @@ public class ApplicationGroupController {
 
         // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
 
-        return  appGroupRep.findAll();
+        return  applicationGroupRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-group/find", produces = APPLICATION_JSON_VALUE)
@@ -41,22 +40,22 @@ public class ApplicationGroupController {
     public List<ApplicationGroup> search(@RequestParam(required = false) String name) {
         log.info("ApplicationGroupController.search, name={}", name);
 
-        List<ApplicationGroup> applicationGroup;
+        List<ApplicationGroup> applicationGroups;
 
         if (name == null) {
-            applicationGroup = appGroupRep.findAll();
+            applicationGroups = applicationGroupRepository.findAll();
         } else {
-            applicationGroup = appGroupRep.findByNameLike("%" + name + "%");
+            applicationGroups = applicationGroupRepository.findByNameLike("%" + name + "%");
         }
 
-        return applicationGroup;
+        return applicationGroups;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-group/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public ApplicationGroup findById(@PathVariable Long id) {
         log.info("ApplicationGroupController.findById, name={}", id);
-        return appGroupRep.findOne(id);
+        return applicationGroupRepository.findOne(id);
     }
 
     /*
@@ -69,14 +68,36 @@ public class ApplicationGroupController {
     @ResponseBody
     public AppGroupModel create(@RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.create");
-        ApplicationGroup appGroup = new ApplicationGroup(appGroupModel.name);
-        appGroup = appGroupRep.save(appGroup);
-        return new AppGroupModel(appGroup.getId(), appGroup.getName());
+
+        ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
+
+        applicationGroup = applicationGroupRepository.save(applicationGroup);
+        return new AppGroupModel(applicationGroup.getId(), applicationGroup.getName());
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/data/application-groups/{id}")
+    @ResponseBody //has to be here
+    public void remove(@PathVariable Long id) {
+        log.info("ApplicationGroupController.remove");
+        applicationGroupRepository.delete(id);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppGroupModel update(@PathVariable Long id, @RequestBody AppGroupModel appGroupModel) {
+        log.info("ApplicationGroupController.update");
+
+        ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
+        applicationGroup.setName(appGroupModel.getName());
+
+        applicationGroup = applicationGroupRepository.save(applicationGroup);
+        return new AppGroupModel(applicationGroup.getId(), applicationGroup.getName());
     }
 
     public static class AppGroupModel {
 
         public Long id;
+
         public String name;
 
 
@@ -90,5 +111,14 @@ public class ApplicationGroupController {
             this.id = id;
             this.name = name;
         }
+
+
+        public Long getId() { return id; }
+
+        public void setId(Long id) { this.id = id; }
+
+        public String getName() { return name; }
+
+        public void setName(String name) { this.name = name; }
     }
 }

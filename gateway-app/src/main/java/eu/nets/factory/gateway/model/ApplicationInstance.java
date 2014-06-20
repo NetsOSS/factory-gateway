@@ -22,6 +22,7 @@ public class ApplicationInstance extends AbstractEntity {
     @NotNull
     private String path;
 
+
     public ApplicationInstance(String name, String host, int port, String path) {
         this.name = name;
         this.host = host;
@@ -29,8 +30,8 @@ public class ApplicationInstance extends AbstractEntity {
         this.path = path;
     }
 
-    public ApplicationInstance() {
-    }
+    public ApplicationInstance() { }
+
 
     public void setName(String name) {
         this.name = name;

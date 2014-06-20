@@ -18,6 +18,7 @@ public class LoadBalancer extends AbstractEntity{
     @NotNull
     private String sshKey;
 
+
     public LoadBalancer(String name, String host, String installationPath, String sshKey) {
         this.name = name;
         this.host = host;
@@ -25,8 +26,8 @@ public class LoadBalancer extends AbstractEntity{
         this.sshKey = sshKey;
     }
 
-    public LoadBalancer() {
-    }
+    public LoadBalancer() { }
+
 
     public String getName() {
         return name;
