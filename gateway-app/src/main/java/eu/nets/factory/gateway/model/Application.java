@@ -46,36 +46,21 @@ public class Application extends AbstractEntity {
 
 
     public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getPublicUrl(){ return publicURL; }
-
     public void setPublicUrl(String url) { this.publicURL = url; }
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<LoadBalancer> getLoadBalancerList() {
         return loadBalancerList;
     }
-
     public void setLoadBalancerList(List<LoadBalancer> loadBalancerList) {
         this.loadBalancerList = loadBalancerList;
-    }
-
-    public List<ApplicationInstance> getApplicationInstances() {
-        return applicationInstances;
-    }
-
-    public void setApplicationInstances(List<ApplicationInstance> applicationInstances) {
-        this.applicationInstances = applicationInstances;
     }
 
     public ApplicationGroup getApplicationGroup() {
         return applicationGroup;
     }
-
     public void setApplicationGroup(ApplicationGroup applicationGroup) {
         this.applicationGroup = applicationGroup;
     }
@@ -83,16 +68,15 @@ public class Application extends AbstractEntity {
     public void addLoadBalancer(LoadBalancer loadBalancer) {
         this.loadBalancerList.add(loadBalancer);
     }
-
     public void removeLoadBalancer(LoadBalancer loadBalancer) {
         this.loadBalancerList.remove(loadBalancer);
     }
 
-    public void addApplicationInstance(ApplicationInstance applicationInstance) {
-        this.applicationInstances.add(applicationInstance);
+    public List<ApplicationInstance> getApplicationInstances() {
+        return applicationInstances;
     }
+    public void setApplicationInstances(List<ApplicationInstance> applicationInstances) { this.applicationInstances = applicationInstances; }
 
-    public void removeApplicationInstance(ApplicationInstance applicationInstance) {
-        this.applicationInstances.remove(applicationInstance);
-    }
+    public void addApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.add(applicationInstance); }
+    public void removeApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.remove(applicationInstance); }
 }

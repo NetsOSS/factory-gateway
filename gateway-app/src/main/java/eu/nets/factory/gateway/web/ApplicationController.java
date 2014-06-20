@@ -1,6 +1,7 @@
 package eu.nets.factory.gateway.web;
 
         import eu.nets.factory.gateway.model.Application;
+        import eu.nets.factory.gateway.model.ApplicationInstance;
         import eu.nets.factory.gateway.model.ApplicationRepository;
         import org.slf4j.Logger;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,13 @@ public class ApplicationController {
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("ApplicationController.remove");
+
+        /* Application - ApplicationInstance relation
+        List<ApplicationInstance> applicationInstances = applicationRepository.findOne(id).getApplicationInstances();
+        for(ApplicationInstance applicationInstance : applicationInstances) {
+            ApplicationInstanceController.remove(applicationInstance.getId());
+        }
+        */
         applicationRepository.delete(id);
     }
 

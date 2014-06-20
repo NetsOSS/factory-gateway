@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -24,7 +21,7 @@ public class ApplicationInstanceController {
 
     private final Logger log = getLogger(getClass());
     @Autowired
-    private ApplicationInstanceRepository appInstRep;
+    private ApplicationInstanceRepository applicationInstanceRepository;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances", produces = APPLICATION_JSON_VALUE)
@@ -36,7 +33,7 @@ public class ApplicationInstanceController {
 
         // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
 
-        return  appInstRep.findAll();
+        return  applicationInstanceRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/find", produces = APPLICATION_JSON_VALUE)
@@ -47,9 +44,9 @@ public class ApplicationInstanceController {
         List<ApplicationInstance> applicationInstances;
 
         if (name == null) {
-            applicationInstances = appInstRep.findAll();
+            applicationInstances = applicationInstanceRepository.findAll();
         } else {
-            applicationInstances = appInstRep.findByNameLike("%" + name + "%");
+            applicationInstances = applicationInstanceRepository.findByNameLike("%" + name + "%");
         }
 
         return applicationInstances;
@@ -59,7 +56,7 @@ public class ApplicationInstanceController {
     @ResponseBody
     public ApplicationInstance findById(@PathVariable Long id) {
         log.info("ApplicationInstanceController.findById, name={}", id);
-        return appInstRep.findOne(id);
+        return applicationInstanceRepository.findOne(id);
     }
 
     /*
@@ -70,13 +67,15 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppInstModel create(@RequestBody AppInstModel appInstModel) {
+    public AppInstModel create(@RequestBody AppInstModel applicationInstanceModel) {
         log.info("ApplicationInstanceController.create");
 
-        ApplicationInstance appInst = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path, appInstModel.application);
-        ApplicationInstance applicationInstance = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path, appInstModel.application);
+        ApplicationInstance applicationInstance = new ApplicationInstance(applicationInstanceModel.name, applicationInstanceModel.host, applicationInstanceModel.port, applicationInstanceModel.path, applicationInstanceModel.application);
 
-        applicationInstance = appInstRep.save(applicationInstance);
+        applicationInstance = applicationInstanceRepository.save(applicationInstance);
+        /* Application - ApplicationInstance relation
+        applicationInstanceModel.getApplication().addApplicationInstance(applicationInstance);
+        */
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
      }
 
@@ -84,27 +83,32 @@ public class ApplicationInstanceController {
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("ApplicationInstanceController.remove");
-        appInstRep.delete(id);
+        /* Application - ApplicationInstance relation
+        ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
+        applicationInstance.getApplication().removeApplicationInstance(applicationInstance);
+        */
+        applicationInstanceRepository.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
+    public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel applicationInstanceModel) {
         log.info("ApplicationInstanceController.update");
 
-        ApplicationInstance applicationInstance = appInstRep.findOne(id);
-        applicationInstance.setName(appInstModel.getName());
-        applicationInstance.setPath(appInstModel.getPath());
-        applicationInstance.setHost(appInstModel.getHost());
-        applicationInstance.setPort(appInstModel.getPort());
+        ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
+        applicationInstance.setName(applicationInstanceModel.getName());
+        applicationInstance.setPath(applicationInstanceModel.getPath());
+        applicationInstance.setHost(applicationInstanceModel.getHost());
+        applicationInstance.setPort(applicationInstanceModel.getPort());
 
-        applicationInstance = appInstRep.save(applicationInstance);
+        applicationInstance = applicationInstanceRepository.save(applicationInstance);
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
     }
 
     public static class AppInstModel {
 
         public Long id;
+
         public String name;
         public String path;
         public String host;
@@ -114,8 +118,8 @@ public class ApplicationInstanceController {
 
         public AppInstModel() { }
 
-        public AppInstModel(ApplicationInstance appInst) {
-          this(appInst.getId(), appInst.getName());
+        public AppInstModel(ApplicationInstance applicationInstance) {
+          this(applicationInstance.getId(), applicationInstance.getName());
         }
 
         public AppInstModel(Long id, String name) {
@@ -126,7 +130,6 @@ public class ApplicationInstanceController {
         public Long getId() {
             return id;
         }
-
         public void setId(Long id) {
             this.id = id;
         }
@@ -134,7 +137,6 @@ public class ApplicationInstanceController {
         public String getName() {
             return name;
         }
-
         public void setName(String name) {
             this.name = name;
         }
@@ -142,7 +144,6 @@ public class ApplicationInstanceController {
         public String getPath() {
             return path;
         }
-
         public void setPath(String path) {
             this.path = path;
         }
@@ -150,7 +151,6 @@ public class ApplicationInstanceController {
         public String getHost() {
             return host;
         }
-
         public void setHost(String host) {
             this.host = host;
         }
@@ -158,9 +158,15 @@ public class ApplicationInstanceController {
         public Integer getPort() {
             return port;
         }
-
         public void setPort(Integer port) {
             this.port = port;
+        }
+
+        public Application getApplication() {
+            return application;
+        }
+        public void setApplication(Application application) {
+            this.application = application;
         }
     }
 }
