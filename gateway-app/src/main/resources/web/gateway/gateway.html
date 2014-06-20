@@ -1,12 +1,33 @@
 <h1>Gateway</h1>
 
 <div class="row">
+
+    <div class="col-sm-6">
+        <h3>New Application Group </h3>
+
+        <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
+
+            <div class="form-group">
+                <label for="inAppName">Name</label>
+                <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName" name="name"
+                       required
+                       placeholder="Enter application name">
+            </div>
+            <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
+        </form>
+    </div>
+
+    <div class="col-sm-6">
+    </div>
+</div>
+<div class="row">
+
     <div class="col-sm-6">
         <h3>New Application </h3>
 
         <form role="form" ng-submit="createApplication()" name="createAppForm">
 
-            <div class="form-group" >
+            <div class="form-group">
                 <label for="inAppName">Name</label>
                 <input type="text" ng-model="app.name" class="form-control" id="inAppName" name="name"
                        required
@@ -18,9 +39,18 @@
                        required
                        placeholder="Enter public url">
             </div>
+            <div class="form-group">
+                <label for="selectAppGroup">Application Group</label>
+                <select class="form-control" id="selectAppGroup">
+                    <option>Bank</option>
+                    <option>MobilBank</option>
+                    <option>eFaktura</option>
+
+                </select>
+            </div>
 
 
-            <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" >Create</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
         </form>
     </div>
 
