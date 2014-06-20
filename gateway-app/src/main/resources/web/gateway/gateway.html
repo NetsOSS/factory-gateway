@@ -4,23 +4,23 @@
     <div class="col-sm-6">
         <h3>New Application </h3>
 
-        <form role="form" ng-submit="createApplication()">
+        <form role="form" ng-submit="createApplication()" name="createAppForm">
 
-            <div class="form-group">
+            <div class="form-group" >
                 <label for="inAppName">Name</label>
-                <input type="text" ng-model="app.name" class="form-control" id="inAppName"
+                <input type="text" ng-model="app.name" class="form-control" id="inAppName" name="name"
                        required
                        placeholder="Enter application name">
             </div>
             <div class="form-group">
                 <label for="inAppPublicUrl">Public URL</label>
-                <input type="text" ng-model="app.publicURL" class="form-control " id="inAppPublicUrl"
+                <input type="text" ng-model="app.publicURL" class="form-control " id="inAppPublicUrl" name="publicUrl"
                        required
                        placeholder="Enter public url">
             </div>
 
 
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" >Create</button>
         </form>
     </div>
 

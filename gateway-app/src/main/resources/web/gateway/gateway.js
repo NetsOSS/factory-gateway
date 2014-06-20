@@ -26,6 +26,10 @@ define([
           controller: 'AppInstCtrl',
           templateUrl: templatePrefix + "appInst.html"
         })
+        .when('/lb/:id', {
+          controller: 'LoadBalancerCtrl',
+          templateUrl: templatePrefix + "loadBalancer.html"
+        })
     ;
   });
 
@@ -119,6 +123,12 @@ define([
       GatewayData.ApplicationInstanceController.create($scope.appInst);
     };
 
+    $scope.removeApp = function () {
+      console.log("Deleting id: ", $scope.app.id);
+      //GatewayData.ApplicationInstanceController.remove($scope.appInst.id);
+
+    };
+
     $scope.appInstSearch = function () {
       console.log("Search appInst : ", $scope.searchAppInstInput);
       // GatewayData.PersonController.search($scope.searchInput).then(function (data) {
@@ -148,6 +158,15 @@ define([
       GatewayData.ApplicationInstanceController.update($scope.appInst.id, $scope.appInst);
 
     };
+
+  });
+
+ //    ----------------------- Load balancer Controller ------------------------------------
+  gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
+    GatewayData.LoadBalancerController.findLoadBalancerById($routeParams.id).then(function (data) {
+      console.log("Data: ", data);
+      $scope.lb = data;
+    });
 
   });
 
