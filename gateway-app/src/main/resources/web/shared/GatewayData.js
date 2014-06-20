@@ -162,7 +162,7 @@ define([], function () {
     this.ApplicationInstanceController.search = function (name) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/instances/find';
+      req.url = prefix + '/data/find';
       req.params = {};
       req.params.name = name;
       return $http(req).then(getData);

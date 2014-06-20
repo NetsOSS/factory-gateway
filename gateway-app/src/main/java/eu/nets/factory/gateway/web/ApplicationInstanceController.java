@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.ApplicationInstanceRepository;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class ApplicationInstanceController {
         return  appInstRep.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/instances/find", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/data/find", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<ApplicationInstance> search(@RequestParam(required = false) String name) {
         log.info("ApplicationInstanceController.search, name={}", name);
@@ -72,10 +73,11 @@ public class ApplicationInstanceController {
     public AppInstModel create(@RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.create");
 
-        ApplicationInstance appInst = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path);
+        ApplicationInstance appInst = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path, appInstModel.application);
+        ApplicationInstance applicationInstance = new ApplicationInstance(appInstModel.name, appInstModel.host,appInstModel.port,appInstModel.path, appInstModel.application);
 
-        appInst = appInstRep.save(appInst);
-        return new AppInstModel(appInst.getId(), appInst.getName());
+        applicationInstance = appInstRep.save(applicationInstance);
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
      }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
@@ -103,31 +105,22 @@ public class ApplicationInstanceController {
     public static class AppInstModel {
 
         public Long id;
-
         public String name;
         public String path;
-
         public String host;
         public Integer port;
+        public Application application;
 
 
         public AppInstModel() { }
 
         public AppInstModel(ApplicationInstance appInst) {
-          this(appInst.getId(), appInst.getName(), appInst.getPath(), appInst.getHost(), appInst.getPort());
+          this(appInst.getId(), appInst.getName());
         }
 
         public AppInstModel(Long id, String name) {
             this.id = id;
             this.name = name;
-        }
-
-        public AppInstModel(Long id, String name, String path, String host, Integer port) {
-            this.id = id;
-            this.name = name;
-            this.path = path;
-            this.host = host;
-            this.port = port;
         }
 
         public Long getId() {
