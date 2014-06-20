@@ -2,58 +2,38 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <h3>New Application Instance</h3>
+        <h3>New Application </h3>
 
-        <form role="form" ng-submit="saveAppInst()" name="form">
+        <form role="form" ng-submit="createApplication()">
 
-            <div class="form-group" ng-class="{'has-error': form.name.$invalid && !form.name.$pristine}">
-                <label for="inAppInstName">Name</label>
-                <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
+            <div class="form-group">
+                <label for="inAppName">Name</label>
+                <input type="text" ng-model="app.name" class="form-control" id="inAppName"
                        required
-                       placeholder="Enter name">
-            </div>
-            <div class="form-group" ng-class="{'has-error': form.host.$invalid && !form.host.$pristine}">
-                <label for="inAppInstHost">Host</label>
-                <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
-                       required
-                       placeholder="Enter host">
+                       placeholder="Enter application name">
             </div>
             <div class="form-group">
-                <label for="inAppInstPort">Port</label>
-                <input type="number" ng-model="appInst.port" min="1" max="65535" class="form-control" id="inAppInstPort"
-                       name="port"
+                <label for="inAppPublicUrl">Public URL</label>
+                <input type="text" ng-model="app.publicUrl" class="form-control " id="inAppPublicUrl"
                        required
-                       integer
-                       placeholder="Enter port">
-                <span ng-show="form.port.$error.integer">This is not valid integer!</span>
-                 <span ng-show="form.port.$error.min || form.port.$error.max">
-
-      The value must be in range 1 to 65535!</span>
-
-            </div>
-            <div class="form-group">
-                <label for="inAppInstPath">Path</label>
-                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath" required
-                       placeholder="Enter path / url">
+                       placeholder="Enter public url">
             </div>
 
-            <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Submit</button>
+
+            <button type="submit" class="btn btn-primary">Create</button>
         </form>
-
-        <div class="alert alert-success" ng-show="newAppInstAlertSuccess">Application is added successfully (refresh
-            browser)
-        </div>
     </div>
 
 
     <div class="col-sm-6">
 
-        <h3>All Application Instances</h3>
+        <h3>All Applications</h3>
 
         <div class="list-group">
             <a href="#/app/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
-                <b> {{a.name}}</b> ({{a.id}}) {{a.host}}/{{a.path}}:{{a.port}}
+                <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}})
             </a>
+
 
         </div>
         <h4>Raw</h4>
@@ -61,7 +41,9 @@
     </div>
 
 </div>
+
 <hr>
+
 
 <h1>Person (demo) </h1>
 

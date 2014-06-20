@@ -154,6 +154,14 @@ define([], function () {
       return ApplicationInstanceController.search($route.current.params.name);
     };
     this.LoadBalancerController = {};
+    this.LoadBalancerController.create = function (loadBalancerModel) {
+      var req = {};
+      req.method = 'POST';
+      req.url = prefix + '/data/loadbalancers';
+      req.data = loadBalancerModel;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.LoadBalancerController.findLoadBalancerById = function (id) {
       var req = {};
       req.method = 'GET';

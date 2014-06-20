@@ -5,7 +5,7 @@ define([
   'angular'
 ], function (require, angular) {
   var templatePrefix = require.toUrl("./");
-  var gateway = angular.module('gateway', ['ngRoute', 'shared.services','shared.directives']);
+  var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives']);
 
   gateway.config(function ($routeProvider) {
     $routeProvider.
@@ -19,6 +19,10 @@ define([
         })
         .
         when('/app/:id', {
+          controller: 'AppCtrl',
+          templateUrl: templatePrefix + "app.html"
+        })
+        .when('/appInst/:id', {
           controller: 'AppInstCtrl',
           templateUrl: templatePrefix + "appInst.html"
         })
@@ -26,11 +30,11 @@ define([
   });
 
   gateway.controller('FrontPageCtrl', function ($scope, GatewayData) {
-    //$('#newPersonAlertSuccess').hide();
+
 
     $scope.showNewPersonAlert = false;
 
-    // ----------------------- Person functions -----------
+    // ----------------------- Person functions ------------------------------------
     GatewayData.PersonController.list().then(function (data) {
       $scope.persons = data;
     });
@@ -49,15 +53,38 @@ define([
     };
 
 
-    // ----------------------- Application Instance functions -----------
-    GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
+    // ----------------------- Application functions ------------------------------------
+    GatewayData.ApplicationController.listAllApps().then(function (data) {
       $scope.allApps = data;
+    });
+
+
+    $scope.createApplication = function () {
+      console.log("New application : ", $scope.app);
+      GatewayData.ApplicationController.create($scope.app);
+
+    };
+
+
+  });
+
+  //Application controller
+  gateway.controller('AppCtrl', function ($scope, $routeParams, GatewayData) {
+    //Find the Application object from id.
+    GatewayData.ApplicationController.findById($routeParams.id).then(function (data) {
+      console.log("Data: ", data);
+      $scope.app = data;
+    });
+
+    // ----------------------- Application Instance functions ------------------------------------
+    GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
+      $scope.allInstApps = data;
     });
 
     $scope.saveAppInst = function () {
 
       console.log("Saving App Inst : ", $scope.appInst);
-      $scope.newAppInstAlertSuccess =true;
+      $scope.newAppInstAlertSuccess = true;
       GatewayData.ApplicationInstanceController.create($scope.appInst);
     };
 
@@ -68,26 +95,23 @@ define([
       //});
     };
 
-
   });
 
 
-
-
-  gateway.controller('AppInstCtrl', function ($scope, $routeParams,GatewayData) {
+  gateway.controller('AppInstCtrl', function ($scope, $routeParams, GatewayData) {
     GatewayData.ApplicationInstanceController.findById($routeParams.id).then(function (data) {
-      console.log("Data: ",data);
-      $scope.appInst=data;
+      console.log("Data: ", data);
+      $scope.appInst = data;
     });
 
-    $scope.deleteAppInst = function(){
+    $scope.deleteAppInst = function () {
       console.log("Deleting id: ", $scope.appInst.id);
       GatewayData.ApplicationInstanceController.remove($scope.appInst.id);
 
     };
 
 
-    $scope.updateAppInst = function(){
+    $scope.updateAppInst = function () {
       console.log("Updating: ", $scope.appInst);
       //GatewayData.ApplicationInstanceController.delete($scope.app.id);
       GatewayData.ApplicationInstanceController.update($scope.appInst.id, $scope.appInst);
