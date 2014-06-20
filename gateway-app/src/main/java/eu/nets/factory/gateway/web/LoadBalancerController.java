@@ -1,14 +1,13 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.model.LoadBalancerRepository;
+import eu.nets.factory.gateway.model.LoadBalancer_;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -45,9 +44,23 @@ public class LoadBalancerController {
     @ResponseBody
     public LoadBalancer findLoadBalancerBySshKey(@PathVariable String ssh) {
         log.info("LoadBalancerController.findLoadBalancerById, name={}", ssh);
+        List<LoadBalancer> all = loadBalancerRepository.findAll();
+        for(LoadBalancer l: all) {
+            if(l.getSshKey().equals(ssh)) {
+                return l;
+            }
+        }
         return null;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/data/loadbalancers", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LoadBalancerModel create(@RequestBody LoadBalancerModel loadBalancerModel) {
+        log.info("LoadBalancerController.create");
+        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.getName(), loadBalancerModel.getHost(), loadBalancerModel.getInstallationPath(), loadBalancerModel.getSshKey());
+        loadBalancer = loadBalancerRepository.save(loadBalancer);
+        return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
+    }
 
     public static class LoadBalancerModel {
 
@@ -60,6 +73,14 @@ public class LoadBalancerController {
         public LoadBalancerModel(Long id, String name) {
             this.id = id;
             this.name = name;
+        }
+
+        public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey) {
+            this.id = id;
+            this.name = name;
+            this.host = host;
+            this.installationPath = installationPath;
+            this.sshKey = sshKey;
         }
 
         public LoadBalancerModel() {
