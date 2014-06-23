@@ -65,7 +65,7 @@ public class LoadBalancerController {
         return new LoadBalancerModel(tmp);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{sshKey}", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/findBySsh/{sshKey}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public LoadBalancerModel findBySshKey(@PathVariable String ssh) {
         log.info("LoadBalancerController.findBySshKey, name={}", ssh);
@@ -111,10 +111,10 @@ public class LoadBalancerController {
         return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
     }
 
-    /*@RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers_applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public LoadBalancerModel addApplication(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
         return null;
-    }*/
+    }
 
 }

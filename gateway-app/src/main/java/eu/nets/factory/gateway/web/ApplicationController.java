@@ -39,9 +39,9 @@ public class ApplicationController {
                 map(AppModel::new).collect(toList());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/applications/find", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/data/applications/find/{name}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Application> search(@RequestParam(required = false) String name) {
+    public List<AppModel> search(@RequestParam(required = false) String name) {
         log.info("ApplicationController.search, name={}", name);
 
         List<Application> applications;
@@ -52,14 +52,15 @@ public class ApplicationController {
             applications = applicationRepository.findByNameLike("%" + name + "%");
         }
 
-        return applications;
+        return applications.stream().
+                map(AppModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Application findById(@PathVariable Long id) {
+    public AppModel findById(@PathVariable Long id) {
         log.info("ApplicationController.findById, name={}", id);
-        return applicationRepository.findOne(id);
+        return new AppModel(applicationRepository.findOne(id));
     }
 
     /*
