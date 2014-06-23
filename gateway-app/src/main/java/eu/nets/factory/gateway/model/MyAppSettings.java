@@ -16,10 +16,13 @@ public class MyAppSettings {
 
     private boolean local;
 
+    private boolean unitTest;
+
     @PostConstruct
     public void postConstruct() {
         userName = System.getProperty("user.name");
         local = environment.acceptsProfiles("local");
+        unitTest = environment.acceptsProfiles("unitTest");
     }
 
     public boolean loadResourcesFromDisk() {
@@ -31,32 +34,36 @@ public class MyAppSettings {
     }
 
     public String getDatabaseUrl() {
-        if (!local) {
+        if (local) {
+
+            switch (userName) {
+                case "tlaug":
+                case "sleru":
+                case "kwlar":
+                case "ofbje":
+                case "ogamm":
+                case "mbyhr":
+                    return "jdbc:oracle:thin:@vm-udb-7:1521:u7utv";
+            }
+
+            throw new IllegalStateException("Could not find database URL for user " + userName);
+        } else if (unitTest) {
+            return "jdbc:h2:mem:.";
+        }
+            else {
             return environment.getRequiredProperty("database.url");
         }
-
-        switch (userName) {
-            case "tlaug":
-            case "sleru":
-            case "kwlar":
-            case "ofbje":
-            case "ogamm":
-            case "mbyhr":
-                return "jdbc:oracle:thin:@vm-udb-7:1521:u7utv";
-        }
-
-        throw new IllegalStateException("Could not find database URL for user " + userName);
     }
 
     public String getDatabaseUsername() {
-        if (local) {
+        if (local || unitTest) {
             return userName;
         }
         return environment.getRequiredProperty("database.username");
     }
 
     public String getDatabasePassword() {
-        if (local) {
+        if (local || unitTest) {
             return userName;
         }
         return environment.getRequiredProperty("database.password");
