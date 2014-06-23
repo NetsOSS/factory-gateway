@@ -28,7 +28,11 @@ define([ 'angular' ], function (angular) {
   directives.directive('lbForm', function () {
     return {
       restrict: 'E',
-      templateUrl: 'web/gateway/lbform.html'
+      templateUrl: 'web/gateway/lbform.html',
+      scope : {
+        loadBalancer : '='
+      },
+      controller: 'LoadBalancerFormCtrl'
     };
   });
 

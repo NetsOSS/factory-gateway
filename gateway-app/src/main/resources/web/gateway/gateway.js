@@ -44,7 +44,7 @@ define([
     GatewayData.PersonController.list().then(function (data) {
       $scope.persons = data;
     });
-    GatewayData.ApplicationGroupController.listAllAppGroups().then(function(data) {
+    GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
       $scope.allAppGroups = data;
     });
 
@@ -111,7 +111,7 @@ define([
       console.log("New application Group : ", $scope.appGroup);
       GatewayData.ApplicationGroupController.create($scope.appGroup);
     };
-    GatewayData.ApplicationGroupController.listAllAppGroups().then(function(data){
+    GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
       console.log(data);
     });
 
@@ -128,9 +128,9 @@ define([
 
     // ----------------------- Application Instance functions ------------------------------------
     /*GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
-      $scope.allInstApps = data;
-    });
-    */
+     $scope.allInstApps = data;
+     });
+     */
     $scope.saveAppInst = function () {
 
       console.log("Saving App Inst : ", $scope.appInst);
@@ -144,6 +144,7 @@ define([
 
     $scope.removeApp = function () {
       console.log("Deleting id: ", $scope.app.id);
+      GatewayData.ApplicationController.remove($scope.app.id);
       //GatewayData.ApplicationInstanceController.remove($scope.appInst.id);
 
     };
@@ -180,6 +181,10 @@ define([
 
   });
 
+  gateway.controller('LoadBalancerFormCtrl', function ($scope) {
+  console.log("LB Form Controller");
+  });
+
   //    ----------------------- Load balancer Controller ------------------------------------
   gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
 
@@ -188,8 +193,8 @@ define([
       $scope.lb = data;
     });
 
-    GatewayData.LoadBalancerController.getApplications($routeParams.id).then(function(data){
-      console.log("Apps for this LB : ",data);
+    GatewayData.LoadBalancerController.getApplications($routeParams.id).then(function (data) {
+      console.log("Apps for this LB : ", data);
       $scope.lbApps = data;
     });
 
