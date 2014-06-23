@@ -63,11 +63,15 @@
             </div>
             <div class="form-group">
                 <label for="selectAppGroup">Application Group</label>
-                <select ng-model="selectedTestAccount" id="selectAppGroup" ng-options="item.id as item.name for item in allAppGroups" class="form-control">
+                <select ng-model="app.group" name="group" id="selectAppGroup"  ng-options=" v.id as v.name for v in allAppGroups" class="form-control">
                     <option value="">Select group (or create one above)</option>
-
                 </select>
             </div>
+
+
+
+
+
 
 
 

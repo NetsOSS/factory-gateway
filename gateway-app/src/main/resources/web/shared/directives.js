@@ -28,7 +28,7 @@ define([ 'angular' ], function (angular) {
   directives.directive('lbForm', function () {
     return {
       restrict: 'E',
-      templateUrl: 'lbform.html'
+      templateUrl: 'web/gateway/lbform.html'
     };
   });
 

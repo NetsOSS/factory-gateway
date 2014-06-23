@@ -89,17 +89,19 @@ public class ApplicationInstanceController {
         applicationInstanceModel.getApplication().addApplicationInstance(applicationInstance);
         */
         //Long id, String name, String path, String host, Integer port)
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort());
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());
      }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("ApplicationInstanceController.remove");
-        /* Application - ApplicationInstance relation
+
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
-        applicationInstance.getApplication().removeApplicationInstance(applicationInstance);
-        */
+        Application application = applicationInstance.getApplication();
+        application.removeApplicationInstance(applicationInstance);
+        applicationRepository.save(application);
+
         applicationInstanceRepository.delete(id);
     }
 
@@ -115,7 +117,7 @@ public class ApplicationInstanceController {
         applicationInstance.setPort(applicationInstanceModel.port);
 
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort());
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());
 
     }
 }
