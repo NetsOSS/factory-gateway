@@ -44,6 +44,9 @@ define([
     GatewayData.PersonController.list().then(function (data) {
       $scope.persons = data;
     });
+    GatewayData.ApplicationGroupController.listAllAppGroups().then(function(data) {
+      $scope.allAppGroups = data;
+    });
 
 
     $scope.savePerson = function () {

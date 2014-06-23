@@ -18,8 +18,30 @@
     </div>
 
     <div class="col-sm-6">
+
+        <h3>All Application Groups</h3>
+
+        <div class="list-group">
+            <a href="#/app/{{appGroup.id}}" class="list-group-item" ng-repeat="appGroup in allAppGroups">
+                <b> {{appGroup.name}}</b> ({{appGroup.id}})
+            </a>
+
+
+        </div>
+
+
+
+        <a href="" ng-model="collapsedGroup" ng-click="collapsedGroup=!collapsedGroup"><strong>Toggle (show/hide)</strong> json data</a>
+
+        <div ng-show="collapsedGroup">
+            <pre>{{allAppGroups|json}}</pre>
+         </div>
+
+
+
     </div>
 </div>
+<hr />
 <div class="row">
 
     <div class="col-sm-6">
@@ -41,13 +63,15 @@
             </div>
             <div class="form-group">
                 <label for="selectAppGroup">Application Group</label>
-                <select class="form-control" id="selectAppGroup">
-                    <option>Bank</option>
-                    <option>MobilBank</option>
-                    <option>eFaktura</option>
+                <select ng-model="selectedTestAccount" id="selectAppGroup" ng-options="item.id as item.name for item in allAppGroups" class="form-control">
+                    <option value="">Select group (or create one above)</option>
 
                 </select>
             </div>
+
+
+
+
 
 
             <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
@@ -66,8 +90,14 @@
 
 
         </div>
-        <h4>Raw</h4>
-        <pre>{{allApps|json}}</pre>
+
+
+
+        <a href="" ng-model="collapsedApp" ng-click="collapsedApp=!collapsedApp"><strong>Toggle (show/hide)</strong> json data</a>
+
+        <div ng-show="collapsedApp">
+            <pre>{{allApps|json}}</pre>
+        </div>
     </div>
 
 </div>
