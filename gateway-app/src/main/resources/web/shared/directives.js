@@ -5,12 +5,12 @@ define([ 'angular' ], function (angular) {
 
 
   var INTEGER_REGEXP = /^\-?\d+$/;
-  directives.directive('integer', function() {
+  directives.directive('integer', function () {
     console.log('hei ');
     return {
       require: 'ngModel',
-      link: function(scope, elm, attrs, ctrl) {
-        ctrl.$parsers.unshift(function(viewValue) {
+      link: function (scope, elm, attrs, ctrl) {
+        ctrl.$parsers.unshift(function (viewValue) {
           if (INTEGER_REGEXP.test(viewValue)) {
             // it is valid
             ctrl.$setValidity('integer', true);
@@ -24,5 +24,14 @@ define([ 'angular' ], function (angular) {
       }
     };
   });
+
+  directives.directive('lbForm', function () {
+    return {
+      restrict: 'E',
+      templateUrl: 'lbform.html'
+    };
+  });
+
 });
+
 

@@ -122,21 +122,23 @@ define([
   gateway.controller('AppCtrl', function ($scope, $routeParams, GatewayData) {
     //Find the Application object from id.
     GatewayData.ApplicationController.findById($routeParams.id).then(function (data) {
-      console.log("Data: ", data);
+      console.log("Application data : ", data);
       $scope.app = data;
     });
 
     // ----------------------- Application Instance functions ------------------------------------
-    GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
+    /*GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
       $scope.allInstApps = data;
     });
-
+    */
     $scope.saveAppInst = function () {
 
       console.log("Saving App Inst : ", $scope.appInst);
       $scope.newAppInstAlertSuccess = true;
-      GatewayData.ApplicationInstanceController.create($scope.appInst).then(function (data) {
-        $scope.allInstApps.push(data);
+
+      GatewayData.ApplicationInstanceController.create($scope.app.id, $scope.appInst).then(function (data) {
+        $scope.app.applications.push(data);
+
       });
     };
 
