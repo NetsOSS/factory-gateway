@@ -88,7 +88,8 @@ public class ApplicationInstanceController {
         /* Application - ApplicationInstance relation
         applicationInstanceModel.getApplication().addApplicationInstance(applicationInstance);
         */
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
+        //Long id, String name, String path, String host, Integer port)
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort());
      }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
@@ -114,6 +115,7 @@ public class ApplicationInstanceController {
         applicationInstance.setPort(applicationInstanceModel.port);
 
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort());
+
     }
 }
