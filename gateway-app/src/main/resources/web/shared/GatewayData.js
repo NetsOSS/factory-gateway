@@ -8,15 +8,6 @@ define([], function () {
       return res.data;
     };
     this.ApplicationController = {};
-    this.ApplicationController.addApplicationGroup = function (applicationId, applicationGroupId) {
-      var req = {};
-      req.method = 'PUT';
-      req.url = prefix + '/data/applications/{applicationId}/application-group';
-      req.url = req.url.replace(/{applicationId}/, applicationId);
-      req.data = applicationGroupId;
-      req.params = {};
-      return $http(req).then(getData);
-    };
     this.ApplicationController.create = function (applicationModel) {
       var req = {};
       req.method = 'POST';

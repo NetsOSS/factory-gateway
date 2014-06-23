@@ -15,29 +15,22 @@ public class ApplicationGroup extends AbstractEntity {
     @NotNull
     private String name;
 
-    //@OneToMany(mappedBy = "applicationGroup")
-    //private List<Application> applications;
+    @NotNull
+    @OneToMany(mappedBy = "applicationGroup")
+    private List<Application> applications;
+
 
     public ApplicationGroup(String name) {
         this.name = name;
     }
 
-    public ApplicationGroup(){
-
-    }
+    public ApplicationGroup(){ }
 
 
-    public String getName(){ return name; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /*public List<Application> getApplications() {
-        return applications;
-    }
-
-    public void setApplications(List<Application> applications) {
-        this.applications = applications;
-    }*/
+    public List<Application> getApplications() { return applications; }
+    public void addApplication(Application application) { this.applications.add(application); }
+    public void removeApplication(Application application) { this.applications.remove(application); }
 }

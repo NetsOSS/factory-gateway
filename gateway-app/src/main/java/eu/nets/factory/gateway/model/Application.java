@@ -32,16 +32,16 @@ public class Application extends AbstractEntity {
     @OneToMany(mappedBy = "application")
     private List<ApplicationInstance> applicationInstances = new ArrayList<>();
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "application_group")
     private ApplicationGroup applicationGroup;
 
 
-    public Application(String name, String url) {
+    public Application(String name, String url, ApplicationGroup applicationGroup) {
         this.name = name;
         this.publicURL = url;
-        //loadBalancerList = new ArrayList<LoadBalancer>();
-        applicationInstances = new ArrayList<ApplicationInstance>();
+        this.applicationGroup = applicationGroup;
     }
 
     public Application(){}
@@ -53,31 +53,15 @@ public class Application extends AbstractEntity {
     public String getPublicUrl(){ return publicURL; }
     public void setPublicUrl(String url) { this.publicURL = url; }
 
-    public List<LoadBalancer> getLoadBalancerList() {
-        return loadBalancerList;
-    }
-    public void setLoadBalancerList(List<LoadBalancer> loadBalancerList) {
-        this.loadBalancerList = loadBalancerList;
-    }
-
     public ApplicationGroup getApplicationGroup() {
         return applicationGroup;
     }
-    public void setApplicationGroup(ApplicationGroup applicationGroup) {
-        this.applicationGroup = applicationGroup;
-    }
 
-      public void addLoadBalancer(LoadBalancer loadBalancer) {
-        this.loadBalancerList.add(loadBalancer);
-    }
-    public void removeLoadBalancer(LoadBalancer loadBalancer) {
-        this.loadBalancerList.remove(loadBalancer);
-    }
+    public List<LoadBalancer> getLoadBalancerList() { return loadBalancerList; }
+    public void addLoadBalancer(LoadBalancer loadBalancer) { this.loadBalancerList.add(loadBalancer); }
+    public void removeLoadBalancer(LoadBalancer loadBalancer) { this.loadBalancerList.remove(loadBalancer); }
 
-    public List<ApplicationInstance> getApplicationInstances() {
-        return applicationInstances;
-    }
-    //public void setApplicationInstances(List<ApplicationInstance> applicationInstances) { this.applicationInstances = applicationInstances; }
+    public List<ApplicationInstance> getApplicationInstances() { return applicationInstances; }
     public void addApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.add(applicationInstance); }
     public void removeApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.remove(applicationInstance); }
 }

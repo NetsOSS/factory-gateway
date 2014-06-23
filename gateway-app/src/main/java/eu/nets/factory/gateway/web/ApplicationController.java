@@ -1,6 +1,7 @@
 package eu.nets.factory.gateway.web;
 
         import eu.nets.factory.gateway.model.Application;
+        import eu.nets.factory.gateway.model.ApplicationGroup;
         import eu.nets.factory.gateway.model.ApplicationGroupRepository;
         import eu.nets.factory.gateway.model.ApplicationRepository;
         import org.slf4j.Logger;
@@ -77,12 +78,15 @@ public class ApplicationController {
     @ResponseBody
     public AppModel create(@RequestBody AppModel applicationModel) {
         log.info("ApplicationController.create");
-        Application application = new Application(applicationModel.getName(), applicationModel.getPublicUrl());
-        if (applicationModel.getApplicationGroupId() != null) {
-                application.setApplicationGroup(applicationGroupRepository.findOne(applicationModel.getApplicationGroupId()));
-        }
+
+        ApplicationGroup applicationGroup = applicationGroupRepository.findOne(applicationModel.getApplicationGroupId());
+        Application application = new Application(applicationModel.getName(), applicationModel.getPublicUrl(), applicationGroup);
         application = applicationRepository.save(application);
-        return new AppModel(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup());
+
+        applicationGroup.addApplication(application);
+        applicationGroupRepository.save(applicationGroup);
+
+        return new AppModel(application);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
@@ -107,12 +111,12 @@ public class ApplicationController {
         Application application = applicationRepository.findOne(id);
         application.setName(appModel.getName());
         application.setPublicUrl(appModel.getPublicUrl());
-        application.setApplicationGroup(applicationGroupRepository.findOne(appModel.getApplicationGroupId()));
 
         application = applicationRepository.save(application);
-        return new AppModel(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup());
+        return new AppModel(application);
     }
 
+    /*
     @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{applicationId}/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel addApplicationGroup(@PathVariable Long applicationId, @RequestBody Long applicationGroupId) {
@@ -124,6 +128,7 @@ public class ApplicationController {
         application = applicationRepository.save(application);
         return new AppGroupModel(application.getApplicationGroup());
     }
+    */
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/application-group", produces = APPLICATION_JSON_VALUE)
     @ResponseBody

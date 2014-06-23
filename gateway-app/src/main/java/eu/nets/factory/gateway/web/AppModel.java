@@ -30,7 +30,7 @@ public  class AppModel {
         this.id = id;
         this.name = name;
         this.publicURL = url;
-        if(applicationGroup != null) { this.applicationGroupId = applicationGroup.getId(); } else { this.applicationGroupId = null; }
+        this.applicationGroupId = applicationGroup.getId();
     }
 
 
@@ -44,5 +44,5 @@ public  class AppModel {
     //public void setPublicUrl(String url) { this.publicURL = url; }
 
     public Long getApplicationGroupId() { return applicationGroupId; }
-    public void setApplicationGroupId(Long applicationGroupId) { this.applicationGroupId = applicationGroupId; }
+
 }
