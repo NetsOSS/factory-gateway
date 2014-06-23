@@ -192,7 +192,7 @@ define([], function () {
     this.LoadBalancerController.addApplication = function (id, application) {
       var req = {};
       req.method = 'PUT';
-      req.url = prefix + '/data/load-balancer/{id}/applications';
+      req.url = prefix + '/data/load-balancers/{id}/applications';
       req.url = req.url.replace(/{id}/, id);
       req.data = application;
       req.params = {};
@@ -225,7 +225,7 @@ define([], function () {
     this.LoadBalancerController.getApplications = function (id) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/load-balancer/{id}/applications';
+      req.url = prefix + '/data/load-balancers/{id}/applications';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);

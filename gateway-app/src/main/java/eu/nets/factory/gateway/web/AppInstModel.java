@@ -17,11 +17,16 @@ public  class AppInstModel {
     public AppInstModel() { }
 
     public AppInstModel(ApplicationInstance applicationInstance) {
-        this(applicationInstance.getId(), applicationInstance.getName());
+        this(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort());
     }
 
-    public AppInstModel(Long id, String name) {
+
+
+    public AppInstModel(Long id, String name, String path, String host, Integer port) {
         this.id = id;
         this.name = name;
+        this.path = path;
+        this.host = host;
+        this.port = port;
     }
 }
