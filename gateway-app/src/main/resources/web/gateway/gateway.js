@@ -188,6 +188,10 @@ define([
       $scope.lb = data;
     });
 
+    GatewayData.LoadBalancerController.getApplications($routeParams.id).then(function(data){
+      //console.log("")
+    });
+
   });
 
 
