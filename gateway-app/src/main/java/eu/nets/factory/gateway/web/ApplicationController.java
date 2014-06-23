@@ -77,9 +77,9 @@ public class ApplicationController {
     @ResponseBody
     public AppModel create(@RequestBody AppModel applicationModel) {
         log.info("ApplicationController.create");
-        Application application = new Application(applicationModel.getName(), applicationModel.getPublicUrl());
+        Application application = new Application(applicationModel.getName(), applicationModel.getPublicUrl(), applicationGroupRepository.findOne(applicationModel.getApplicationGroupId()));
         application = applicationRepository.save(application);
-        return new AppModel(application.getId(), application.getName(), application.getPublicUrl());
+        return new AppModel(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup().getId());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
@@ -104,9 +104,10 @@ public class ApplicationController {
         Application application = applicationRepository.findOne(id);
         application.setName(appModel.getName());
         application.setPublicUrl(appModel.getPublicUrl());
+        application.setApplicationGroup(applicationGroupRepository.findOne(appModel.getApplicationGroupId()));
 
         application = applicationRepository.save(application);
-        return new AppModel(application.getId(), application.getName());
+        return new AppModel(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup().getId());
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{applicationId}/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

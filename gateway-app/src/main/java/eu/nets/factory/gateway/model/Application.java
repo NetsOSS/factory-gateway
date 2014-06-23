@@ -37,9 +37,11 @@ public class Application extends AbstractEntity {
     private ApplicationGroup applicationGroup;
 
 
-    public Application(String name, String url) {
+    public Application(String name, String url, ApplicationGroup applicationGroup) {
         this.name = name;
         this.publicURL = url;
+        this.applicationGroup = applicationGroup;
+        //loadBalancerList = new ArrayList<LoadBalancer>();
         applicationInstances = new ArrayList<ApplicationInstance>();
     }
 
@@ -76,8 +78,7 @@ public class Application extends AbstractEntity {
     public List<ApplicationInstance> getApplicationInstances() {
         return applicationInstances;
     }
-    public void setApplicationInstances(List<ApplicationInstance> applicationInstances) { this.applicationInstances = applicationInstances; }
-
+    //public void setApplicationInstances(List<ApplicationInstance> applicationInstances) { this.applicationInstances = applicationInstances; }
     public void addApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.add(applicationInstance); }
     public void removeApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.remove(applicationInstance); }
 }
