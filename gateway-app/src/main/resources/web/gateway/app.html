@@ -72,8 +72,14 @@
             </a>
 
         </div>
-        <h4>Raw</h4>
-        <pre>{{allInstApps|json}}</pre>
+
+
+        <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle (show/hide)</strong> json data</a>
+
+        <div ng-show="collapsedAppInst">
+            <pre>{{app.applications|json}}</pre>
+        </div>
+
     </div>
 
 </div>

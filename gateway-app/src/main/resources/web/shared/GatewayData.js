@@ -8,6 +8,15 @@ define([], function () {
       return res.data;
     };
     this.ApplicationController = {};
+    this.ApplicationController.addApplicationGroup = function (applicationId, applicationGroupId) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/applications/{applicationId}/application-group';
+      req.url = req.url.replace(/{applicationId}/, applicationId);
+      req.data = applicationGroupId;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationController.create = function (applicationModel) {
       var req = {};
       req.method = 'POST';
@@ -20,6 +29,22 @@ define([], function () {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/applications/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.getApplicationGroup = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/applications/{id}/application-group';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.getLoadBalancers = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/applications/{id}/load-balancers';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
@@ -60,6 +85,12 @@ define([], function () {
     this.resolve.ApplicationController = {};
     this.resolve.ApplicationController.findById = function (GatewayData, $route) {
       return ApplicationController.findById($route.current.params.id);
+    };
+    this.resolve.ApplicationController.getApplicationGroup = function (GatewayData, $route) {
+      return ApplicationController.getApplicationGroup($route.current.params.id);
+    };
+    this.resolve.ApplicationController.getLoadBalancers = function (GatewayData, $route) {
+      return ApplicationController.getLoadBalancers($route.current.params.id);
     };
     this.resolve.ApplicationController.listAllApps = function (GatewayData, $route) {
       return ApplicationController.listAllApps();
