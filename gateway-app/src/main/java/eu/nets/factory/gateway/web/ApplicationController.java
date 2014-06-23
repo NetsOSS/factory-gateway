@@ -1,6 +1,7 @@
 package eu.nets.factory.gateway.web;
 
         import eu.nets.factory.gateway.model.Application;
+        import eu.nets.factory.gateway.model.ApplicationGroupRepository;
         import eu.nets.factory.gateway.model.ApplicationRepository;
         import org.slf4j.Logger;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,12 @@ package eu.nets.factory.gateway.web;
 public class ApplicationController {
 
     private final Logger log = getLogger(getClass());
+
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ApplicationGroupRepository applicationGroupRepository;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications", produces = APPLICATION_JSON_VALUE)
@@ -105,5 +110,15 @@ public class ApplicationController {
         return new AppModel(application.getId(), application.getName());
     }
 
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{app_id}/addgroup/{group_id}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppModel addApplicationGroup(@PathVariable Long app_id, @PathVariable Long group_id) {
+        log.info("ApplicationController.addGroup");
 
+        Application application = applicationRepository.findOne(app_id);
+        application.setApplicationGroup(applicationGroupRepository.findOne(group_id));
+
+        application = applicationRepository.save(application);
+        return new AppModel(application.getId(), application.getName());
+    }
 }

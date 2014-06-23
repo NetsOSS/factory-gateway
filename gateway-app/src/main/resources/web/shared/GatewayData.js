@@ -42,9 +42,9 @@ define([], function () {
     this.ApplicationController.search = function (name) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/applications/find';
+      req.url = prefix + '/data/applications/find/{name}';
+      req.url = req.url.replace(/{name}/, name);
       req.params = {};
-      req.params.name = name;
       return $http(req).then(getData);
     };
     this.ApplicationController.update = function (id, appModel) {
@@ -208,7 +208,7 @@ define([], function () {
     this.LoadBalancerController.findBySshKey = function (sshKey) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/load-balancers/{sshKey}';
+      req.url = prefix + '/data/load-balancers/findBySsh/{sshKey}';
       req.url = req.url.replace(/{sshKey}/, sshKey);
       req.params = {};
       return $http(req).then(getData);

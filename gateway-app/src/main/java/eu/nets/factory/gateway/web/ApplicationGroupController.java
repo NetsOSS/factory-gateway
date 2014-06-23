@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -17,6 +19,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
  */
 
 @Controller
+@Transactional
 public class ApplicationGroupController {
 
     private final Logger log = getLogger(getClass());
@@ -25,19 +28,19 @@ public class ApplicationGroupController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-groups", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ApplicationGroup> listAllAppGroups() {
+    public List<AppGroupModel> listAllAppGroups() {
         log.info("ApplicationGroupController.list");
         //List<ApplicationGroup> l = new ArrayList<ApplicationGroup>();
         //l.add(new ApplicationGroup("test"));
 
         // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
 
-        return  applicationGroupRepository.findAll();
+        return  applicationGroupRepository.findAll().stream().map(AppGroupModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-group/find", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ApplicationGroup> search(@RequestParam(required = false) String name) {
+    public List<AppGroupModel> search(@RequestParam(required = false) String name) {
         log.info("ApplicationGroupController.search, name={}", name);
 
         List<ApplicationGroup> applicationGroups;
@@ -48,14 +51,14 @@ public class ApplicationGroupController {
             applicationGroups = applicationGroupRepository.findByNameLike("%" + name + "%");
         }
 
-        return applicationGroups;
+        return applicationGroups.stream().map(AppGroupModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-group/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ApplicationGroup findById(@PathVariable Long id) {
+    public AppGroupModel findById(@PathVariable Long id) {
         log.info("ApplicationGroupController.findById, name={}", id);
-        return applicationGroupRepository.findOne(id);
+        return new AppGroupModel(applicationGroupRepository.findOne(id));
     }
 
     /*
@@ -72,7 +75,7 @@ public class ApplicationGroupController {
         ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
 
         applicationGroup = applicationGroupRepository.save(applicationGroup);
-        return new AppGroupModel(applicationGroup.getId(), applicationGroup.getName());
+        return new AppGroupModel(applicationGroup);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/application-groups/{id}")
@@ -91,34 +94,8 @@ public class ApplicationGroupController {
         applicationGroup.setName(appGroupModel.getName());
 
         applicationGroup = applicationGroupRepository.save(applicationGroup);
-        return new AppGroupModel(applicationGroup.getId(), applicationGroup.getName());
+        return new AppGroupModel(applicationGroup);
     }
 
-    public static class AppGroupModel {
 
-        public Long id;
-
-        public String name;
-
-
-        public AppGroupModel() { }
-
-        public AppGroupModel(ApplicationGroup appGroup) {
-            this(appGroup.getId(), appGroup.getName());
-        }
-
-        public AppGroupModel(Long id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-
-        public Long getId() { return id; }
-
-        public void setId(Long id) { this.id = id; }
-
-        public String getName() { return name; }
-
-        public void setName(String name) { this.name = name; }
-    }
 }
