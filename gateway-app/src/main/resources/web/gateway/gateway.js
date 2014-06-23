@@ -137,7 +137,7 @@ define([
       $scope.newAppInstAlertSuccess = true;
 
       GatewayData.ApplicationInstanceController.create($scope.app.id, $scope.appInst).then(function (data) {
-        $scope.app.applications.push(data);
+        $scope.app.applicationInstances.push(data);
 
       });
     };

@@ -67,7 +67,7 @@
         <h3>All Application Instances of '{{app.name}}'  </h3>
 
         <div class="list-group">
-            <a href="#/appInst/{{a.id}}" class="list-group-item" ng-repeat="a in app.applications">
+            <a href="#/appInst/{{a.id}}" class="list-group-item" ng-repeat="a in app.applicationInstances">
                 <b> {{a.name}}</b> ({{a.id}}) {{a.host}}/{{a.path}}:{{a.port}}
             </a>
 
