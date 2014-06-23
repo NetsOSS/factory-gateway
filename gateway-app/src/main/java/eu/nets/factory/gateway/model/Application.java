@@ -37,10 +37,9 @@ public class Application extends AbstractEntity {
     private ApplicationGroup applicationGroup;
 
 
-    public Application(String name, String url, ApplicationGroup applicationGroup) {
+    public Application(String name, String url) {
         this.name = name;
         this.publicURL = url;
-        this.applicationGroup = applicationGroup;
         //loadBalancerList = new ArrayList<LoadBalancer>();
         applicationInstances = new ArrayList<ApplicationInstance>();
     }

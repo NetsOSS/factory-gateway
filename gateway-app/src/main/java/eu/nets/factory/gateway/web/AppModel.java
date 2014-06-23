@@ -1,6 +1,7 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,20 +21,20 @@ public  class AppModel {
     public AppModel() { }
 
     public AppModel(Application application) {
-        this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup().getId());
-         applicationInstances= application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
+        this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup());
+        applicationInstances= application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
        // instanceIds=application.getApplicationInstances().stream().map(ApplicationInstance::getId).collect(toList());
     }
 
-    public AppModel(Long id, String name, String url, Long applicationGroupId) {
+    public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup) {
         this.id = id;
         this.name = name;
         this.publicURL = url;
-        this.applicationGroupId = applicationGroupId;
+        if(applicationGroup != null) { this.applicationGroupId = applicationGroup.getId(); } else { this.applicationGroupId = null; }
     }
 
 
-    public Long getId() { return id; }
+     public Long getId() { return id; }
     //public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
@@ -43,4 +44,5 @@ public  class AppModel {
     //public void setPublicUrl(String url) { this.publicURL = url; }
 
     public Long getApplicationGroupId() { return applicationGroupId; }
+    public void setApplicationGroupId(Long applicationGroupId) { this.applicationGroupId = applicationGroupId; }
 }
