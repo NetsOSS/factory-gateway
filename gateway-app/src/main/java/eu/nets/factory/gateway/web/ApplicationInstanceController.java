@@ -7,10 +7,12 @@ import eu.nets.factory.gateway.model.ApplicationRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -18,6 +20,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
  * Created by sleru on 18.06.2014.
  */
 @Controller
+@Transactional
 public class ApplicationInstanceController {
 
     private final Logger log = getLogger(getClass());
@@ -30,27 +33,27 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ApplicationInstance> listAllAppInsts() {
+    public List<AppInstModel> listAllAppInsts() {
         log.info("ApplicationInstanceController.list");
         //List<ApplicationInstance> l = new ArrayList<ApplicationInstance>();
         //l.add(new ApplicationInstance("test"));
 
         // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
 
-        return  applicationInstanceRepository.findAll();
+        return  applicationInstanceRepository.findAll().stream().map(AppInstModel::new).collect(toList());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/find", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/data/instances/find", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ApplicationInstance> search(@RequestParam(required = false) String name) {
+    public List<AppInstModel> search(@RequestParam(required = false) String name) {
         log.info("ApplicationInstanceController.search, name={}", name);
 
-        List<ApplicationInstance> applicationInstances;
+        List<AppInstModel> applicationInstances;
 
         if (name == null) {
-            applicationInstances = applicationInstanceRepository.findAll();
+            applicationInstances = applicationInstanceRepository.findAll().stream().map(AppInstModel::new).collect(toList());
         } else {
-            applicationInstances = applicationInstanceRepository.findByNameLike("%" + name + "%");
+            applicationInstances = applicationInstanceRepository.findByNameLike("%" + name + "%").stream().map(AppInstModel::new).collect(toList());
         }
 
         return applicationInstances;
@@ -58,9 +61,10 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ApplicationInstance findById(@PathVariable Long id) {
+    public AppInstModel findById(@PathVariable Long id) {
         log.info("ApplicationInstanceController.findById, name={}", id);
-        return applicationInstanceRepository.findOne(id);
+
+        return new AppInstModel(applicationInstanceRepository.findOne(id));
     }
 
     /*
@@ -74,10 +78,8 @@ public class ApplicationInstanceController {
     public AppInstModel create(@PathVariable long applicationId, @RequestBody AppInstModel applicationInstanceModel) {
         log.info("ApplicationInstanceController.create");
 
-
         Application application = applicationRepository.findOne(applicationInstanceModel.application.id);
-
-       ApplicationInstance applicationInstance = new ApplicationInstance(applicationInstanceModel.name, applicationInstanceModel.host, applicationInstanceModel.port, applicationInstanceModel.path, application);
+        ApplicationInstance applicationInstance = new ApplicationInstance(applicationInstanceModel.name, applicationInstanceModel.host, applicationInstanceModel.port, applicationInstanceModel.path, application);
 
         application.addApplicationInstance(applicationInstance);
         applicationRepository.save(application );
@@ -113,6 +115,4 @@ public class ApplicationInstanceController {
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
     }
-
-
 }

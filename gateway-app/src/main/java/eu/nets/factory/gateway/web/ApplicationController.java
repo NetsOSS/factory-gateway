@@ -40,8 +40,7 @@ public class ApplicationController {
 
         // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
 
-        return  applicationRepository.findAll().stream().
-                map(AppModel::new).collect(toList());
+        return  applicationRepository.findAll().stream().map(AppModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/find/{name}", produces = APPLICATION_JSON_VALUE)

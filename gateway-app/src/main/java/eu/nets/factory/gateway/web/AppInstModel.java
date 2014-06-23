@@ -24,7 +24,4 @@ public  class AppInstModel {
         this.id = id;
         this.name = name;
     }
-
-
-
 }
