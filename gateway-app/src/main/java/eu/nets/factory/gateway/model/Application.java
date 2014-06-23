@@ -1,5 +1,7 @@
 package eu.nets.factory.gateway.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.persistence.*;
@@ -21,14 +23,14 @@ public class Application extends AbstractEntity {
     @NotNull
     private String publicURL;
 
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(name = "load_balancer_application",
                 joinColumns = {@JoinColumn(name = "application_id")},
                 inverseJoinColumns = {@JoinColumn(name = "load_balancer_id")})
-    private List<LoadBalancer> loadBalancerList;
+    private List<LoadBalancer> loadBalancerList;*/
 
     @OneToMany(mappedBy = "application")
-    private List<ApplicationInstance> applicationInstances;
+    private List<ApplicationInstance> applicationInstances = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "application_group")
@@ -38,7 +40,7 @@ public class Application extends AbstractEntity {
     public Application(String name, String url) {
         this.name = name;
         this.publicURL = url;
-        loadBalancerList = new ArrayList<LoadBalancer>();
+        //loadBalancerList = new ArrayList<LoadBalancer>();
         applicationInstances = new ArrayList<ApplicationInstance>();
     }
 
@@ -51,12 +53,12 @@ public class Application extends AbstractEntity {
     public String getPublicUrl(){ return publicURL; }
     public void setPublicUrl(String url) { this.publicURL = url; }
 
-    public List<LoadBalancer> getLoadBalancerList() {
+    /*public List<LoadBalancer> getLoadBalancerList() {
         return loadBalancerList;
     }
     public void setLoadBalancerList(List<LoadBalancer> loadBalancerList) {
         this.loadBalancerList = loadBalancerList;
-    }
+    }*/
 
     public ApplicationGroup getApplicationGroup() {
         return applicationGroup;
@@ -65,12 +67,12 @@ public class Application extends AbstractEntity {
         this.applicationGroup = applicationGroup;
     }
 
-    public void addLoadBalancer(LoadBalancer loadBalancer) {
+ /*   public void addLoadBalancer(LoadBalancer loadBalancer) {
         this.loadBalancerList.add(loadBalancer);
     }
     public void removeLoadBalancer(LoadBalancer loadBalancer) {
         this.loadBalancerList.remove(loadBalancer);
-    }
+    }*/
 
     public List<ApplicationInstance> getApplicationInstances() {
         return applicationInstances;

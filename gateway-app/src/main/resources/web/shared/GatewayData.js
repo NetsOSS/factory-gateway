@@ -128,11 +128,12 @@ define([], function () {
       return ApplicationGroupController.search($route.current.params.name);
     };
     this.ApplicationInstanceController = {};
-    this.ApplicationInstanceController.create = function (appInstModel) {
+    this.ApplicationInstanceController.create = function (applicationId, applicationInstanceModel) {
       var req = {};
       req.method = 'POST';
-      req.url = prefix + '/data/instances';
-      req.data = appInstModel;
+      req.url = prefix + '/data/applications/{applicationId}/instances';
+      req.url = req.url.replace(/{applicationId}/, applicationId);
+      req.data = applicationInstanceModel;
       req.params = {};
       return $http(req).then(getData);
     };
@@ -167,12 +168,12 @@ define([], function () {
       req.params.name = name;
       return $http(req).then(getData);
     };
-    this.ApplicationInstanceController.update = function (id, appInstModel) {
+    this.ApplicationInstanceController.update = function (id, applicationInstanceModel) {
       var req = {};
       req.method = 'PUT';
       req.url = prefix + '/data/instances/{id}';
       req.url = req.url.replace(/{id}/, id);
-      req.data = appInstModel;
+      req.data = applicationInstanceModel;
       req.params = {};
       return $http(req).then(getData);
     };

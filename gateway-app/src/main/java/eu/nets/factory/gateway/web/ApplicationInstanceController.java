@@ -3,6 +3,7 @@ package eu.nets.factory.gateway.web;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.ApplicationInstanceRepository;
+import eu.nets.factory.gateway.model.ApplicationRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class ApplicationInstanceController {
 
     private final Logger log = getLogger(getClass());
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @Autowired
     private ApplicationInstanceRepository applicationInstanceRepository;
 
@@ -65,13 +69,18 @@ public class ApplicationInstanceController {
     public PersonModel create(@RequestBody PersonModel personModel) {
      */
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppInstModel create(@RequestBody AppInstModel applicationInstanceModel) {
+    public AppInstModel create(@PathVariable long applicationId, @RequestBody AppInstModel applicationInstanceModel) {
         log.info("ApplicationInstanceController.create");
 
-        ApplicationInstance applicationInstance = new ApplicationInstance(applicationInstanceModel.name, applicationInstanceModel.host, applicationInstanceModel.port, applicationInstanceModel.path, applicationInstanceModel.application);
 
+        Application application = applicationRepository.findOne(applicationInstanceModel.application.id);
+
+       ApplicationInstance applicationInstance = new ApplicationInstance(applicationInstanceModel.name, applicationInstanceModel.host, applicationInstanceModel.port, applicationInstanceModel.path, application);
+
+        application.addApplicationInstance(applicationInstance);
+        applicationRepository.save(application );
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
         /* Application - ApplicationInstance relation
         applicationInstanceModel.getApplication().addApplicationInstance(applicationInstance);
@@ -96,77 +105,14 @@ public class ApplicationInstanceController {
         log.info("ApplicationInstanceController.update");
 
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
-        applicationInstance.setName(applicationInstanceModel.getName());
-        applicationInstance.setPath(applicationInstanceModel.getPath());
-        applicationInstance.setHost(applicationInstanceModel.getHost());
-        applicationInstance.setPort(applicationInstanceModel.getPort());
+        applicationInstance.setName(applicationInstanceModel.name);
+        applicationInstance.setPath(applicationInstanceModel.path);
+        applicationInstance.setHost(applicationInstanceModel.host  );
+        applicationInstance.setPort(applicationInstanceModel.port);
 
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
     }
 
-    public static class AppInstModel {
 
-        public Long id;
-
-        public String name;
-        public String path;
-        public String host;
-        public Integer port;
-        public Application application;
-
-
-        public AppInstModel() { }
-
-        public AppInstModel(ApplicationInstance applicationInstance) {
-          this(applicationInstance.getId(), applicationInstance.getName());
-        }
-
-        public AppInstModel(Long id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public Long getId() {
-            return id;
-        }
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getPath() {
-            return path;
-        }
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public String getHost() {
-            return host;
-        }
-        public void setHost(String host) {
-            this.host = host;
-        }
-
-        public Integer getPort() {
-            return port;
-        }
-        public void setPort(Integer port) {
-            this.port = port;
-        }
-
-        public Application getApplication() {
-            return application;
-        }
-        public void setApplication(Application application) {
-            this.application = application;
-        }
-    }
 }

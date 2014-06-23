@@ -1,6 +1,8 @@
 package eu.nets.factory.gateway.web;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +43,9 @@ public class GatewayExceptionControllerAdvice {
                 s.append("The field '").append(v.getPropertyPath()).append("' ").append(v.getMessage()).append(". ");
             }
         } else {
-            s = new StringBuilder("Internal error");
+            StringWriter buf = new StringWriter();
+            e.printStackTrace(new PrintWriter(buf));
+            s = new StringBuilder(buf.toString());
         }
 
         String message = s.toString();

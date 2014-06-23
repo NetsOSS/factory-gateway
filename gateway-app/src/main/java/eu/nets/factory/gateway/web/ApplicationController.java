@@ -1,22 +1,23 @@
 package eu.nets.factory.gateway.web;
 
         import eu.nets.factory.gateway.model.Application;
-        import eu.nets.factory.gateway.model.ApplicationInstance;
         import eu.nets.factory.gateway.model.ApplicationRepository;
         import org.slf4j.Logger;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Controller;
         import org.springframework.web.bind.annotation.*;
 
+        import javax.transaction.Transactional;
         import java.util.List;
 
+        import static java.util.stream.Collectors.toList;
         import static org.slf4j.LoggerFactory.getLogger;
         import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 /**
  * Created by kwlar on 19.06.2014.
  */
-
+@Transactional
 @Controller
 public class ApplicationController {
 
@@ -24,16 +25,18 @@ public class ApplicationController {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Application> listAllApps() {
+    public List<AppModel> listAllApps() {
         log.info("ApplicationController.list");
         //List<Application> l = new ArrayList<Application>();
         //l.add(new Application("test"));
 
         // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
 
-        return  applicationRepository.findAll();
+        return  applicationRepository.findAll().stream().
+                map(AppModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/find", produces = APPLICATION_JSON_VALUE)
@@ -101,40 +104,5 @@ public class ApplicationController {
         return new AppModel(application.getId(), application.getName());
     }
 
-    public static class AppModel {
 
-        public Long id;
-
-        public String name;
-        public String publicURL;
-
-
-        public AppModel() { }
-
-        public AppModel(Application app) { this(app.getId(), app.getName(), app.getPublicUrl()); }
-
-        public AppModel(Long id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public AppModel(Long id, String name, String url) {
-            this.id = id;
-            this.name = name;
-            this.publicURL = url;
-        }
-
-
-        public Long getId() { return id; }
-
-        public void setId(Long id) { this.id = id; }
-
-        public String getName() { return name; }
-
-        public void setName(String name) { this.name = name; }
-
-        public String getPublicUrl() { return publicURL; }
-
-        public void setPublicUrl(String url) { this.publicURL = url; }
-    }
 }
