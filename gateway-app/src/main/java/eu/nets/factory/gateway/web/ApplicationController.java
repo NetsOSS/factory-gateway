@@ -109,15 +109,34 @@ public class ApplicationController {
         return new AppModel(application.getId(), application.getName());
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{app_id}/addgroup/{group_id}", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{applicationId}/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppModel addApplicationGroup(@PathVariable Long app_id, @PathVariable Long group_id) {
+    public AppGroupModel addApplicationGroup(@PathVariable Long applicationId, @RequestBody Long applicationGroupId) {
         log.info("ApplicationController.addGroup");
 
-        Application application = applicationRepository.findOne(app_id);
-        application.setApplicationGroup(applicationGroupRepository.findOne(group_id));
+        Application application = applicationRepository.findOne(applicationId);
+        application.setApplicationGroup(applicationGroupRepository.findOne(applicationGroupId));
 
         application = applicationRepository.save(application);
-        return new AppModel(application.getId(), application.getName());
+        return new AppGroupModel(application.getApplicationGroup());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/application-group", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppGroupModel getApplicationGroup(@PathVariable Long id) {
+        log.info("ApplicationController.getGroup");
+        Application application = applicationRepository.findOne(id);
+
+        return new AppGroupModel(application.getApplicationGroup());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/load-balancers", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<LoadBalancerModel> getLoadBalancers(@PathVariable Long id) {
+        log.info("ApplicationController.getLoadBalancers");
+        Application application = applicationRepository.findOne(id);
+
+        return application.getLoadBalancerList().stream().
+                map(LoadBalancerModel::new).collect(toList());
     }
 }
