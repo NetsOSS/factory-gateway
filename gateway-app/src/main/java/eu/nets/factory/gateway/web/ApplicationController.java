@@ -41,7 +41,7 @@ public class ApplicationController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/find/{name}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AppModel> search(@RequestParam(required = false) String name) {
+    public List<AppModel> search(@PathVariable String name) {
         log.info("ApplicationController.search, name={}", name);
 
         List<Application> applications;
