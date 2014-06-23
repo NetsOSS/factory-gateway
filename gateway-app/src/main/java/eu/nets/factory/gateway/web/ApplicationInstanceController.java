@@ -76,18 +76,20 @@ public class ApplicationInstanceController {
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel create(@PathVariable long applicationId, @RequestBody AppInstModel applicationInstanceModel) {
-        log.info("ApplicationInstanceController.create");
+        log.info("ApplicationInstanceController.create AppId={} host= {}",applicationId, applicationInstanceModel.host);
 
-        Application application = applicationRepository.findOne(applicationInstanceModel.application.id);
+        Application application = applicationRepository.findOne(applicationId);
         ApplicationInstance applicationInstance = new ApplicationInstance(applicationInstanceModel.name, applicationInstanceModel.host, applicationInstanceModel.port, applicationInstanceModel.path, application);
+        applicationInstance = applicationInstanceRepository.save(applicationInstance);
 
         application.addApplicationInstance(applicationInstance);
-        applicationRepository.save(application );
-        applicationInstance = applicationInstanceRepository.save(applicationInstance);
+        applicationRepository.save(application);
+
         /* Application - ApplicationInstance relation
         applicationInstanceModel.getApplication().addApplicationInstance(applicationInstance);
         */
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
+        //Long id, String name, String path, String host, Integer port)
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort());
      }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
@@ -113,6 +115,7 @@ public class ApplicationInstanceController {
         applicationInstance.setPort(applicationInstanceModel.port);
 
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName());
+        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort());
+
     }
 }

@@ -1,9 +1,6 @@
 package eu.nets.factory.gateway.web;
 
-import eu.nets.factory.gateway.model.ApplicationInstance;
-import eu.nets.factory.gateway.model.LoadBalancer;
-import eu.nets.factory.gateway.model.LoadBalancerRepository;
-import eu.nets.factory.gateway.model.LoadBalancer_;
+import eu.nets.factory.gateway.model.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -111,10 +108,20 @@ public class LoadBalancerController {
         return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers_applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LoadBalancerModel addApplication(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
-        return null;
+    public List<AppModel> addApplication(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel, @RequestBody Application application) {
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        loadBalancer.addApplication(application);
+        loadBalancer = loadBalancerRepository.save(loadBalancer);
+        return loadBalancer.getApplications().stream().
+                map(AppModel::new).collect(toList());
     }
-
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/applications", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<AppModel> getApplications(@PathVariable Long id) {
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        return loadBalancer.getApplications().stream().
+                map(AppModel::new).collect(toList());
+    }
 }
