@@ -97,5 +97,10 @@ public class ApplicationGroupController {
         return new AppGroupModel(applicationGroup);
     }
 
-
+    @RequestMapping(method = RequestMethod.GET, value = "/data/application-groups/{id}/applications", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<AppModel> getApplications(@PathVariable Long id) {
+        log.info("ApplicationGroupController.getApplications()");
+        return applicationGroupRepository.findOne(id).getApplications().stream().map(AppModel::new).collect(toList());
+    }
 }

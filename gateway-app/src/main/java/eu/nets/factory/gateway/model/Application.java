@@ -21,6 +21,7 @@ public class Application extends AbstractEntity {
     private String name;
 
     @NotNull
+    @Column(nullable = false)
     private String publicURL;
 
     @ManyToMany

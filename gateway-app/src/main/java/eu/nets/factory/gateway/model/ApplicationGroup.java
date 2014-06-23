@@ -3,6 +3,7 @@ package eu.nets.factory.gateway.model;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,9 +16,8 @@ public class ApplicationGroup extends AbstractEntity {
     @NotNull
     private String name;
 
-    @NotNull
     @OneToMany(mappedBy = "applicationGroup")
-    private List<Application> applications;
+    private List<Application> applications = new ArrayList<>();
 
 
     public ApplicationGroup(String name) {

@@ -106,6 +106,14 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationGroupController.getApplications = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/application-groups/{id}/applications';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationGroupController.listAllAppGroups = function () {
       var req = {};
       req.method = 'GET';
@@ -142,6 +150,9 @@ define([], function () {
     this.resolve.ApplicationGroupController = {};
     this.resolve.ApplicationGroupController.findById = function (GatewayData, $route) {
       return ApplicationGroupController.findById($route.current.params.id);
+    };
+    this.resolve.ApplicationGroupController.getApplications = function (GatewayData, $route) {
+      return ApplicationGroupController.getApplications($route.current.params.id);
     };
     this.resolve.ApplicationGroupController.listAllAppGroups = function (GatewayData, $route) {
       return ApplicationGroupController.listAllAppGroups();
