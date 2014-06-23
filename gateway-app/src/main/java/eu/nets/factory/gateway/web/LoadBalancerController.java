@@ -9,36 +9,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Controller
+@Transactional
 public class LoadBalancerController {
 
     private final Logger log = getLogger(getClass());
     @Autowired
     private LoadBalancerRepository loadBalancerRepository;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers",  produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<LoadBalancer> listAllLoadBalancers() {
+    public List<LoadBalancerModel> listAllLoadBalancers() {
         log.info("LoadBalancerController.list");
         //List<ApplicationInstance> l = new ArrayList<ApplicationInstance>();
         //l.add(new ApplicationInstance("test"));
 
         // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
 
-        return loadBalancerRepository.findAll();
+        return loadBalancerRepository.findAll().stream().
+                map(LoadBalancerModel::new).collect(toList());
 
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/find", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<LoadBalancer> search(@RequestParam(required = false) String name) {
+    public List<LoadBalancerModel> search(@RequestParam(required = false) String name) {
         log.info("LoadBalancerController.search, name={}", name);
 
         List<LoadBalancer> loadBalancers;
@@ -49,41 +53,37 @@ public class LoadBalancerController {
             loadBalancers = loadBalancerRepository.findByNameLike("%" + name + "%");
         }
 
-        return loadBalancers;
+        return loadBalancers.stream().
+                map(LoadBalancerModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LoadBalancer findById(@PathVariable Long id) {
+    public LoadBalancerModel findById(@PathVariable Long id) {
         log.info("LoadBalancerController.findById, name={}", id);
-        return loadBalancerRepository.findOne(id);
+        LoadBalancer tmp = loadBalancerRepository.findOne(id);
+        return new LoadBalancerModel(tmp);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{sshKey}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LoadBalancer findBySshKey(@PathVariable String ssh) {
+    public LoadBalancerModel findBySshKey(@PathVariable String ssh) {
         log.info("LoadBalancerController.findBySshKey, name={}", ssh);
         List<LoadBalancer> all = loadBalancerRepository.findAll();
-        for(LoadBalancer l: all) {
-            if(l.getSshKey().equals(ssh)) {
-                return l;
+        for (LoadBalancer l : all) {
+            if (l.getSshKey().equals(ssh)) {
+                return new LoadBalancerModel(l);
             }
         }
         return null;
     }
-
-    /*
-    @RequestMapping(method = POST, value = "/data/persons", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public PersonModel create(@RequestBody PersonModel personModel) {
-     */
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public LoadBalancerModel create(@RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.create");
 
-        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.getName(), loadBalancerModel.getHost(), loadBalancerModel.getInstallationPath(), loadBalancerModel.getSshKey());
+        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey);
 
         loadBalancer = loadBalancerRepository.save(loadBalancer);
         return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
@@ -96,70 +96,25 @@ public class LoadBalancerController {
         loadBalancerRepository.delete(id);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public LoadBalancerModel update(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.update");
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
-        loadBalancer.setName(loadBalancerModel.getName());
-        loadBalancer.setHost(loadBalancerModel.getHost());
-        loadBalancer.setInstallationPath(loadBalancerModel.getInstallationPath());
-        loadBalancer.setSshKey(loadBalancerModel.getSshKey());
+        loadBalancer.setName(loadBalancerModel.name);
+        loadBalancer.setHost(loadBalancerModel.host);
+        loadBalancer.setInstallationPath(loadBalancerModel.installationPath);
+        loadBalancer.setSshKey(loadBalancerModel.sshKey);
 
         loadBalancer = loadBalancerRepository.save(loadBalancer);
         return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
     }
 
-    public static class LoadBalancerModel {
+    /*@RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LoadBalancerModel addApplication(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
+        return null;
+    }*/
 
-        Long id;
-
-        String name;
-        String installationPath;
-
-        String host;
-        String sshKey;
-
-
-        public LoadBalancerModel() { }
-
-        public LoadBalancerModel(LoadBalancer loadBalancer) {
-            this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey());
-        }
-
-        public LoadBalancerModel(Long id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey) {
-            this.id = id;
-            this.name = name;
-            this.host = host;
-            this.installationPath = installationPath;
-            this.sshKey = sshKey;
-        }
-
-
-        public Long getId() { return id; }
-
-        public void setId(Long id) { this.id = id; }
-
-        public String getName() { return name; }
-
-        public void setName(String name) { this.name = name; }
-
-        public String getHost() { return host; }
-
-        public void setHost(String host) { this.host = host; }
-
-        public String getInstallationPath() { return installationPath; }
-
-        public void setInstallationPath(String installationPath) { this.installationPath = installationPath; }
-
-        public String getSshKey() { return sshKey; }
-
-        public void setSshKey(String sshKey) { this.sshKey = sshKey; }
-    }
 }

@@ -128,10 +128,11 @@ define([], function () {
       return ApplicationGroupController.search($route.current.params.name);
     };
     this.ApplicationInstanceController = {};
-    this.ApplicationInstanceController.create = function (applicationInstanceModel) {
+    this.ApplicationInstanceController.create = function (applicationId, applicationInstanceModel) {
       var req = {};
       req.method = 'POST';
-      req.url = prefix + '/data/instances';
+      req.url = prefix + '/data/applications/{applicationId}/instances';
+      req.url = req.url.replace(/{applicationId}/, applicationId);
       req.data = applicationInstanceModel;
       req.params = {};
       return $http(req).then(getData);
