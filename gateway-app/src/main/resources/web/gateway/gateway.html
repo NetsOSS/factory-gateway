@@ -22,7 +22,7 @@
         <h3>All Application Groups</h3>
 
         <div class="list-group">
-            <a href="#" class="list-group-item" ng-repeat="appGroup in allAppGroups">
+            <a href="#/group/{{appGroup.id}}" class="list-group-item" ng-repeat="appGroup in allAppGroups">
                 <b> {{appGroup.name}}</b> ({{appGroup.id}})
             </a>
 

@@ -30,11 +30,15 @@ define([
           controller: 'LoadBalancerCtrl',
           templateUrl: templatePrefix + "loadBalancer.html"
         })
+        .when('/group/:id', {
+          controller: 'AppGroupCtrl',
+          templateUrl: templatePrefix + "appGroup.html"
+        })
     ;
   });
 
-  gateway.controller('FrontPageCtrl', function ($scope, GatewayData) {
-
+  gateway.controller('FrontPageCtrl', function ($location,$scope, GatewayData) {
+    $scope.allApps = [];
 
     $scope.showNewPersonAlert = false;
 
@@ -78,6 +82,7 @@ define([
     $scope.createApplication = function () {
       console.log("New application : ", $scope.app);
       GatewayData.ApplicationController.create($scope.app).then(function (data) {
+
         $scope.allApps.push(data);
       });
 
@@ -109,7 +114,10 @@ define([
 
     $scope.createApplicationGroup = function () {
       console.log("New application Group : ", $scope.appGroup);
-      GatewayData.ApplicationGroupController.create($scope.appGroup);
+      GatewayData.ApplicationGroupController.create($scope.appGroup).then(function(data){
+        $scope.allAppGroups.push(data);
+      });
+
     };
     GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
       console.log(data);
@@ -197,6 +205,21 @@ define([
       console.log("Apps for this LB : ", data);
       $scope.lbApps = data;
     });
+
+  });
+
+  //    ----------------------- Load balancer Controller ------------------------------------
+  gateway.controller('AppGroupCtrl', function ($scope, $routeParams,$location, GatewayData) {
+    GatewayData.ApplicationGroupController.findById($routeParams.id).then(function (data) {
+      console.log("AppGroup : ", data);
+      $scope.group = data;
+    });
+
+    $scope.removeGroup = function(){
+      GatewayData.ApplicationGroupController.remove($routeParams.id);
+      $location.path("/");
+    };
+
 
   });
 
