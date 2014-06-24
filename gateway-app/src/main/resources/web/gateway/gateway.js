@@ -37,7 +37,7 @@ define([
     ;
   });
 
-  gateway.controller('FrontPageCtrl', function ($location,$scope, GatewayData) {
+  gateway.controller('FrontPageCtrl', function ($location, $scope, GatewayData) {
     $scope.allApps = [];
 
     $scope.showNewPersonAlert = false;
@@ -114,7 +114,7 @@ define([
 
     $scope.createApplicationGroup = function () {
       console.log("New application Group : ", $scope.appGroup);
-      GatewayData.ApplicationGroupController.create($scope.appGroup).then(function(data){
+      GatewayData.ApplicationGroupController.create($scope.appGroup).then(function (data) {
         $scope.allAppGroups.push(data);
       });
 
@@ -135,7 +135,7 @@ define([
 
       //Find more info  (name) about the group it belongs too.
       GatewayData.ApplicationGroupController.findById($scope.app.applicationGroupId).then(function (data) {
-        $scope.appGroup=data;
+        $scope.appGroup = data;
       });
     });
 
@@ -196,32 +196,50 @@ define([
   });
 
   gateway.controller('LoadBalancerFormCtrl', function ($scope) {
-  console.log("LB Form Controller");
+    console.log("LB Form Controller");
   });
 
   //    ----------------------- Load balancer Controller ------------------------------------
   gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
+
 
     GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
       console.log("Data: ", data);
       $scope.lb = data;
     });
 
+    $scope.addAppToLB = function (appId) {
+      console.log('Adding app to LB ',appId);
+      GatewayData.LoadBalancerController.addApplication( $scope.lb.id,appId).then(function (data) {
+        console.log('Added!!');
+      });
+    };
+
+    $scope.removeAppFromLB = function (appId) {
+      console.log('Remove app from LB ',appId);
+
+    };
+
+
+    GatewayData.ApplicationController.listAllApps().then(function (data) {
+      $scope.allApps = data;
+    });
+
     GatewayData.LoadBalancerController.getApplications($routeParams.id).then(function (data) {
       console.log("Apps for this LB : ", data);
-      $scope.lbApps = data;
+      $scope.allAppsInLb = data;
     });
 
   });
 
   //    ----------------------- Load balancer Controller ------------------------------------
-  gateway.controller('AppGroupCtrl', function ($scope, $routeParams,$location, GatewayData) {
+  gateway.controller('AppGroupCtrl', function ($scope, $routeParams, $location, GatewayData) {
     GatewayData.ApplicationGroupController.findById($routeParams.id).then(function (data) {
       console.log("AppGroup : ", data);
       $scope.group = data;
     });
 
-    $scope.removeGroup = function(){
+    $scope.removeGroup = function () {
       GatewayData.ApplicationGroupController.remove($routeParams.id);
       $location.path("/");
     };

@@ -14,6 +14,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import static org.springframework.util.MimeTypeUtils.TEXT_PLAIN;
 
 @Controller
 @Transactional
@@ -113,9 +114,10 @@ public class LoadBalancerController {
         return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AppModel> addApplication(@PathVariable Long id, @PathVariable Long applicationId) {
+    public List<AppModel> addApplication(@PathVariable Long id, @RequestBody Long applicationId) {
+        log.info("LoadBalancerController.addApplication() LB.id={} , App.id={} ",id,applicationId);
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         loadBalancer.addApplication(applicationRepository.findOne(applicationId));
         loadBalancer = loadBalancerRepository.save(loadBalancer);

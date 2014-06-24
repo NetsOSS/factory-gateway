@@ -3,8 +3,25 @@
 <pre>{{lb|json}}</pre>
 
 <h3>Application in this Load Balancer</h3>
-<pre>{{lbApps|json}}</pre>
-<h3>Add new application </h3>
-        ?
+<div class="list-group">
+    <a href="" class="list-group-item" ng-repeat="a in allAppsInLb" ng-click="removeAppFromLB(a.id)">
+        <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
 
+    </a>
+</div>
+<pre>{{allAppsInLb|json}}</pre>
+<h3>Add new application (from existing applications) </h3>
+
+<div class="list-group">
+    <a href="" class="list-group-item" ng-repeat="a in allApps" ng-click="addAppToLB(a.id)">
+        <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
+
+    </a>
+</div>
+
+
+
+
+
+<h1>Update Load Balancer (not implemented)</h1>
 <lb-form loadBalancer="lb" ></lb-form>
