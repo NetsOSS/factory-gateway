@@ -15,7 +15,7 @@ public  class AppModel {
     public String name;
     public String publicURL;
     public List<AppInstModel> applicationInstances = new ArrayList<>();
-    public List<Long> instanceIds = new ArrayList<>();
+    public List<LoadBalancerModel> loadBalancers = new ArrayList<>();
     public Long applicationGroupId;
 
     public AppModel() { }

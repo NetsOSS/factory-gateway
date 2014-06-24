@@ -55,13 +55,13 @@ public class InitTestClass {
         //Applications
         Application applicationOne = new Application("Kamino", "www.kamino.no", groupOne);
         Application applicationTwo = new Application("Grandiosa", "www.grandiosa.no", groupTwo);
-        Application applicationThree = new Application("Alpha", "www.alpha.no", groupThree);
+        Application applicationThree = new Application("Alpha", "www.alpha.no", groupTwo);
         AppModel appModelOne = new AppModel(applicationOne);
         AppModel appModelTwo = new AppModel(applicationTwo);
         AppModel appModelThree = new AppModel(applicationThree);
         appModelOne.applicationGroupId = groupModelOne.getId();
         appModelTwo.applicationGroupId = groupModelTwo.getId();
-        appModelThree.applicationGroupId = groupModelThree.getId();
+        appModelThree.applicationGroupId = groupModelTwo.getId();
 
         appModelOne = applicationController.create(appModelOne);
         appModelTwo = applicationController.create(appModelTwo);
@@ -70,21 +70,18 @@ public class InitTestClass {
         //ApplicationInstances
         ApplicationInstance appInstOne = new ApplicationInstance("Kamino 1.0", "hostOne", 8080, "www.kamino.no/1.0", applicationOne);
         ApplicationInstance appInstTwo = new ApplicationInstance("Grandiosa 1.0", "hostTwo", 8080, "www.grandiosa.no/1.0", applicationTwo);
-        ApplicationInstance appInstThree = new ApplicationInstance("Alpha 1.0", "hostThree", 8080, "www.alpha.no/1.0", applicationThree);
+        ApplicationInstance appInstThree = new ApplicationInstance("Alpha 1.0", "hostThree", 8080, "www.alpha.no/1.0", applicationTwo);
         AppInstModel instModelOne = new AppInstModel(appInstOne);
         AppInstModel instModelTwo = new AppInstModel(appInstTwo);
-        AppInstModel instModelthree = new AppInstModel(appInstThree);
+        AppInstModel instModelThree = new AppInstModel(appInstThree);
 
         applicationInstanceController.create(appModelOne.getId(), instModelOne);
         applicationInstanceController.create(appModelTwo.getId(), instModelTwo);
-        applicationInstanceController.create(appModelThree.getId(), instModelthree);
+        applicationInstanceController.create(appModelTwo.getId(), instModelThree);
 
         //Adding loadBalancer to Application
         loadBalancerController.addApplication(loadBalancerOne.getId(), applicationOne.getId());
         loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationTwo.getId());
-        loadBalancerController.addApplication(loadBalancerThree.getId(), applicationThree.getId());
-
-
-
+        loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationThree.getId());
     }
 }
