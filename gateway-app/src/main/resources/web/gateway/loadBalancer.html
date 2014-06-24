@@ -2,26 +2,52 @@
 
 <pre>{{lb|json}}</pre>
 
-<h3>Application in this Load Balancer</h3>
-<div class="list-group">
-    <a href="" class="list-group-item" ng-repeat="a in allAppsInLb" ng-click="removeAppFromLB(a.id)">
-        <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
 
-    </a>
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Application in this Load Balancer</h3>
+
+        <div class="list-group">
+            <a class="list-group-item" ng-repeat="a in allAppsInLb" >
+                <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
+                <button type="button"ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">Remove</button>
+            </a>
+        </div>
+
+
+
+
+        <a href="" ng-model="collapsedExistingApps" ng-click="collapsedExistingApps=!collapsedExistingApps"><strong>Toggle
+            (show/hide)</strong> json data</a>
+
+        <div ng-show="collapsedExistingApps">
+            <pre>{{allAppsInLb|json}}</pre>
+        </div>
+    </div>
+
+
+    <div class="col-sm-6">
+        <h3>Add new application (from existing applications) </h3>
+
+        <div class="list-group">
+            <a class="list-group-item" ng-repeat="a in allApps" >
+                <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
+                <button type="button" ng-click="addAppToLB(a.id)" class="btn btn-primary btn-sm pull-right">Add</button>
+            </a>
+        </div>
+    </div>
+
 </div>
-<pre>{{allAppsInLb|json}}</pre>
-<h3>Add new application (from existing applications) </h3>
+<div class="row">
 
-<div class="list-group">
-    <a href="" class="list-group-item" ng-repeat="a in allApps" ng-click="addAppToLB(a.id)">
-        <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
-
-    </a>
+    <button type="button" class="btn btn-primary btn-lg">Generate config ?</button>
 </div>
 
 
 
 
 
+
+<hr>
 <h1>Update Load Balancer (not implemented)</h1>
-<lb-form loadBalancer="lb" ></lb-form>
+<lb-form loadBalancer="lb"></lb-form>

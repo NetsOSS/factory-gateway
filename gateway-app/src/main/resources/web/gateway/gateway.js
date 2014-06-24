@@ -201,7 +201,7 @@ define([
 
   //    ----------------------- Load balancer Controller ------------------------------------
   gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
-
+    var localLBList =[];
 
     GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
       console.log("Data: ", data);
@@ -212,11 +212,13 @@ define([
       console.log('Adding app to LB ',appId);
       GatewayData.LoadBalancerController.addApplication( $scope.lb.id,appId).then(function (data) {
         console.log('Added!!');
+
       });
     };
 
     $scope.removeAppFromLB = function (appId) {
       console.log('Remove app from LB ',appId);
+      //GatewayData.LoadBalancerController.remove(appId);
 
     };
 
