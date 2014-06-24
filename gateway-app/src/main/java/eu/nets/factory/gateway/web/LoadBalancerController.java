@@ -128,4 +128,14 @@ public class LoadBalancerController {
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         return loadBalancer.getApplications().stream().map(AppModel::new).collect(toList());
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{loadBalancerId}/applications", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void removeApplicationFromLoadBalancer(@PathVariable Long loadBalancerId,@RequestBody Long applicationId) {
+
+        Application application = applicationRepository.findOne(applicationId);
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(loadBalancerId);
+
+        loadBalancer.removeApplication(application);
+    }
 }
