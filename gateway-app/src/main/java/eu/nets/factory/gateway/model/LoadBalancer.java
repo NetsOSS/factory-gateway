@@ -46,7 +46,6 @@ public class LoadBalancer extends AbstractEntity{
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -54,7 +53,6 @@ public class LoadBalancer extends AbstractEntity{
     public String getHost() {
         return host;
     }
-
     public void setHost(String host) {
         this.host = host;
     }
@@ -62,7 +60,6 @@ public class LoadBalancer extends AbstractEntity{
     public String getInstallationPath() {
         return installationPath;
     }
-
     public void setInstallationPath(String installationPath) {
         this.installationPath = installationPath;
     }
@@ -70,7 +67,6 @@ public class LoadBalancer extends AbstractEntity{
     public String getSshKey() {
         return sshKey;
     }
-
     public void setSshKey(String sshKey) {
         this.sshKey = sshKey;
     }
@@ -78,15 +74,10 @@ public class LoadBalancer extends AbstractEntity{
     public List<Application> getApplications() {
         return applications;
     }
-
-    public void setApplications(List<Application> applications) {
-        this.applications = applications;
-    }
-
+    // public void setApplications(List<Application> applications) { this.applications = applications; }
     public void addApplication(Application application) {
         this.applications.add(application);
     }
-
     public void removeApplication(Application application) {
         this.applications.remove(application);
     }

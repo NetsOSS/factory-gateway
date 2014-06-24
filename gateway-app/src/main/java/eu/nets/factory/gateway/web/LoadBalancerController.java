@@ -20,20 +20,19 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class LoadBalancerController {
 
     private final Logger log = getLogger(getClass());
+
     @Autowired
     private LoadBalancerRepository loadBalancerRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<LoadBalancerModel> listAllLoadBalancers() {
         log.info("LoadBalancerController.list");
-        //List<ApplicationInstance> l = new ArrayList<ApplicationInstance>();
-        //l.add(new ApplicationInstance("test"));
-
-        // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
-
-        return loadBalancerRepository.findAll().stream().
-                map(LoadBalancerModel::new).collect(toList());
+        return loadBalancerRepository.findAll().stream().map(LoadBalancerModel::new).collect(toList());
 
     }
 
@@ -50,16 +49,14 @@ public class LoadBalancerController {
             loadBalancers = loadBalancerRepository.findByNameLike("%" + name + "%");
         }
 
-        return loadBalancers.stream().
-                map(LoadBalancerModel::new).collect(toList());
+        return loadBalancers.stream().map(LoadBalancerModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public LoadBalancerModel findById(@PathVariable Long id) {
         log.info("LoadBalancerController.findById, name={}", id);
-        LoadBalancer tmp = loadBalancerRepository.findOne(id);
-        return new LoadBalancerModel(tmp);
+        return new LoadBalancerModel(loadBalancerRepository.findOne(id));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/findBySsh/{sshKey}", produces = APPLICATION_JSON_VALUE)
@@ -81,8 +78,8 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.create");
 
         LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey);
-
         loadBalancer = loadBalancerRepository.save(loadBalancer);
+
         return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
     }
 
@@ -90,6 +87,14 @@ public class LoadBalancerController {
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("LoadBalancerController.remove");
+
+                /* LoadBalancer - Application relation
+        List<Application> application = loadBalancerRepository.findOne(id).getApplications();
+        for(Application application : applications) {
+            ApplicationController.remove(application.getId()); //WARNING!  this will loop
+        }
+        */
+
         loadBalancerRepository.delete(id);
     }
 
@@ -110,18 +115,16 @@ public class LoadBalancerController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AppModel> addApplication(@PathVariable Long id, @RequestBody Application application) {
+    public List<AppModel> addApplication(@PathVariable Long id, @PathVariable Long applicationId) {
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
-        loadBalancer.addApplication(application);
+        loadBalancer.addApplication(applicationRepository.findOne(applicationId));
         loadBalancer = loadBalancerRepository.save(loadBalancer);
-        return loadBalancer.getApplications().stream().
-                map(AppModel::new).collect(toList());
+        return loadBalancer.getApplications().stream().map(AppModel::new).collect(toList());
     }
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppModel> getApplications(@PathVariable Long id) {
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
-        return loadBalancer.getApplications().stream().
-                map(AppModel::new).collect(toList());
+        return loadBalancer.getApplications().stream().map(AppModel::new).collect(toList());
     }
 }

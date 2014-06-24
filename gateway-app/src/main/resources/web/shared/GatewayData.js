@@ -222,12 +222,12 @@ define([], function () {
       return ApplicationInstanceController.search($route.current.params.name);
     };
     this.LoadBalancerController = {};
-    this.LoadBalancerController.addApplication = function (id, application) {
+    this.LoadBalancerController.addApplication = function (id, payload) {
       var req = {};
       req.method = 'PUT';
       req.url = prefix + '/data/load-balancers/{id}/applications';
       req.url = req.url.replace(/{id}/, id);
-      req.data = application;
+      req.data = payload;
       req.params = {};
       return $http(req).then(getData);
     };

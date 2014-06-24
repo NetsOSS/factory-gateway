@@ -30,11 +30,6 @@ public class ApplicationGroupController {
     @ResponseBody
     public List<AppGroupModel> listAllAppGroups() {
         log.info("ApplicationGroupController.list");
-        //List<ApplicationGroup> l = new ArrayList<ApplicationGroup>();
-        //l.add(new ApplicationGroup("test"));
-
-        // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
-
         return  applicationGroupRepository.findAll().stream().map(AppGroupModel::new).collect(toList());
     }
 
@@ -61,19 +56,12 @@ public class ApplicationGroupController {
         return new AppGroupModel(applicationGroupRepository.findOne(id));
     }
 
-    /*
-    @RequestMapping(method = POST, value = "/data/persons", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public PersonModel create(@RequestBody PersonModel personModel) {
-     */
-
     @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel create(@RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.create");
 
         ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
-
         applicationGroup = applicationGroupRepository.save(applicationGroup);
         return new AppGroupModel(applicationGroup);
     }
@@ -82,6 +70,13 @@ public class ApplicationGroupController {
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("ApplicationGroupController.remove");
+
+        /* ApplicationGroup - Application relation
+        List<Applications> applications = applicationGroupRepository.findOne(id).getApplications();
+        for(Application application : applications) {
+            ApplicationController.remove(application.getId()); //WARNING!  this will loop
+        }
+        */
         applicationGroupRepository.delete(id);
     }
 
@@ -91,7 +86,7 @@ public class ApplicationGroupController {
         log.info("ApplicationGroupController.update");
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
-        applicationGroup.setName(appGroupModel.getName());
+        applicationGroup.setName(appGroupModel.name);
 
         applicationGroup = applicationGroupRepository.save(applicationGroup);
         return new AppGroupModel(applicationGroup);
@@ -103,10 +98,8 @@ public class ApplicationGroupController {
         log.info("ApplicationGroupController.getApplications() LORD   id= {}",id);
         ApplicationGroup g = applicationGroupRepository.findOne(id);
         log.info("ApplicationGroupController.getApplications() : isNull ? {} ",g==null);
-
         log.info("ApplicationGroupController.getApplications() : name {}",g.getName());
+
         return applicationGroupRepository.findOne(id).getApplications().stream().map(AppModel::new).collect(toList());
-
-
     }
 }

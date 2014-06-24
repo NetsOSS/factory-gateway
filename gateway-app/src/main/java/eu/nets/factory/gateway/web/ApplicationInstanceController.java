@@ -35,11 +35,6 @@ public class ApplicationInstanceController {
     @ResponseBody
     public List<AppInstModel> listAllAppInsts() {
         log.info("ApplicationInstanceController.list");
-        //List<ApplicationInstance> l = new ArrayList<ApplicationInstance>();
-        //l.add(new ApplicationInstance("test"));
-
-        // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
-
         return  applicationInstanceRepository.findAll().stream().map(AppInstModel::new).collect(toList());
     }
 
@@ -48,30 +43,23 @@ public class ApplicationInstanceController {
     public List<AppInstModel> search(@RequestParam(required = false) String name) {
         log.info("ApplicationInstanceController.search, name={}", name);
 
-        List<AppInstModel> applicationInstances;
+        List<ApplicationInstance> applicationInstances;
 
         if (name == null) {
-            applicationInstances = applicationInstanceRepository.findAll().stream().map(AppInstModel::new).collect(toList());
+            applicationInstances = applicationInstanceRepository.findAll();
         } else {
-            applicationInstances = applicationInstanceRepository.findByNameLike("%" + name + "%").stream().map(AppInstModel::new).collect(toList());
+            applicationInstances = applicationInstanceRepository.findByNameLike("%" + name + "%");
         }
 
-        return applicationInstances;
+        return applicationInstances.stream().map(AppInstModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel findById(@PathVariable Long id) {
         log.info("ApplicationInstanceController.findById, name={}", id);
-
         return new AppInstModel(applicationInstanceRepository.findOne(id));
     }
-
-    /*
-    @RequestMapping(method = POST, value = "/data/persons", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public PersonModel create(@RequestBody PersonModel personModel) {
-     */
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -85,10 +73,6 @@ public class ApplicationInstanceController {
         application.addApplicationInstance(applicationInstance);
         applicationRepository.save(application);
 
-        /* Application - ApplicationInstance relation
-        applicationInstanceModel.getApplication().addApplicationInstance(applicationInstance);
-        */
-        //Long id, String name, String path, String host, Integer port)
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());
      }
 
@@ -113,7 +97,7 @@ public class ApplicationInstanceController {
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
         applicationInstance.setName(applicationInstanceModel.name);
         applicationInstance.setPath(applicationInstanceModel.path);
-        applicationInstance.setHost(applicationInstanceModel.host  );
+        applicationInstance.setHost(applicationInstanceModel.host);
         applicationInstance.setPort(applicationInstanceModel.port);
 
         applicationInstance = applicationInstanceRepository.save(applicationInstance);

@@ -80,9 +80,9 @@ public class InitTestClass {
         applicationInstanceController.create(appModelThree.getId(), instModelthree);
 
         //Adding loadBalancer to Application
-        loadBalancerController.addApplication(loadBalancerOne.getId(), applicationOne);
-        loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationTwo);
-        loadBalancerController.addApplication(loadBalancerThree.getId(), applicationThree);
+        loadBalancerController.addApplication(loadBalancerOne.getId(), applicationOne.getId());
+        loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationTwo.getId());
+        loadBalancerController.addApplication(loadBalancerThree.getId(), applicationThree.getId());
 
 
 

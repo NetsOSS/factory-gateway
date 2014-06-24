@@ -39,43 +39,28 @@ public class ApplicationInstance extends AbstractEntity {
     public ApplicationInstance() { }
 
 
+    public String getName() { return name; }
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
+    public String getHost() { return host; }
     public void setHost(String host) {
         this.host = host;
     }
 
-    public String getHost() {
-        return host;
-    }
-
+    public int getPort() { return port; }
     public void setPort(int port) {
         this.port = port;
     }
 
-    public int getPort() {
-        return port;
-    }
-
+    public String getPath() { return path; }
     public void setPath(String path) {
         this.path = path;
     }
 
-    public String getPath() {
-        return path;
-    }
-
+    public void setApplication(Application application) { this.application = application; }
     public Application getApplication() {
         return application;
-    }
-
-    public void setApplication(Application application) {
-        this.application = application;
     }
 }
