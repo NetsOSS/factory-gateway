@@ -98,7 +98,6 @@ public class ApplicationController {
         if(application == null) {
             return;
         }
-
         List<ApplicationInstance> instances = application.getApplicationInstances();
         for(ApplicationInstance instance: instances) {
             applicationInstanceRepository.delete(instance);
