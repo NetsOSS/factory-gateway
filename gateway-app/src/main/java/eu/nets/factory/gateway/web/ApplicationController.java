@@ -1,9 +1,6 @@
 package eu.nets.factory.gateway.web;
 
-        import eu.nets.factory.gateway.model.Application;
-        import eu.nets.factory.gateway.model.ApplicationGroup;
-        import eu.nets.factory.gateway.model.ApplicationGroupRepository;
-        import eu.nets.factory.gateway.model.ApplicationRepository;
+        import eu.nets.factory.gateway.model.*;
         import org.slf4j.Logger;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Controller;
@@ -31,11 +28,19 @@ public class ApplicationController {
     @Autowired
     private ApplicationGroupRepository applicationGroupRepository;
 
+    @Autowired
+    private ApplicationInstanceRepository applicationInstanceRepository;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppModel> listAllApps() {
         log.info("ApplicationController.list");
+        //List<Application> l = new ArrayList<Application>();
+        //l.add(new Application("test"));
+
+        // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
+
         return  applicationRepository.findAll().stream().map(AppModel::new).collect(toList());
     }
 
@@ -52,7 +57,8 @@ public class ApplicationController {
             applications = applicationRepository.findByNameLike("%" + name + "%");
         }
 
-        return applications.stream().map(AppModel::new).collect(toList());
+        return applications.stream().
+                map(AppModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}", produces = APPLICATION_JSON_VALUE)
@@ -61,6 +67,12 @@ public class ApplicationController {
         log.info("ApplicationController.findById, name={}", id);
         return new AppModel(applicationRepository.findOne(id));
     }
+
+    /*
+    @RequestMapping(method = POST, value = "/data/persons", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public PersonModel create(@RequestBody PersonModel personModel) {
+     */
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -82,17 +94,19 @@ public class ApplicationController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationController.remove");
 
-        /* Application - ApplicationInstance relation
-        List<ApplicationInstance> applicationInstances = applicationRepository.findOne(id).getApplicationInstances();
-        for(ApplicationInstance applicationInstance : applicationInstances) {
-            ApplicationInstanceController.remove(applicationInstance.getId());
+        Application application = applicationRepository.findOne(id);
+        if(application == null) {
+            return;
         }
-        */
 
-        /* Application - ApplicationGroup relation */
-
-        /* Application - LoadBalancer relation */
-
+        List<ApplicationInstance> instances = application.getApplicationInstances();
+        for(ApplicationInstance instance: instances) {
+            applicationInstanceRepository.delete(instance);
+        }
+        ApplicationGroup group = application.getApplicationGroup();
+        if(group != null) {
+            group.removeApplication(application);
+        }
         applicationRepository.delete(id);
     }
 
@@ -109,6 +123,20 @@ public class ApplicationController {
         return new AppModel(application);
     }
 
+    /*
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{applicationId}/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppGroupModel addApplicationGroup(@PathVariable Long applicationId, @RequestBody Long applicationGroupId) {
+        log.info("ApplicationController.addGroup");
+
+        Application application = applicationRepository.findOne(applicationId);
+        application.setApplicationGroup(applicationGroupRepository.findOne(applicationGroupId));
+
+        application = applicationRepository.save(application);
+        return new AppGroupModel(application.getApplicationGroup());
+    }
+    */
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/application-group", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel getApplicationGroup(@PathVariable Long id) {
@@ -124,6 +152,7 @@ public class ApplicationController {
         log.info("ApplicationController.getLoadBalancers");
         Application application = applicationRepository.findOne(id);
 
-        return application.getLoadBalancerList().stream().map(LoadBalancerModel::new).collect(toList());
+        return application.getLoadBalancerList().stream().
+                map(LoadBalancerModel::new).collect(toList());
     }
 }
