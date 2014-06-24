@@ -1,11 +1,13 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.service.ConfigGeneratorService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import static org.springframework.util.MimeTypeUtils.*;
 
 @Controller
 @Transactional
@@ -27,6 +29,9 @@ public class LoadBalancerController {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+
+    @Autowired
+    private ConfigGeneratorService configGeneratorService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -137,5 +142,13 @@ public class LoadBalancerController {
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(loadBalancerId);
 
         loadBalancer.removeApplication(application);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/config")
+    @ResponseBody
+    public String pushConfiguration(HttpServletResponse response, @PathVariable Long id) {
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        return configGeneratorService.generateConfig(loadBalancerRepository.findOne(id));
     }
 }
