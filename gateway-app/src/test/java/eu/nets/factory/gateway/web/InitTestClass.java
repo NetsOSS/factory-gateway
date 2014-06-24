@@ -56,11 +56,33 @@ public class InitTestClass {
         Application applicationOne = new Application("Kamino", "www.kamino.no", groupOne);
         Application applicationTwo = new Application("Grandiosa", "www.grandiosa.no", groupTwo);
         Application applicationThree = new Application("Alpha", "www.alpha.no", groupThree);
+        AppModel appModelOne = new AppModel(applicationOne);
+        AppModel appModelTwo = new AppModel(applicationTwo);
+        AppModel appModelThree = new AppModel(applicationThree);
+
+        applicationController.create(appModelOne);
+        applicationController.create(appModelTwo);
+        applicationController.create(appModelThree);
+
 
         //ApplicationInstances
         ApplicationInstance appInstOne = new ApplicationInstance("Kamino 1.0", "hostOne", 8080, "www.kamino.no/1.0", applicationOne);
         ApplicationInstance appInstTwo = new ApplicationInstance("Grandiosa 1.0", "hostTwo", 8080, "www.grandiosa.no/1.0", applicationTwo);
         ApplicationInstance appInstThree = new ApplicationInstance("Alpha 1.0", "hostThree", 8080, "www.alpha.no/1.0", applicationThree);
+        AppInstModel instModelOne = new AppInstModel(appInstOne);
+        AppInstModel instModelTwo = new AppInstModel(appInstTwo);
+        AppInstModel instModelthree = new AppInstModel(appInstThree);
+
+        applicationInstanceController.create(appInstOne.getApplication().getId(), instModelOne);
+        applicationInstanceController.create(appInstTwo.getApplication().getId(), instModelTwo);
+        applicationInstanceController.create(appInstThree.getApplication().getId(), instModelthree);
+
+        //Adding loadBalancer to Application
+        loadBalancerController.addApplication(loadBalancerOne.getId(), applicationOne);
+        loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationTwo);
+        loadBalancerController.addApplication(loadBalancerThree.getId(), applicationThree);
+
+
 
     }
 }
