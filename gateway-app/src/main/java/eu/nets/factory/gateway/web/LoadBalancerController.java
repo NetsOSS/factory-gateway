@@ -110,7 +110,7 @@ public class LoadBalancerController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AppModel> addApplication(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel, @RequestBody Application application) {
+    public List<AppModel> addApplication(@PathVariable Long id, @RequestBody Application application) {
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         loadBalancer.addApplication(application);
         loadBalancer = loadBalancerRepository.save(loadBalancer);
