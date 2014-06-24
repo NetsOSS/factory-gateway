@@ -132,7 +132,13 @@ define([
     GatewayData.ApplicationController.findById($routeParams.id).then(function (data) {
       console.log("Application data : ", data);
       $scope.app = data;
+
+      //Find more info  (name) about the group it belongs too.
+      GatewayData.ApplicationGroupController.findById($scope.app.applicationGroupId).then(function (data) {
+        $scope.appGroup=data;
+      });
     });
+
 
     // ----------------------- Application Instance functions ------------------------------------
     /*GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {

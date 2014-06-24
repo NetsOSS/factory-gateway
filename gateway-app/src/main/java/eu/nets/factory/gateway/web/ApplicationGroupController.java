@@ -100,7 +100,13 @@ public class ApplicationGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-groups/{id}/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppModel> getApplications(@PathVariable Long id) {
-        log.info("ApplicationGroupController.getApplications()");
+        log.info("ApplicationGroupController.getApplications() LORD   id= {}",id);
+        ApplicationGroup g = applicationGroupRepository.findOne(id);
+        log.info("ApplicationGroupController.getApplications() : isNull ? {} ",g==null);
+
+        log.info("ApplicationGroupController.getApplications() : name {}",g.getName());
         return applicationGroupRepository.findOne(id).getApplications().stream().map(AppModel::new).collect(toList());
+
+
     }
 }
