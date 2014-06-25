@@ -87,6 +87,9 @@ define([
       });
 
 
+
+
+
     };
 
     // ----------------------- Load balancer functions ------------------------------------
@@ -230,6 +233,9 @@ define([
 
     };
 
+    GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function(data){
+      $scope.configFile = data;
+    });
 
     var reloadAppLists = function () {
       $scope.inLBList = [];

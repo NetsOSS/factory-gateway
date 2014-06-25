@@ -50,7 +50,15 @@
 <hr>
 <div class="row">
 
-    <button type="button" class="btn btn-primary btn-lg">Generate config ?</button>
+    <button type="button" class="btn btn-primary btn-lg" ng-model="collapseConfig" ng-click="collapseConfig=!collapseConfig">Show HA Proxy config file</button>
+
+
+
+    <div ng-show="collapseConfig">
+
+        <pre>{{configFile}}</pre>
+    </div>
+
 </div>
 
 <!--
