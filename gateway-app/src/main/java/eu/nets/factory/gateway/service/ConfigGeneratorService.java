@@ -25,41 +25,55 @@ public class ConfigGeneratorService {
 
     public String generateConfig(LoadBalancer loadBalancer) {
 
+
         List<String> rules = new ArrayList<>();
         List<String> backends = new ArrayList<>();
+        List<String> use_backends = new ArrayList<>();
 
         // Populate variables
         for (Application application : loadBalancer.getApplications()) {
 
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter pw = new PrintWriter(stringWriter);
+
             // acl + use_backend
-            rules.add(  "acl " + application.getName() + "rule path -m beg /" + application.getPublicUrl() +
-                        "\nuse_backend " + application.getName() + " if " + application.getName() + "rule\n");
+            rules.add("acl " + application.getName() + "rule path -m beg " + application.getPublicUrl());
+            use_backends.add("use_backend " + application.getName() + " if " + application.getName() + "rule");
 
             // backend
-            StringBuilder b = new StringBuilder().append("\nbackend " + application.getName() + "\n");
-            b.append("reqrep ^([^\\ :]*)\\ /ofbj/(.*)     \\1\\ /\\2\n");
+            pw.println();
+            pw.println(TAB + "backend " + application.getName());
+            pw.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
+
+//            StringBuilder b = new StringBuilder().append("backend " + application.getName());
+//            b.append("reqrep ^([^\\ :]*)\\ /ofbj/(.*)     \\1\\ /\\2\n");
 
             // server
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                b.append("server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + " maxconn 32\n");
+                pw.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + " maxconn 32");
+//                b.append("server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + " maxconn 32");
             }
-            backends.add(b.toString());
+            backends.add(stringWriter.toString());
+            stringWriter.flush();
+            pw.flush();
         }
 
-        String strConfig = buildString(rules, backends);
+        String strConfig = buildString(rules, backends, use_backends);
         return strConfig;
     }
 
-    private String buildString(List<String> rules, List<String> backends) {
+    private String buildString(List<String> rules, List<String> backends, List<String> use_backends) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter pw = new PrintWriter(stringWriter);
-
 
         writeDefaultsStart(pw);
 
         // Write content
         for (String rule : rules) {
             pw.println(TAB2 + rule);
+        }
+        for (String use_backend : use_backends) {
+            pw.println(TAB2 + use_backend);
         }
         for(String backend : backends) {
             pw.println(TAB2 + backend);
@@ -85,13 +99,13 @@ public class ConfigGeneratorService {
         pw.println(TAB2 + "timeout client 50000ms");
         pw.println(TAB2 + "timeout server 50000ms");
         pw.println();
-        pw.println(TAB + "frontend http-in3");
-        pw.println(TAB2 + "bind *:30111");
+        pw.println(TAB + "frontend http-in");
+        pw.println(TAB2 + "bind *:10002");
     }
 
     private void writeDefaultsEnd(PrintWriter pw) {
         pw.println();
-        pw.println(TAB + "listen stats *:33334");
+        pw.println(TAB + "listen stats *:10003");
         pw.println(TAB2 + "mode http");
         pw.println(TAB2 + "stats enable");
         pw.println(TAB2 + "stats uri /proxy-stats");
