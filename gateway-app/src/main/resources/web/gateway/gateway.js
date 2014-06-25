@@ -268,7 +268,11 @@ define([
 
       //Reload config file.. should maybe be saved as a string in LB model.
       GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function(data){
-        $scope.configFile = data;
+        console.log('Type of config : ',typeof data);
+        var fixed= data;
+        fixed = fixed.replace(/\\r\\n/g, "\n");
+        $scope.configFile = fixed;
+
       });
 
     };
