@@ -50,7 +50,7 @@ define([], function () {
     this.ApplicationController.remove = function (id) {
       var req = {};
       req.method = 'DELETE';
-      req.url = prefix + '/data/applications/{id}';
+      req.url = prefix + '/data/applications/remove/{id}';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
@@ -286,11 +286,11 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.LoadBalancerController.removeApplicationFromLoadBalancer = function (loadBalancerId, applicationId) {
+    this.LoadBalancerController.removeApplicationFromLoadbalancer = function (id, applicationId) {
       var req = {};
       req.method = 'PUT';
-      req.url = prefix + '/data/load-balancers/{loadBalancerId}/applications';
-      req.url = req.url.replace(/{loadBalancerId}/, loadBalancerId);
+      req.url = prefix + '/data/load-balancers/{id}/applicationsRemove';
+      req.url = req.url.replace(/{id}/, id);
       req.data = applicationId;
       req.params = {};
       return $http(req).then(getData);
