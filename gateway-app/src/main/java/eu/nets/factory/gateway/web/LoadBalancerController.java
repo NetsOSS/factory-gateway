@@ -85,7 +85,7 @@ public class LoadBalancerController {
         LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort);
         loadBalancer = loadBalancerRepository.save(loadBalancer);
 
-        return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
+        return new LoadBalancerModel(loadBalancer); //.getId(), loadBalancer.getName());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/load-balancers/{id}")
@@ -109,7 +109,7 @@ public class LoadBalancerController {
         loadBalancer.setPublicPort(loadBalancerModel.publicPort);
 
         loadBalancer = loadBalancerRepository.save(loadBalancer);
-        return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
+        return new LoadBalancerModel(loadBalancer); //.getId(), loadBalancer.getName());
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

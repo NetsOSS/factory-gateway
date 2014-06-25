@@ -18,7 +18,14 @@ public  class AppInstModel {
     public AppInstModel() { }
 
     public AppInstModel(ApplicationInstance applicationInstance) {
+        this(applicationInstance, true);
+    }
+
+    public AppInstModel(ApplicationInstance applicationInstance, Boolean summary) {
         this(applicationInstance.getId(), applicationInstance.getName(), applicationInstance.getPath(), applicationInstance.getHost(), applicationInstance.getPort(), applicationInstance.getApplication().getId());
+        if(!summary) {
+            //this.application = new AppModel(applicationInstance.getApplication());
+        }
     }
 
     public AppInstModel(Long id, String name, String path, String host, Integer port, Long applicationId) {
@@ -28,5 +35,9 @@ public  class AppInstModel {
         this.host = host;
         this.port = port;
         this.applicationId = applicationId;
+    }
+
+    public static AppInstModel summary(ApplicationInstance applicationInstance) {
+        return new AppInstModel(applicationInstance, false);
     }
 }

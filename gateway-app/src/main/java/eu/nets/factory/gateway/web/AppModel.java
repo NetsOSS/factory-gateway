@@ -21,9 +21,16 @@ public  class AppModel {
     public AppModel() { }
 
     public AppModel(Application application) {
+        this(application, false);
+
+    }
+
+    private AppModel(Application application, Boolean summary) {
         this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup());
-        applicationInstances= application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
-        loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::new).collect(toList());
+        if(!summary) {
+            applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
+            loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
+        }
     }
 
     public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup) {
@@ -33,6 +40,9 @@ public  class AppModel {
         this.applicationGroupId = applicationGroup.getId();
     }
 
+    public static AppModel summary(Application application) {
+        return new AppModel(application, true);
+    }
 
      public Long getId() { return id; }
     //public void setId(Long id) { this.id = id; }

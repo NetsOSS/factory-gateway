@@ -204,6 +204,7 @@ public class ApplicationControllerTest {
         partId = methodId + " - 1: "; // create application
 
         List<ApplicationGroup> applicationGroups = applicationGroupRepository.findAll();
+        assertNotNull(partId + "received null-pointer: 'applicationGroups'", applicationGroups);
         Collections.sort(applicationGroups, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
         AppGroupModel appGroupModel = new AppGroupModel(applicationGroups.get(0));
         assertNotNull(partId + "received null-pointer: 'appGroupModel'", appGroupModel);
@@ -311,7 +312,7 @@ public class ApplicationControllerTest {
         Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
         appModel = appModels.get(0);
         assertEquals(partId + "expected 'Delta', got '" + appModel.name + "'", "Delta", appModel.name);
-        assertEquals(partId + "expected 'www.delta.no', got '" + appModel.name + "'", "www.delta.no", appModel.name);
+        assertEquals(partId + "expected 'www.delta.no', got '" + appModel.publicURL + "'", "www.delta.no", appModel.publicURL);
 
         // sett back to old values
         appModel.name = oldName;
