@@ -271,7 +271,14 @@ define([
         console.log('Type of config : ',typeof data);
         var fixed= data;
         fixed = fixed.replace(/\\r\\n/g, "\n");
-        //fixed = fixed..replace(/\\/g, "");
+       // fixed = fixed.replace("\\\\", "LOL");
+
+
+        var find = '\\\\\\\\';
+        var re = new RegExp(find, 'g');
+
+        fixed = fixed.replace(re, "\\");
+        //fixed = fixed.replace(/\\/g, "");
         $scope.configFile = fixed;
 
       });
