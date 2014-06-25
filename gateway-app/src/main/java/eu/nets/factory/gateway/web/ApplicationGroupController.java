@@ -71,12 +71,7 @@ public class ApplicationGroupController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationGroupController.remove");
 
-        /* ApplicationGroup - Application relation
-        List<Applications> applications = applicationGroupRepository.findOne(id).getApplications();
-        for(Application application : applications) {
-            ApplicationController.remove(application.getId()); //WARNING!  this will loop
-        }
-        */
+        applicationGroupRepository.findOne(id);
         applicationGroupRepository.delete(id);
     }
 

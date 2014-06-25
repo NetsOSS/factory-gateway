@@ -31,6 +31,9 @@ public class ApplicationController {
     @Autowired
     private ApplicationInstanceRepository applicationInstanceRepository;
 
+    @Autowired
+    private LoadBalancerRepository loadBalancerRepository;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -106,6 +109,14 @@ public class ApplicationController {
         if(group != null) {
             group.removeApplication(application);
         }
+        List<LoadBalancer> loadBalancers = application.getLoadBalancerList();
+        for(LoadBalancer l: loadBalancers) {
+            application.removeLoadBalancer(l);
+            l.removeApplication(application);
+            loadBalancerRepository.save(l);
+        }
+
+        applicationGroupRepository.save(group);
         applicationRepository.delete(id);
     }
 

@@ -286,11 +286,12 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.LoadBalancerController.removeApplicationFromLoadBalancer = function (loadBalancerId) {
+    this.LoadBalancerController.removeApplicationFromLoadBalancer = function (loadBalancerId, applicationId) {
       var req = {};
-      req.method = 'GET';
+      req.method = 'PUT';
       req.url = prefix + '/data/load-balancers/{loadBalancerId}/applications';
       req.url = req.url.replace(/{loadBalancerId}/, loadBalancerId);
+      req.data = applicationId;
       req.params = {};
       return $http(req).then(getData);
     };
@@ -327,9 +328,6 @@ define([], function () {
     };
     this.resolve.LoadBalancerController.pushConfiguration = function (GatewayData, $route) {
       return LoadBalancerController.pushConfiguration($route.current.params.id);
-    };
-    this.resolve.LoadBalancerController.removeApplicationFromLoadBalancer = function (GatewayData, $route) {
-      return LoadBalancerController.removeApplicationFromLoadBalancer($route.current.params.loadBalancerId);
     };
     this.resolve.LoadBalancerController.search = function (GatewayData, $route) {
       return LoadBalancerController.search($route.current.params.name);

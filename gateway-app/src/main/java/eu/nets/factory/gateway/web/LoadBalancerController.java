@@ -93,14 +93,7 @@ public class LoadBalancerController {
     public void remove(@PathVariable Long id) {
         log.info("LoadBalancerController.remove");
 
-                /* LoadBalancer - Application relation
-        List<Application> application = loadBalancerRepository.findOne(id).getApplications();
-        for(Application application : applications) {
-            ApplicationController.remove(application.getId()); //WARNING!  this will loop
-        }
-        */
-
-        loadBalancerRepository.delete(id);
+         loadBalancerRepository.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -134,14 +127,17 @@ public class LoadBalancerController {
         return loadBalancer.getApplications().stream().map(AppModel::new).collect(toList());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{loadBalancerId}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{loadBalancerId}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void removeApplicationFromLoadBalancer(@PathVariable Long loadBalancerId,@RequestBody Long applicationId) {
+    public void removeApplicationFromLoadBalancer(@PathVariable Long loadBalancerId, @RequestBody Long applicationId) {
 
         Application application = applicationRepository.findOne(applicationId);
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(loadBalancerId);
 
+        application.removeLoadBalancer(loadBalancer);
         loadBalancer.removeApplication(application);
+        applicationRepository.save(application);
+        loadBalancerRepository.save(loadBalancer);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/config")
