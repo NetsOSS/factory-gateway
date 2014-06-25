@@ -97,4 +97,10 @@ public class ApplicationGroupController {
 
         return applicationGroupRepository.findOne(id).getApplications().stream().map(AppModel::new).collect(toList());
     }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{id}/remove-application", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppGroupModel removeApplication(@PathVariable Long id, @RequestBody Long appId) {
+        return null;
+    }
 }

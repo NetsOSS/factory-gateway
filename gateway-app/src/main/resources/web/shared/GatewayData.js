@@ -129,6 +129,15 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationGroupController.removeApplication = function (id, appId) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/application-groups/{id}/remove-application';
+      req.url = req.url.replace(/{id}/, id);
+      req.data = appId;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationGroupController.search = function (name) {
       var req = {};
       req.method = 'GET';
@@ -289,7 +298,7 @@ define([], function () {
     this.LoadBalancerController.removeApplicationFromLoadbalancer = function (id, applicationId) {
       var req = {};
       req.method = 'PUT';
-      req.url = prefix + '/data/load-balancers/{id}/applicationsRemove';
+      req.url = prefix + '/data/load-balancers/{id}/remove-application';
       req.url = req.url.replace(/{id}/, id);
       req.data = applicationId;
       req.params = {};

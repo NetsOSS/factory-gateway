@@ -16,7 +16,7 @@ public class LoadBalancerModel {
     public String installationPath;
     public String host;
     public String sshKey;
-    List<AppModel> applications = new ArrayList<AppModel>();
+    public List<AppModel> applications = new ArrayList<AppModel>();
 
 
     public LoadBalancerModel() { }
