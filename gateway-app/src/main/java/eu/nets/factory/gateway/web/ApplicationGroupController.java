@@ -32,6 +32,12 @@ public class ApplicationGroupController {
     @Autowired
     private ApplicationController applicationController;
 
+    @Autowired
+    private LoadBalancerRepository loadBalancerRepository;
+
+    @Autowired
+    private ApplicationInstanceRepository applicationInstanceRepository;
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-groups", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppGroupModel> listAllAppGroups() {
@@ -77,15 +83,27 @@ public class ApplicationGroupController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationGroupController.remove");
 
-      /*  ApplicationGroup applicationGroup =  applicationGroupRepository.findOne(id);
+        ApplicationGroup applicationGroup =  applicationGroupRepository.findOne(id);
         List<Application> list = applicationGroup.getApplications();
 
         for(Iterator<Application> it = list.iterator(); it.hasNext();) {
             Application application = it.next();
+            List<ApplicationInstance> instances = application.getApplicationInstances();
+            for(ApplicationInstance instance: instances) {
+                applicationInstanceRepository.delete(instance);
+
+                List<LoadBalancer> loadBalancers = application.getLoadBalancerList();
+                for(Iterator<LoadBalancer> loadIt = loadBalancers.iterator(); loadIt.hasNext();) {
+                    LoadBalancer l = loadIt.next();
+                    loadIt.remove();
+                    loadBalancerRepository.save(l);
+                }
+            }
             it.remove();
-            applicationController.remove(application.getId());
+            applicationRepository.delete(application.getId());
         }
-        applicationGroupRepository.delete(id);*/
+
+        applicationGroupRepository.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

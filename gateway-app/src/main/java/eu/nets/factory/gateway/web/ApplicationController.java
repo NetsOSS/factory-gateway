@@ -109,7 +109,7 @@ public class ApplicationController {
         }
         ApplicationGroup group = application.getApplicationGroup();
         if(group != null) {
-            group.removeApplication(application);
+           group.removeApplication(application);
         }
         List<LoadBalancer> loadBalancers = application.getLoadBalancerList();
         for(Iterator<LoadBalancer> it = loadBalancers.iterator(); it.hasNext();) {
