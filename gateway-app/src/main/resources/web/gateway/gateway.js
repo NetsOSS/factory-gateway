@@ -271,6 +271,7 @@ define([
         console.log('Type of config : ',typeof data);
         var fixed= data;
         fixed = fixed.replace(/\\r\\n/g, "\n");
+        //fixed = fixed..replace(/\\/g, "");
         $scope.configFile = fixed;
 
       });
