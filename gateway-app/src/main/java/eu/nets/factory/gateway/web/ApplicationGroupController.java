@@ -1,13 +1,13 @@
 package eu.nets.factory.gateway.web;
 
-import eu.nets.factory.gateway.model.ApplicationGroup;
-import eu.nets.factory.gateway.model.ApplicationGroupRepository;
+import eu.nets.factory.gateway.model.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -25,6 +25,12 @@ public class ApplicationGroupController {
     private final Logger log = getLogger(getClass());
     @Autowired
     private ApplicationGroupRepository applicationGroupRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ApplicationController applicationController;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-groups", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -71,8 +77,15 @@ public class ApplicationGroupController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationGroupController.remove");
 
-        applicationGroupRepository.findOne(id);
-        applicationGroupRepository.delete(id);
+      /*  ApplicationGroup applicationGroup =  applicationGroupRepository.findOne(id);
+        List<Application> list = applicationGroup.getApplications();
+
+        for(Iterator<Application> it = list.iterator(); it.hasNext();) {
+            Application application = it.next();
+            it.remove();
+            applicationController.remove(application.getId());
+        }
+        applicationGroupRepository.delete(id);*/
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

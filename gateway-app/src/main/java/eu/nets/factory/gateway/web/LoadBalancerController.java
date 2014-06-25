@@ -113,12 +113,12 @@ public class LoadBalancerController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AppModel> addApplication(@PathVariable Long id, @RequestBody Long applicationId) {
+    public LoadBalancerModel addApplication(@PathVariable Long id, @RequestBody Long applicationId) {
         log.info("LoadBalancerController.addApplication() LB.id={} , App.id={} ",id,applicationId);
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         loadBalancer.addApplication(applicationRepository.findOne(applicationId));
         loadBalancer = loadBalancerRepository.save(loadBalancer);
-        return loadBalancer.getApplications().stream().map(AppModel::new).collect(toList());
+        return new LoadBalancerModel(loadBalancer);
     }
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody

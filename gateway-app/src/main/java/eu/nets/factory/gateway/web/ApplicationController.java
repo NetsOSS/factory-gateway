@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+        import edu.umd.cs.findbugs.ba.bcp.Load;
         import eu.nets.factory.gateway.model.*;
         import org.slf4j.Logger;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ package eu.nets.factory.gateway.web;
         import org.springframework.web.bind.annotation.*;
 
         import javax.transaction.Transactional;
+        import java.util.Iterator;
         import java.util.List;
 
         import static java.util.stream.Collectors.toList;
@@ -110,9 +112,9 @@ public class ApplicationController {
             group.removeApplication(application);
         }
         List<LoadBalancer> loadBalancers = application.getLoadBalancerList();
-        for(LoadBalancer l: loadBalancers) {
-            application.removeLoadBalancer(l);
-            l.removeApplication(application);
+        for(Iterator<LoadBalancer> it = loadBalancers.iterator(); it.hasNext();) {
+            LoadBalancer l = it.next();
+            it.remove();
             loadBalancerRepository.save(l);
         }
 
