@@ -1,6 +1,21 @@
 <h1>Load Balancer</h1>
 
-<pre>{{lb|json}}</pre>
+
+<ul class="list-unstyled">
+    <li>ID : {{lb.id}}</li>
+    <li>Name : {{lb.name}}</li>
+    <li>InstallationPath : {{lb.installationPath}}</li>
+    <li>Host : {{lb.host}}</li>
+    <li>sshKey : {{lb.sshKey}}</li>
+    <li>Number of applications : {{lb.applications.length}}</li>
+</ul>
+
+<a href="" ng-model="collapsedLBJSON" ng-click="collapsedLBJSON=!collapsedLBJSON"><strong>Toggle
+    (show/hide)</strong> json data</a>
+
+<div ng-show="collapsedLBJSON">
+    <pre>{{lb|json}}</pre>
+</div>
 
 
 <div class="row">
@@ -8,21 +23,14 @@
         <h3>Application in this Load Balancer</h3>
 
         <div class="list-group">
-            <a class="list-group-item" ng-repeat="a in allAppsInLb" >
+            <a class="list-group-item" ng-repeat="a in inLBList">
                 <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
-                <button type="button"ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">Remove</button>
+                <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">Remove
+                </button>
             </a>
         </div>
 
 
-
-
-        <a href="" ng-model="collapsedExistingApps" ng-click="collapsedExistingApps=!collapsedExistingApps"><strong>Toggle
-            (show/hide)</strong> json data</a>
-
-        <div ng-show="collapsedExistingApps">
-            <pre>{{allAppsInLb|json}}</pre>
-        </div>
     </div>
 
 
@@ -30,7 +38,7 @@
         <h3>Add new application (from existing applications) </h3>
 
         <div class="list-group">
-            <a class="list-group-item" ng-repeat="a in allApps" >
+            <a class="list-group-item" ng-repeat="a in allLBList">
                 <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
                 <button type="button" ng-click="addAppToLB(a.id)" class="btn btn-primary btn-sm pull-right">Add</button>
             </a>
@@ -38,16 +46,15 @@
     </div>
 
 </div>
+
+<hr>
 <div class="row">
 
     <button type="button" class="btn btn-primary btn-lg">Generate config ?</button>
 </div>
 
-
-
-
-
-
+<!--
 <hr>
 <h1>Update Load Balancer (not implemented)</h1>
 <lb-form loadBalancer="lb"></lb-form>
+-->

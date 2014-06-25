@@ -201,43 +201,81 @@ define([
 
   //    ----------------------- Load balancer Controller ------------------------------------
   gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
-    var localLBList =[];
-    var LBid=$routeParams.id;
-    var currentLb;
+    $scope.inLBList = [];
+    $scope.allLBList = [];
+
+    var LBid = $routeParams.id;
+    // var currentLb;
 
     GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
       console.log("Data: ", data);
       $scope.lb = data;
-      currentLb=data;
+      reloadAppLists();
     });
 
     $scope.addAppToLB = function (appId) {
-      console.log('Adding app to LB ',appId);
-      GatewayData.LoadBalancerController.addApplication( $scope.lb.id,appId).then(function (data) {
+      console.log('Adding app to LB ', appId);
+      GatewayData.LoadBalancerController.addApplication($scope.lb.id, appId).then(function (data) {
         console.log('Added!!');
-
+        $scope.lb = data;
+        reloadAppLists();
       });
     };
-
-
-
     $scope.removeAppFromLB = function (appId) {
-      console.log('Remove app ',appId,' from LB ',currentLb.id);
-      GatewayData.LoadBalancerController.removeApplicationFromLoadbalancer(currentLb.id , appId);
-
-      //GatewayData.LoadBalancerController.remove(appId);
+      console.log('Remove app ', appId, ' from LB ', $scope.lb.id);
+      GatewayData.LoadBalancerController.removeApplicationFromLoadbalancer($scope.lb.id, appId).then(function (data) {
+        $scope.lb = data;
+        reloadAppLists();
+      });
 
     };
 
 
-    GatewayData.ApplicationController.listAllApps().then(function (data) {
-      $scope.allApps = data;
-    });
+    var reloadAppLists = function () {
+      $scope.inLBList = [];
+      $scope.allLBList = [];
 
-    GatewayData.LoadBalancerController.getApplications($routeParams.id).then(function (data) {
-      console.log("Apps for this LB : ", data);
-      $scope.allAppsInLb = data;
-    });
+      //console.log
+      $scope.inLBList = $scope.lb.applications;
+
+
+      GatewayData.ApplicationController.listAllApps().then(function (data) {
+        console.log('Data to parse: ', data);
+        for (var i = 0; i < data.length; i++) {
+
+          //Search: Loop through All Apps. Add an app if it does not exist in the Load Balancer.
+          var contains = false;
+          for (var j = 0; j < $scope.inLBList.length; j++) {
+            //console.log(data[i].id, ' =? ', $scope.inLBList[j].id);
+            if (data[i].id == $scope.inLBList[j].id) {
+              contains = true;
+              break;
+            }
+          }
+          if (!contains)
+            $scope.allLBList.push(data[i]);
+
+        }
+
+
+        //console.log('Size all left apps : ', $scope.allLBList.length);
+        // console.log('all left apps : ', $scope.allLBList);
+      });
+
+
+    };
+    //reloadAppLists();
+
+    //this.reloadAppLists();
+
+//    GatewayData.LoadBalancerController.getApplications($routeParams.id).then(function (data) {
+//      $scope.inLBList=data;
+//    });
+//
+//    GatewayData.ApplicationController.listAllApps().then(function (data) {
+//      $scope.allApps = data;
+//    });
+
 
   });
 
