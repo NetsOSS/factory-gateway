@@ -38,8 +38,6 @@ public class LoadBalancerModel {
         this.installationPath = installationPath;
         this.sshKey = sshKey;
         this.publicPort = publicPort;
-        this.applications = applications.stream().
-                map(AppModel::new).collect(toList());;
+        this.applications = applications.stream().map(AppModel::new).collect(toList());
     }
-
 }

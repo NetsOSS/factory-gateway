@@ -23,7 +23,7 @@ public  class AppModel {
     public AppModel(Application application) {
         this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup());
         applicationInstances= application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
-       // instanceIds=application.getApplicationInstances().stream().map(ApplicationInstance::getId).collect(toList());
+        loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::new).collect(toList());
     }
 
     public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup) {

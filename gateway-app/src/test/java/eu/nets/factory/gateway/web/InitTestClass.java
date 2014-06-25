@@ -28,9 +28,9 @@ public class InitTestClass {
     public void init() {
 
         //LoadBalancers
-      /*  LoadBalancer loadBalancerOne = new LoadBalancer("Per", "hostOne", "instPathOne", "sshOne");
-        LoadBalancer loadBalancerTwo = new LoadBalancer("Knut", "hostOne", "instPathOne", "sshOne");
-        LoadBalancer loadBalancerThree = new LoadBalancer("Hans", "hostOne", "instPathOne", "sshOne");
+        LoadBalancer loadBalancerOne = new LoadBalancer("Per", "hostOne", "instPathOne", "sshOne", 123);
+        LoadBalancer loadBalancerTwo = new LoadBalancer("Knut", "hostOne", "instPathOne", "sshOne", 234);
+        LoadBalancer loadBalancerThree = new LoadBalancer("Hans", "hostOne", "instPathOne", "sshOne", 345);
         LoadBalancerModel loadModelOne = new LoadBalancerModel(loadBalancerOne);
         LoadBalancerModel loadModelTwo = new LoadBalancerModel(loadBalancerTwo);
         LoadBalancerModel loadModelThree = new LoadBalancerModel(loadBalancerThree);
@@ -80,8 +80,8 @@ public class InitTestClass {
         applicationInstanceController.create(appModelTwo.getId(), instModelThree);
 
         //Adding loadBalancer to Application
-        loadBalancerController.addApplication(loadBalancerOne.getId(), applicationOne.getId());
-        loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationTwo.getId());
-        loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationThree.getId());*/
+        loadBalancerController.addApplication(loadModelOne.id, appModelOne.getId());
+        loadBalancerController.addApplication(loadModelTwo.id, appModelTwo.getId());
+        loadBalancerController.addApplication(loadModelTwo.id, appModelThree.getId());
     }
 }

@@ -92,7 +92,7 @@ public class ApplicationGroupController {
             for(ApplicationInstance instance: instances) {
                 applicationInstanceRepository.delete(instance);
 
-                List<LoadBalancer> loadBalancers = application.getLoadBalancerList();
+                List<LoadBalancer> loadBalancers = application.getLoadBalancers();
                 for(Iterator<LoadBalancer> loadIt = loadBalancers.iterator(); loadIt.hasNext();) {
                     LoadBalancer l = loadIt.next();
                     loadIt.remove();

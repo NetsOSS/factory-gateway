@@ -41,11 +41,6 @@ public class ApplicationController {
     @ResponseBody
     public List<AppModel> listAllApps() {
         log.info("ApplicationController.list");
-        //List<Application> l = new ArrayList<Application>();
-        //l.add(new Application("test"));
-
-        // personRepository.findAll().stream().map(PersonModel::new).collect(toList());
-
         return  applicationRepository.findAll().stream().map(AppModel::new).collect(toList());
     }
 
@@ -72,12 +67,6 @@ public class ApplicationController {
         log.info("ApplicationController.findById, name={}", id);
         return new AppModel(applicationRepository.findOne(id));
     }
-
-    /*
-    @RequestMapping(method = POST, value = "/data/persons", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public PersonModel create(@RequestBody PersonModel personModel) {
-     */
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -111,7 +100,7 @@ public class ApplicationController {
         if(group != null) {
            group.removeApplication(application);
         }
-        List<LoadBalancer> loadBalancers = application.getLoadBalancerList();
+        List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for(Iterator<LoadBalancer> it = loadBalancers.iterator(); it.hasNext();) {
             LoadBalancer l = it.next();
             it.remove();
@@ -135,20 +124,6 @@ public class ApplicationController {
         return new AppModel(application);
     }
 
-    /*
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{applicationId}/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public AppGroupModel addApplicationGroup(@PathVariable Long applicationId, @RequestBody Long applicationGroupId) {
-        log.info("ApplicationController.addGroup");
-
-        Application application = applicationRepository.findOne(applicationId);
-        application.setApplicationGroup(applicationGroupRepository.findOne(applicationGroupId));
-
-        application = applicationRepository.save(application);
-        return new AppGroupModel(application.getApplicationGroup());
-    }
-    */
-
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/application-group", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel getApplicationGroup(@PathVariable Long id) {
@@ -164,7 +139,6 @@ public class ApplicationController {
         log.info("ApplicationController.getLoadBalancers");
         Application application = applicationRepository.findOne(id);
 
-        return application.getLoadBalancerList().stream().
-                map(LoadBalancerModel::new).collect(toList());
+        return application.getLoadBalancers().stream().map(LoadBalancerModel::new).collect(toList());
     }
 }

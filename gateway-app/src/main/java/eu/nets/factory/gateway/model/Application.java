@@ -28,7 +28,7 @@ public class Application extends AbstractEntity {
     @JoinTable(name = "load_balancer_application",
                 joinColumns = {@JoinColumn(name = "application_id")},
                 inverseJoinColumns = {@JoinColumn(name = "load_balancer_id")})
-    private List<LoadBalancer> loadBalancerList = new ArrayList<LoadBalancer>();
+    private List<LoadBalancer> loadBalancers = new ArrayList<>(); //<LoadBalancer>();
 
     @OneToMany(mappedBy = "application")
     private List<ApplicationInstance> applicationInstances = new ArrayList<>();
@@ -58,9 +58,9 @@ public class Application extends AbstractEntity {
         return applicationGroup;
     }
 
-    public List<LoadBalancer> getLoadBalancerList() { return loadBalancerList; }
-    public void addLoadBalancer(LoadBalancer loadBalancer) { this.loadBalancerList.add(loadBalancer); }
-    public void removeLoadBalancer(LoadBalancer loadBalancer) { this.loadBalancerList.remove(loadBalancer); }
+    public List<LoadBalancer> getLoadBalancers() { return loadBalancers; }
+    public void addLoadBalancer(LoadBalancer loadBalancer) { this.loadBalancers.add(loadBalancer); }
+    public void removeLoadBalancer(LoadBalancer loadBalancer) { this.loadBalancers.remove(loadBalancer); }
 
     public List<ApplicationInstance> getApplicationInstances() { return applicationInstances; }
     public void addApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.add(applicationInstance); }
