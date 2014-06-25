@@ -233,9 +233,7 @@ define([
 
     };
 
-    GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function(data){
-      $scope.configFile = data;
-    });
+
 
     var reloadAppLists = function () {
       $scope.inLBList = [];
@@ -268,6 +266,10 @@ define([
         // console.log('all left apps : ', $scope.allLBList);
       });
 
+      //Reload config file.. should maybe be saved as a string in LB model.
+      GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function(data){
+        $scope.configFile = data;
+      });
 
     };
     //reloadAppLists();
