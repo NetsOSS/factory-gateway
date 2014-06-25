@@ -92,7 +92,7 @@ public class ApplicationController {
         return new AppModel(application);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/remove/{id}")
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("ApplicationController.remove");
