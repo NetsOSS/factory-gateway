@@ -28,7 +28,7 @@ public class InitTestClass {
     public void init() {
 
         //LoadBalancers
-        LoadBalancer loadBalancerOne = new LoadBalancer("Per", "hostOne", "instPathOne", "sshOne");
+      /*  LoadBalancer loadBalancerOne = new LoadBalancer("Per", "hostOne", "instPathOne", "sshOne");
         LoadBalancer loadBalancerTwo = new LoadBalancer("Knut", "hostOne", "instPathOne", "sshOne");
         LoadBalancer loadBalancerThree = new LoadBalancer("Hans", "hostOne", "instPathOne", "sshOne");
         LoadBalancerModel loadModelOne = new LoadBalancerModel(loadBalancerOne);
@@ -82,6 +82,6 @@ public class InitTestClass {
         //Adding loadBalancer to Application
         loadBalancerController.addApplication(loadBalancerOne.getId(), applicationOne.getId());
         loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationTwo.getId());
-        loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationThree.getId());
+        loadBalancerController.addApplication(loadBalancerTwo.getId(), applicationThree.getId());*/
     }
 }

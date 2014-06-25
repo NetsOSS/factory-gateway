@@ -82,7 +82,7 @@ public class LoadBalancerController {
     public LoadBalancerModel create(@RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.create");
 
-        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey);
+        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort);
         loadBalancer = loadBalancerRepository.save(loadBalancer);
 
         return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());
@@ -106,6 +106,7 @@ public class LoadBalancerController {
         loadBalancer.setHost(loadBalancerModel.host);
         loadBalancer.setInstallationPath(loadBalancerModel.installationPath);
         loadBalancer.setSshKey(loadBalancerModel.sshKey);
+        loadBalancer.setPublicPort(loadBalancerModel.publicPort);
 
         loadBalancer = loadBalancerRepository.save(loadBalancer);
         return new LoadBalancerModel(loadBalancer.getId(), loadBalancer.getName());

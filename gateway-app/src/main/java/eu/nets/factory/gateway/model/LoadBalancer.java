@@ -25,6 +25,9 @@ public class LoadBalancer extends AbstractEntity{
     @NotNull
     private String sshKey;
 
+    @NotNull
+    private int publicPort;
+
     @ManyToMany
     @JoinTable(name = "load_balancer_application",
             joinColumns = {@JoinColumn(name = "load_balancer_id")},
@@ -32,11 +35,12 @@ public class LoadBalancer extends AbstractEntity{
     private List<Application> applications;
 
 
-    public LoadBalancer(String name, String host, String installationPath, String sshKey) {
+    public LoadBalancer(String name, String host, String installationPath, String sshKey, int publicPort) {
         this.name = name;
         this.host = host;
         this.installationPath = installationPath;
         this.sshKey = sshKey;
+        this.publicPort = publicPort;
         this.applications = new ArrayList<Application>();
     }
 
@@ -69,6 +73,14 @@ public class LoadBalancer extends AbstractEntity{
     }
     public void setSshKey(String sshKey) {
         this.sshKey = sshKey;
+    }
+
+    public int getPublicPort() {
+        return publicPort;
+    }
+
+    public void setPublicPort(int publicPort) {
+        this.publicPort = publicPort;
     }
 
     public List<Application> getApplications() {

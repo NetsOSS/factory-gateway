@@ -16,13 +16,14 @@ public class LoadBalancerModel {
     public String installationPath;
     public String host;
     public String sshKey;
+    public int publicPort;
     public List<AppModel> applications = new ArrayList<AppModel>();
 
 
     public LoadBalancerModel() { }
 
     public LoadBalancerModel(LoadBalancer loadBalancer) {
-        this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getApplications());
+        this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getPublicPort(), loadBalancer.getApplications());
     }
 
     public LoadBalancerModel(Long id, String name) {
@@ -30,12 +31,13 @@ public class LoadBalancerModel {
         this.name = name;
     }
 
-    public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey, List<Application> applications) {
+    public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey, int publicPort, List<Application> applications) {
         this.id = id;
         this.name = name;
         this.host = host;
         this.installationPath = installationPath;
         this.sshKey = sshKey;
+        this.publicPort = publicPort;
         this.applications = applications.stream().
                 map(AppModel::new).collect(toList());;
     }
