@@ -50,7 +50,7 @@ define([], function () {
     this.ApplicationController.remove = function (id) {
       var req = {};
       req.method = 'DELETE';
-      req.url = prefix + '/data/applications/remove/{id}';
+      req.url = prefix + '/data/applications/{id}';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);

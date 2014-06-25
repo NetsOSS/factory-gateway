@@ -1,10 +1,13 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class LoadBalancerModel {
 
@@ -19,7 +22,7 @@ public class LoadBalancerModel {
     public LoadBalancerModel() { }
 
     public LoadBalancerModel(LoadBalancer loadBalancer) {
-        this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey());
+        this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getApplications());
     }
 
     public LoadBalancerModel(Long id, String name) {
@@ -27,11 +30,14 @@ public class LoadBalancerModel {
         this.name = name;
     }
 
-    public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey) {
+    public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey, List<Application> applications) {
         this.id = id;
         this.name = name;
         this.host = host;
         this.installationPath = installationPath;
         this.sshKey = sshKey;
+        this.applications = applications.stream().
+                map(AppModel::new).collect(toList());;
     }
+
 }
