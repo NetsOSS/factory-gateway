@@ -127,7 +127,7 @@ public class LoadBalancerController {
         return loadBalancer.getApplications().stream().map(AppModel::new).collect(toList());
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{loadBalancerId}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.DELETE, value = "/data/load-balancers/{loadBalancerId}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public void removeApplicationFromLoadBalancer(@PathVariable Long loadBalancerId, @RequestBody Long applicationId) {
 
