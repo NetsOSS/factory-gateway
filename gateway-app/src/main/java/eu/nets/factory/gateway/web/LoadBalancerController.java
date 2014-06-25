@@ -144,8 +144,6 @@ public class LoadBalancerController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/config")
     @ResponseBody
     public String pushConfiguration(HttpServletResponse response, @PathVariable Long id) {
-        response.setContentType("text/plain");
-        response.setCharacterEncoding("UTF-8");
         return configGeneratorService.generateConfig(loadBalancerRepository.findOne(id));
     }
 }

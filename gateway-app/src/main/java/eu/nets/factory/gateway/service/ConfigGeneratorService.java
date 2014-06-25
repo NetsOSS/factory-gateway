@@ -5,97 +5,96 @@ import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import org.springframework.stereotype.Service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ConfigGeneratorService {
+
+//    private StringWriter stringWriter = new StringWriter();
+//    private PrintWriter pw = new PrintWriter(stringWriter);
+
+    private final static String TAB = "    ";
+    private final static String TAB2 = TAB + TAB;
+
     public String generateConfig() {
         return null;
     }
 
     public String generateConfig(LoadBalancer loadBalancer) {
 
-        StringBuilder config = new StringBuilder();
-
-        //Fetch from database
-        List<Application> applications = loadBalancer.getApplications();
-
-
         List<String> rules = new ArrayList<>();
         List<String> backends = new ArrayList<>();
 
-        //Make config
-        for (Application application : applications) {
-            rules.add("acl " + application.getName() + "rule path -m beg /" + application.getPublicUrl() + "\n" +
-                        "use_backend " + application.getName() + " if " + application.getName() + "rule\n");
+        // Populate variables
+        for (Application application : loadBalancer.getApplications()) {
 
+            // acl + use_backend
+            rules.add(  "acl " + application.getName() + "rule path -m beg /" + application.getPublicUrl() +
+                        "\nuse_backend " + application.getName() + " if " + application.getName() + "rule\n");
+
+            // backend
             StringBuilder b = new StringBuilder().append("\nbackend " + application.getName() + "\n");
             b.append("reqrep ^([^\\ :]*)\\ /ofbj/(.*)     \\1\\ /\\2\n");
 
-            List<ApplicationInstance> applicationInstances = application.getApplicationInstances();
-            for (ApplicationInstance applicationInstance : applicationInstances) {
+            // server
+            for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
                 b.append("server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + " maxconn 32\n");
             }
             backends.add(b.toString());
         }
 
+        String strConfig = buildString(rules, backends);
+        return strConfig;
+    }
 
+    private String buildString(List<String> rules, List<String> backends) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter pw = new PrintWriter(stringWriter);
+
+
+        writeDefaultsStart(pw);
+
+        // Write content
         for (String rule : rules) {
-            config.append(rule);
+            pw.println(TAB2 + rule);
         }
-
         for(String backend : backends) {
-            config.append(backend);
+            pw.println(TAB2 + backend);
         }
 
-
-//        config.append("   # Simple configuration for an HTTP proxy listening on port 80 on all\n" +
-//                "    # interfaces and forwarding requests to a single backend \"servers\" with a\n" +
-//                "    # single server \"server1\" listening on 127.0.0.1:8000\n" +
-//                "    global\n" +
-//                "        daemon\n" +
-//                "        maxconn 256\n" +
-//                "\n" +
-//                "    defaults\n" +
-//                "        mode http\n" +
-//                "        timeout connect 5000ms\n" +
-//                "        timeout client 50000ms\n" +
-//                "        timeout server 50000ms\n" +
-//                "\n" +
-//                "    frontend http-in3\n" +
-//                "        bind *:30111\n" +
-//                "#       acl rule1 path -m beg /data\n" +
-//                "        acl rule2 path -m beg /ofbj\n" +
-//                "        acl rule3 path -m beg /ogamm\n" +
-//                "#       use_backend servers2 if rule1\n" +
-//                "        use_backend servers3 if rule2\n" +
-//                "        use_backend servers4 if rule3\n" +
-//                "        default_backend servers\n" +
-//                "\n" +
-//                "    backend servers\n" +
-//                "#        server server1 127.0.0.1:9002 maxconn 32\n" +
-//                "        server server2 svn.bbsas.no:80 maxconn 32\n" +
-//                "\n" +
-//                "    backend servers2\n" +
-//                "        server server3 172.21.3.13:9002 maxconn 32\n" +
-//                "\n" +
-//                "    backend servers3\n" +
-//                "        reqrep ^([^\\ :]*)\\ /ofbj/(.*)     \\1\\ /\\2\n" +
-//                "        server server3 172.21.3.13:9002 maxconn 32\n" +
-//                "\n" +
-//                "    backend servers4\n" +
-//                "        reqrep ^([^\\ :]*)\\ /ogamm(.*)     \\1\\ /\\2\n" +
-//                "        server server3 172.21.3.45:9002 maxconn 32\n" +
-//                "        server server4 172.21.3.45:9002 maxconn 32\n" +
-//                "\n" +
-//                "    listen stats *:33334\n" +
-//                "        mode    http\n" +
-//                "        stats enable\n" +
-//                "        stats uri       /proxy-stats\n" +
-//                "        stats admin if TRUE\n");
+        writeDefaultsEnd(pw);
 
 
-        return config.toString();
+        String strConfig = stringWriter.toString();
+        stringWriter.flush();
+        pw.flush();
+        return strConfig;
+    }
+
+    private void writeDefaultsStart(PrintWriter pw) {
+        pw.println(TAB + "global");
+        pw.println(TAB2 + "daemon");
+        pw.println(TAB2 + "maxconn 256");
+        pw.println();
+        pw.println(TAB + "defaults");
+        pw.println(TAB2 + "mode http");
+        pw.println(TAB2 + "timeout connect 5000ms");
+        pw.println(TAB2 + "timeout client 50000ms");
+        pw.println(TAB2 + "timeout server 50000ms");
+        pw.println();
+        pw.println(TAB + "frontend http-in3");
+        pw.println(TAB2 + "bind *:30111");
+    }
+
+    private void writeDefaultsEnd(PrintWriter pw) {
+        pw.println();
+        pw.println(TAB + "listen stats *:33334");
+        pw.println(TAB2 + "mode http");
+        pw.println(TAB2 + "stats enable");
+        pw.println(TAB2 + "stats uri /proxy-stats");
+        pw.println(TAB2 + "stats admin if TRUE");
     }
 }
