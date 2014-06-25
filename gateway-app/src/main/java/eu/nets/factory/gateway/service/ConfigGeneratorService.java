@@ -29,6 +29,7 @@ public class ConfigGeneratorService {
         List<String> rules = new ArrayList<>();
         List<String> backends = new ArrayList<>();
         List<String> use_backends = new ArrayList<>();
+        int loadBalancerPort = loadBalancer.getPublicPort();
 
         // Populate variables
         for (Application application : loadBalancer.getApplications()) {
@@ -58,15 +59,18 @@ public class ConfigGeneratorService {
             pw.flush();
         }
 
-        String strConfig = buildString(rules, backends, use_backends);
+        String strConfig = buildString(rules, backends, use_backends, loadBalancerPort);
+//        strConfig.replaceAll("\\\\", "\\");
         return strConfig;
     }
 
-    private String buildString(List<String> rules, List<String> backends, List<String> use_backends) {
+    private String buildString(List<String> rules, List<String> backends, List<String> use_backends, int loadBalancerPort) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter pw = new PrintWriter(stringWriter);
 
         writeDefaultsStart(pw);
+
+        pw.println(TAB2 + "bind *:" + loadBalancerPort);
 
         // Write content
         for (String rule : rules) {
@@ -78,6 +82,9 @@ public class ConfigGeneratorService {
         for(String backend : backends) {
             pw.println(TAB2 + backend);
         }
+
+        pw.println();
+        pw.println(TAB + "listen stats *:" + ++loadBalancerPort);
 
         writeDefaultsEnd(pw);
 
@@ -100,12 +107,9 @@ public class ConfigGeneratorService {
         pw.println(TAB2 + "timeout server 50000ms");
         pw.println();
         pw.println(TAB + "frontend http-in");
-        pw.println(TAB2 + "bind *:10002");
     }
 
     private void writeDefaultsEnd(PrintWriter pw) {
-        pw.println();
-        pw.println(TAB + "listen stats *:10003");
         pw.println(TAB2 + "mode http");
         pw.println(TAB2 + "stats enable");
         pw.println(TAB2 + "stats uri /proxy-stats");
