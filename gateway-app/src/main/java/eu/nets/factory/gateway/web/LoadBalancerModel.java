@@ -29,7 +29,9 @@ public class LoadBalancerModel {
     private LoadBalancerModel(LoadBalancer loadBalancer, Boolean summary) {
         this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getPublicPort());
         if(!summary) {
-            loadBalancer.getApplications().stream().map(AppModel::summary).collect(toList());
+
+            applications = loadBalancer.getApplications().stream().map(AppModel::summary).collect(toList());
+
         }
     }
 /*
