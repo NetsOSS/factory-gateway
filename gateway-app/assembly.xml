@@ -21,7 +21,7 @@
     <fileSet>
       <lineEnding>unix</lineEnding>
       <directory>src/main/zip</directory>
-      <outputDirectory>properties</outputDirectory>
+      <outputDirectory>/</outputDirectory>
     </fileSet>
     <fileSet>
       <lineEnding>unix</lineEnding>

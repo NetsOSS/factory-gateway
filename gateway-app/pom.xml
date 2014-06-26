@@ -193,7 +193,7 @@
 				<configuration>
 					<programs>
 						<program>
-							<mainClass>eu.nets.factory.gateway.app.MyMain</mainClass>
+							<mainClass>eu.nets.factory.gateway.app.GatewayMain</mainClass>
 							<name>startapp</name>
 						</program>
 					</programs>

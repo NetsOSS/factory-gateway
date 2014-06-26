@@ -32,9 +32,9 @@ import static org.slf4j.bridge.SLF4JBridgeHandler.install;
 import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
 import static org.springframework.core.io.support.PropertiesLoaderUtils.fillProperties;
 
-public class MyAppMain {
+public class GatewayMain {
     public static void main(String[] args) throws Exception {
-        new MyAppMain().run();
+        new GatewayMain().run();
     }
 
     public void run() throws Exception {
