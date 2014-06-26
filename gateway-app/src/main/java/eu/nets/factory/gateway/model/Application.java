@@ -1,6 +1,8 @@
 package eu.nets.factory.gateway.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -25,17 +27,20 @@ public class Application extends AbstractEntity {
     private String publicURL;
 
     @ManyToMany//(fetch = FetchType.EAGER)
+    //@Cascade(CascadeType.DELETE)
     @JoinTable(name = "load_balancer_application",
                 joinColumns = {@JoinColumn(name = "application_id")},
                 inverseJoinColumns = {@JoinColumn(name = "load_balancer_id")})
     private List<LoadBalancer> loadBalancers = new ArrayList<>(); //<LoadBalancer>();
 
+    //@Cascade(CascadeType.DELETE)
     @OneToMany(mappedBy = "application")//, fetch = FetchType.EAGER)
     private List<ApplicationInstance> applicationInstances = new ArrayList<>();
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "application_group")
+    //@Cascade(CascadeType.DELETE)
     private ApplicationGroup applicationGroup;
 
 

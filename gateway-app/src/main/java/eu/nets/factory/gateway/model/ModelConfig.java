@@ -207,13 +207,14 @@ public class ModelConfig {
         return new TransactionTemplate(platformTransactionManager);
     }
 
+    /*
     @Bean
     public MBeanExporter jmxService(Statistics statistics) {
         MBeanExporter exporter = new MBeanExporter();
         exporter.setBeans(ImmutableMap.of("Hibernate:name=statistics", (Object) statistics));
         return exporter;
     }
-
+    */
     @Bean
     public Statistics statisticsService(SessionFactory sessionFactory) {
         return sessionFactory.getStatistics();

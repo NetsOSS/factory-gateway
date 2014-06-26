@@ -96,16 +96,15 @@ public class ApplicationController {
         for(ApplicationInstance instance: instances) {
             applicationInstanceRepository.delete(instance);
         }
-        ApplicationGroup group = application.getApplicationGroup();
-        if(group != null) {
-           group.removeApplication(application);
-        }
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for(Iterator<LoadBalancer> it = loadBalancers.iterator(); it.hasNext();) {
             LoadBalancer l = it.next();
-            it.remove();
+            l.removeApplication(application);
+            //it.remove();
             loadBalancerRepository.save(l);
         }
+        ApplicationGroup group = application.getApplicationGroup();
+        group.removeApplication(application);
 
         applicationGroupRepository.save(group);
         applicationRepository.delete(id);

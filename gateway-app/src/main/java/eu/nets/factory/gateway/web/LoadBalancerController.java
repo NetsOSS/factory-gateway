@@ -119,6 +119,8 @@ public class LoadBalancerController {
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         loadBalancer.addApplication(applicationRepository.findOne(applicationId));
         loadBalancer = loadBalancerRepository.save(loadBalancer);
+        Application application = applicationRepository.findOne(applicationId);
+        application.addLoadBalancer(loadBalancer);
         return new LoadBalancerModel(loadBalancer);
     }
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/applications", produces = APPLICATION_JSON_VALUE)
