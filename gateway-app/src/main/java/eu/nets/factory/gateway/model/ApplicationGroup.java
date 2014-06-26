@@ -1,6 +1,7 @@
 package eu.nets.factory.gateway.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
@@ -16,7 +17,8 @@ public class ApplicationGroup extends AbstractEntity {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "applicationGroup")
+    @OneToMany(fetch = FetchType.EAGER)
+    //@OneToMany(mappedBy = "applicationGroup")
     private List<Application> applications = new ArrayList<>();
 
 

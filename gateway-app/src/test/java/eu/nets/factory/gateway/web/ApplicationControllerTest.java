@@ -39,6 +39,9 @@ public class ApplicationControllerTest {
     LoadBalancerController loadBalancerController;
 
     @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
     private ApplicationInstanceRepository applicationInstanceRepository;
 
     @Autowired
@@ -225,8 +228,10 @@ public class ApplicationControllerTest {
         assertEquals(partId + "expected 'Beta', got '" + appModels.get(1).getName() + "'", "Beta", appModels.get(1).getName());
 
         partId = methodId + " - 2: "; // add ApplicationInstance - testRemove
+        application = applicationRepository.findOne(appModel.getId());
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta 1.0", "hostX", 8080, "www.beta.no/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
+        assertNotNull(partId + "received null-pointer: 'appInstModel'", appInstModel);
         applicationInstanceController.create(application.getId(), appInstModel);
         ApplicationInstance applicationInstance2 = new ApplicationInstance("Beta 1.1", "hostX", 8080, "www.beta.no/1.1", application);
         AppInstModel appInstModel2 = new AppInstModel(applicationInstance2);

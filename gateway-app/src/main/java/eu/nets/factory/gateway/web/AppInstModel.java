@@ -21,7 +21,7 @@ public  class AppInstModel {
         this(applicationInstance, true);
     }
 
-    public AppInstModel(ApplicationInstance applicationInstance, Boolean summary) {
+    private AppInstModel(ApplicationInstance applicationInstance, Boolean summary) {
         this(applicationInstance.getId(), applicationInstance.getName(), applicationInstance.getPath(), applicationInstance.getHost(), applicationInstance.getPort(), applicationInstance.getApplication().getId());
         if(!summary) {
             //this.application = new AppModel(applicationInstance.getApplication());

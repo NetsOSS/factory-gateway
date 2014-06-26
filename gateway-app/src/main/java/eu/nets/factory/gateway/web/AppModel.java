@@ -28,8 +28,8 @@ public  class AppModel {
     private AppModel(Application application, Boolean summary) {
         this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup());
         if(!summary) {
-            applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
-            loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
+            this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
+            this.loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
         }
     }
 
