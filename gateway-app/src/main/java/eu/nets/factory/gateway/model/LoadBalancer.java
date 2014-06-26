@@ -1,9 +1,6 @@
 package eu.nets.factory.gateway.model;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,7 +25,7 @@ public class LoadBalancer extends AbstractEntity{
     @NotNull
     private int publicPort;
 
-    @ManyToMany
+    @ManyToMany//(fetch = FetchType.EAGER)
     @JoinTable(name = "load_balancer_application",
             joinColumns = {@JoinColumn(name = "load_balancer_id")},
             inverseJoinColumns = {@JoinColumn(name = "application_id")})

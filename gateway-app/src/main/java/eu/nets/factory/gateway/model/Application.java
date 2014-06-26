@@ -24,13 +24,13 @@ public class Application extends AbstractEntity {
     @Column(nullable = false)
     private String publicURL;
 
-    @ManyToMany
+    @ManyToMany//(fetch = FetchType.EAGER)
     @JoinTable(name = "load_balancer_application",
                 joinColumns = {@JoinColumn(name = "application_id")},
                 inverseJoinColumns = {@JoinColumn(name = "load_balancer_id")})
     private List<LoadBalancer> loadBalancers = new ArrayList<>(); //<LoadBalancer>();
 
-    @OneToMany(mappedBy = "application")
+    @OneToMany(mappedBy = "application")//, fetch = FetchType.EAGER)
     private List<ApplicationInstance> applicationInstances = new ArrayList<>();
 
     @NotNull

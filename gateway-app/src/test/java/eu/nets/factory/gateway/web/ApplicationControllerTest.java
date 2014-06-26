@@ -13,6 +13,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import eu.nets.factory.gateway.web.ApplicationController;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,6 +27,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(classes={WebConfig.class})
 @TransactionConfiguration(defaultRollback = true)
 @WebAppConfiguration
+@Transactional
 @ActiveProfiles("unitTest")
 public class ApplicationControllerTest {
 
@@ -236,14 +238,14 @@ public class ApplicationControllerTest {
         ApplicationInstance applicationInstance2 = new ApplicationInstance("Beta 1.1", "hostX", 8080, "www.beta.no/1.1", application);
         AppInstModel appInstModel2 = new AppInstModel(applicationInstance2);
         applicationInstanceController.create(application.getId(), appInstModel2);
+        application = applicationRepository.findOne(appModel.getId());
         List<ApplicationInstance> applicationInstances = application.getApplicationInstances();
         assertNotNull(partId + "received null-pointer: 'applicationInstances'", applicationInstances);
         Collections.sort(applicationInstances, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
         assertEquals(partId + "expected list 'applicationInstances' to be of size 2, found size " + applicationInstances.size(), 2, applicationInstances.size());
-        assertEquals(partId + "expected 'Beta 1.0', got '" + applicationInstances.get(1).getName() + "'", "Beta 1.0", applicationInstances.get(1).getName());
+        assertEquals(partId + "expected 'Beta 1.0', got '" + applicationInstances.get(0).getName() + "'", "Beta 1.0", applicationInstances.get(0).getName());
         assertNotNull(partId + "received null-pointer: 'application'", applicationInstance.getApplication());
         assertEquals(partId + "expected 'Beta', got '" + applicationInstance.getApplication().getName() + "'", "Beta", applicationInstance.getApplication().getName());
-
 
         partId = methodId + " - 3: "; // add LoadBalancer - testRemove
         List<LoadBalancer> loadBalancers = loadBalancerRepository.findAll();
@@ -254,11 +256,12 @@ public class ApplicationControllerTest {
         LoadBalancerModel loadBalancerModel2 = new LoadBalancerModel(loadBalancers.get(1));
         assertNotNull(partId + "received null-pointer: 'loadBalancerModel'", loadBalancerModel);
         loadBalancerController.addApplication(loadBalancerModel2.id, application.getId());
+        application = applicationRepository.findOne(appModel.getId());
         List<LoadBalancer> appLoadBalancers = application.getLoadBalancers();
         assertNotNull(partId + "received null-pointer: 'loadBalancers'", appLoadBalancers);
         Collections.sort(appLoadBalancers, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
-        assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + appLoadBalancers.size(), 1, appLoadBalancers.size());
-        assertEquals(partId + "expected 'Per', got '" + appLoadBalancers.get(1).getName() + "'", "Per", appLoadBalancers.get(1).getName());
+        assertEquals(partId + "expected list 'loadBalancers' to be of size 2, found size " + appLoadBalancers.size(), 2, appLoadBalancers.size());
+        assertEquals(partId + "expected 'Per', got '" + appLoadBalancers.get(0).getName() + "'", "Per", appLoadBalancers.get(0).getName());
         loadBalancers = loadBalancerRepository.findAll();
         Collections.sort(loadBalancers, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
         loadBalancerModel = new LoadBalancerModel(loadBalancers.get(0));
@@ -276,9 +279,12 @@ public class ApplicationControllerTest {
         testCreate();
 
         partId = methodId + " - 1: "; // remove application from repository
+        assertEquals(partId + "expected list 'applications' to be of size 4, found size " + applicationController.listAllApps().size(), 4, applicationController.listAllApps().size());
         AppModel appModel = applicationController.search("Beta").get(0);
         applicationController.remove(appModel.getId());
-        assertEquals(partId + "expected list 'applications' to be of size 3, found size " + applicationController.listAllApps().size() + "", 3, applicationController.listAllApps().size());
+        assertNotNull(partId + "received null-pointer: 'applicationRepository'", applicationRepository);
+        assertNotNull(partId + "received null-pointer: 'applicationsRepository.findAll'", applicationRepository.findAll());
+        assertEquals(partId + "expected list 'applications' to be of size 3, found size " + applicationController.listAllApps().size(), 3, applicationController.listAllApps().size());
 
         partId = methodId + " - 2: "; // linked ApplicationInstances were also removed from repository
         List<AppInstModel> appInstModels = appModel.applicationInstances;

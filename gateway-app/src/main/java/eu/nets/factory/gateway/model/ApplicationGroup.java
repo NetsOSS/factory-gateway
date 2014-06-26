@@ -17,8 +17,7 @@ public class ApplicationGroup extends AbstractEntity {
     @NotNull
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    //@OneToMany(mappedBy = "applicationGroup")
+    @OneToMany(mappedBy = "applicationGroup")//, fetch = FetchType.EAGER)
     private List<Application> applications = new ArrayList<>();
 
 
