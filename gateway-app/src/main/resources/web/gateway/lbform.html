@@ -1,8 +1,10 @@
-<h4>LB FORM</h4>
 
-<h3>New Load Balancer </h3>
-<pre>{{loadBalancer|json}}</pre>
-<form role="form" ng-submit="createLoadBalancer()">
+<h3 ng-show="!isNewLb">Update Load Balancer </h3>
+<h3 ng-show="isNewLb">New Load Balancer </h3>
+
+Is new LB : {{isNewLb}}
+
+<form role="form" ng-submit="updateOrCreateLB()">
 
     <div class="form-group">
         <label for="inLbName">Name</label>
@@ -30,5 +32,8 @@
     </div>
 
 
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-primary" ng-show="isNewLb">Create</button>
+    <button type="submit" class="btn btn-primary" ng-show="!isNewLb">Update</button>
 </form>
+<!--
+<pre>{{lb|json}}</pre>-->

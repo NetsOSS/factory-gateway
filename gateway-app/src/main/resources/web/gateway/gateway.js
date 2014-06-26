@@ -201,14 +201,44 @@ define([
 
   });
 
-  gateway.controller('LoadBalancerFormCtrl', function ($scope) {
+  gateway.controller('LoadBalancerFormCtrl', function ($scope, $routeParams, GatewayData) {
     console.log("LB Form Controller");
+
+
+
+
+    $scope.isNewLb = $scope.lb ==null;
+    console.log('LB in form: ',$scope.lb);
+    if($scope.lb != null){
+      $scope.isNewLb = $scope.lb.id == null;
+      console.log('cecking id');
+    }
+
+    $scope.updateOrCreateLB = function () {
+      console.log('LB in form: ',$scope.lb);
+      if($scope.lb.id!=null){
+        console.log('Updateing LB');
+        $scope.lb.applications=[];
+        GatewayData.LoadBalancerController.update($scope.lb.id,$scope.lb);
+      }else{
+        console.log('Createing LB');
+        GatewayData.LoadBalancerController.create($scope.lb).then(function (data) {
+          $scope.allLBs.push(data);
+        });
+      }
+
+    };
+
+
   });
 
   //    ----------------------- Load balancer Controller ------------------------------------
   gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
+    $scope.mandat =  {};
     $scope.inLBList = [];
     $scope.allLBList = [];
+
+    $scope.lbLoadingDone=false;
 
     var LBid = $routeParams.id;
     // var currentLb;
@@ -216,6 +246,8 @@ define([
     GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
       console.log("Data: ", data);
       $scope.lb = data;
+      $scope.mandat =  $scope.lb;
+      $scope.lbLoadingDone=true;
       reloadAppLists();
     });
 
@@ -273,8 +305,6 @@ define([
         }
 
 
-        //console.log('Size all left apps : ', $scope.allLBList.length);
-        // console.log('all left apps : ', $scope.allLBList);
       });
 
       //Reload config file.. should maybe be saved as a string in LB model.
@@ -282,31 +312,14 @@ define([
         console.log('Type of config : ',typeof data);
         var fixed= data;
         fixed = fixed.replace(/\\r\\n/g, "\n");
-       // fixed = fixed.replace("\\\\", "LOL");
-
-
         var find = '\\\\\\\\';
         var re = new RegExp(find, 'g');
-
         fixed = fixed.replace(re, "\\");
-        //fixed = fixed.replace(/\\/g, "");
         $scope.configFile = fixed;
 
       });
 
     };
-    //reloadAppLists();
-
-    //this.reloadAppLists();
-
-//    GatewayData.LoadBalancerController.getApplications($routeParams.id).then(function (data) {
-//      $scope.inLBList=data;
-//    });
-//
-//    GatewayData.ApplicationController.listAllApps().then(function (data) {
-//      $scope.allApps = data;
-//    });
-
 
   });
 
@@ -315,12 +328,18 @@ define([
     GatewayData.ApplicationGroupController.findById($routeParams.id).then(function (data) {
       console.log("AppGroup : ", data);
       $scope.group = data;
+
+      GatewayData.ApplicationGroupController.getApplications($scope.group.id).then(function (data) {
+        $scope.allAppsInGroup =data;
+      });
     });
 
     $scope.removeGroup = function () {
       GatewayData.ApplicationGroupController.remove($routeParams.id);
       $location.path("/");
     };
+
+
 
 
   });

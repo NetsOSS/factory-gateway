@@ -29,9 +29,9 @@ define([ 'angular' ], function (angular) {
     return {
       restrict: 'E',
       templateUrl: 'web/gateway/lbform.html',
-      scope : {
-        loadBalancer : '='
-      },
+      //template: "<div><span>{{mandateperson.id}}<span><input type='text' ng-model='mandateperson.firstname' /></div>",
+      //scope: { mandateperson: '=' },
+      scope: false,
       controller: 'LoadBalancerFormCtrl'
     };
   });

@@ -2,3 +2,14 @@
 Nothing more here..
 
 <button type="button" class="btn btn-danger" ng-click="removeGroup()">Delete group</button>
+
+
+<h3>All Applications in this group</h3>
+
+<div class="list-group">
+    <a href="#/app/{{a.id}}" class="list-group-item" ng-repeat="a in allAppsInGroup">
+        <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}})
+    </a>
+
+
+</div>
