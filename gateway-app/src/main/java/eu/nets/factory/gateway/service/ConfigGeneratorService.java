@@ -48,7 +48,7 @@ public class ConfigGeneratorService {
 
             // server
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                pw.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " maxconn 32");
+                pw.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " maxconn 32 check");
             }
             backends.add(stringWriter.toString());
             stringWriter.flush();
