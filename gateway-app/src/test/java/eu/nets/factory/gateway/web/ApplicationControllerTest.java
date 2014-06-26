@@ -359,8 +359,6 @@ public class ApplicationControllerTest {
         List<AppModel> appModels = applicationController.listAllApps();
         Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
 
-        //assertThat(applicationController.getLoadBalancers(appModels.get(0).getId())).hasSize(2);
-
         partId = methodId + " - 1: ";
         assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(0).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(0).getId()).size());
         assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(1).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(1).getId()).size());
