@@ -44,24 +44,18 @@ public class ConfigGeneratorService {
             // backend
             pw.println();
             pw.println(TAB + "backend " + application.getName());
-            pw.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
-
-//            StringBuilder b = new StringBuilder().append("backend " + application.getName());
-//            b.append("reqrep ^([^\\ :]*)\\ /ofbj/(.*)     \\1\\ /\\2\n");
+//            pw.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
             // server
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                pw.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + " maxconn 32");
-//                b.append("server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + " maxconn 32");
+                pw.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " maxconn 32");
             }
             backends.add(stringWriter.toString());
             stringWriter.flush();
             pw.flush();
         }
 
-        String strConfig = buildString(rules, backends, use_backends, loadBalancerPort);
-//        strConfig.replaceAll("\\\\", "\\");
-        return strConfig;
+        return buildString(rules, backends, use_backends, loadBalancerPort);
     }
 
     private String buildString(List<String> rules, List<String> backends, List<String> use_backends, int loadBalancerPort) {
