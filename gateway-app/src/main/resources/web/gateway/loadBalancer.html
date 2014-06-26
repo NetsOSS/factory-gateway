@@ -9,6 +9,7 @@
     <li>sshKey : {{lb.sshKey}}</li>
     <li>Number of applications : {{lb.applications.length}}</li>
 </ul>
+<button type="button" class="btn btn-danger" ng-click="removeLoadBalancer()">Delete</button>
 
 <a href="" ng-model="collapsedLBJSON" ng-click="collapsedLBJSON=!collapsedLBJSON"><strong>Toggle
     (show/hide)</strong> json data</a>
@@ -50,7 +51,7 @@
 <hr>
 <div class="row">
 
-    <button type="button" class="btn btn-primary btn-lg" ng-model="collapseConfig" ng-click="collapseConfig=!collapseConfig">Show/Hide HA Proxy config file</button>
+    <button type="button" class="btn btn-primary" ng-model="collapseConfig" ng-click="collapseConfig=!collapseConfig">Show/Hide HA Proxy config file</button>
 
     <!--<p style="white-space: pre;">{{ configFile}}</p>-->
 
@@ -60,6 +61,8 @@
     </div>
 
 </div>
+
+
 
 <!--
 <hr>
