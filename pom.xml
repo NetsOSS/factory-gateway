@@ -37,7 +37,6 @@
   <scm>
     <connection>scm:git:git@gitorious.bbsas.no:factory/gateway.git</connection>
     <developerConnection>scm:git:git@gitorious.bbsas.no:factory/gateway.git</developerConnection>
-    <tag>gateway-1.0</tag>
   </scm>
 
   <modules>
