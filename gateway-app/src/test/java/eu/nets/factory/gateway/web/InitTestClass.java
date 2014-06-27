@@ -29,8 +29,8 @@ public class InitTestClass {
 
         //LoadBalancers
         LoadBalancer loadBalancerOne = new LoadBalancer("Per", "hostOne", "instPathOne", "sshOne", 123);
-        LoadBalancer loadBalancerTwo = new LoadBalancer("Knut", "hostOne", "instPathOne", "sshOne", 234);
-        LoadBalancer loadBalancerThree = new LoadBalancer("Hans", "hostOne", "instPathOne", "sshOne", 345);
+        LoadBalancer loadBalancerTwo = new LoadBalancer("Knut", "hostTwo", "instPathTwo", "sshTwo", 234);
+        LoadBalancer loadBalancerThree = new LoadBalancer("Hans", "hostTwo", "instPathThree", "sshThree", 345);
         LoadBalancerModel loadModelOne = new LoadBalancerModel(loadBalancerOne);
         LoadBalancerModel loadModelTwo = new LoadBalancerModel(loadBalancerTwo);
         LoadBalancerModel loadModelThree = new LoadBalancerModel(loadBalancerThree);

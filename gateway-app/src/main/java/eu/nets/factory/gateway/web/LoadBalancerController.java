@@ -93,6 +93,11 @@ public class LoadBalancerController {
     public void remove(@PathVariable Long id) {
         log.info("LoadBalancerController.remove");
 
+        List<Application> applications = loadBalancerRepository.findOne(id).getApplications();
+        for(Application application : applications) {
+            application.removeLoadBalancer(loadBalancerRepository.findOne(id));
+        }
+
          loadBalancerRepository.delete(id);
     }
 
