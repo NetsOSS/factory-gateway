@@ -1,4 +1,4 @@
-<h1>Application  : {{app.name}} {{app.publicURL}} </h1>
+<h1>Application  : {{app.name}} {{app.publicUrl}} </h1>
 
 
 <ul class="list-unstyled">
@@ -85,3 +85,6 @@
 
 </div>
 <button type="button" class="btn btn-danger" ng-click="removeApp()">Delete application</button>
+<hr>
+
+<app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone" ></app-form>

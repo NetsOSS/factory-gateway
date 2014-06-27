@@ -13,7 +13,7 @@ public  class AppModel {
     public Long id;
 
     public String name;
-    public String publicURL;
+    public String publicUrl;
     public List<AppInstModel> applicationInstances = new ArrayList<>();
     public List<LoadBalancerModel> loadBalancers = new ArrayList<>();
     public Long applicationGroupId;
@@ -36,7 +36,7 @@ public  class AppModel {
     public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup) {
         this.id = id;
         this.name = name;
-        this.publicURL = url;
+        this.publicUrl = url;
         this.applicationGroupId = applicationGroup.getId();
     }
 
@@ -50,8 +50,8 @@ public  class AppModel {
     public String getName() { return name; }
     //public void setName(String name) { this.name = name; }
 
-    public String getPublicUrl() { return publicURL; }
-    //public void setPublicUrl(String url) { this.publicURL = url; }
+    public String getPublicUrl() { return publicUrl; }
+    //public void setPublicUrl(String url) { this.publicUrl = url; }
 
     public Long getApplicationGroupId() { return applicationGroupId; }
 

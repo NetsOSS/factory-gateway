@@ -23,8 +23,8 @@ public class Application extends AbstractEntity {
     private String name;
 
     @NotNull
-    @Column(nullable = false)
-    private String publicURL;
+    @Column(nullable = false, name = "publicurl")
+    private String publicUrl;
 
     @ManyToMany//(fetch = FetchType.EAGER)
     //@Cascade(CascadeType.DELETE)
@@ -46,7 +46,7 @@ public class Application extends AbstractEntity {
 
     public Application(String name, String url, ApplicationGroup applicationGroup) {
         this.name = name;
-        this.publicURL = url;
+        this.publicUrl = url;
         this.applicationGroup = applicationGroup;
     }
 
@@ -56,8 +56,8 @@ public class Application extends AbstractEntity {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getPublicUrl(){ return publicURL; }
-    public void setPublicUrl(String url) { this.publicURL = url; }
+    public String getPublicUrl(){ return publicUrl; }
+    public void setPublicUrl(String url) { this.publicUrl = url; }
 
     public ApplicationGroup getApplicationGroup() {
         return applicationGroup;

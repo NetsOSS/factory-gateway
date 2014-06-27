@@ -81,7 +81,7 @@ public class ApplicationControllerTest {
         partId = methodId + " - 1: "; //check 'completeness' of first object
         appModel = appModels.get(0);
         assertEquals(partId + "expected 'Kamino', got '" + appModel.name + "'", "Kamino", appModel.name);
-        assertEquals(partId + "expected 'www.kamino.no', got '" + appModel.publicURL + "'", "www.kamino.no", appModel.publicURL);
+        assertEquals(partId + "expected 'www.kamino.no', got '" + appModel.publicUrl + "'", "www.kamino.no", appModel.publicUrl);
 
         assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
         groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
@@ -100,7 +100,7 @@ public class ApplicationControllerTest {
         partId = methodId + " - 2: "; // check 'completeness' of middle object
         appModel = appModels.get(1);
         assertEquals(partId + "expected 'Grandiosa', got '" + appModel.name + "'", "Grandiosa", appModel.name);
-        assertEquals(partId + "expected 'www.grandiosa.no', got '" + appModel.publicURL + "'", "www.grandiosa.no", appModel.publicURL);
+        assertEquals(partId + "expected 'www.grandiosa.no', got '" + appModel.publicUrl + "'", "www.grandiosa.no", appModel.publicUrl);
 
         assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
         groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
@@ -123,7 +123,7 @@ public class ApplicationControllerTest {
         partId = methodId + " - 3: "; // check 'completeness' of last object
         appModel = appModels.get(2);
         assertEquals(partId + "expected 'Alpha', got '" + appModel.name + "'", "Alpha", appModel.name);
-        assertEquals(partId + "expected 'www.alpha.no', got '" + appModel.publicURL + "'", "www.alpha.no", appModel.publicURL);
+        assertEquals(partId + "expected 'www.alpha.no', got '" + appModel.publicUrl + "'", "www.alpha.no", appModel.publicUrl);
 
         assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
         groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
@@ -317,19 +317,19 @@ public class ApplicationControllerTest {
         Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
         AppModel appModel = appModels.get(0);
         String oldName = appModel.name;
-        String oldUrl = appModel.publicURL;
+        String oldUrl = appModel.publicUrl;
         appModel.name = "Delta";
-        appModel.publicURL = "www.delta.no";
+        appModel.publicUrl = "www.delta.no";
         applicationController.update(appModel.getId(), appModel);
         appModels = applicationController.listAllApps();
         Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
         appModel = appModels.get(0);
         assertEquals(partId + "expected 'Delta', got '" + appModel.name + "'", "Delta", appModel.name);
-        assertEquals(partId + "expected 'www.delta.no', got '" + appModel.publicURL + "'", "www.delta.no", appModel.publicURL);
+        assertEquals(partId + "expected 'www.delta.no', got '" + appModel.publicUrl + "'", "www.delta.no", appModel.publicUrl);
 
         // sett back to old values
         appModel.name = oldName;
-        appModel.publicURL = oldUrl;
+        appModel.publicUrl = oldUrl;
         applicationController.update(appModel.getId(), appModel);
     }
 

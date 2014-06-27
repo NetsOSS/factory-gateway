@@ -39,6 +39,16 @@ define([
 
   gateway.controller('FrontPageCtrl', function ($location, $scope, GatewayData) {
     $scope.allApps = [];
+    $scope.testPassObj = {
+      "id": 12000,
+      "name": "finch",
+
+      "applicationInstances": [],
+      "loadBalancers": [],
+      "applicationGroupId": 11000,
+      "publicUrl": "/finch"
+    };
+    $scope.naomi = { name: 'Naomi', address: '1600 Amphitheatre' };
 
     $scope.showNewPersonAlert = false;
 
@@ -78,6 +88,11 @@ define([
       $scope.allApps = data;
     });
 
+    $scope.onAppCreated = function (data) {
+      console.log('Callback, adding to list');
+      $scope.allApps.push(data);
+    };
+
 
     $scope.createApplication = function () {
       console.log("New application : ", $scope.app);
@@ -85,9 +100,6 @@ define([
 
         $scope.allApps.push(data);
       });
-
-
-
 
 
     };
@@ -131,18 +143,24 @@ define([
 
   //Application controller
   gateway.controller('AppCtrl', function ($scope, $routeParams, GatewayData) {
-    //Find the Application object from id.
-    GatewayData.ApplicationController.findById($routeParams.id).then(function (data) {
-      console.log("Application data : ", data);
-      $scope.app = data;
 
-      //Find more info  (name) about the group it belongs too.
-      GatewayData.ApplicationGroupController.findById($scope.app.applicationGroupId).then(function (data) {
-        $scope.appGroup = data;
+    $scope.onAppLoadDone=false;
+
+    $scope.onUpdatedApp = function (data) {
+      GatewayData.ApplicationController.findById($routeParams.id).then(function (data) {
+        console.log("Application data : ", data);
+        $scope.app = data;
+        $scope.localApp = angular.copy($scope.app);
+        $scope.onAppLoadDone=true;
+
+        //Find more info  (name) about the group it belongs too.
+        GatewayData.ApplicationGroupController.findById($scope.app.applicationGroupId).then(function (data) {
+          $scope.appGroup = data;
+        });
       });
-    });
+    };
 
-
+    $scope.onUpdatedApp();
     // ----------------------- Application Instance functions ------------------------------------
     /*GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
      $scope.allInstApps = data;
@@ -158,10 +176,16 @@ define([
 
       });
     };
+//    $scope.onAppCreated = function (data) {
+//      $scope.app.applicationInstances.push(data);
+//    };
 
     $scope.removeApp = function () {
       console.log("Deleting id: ", $scope.app.id);
-      GatewayData.ApplicationController.remove($scope.app.id);
+      GatewayData.ApplicationController.remove($scope.app.id).then(function(data){
+        history.back();
+        $scope.$apply();
+      });
       //GatewayData.ApplicationInstanceController.remove($scope.appInst.id);
 
     };
@@ -184,7 +208,7 @@ define([
 
     $scope.deleteAppInst = function () {
       console.log("Deleting id: ", $scope.appInst.id);
-      GatewayData.ApplicationInstanceController.remove($scope.appInst.id).then(function(data){
+      GatewayData.ApplicationInstanceController.remove($scope.appInst.id).then(function (data) {
         history.back();
         $scope.$apply();
       });
@@ -205,22 +229,20 @@ define([
     console.log("LB Form Controller");
 
 
-
-
-    $scope.isNewLb = $scope.lb ==null;
-    console.log('LB in form: ',$scope.lb);
-    if($scope.lb != null){
+    $scope.isNewLb = $scope.lb == null;
+    console.log('LB in form: ', $scope.lb);
+    if ($scope.lb != null) {
       $scope.isNewLb = $scope.lb.id == null;
       console.log('cecking id');
     }
 
     $scope.updateOrCreateLB = function () {
-      console.log('LB in form: ',$scope.lb);
-      if($scope.lb.id!=null){
+      console.log('LB in form: ', $scope.lb);
+      if ($scope.lb.id != null) {
         console.log('Updateing LB');
-        $scope.lb.applications=[];
-        GatewayData.LoadBalancerController.update($scope.lb.id,$scope.lb);
-      }else{
+        $scope.lb.applications = [];
+        GatewayData.LoadBalancerController.update($scope.lb.id, $scope.lb);
+      } else {
         console.log('Createing LB');
         GatewayData.LoadBalancerController.create($scope.lb).then(function (data) {
           $scope.allLBs.push(data);
@@ -234,11 +256,11 @@ define([
 
   //    ----------------------- Load balancer Controller ------------------------------------
   gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
-    $scope.mandat =  {};
+    $scope.mandat = {};
     $scope.inLBList = [];
     $scope.allLBList = [];
 
-    $scope.lbLoadingDone=false;
+    $scope.lbLoadingDone = false;
 
     var LBid = $routeParams.id;
     // var currentLb;
@@ -246,8 +268,8 @@ define([
     GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
       console.log("Data: ", data);
       $scope.lb = data;
-      $scope.mandat =  $scope.lb;
-      $scope.lbLoadingDone=true;
+      $scope.mandat = $scope.lb;
+      $scope.lbLoadingDone = true;
       reloadAppLists();
     });
 
@@ -269,8 +291,8 @@ define([
     };
 
 
-    $scope.removeLoadBalancer = function(){
-      GatewayData.LoadBalancerController.remove( $scope.lb.id).then(function(data){
+    $scope.removeLoadBalancer = function () {
+      GatewayData.LoadBalancerController.remove($scope.lb.id).then(function (data) {
         history.back();
         $scope.$apply();
 
@@ -308,9 +330,9 @@ define([
       });
 
       //Reload config file.. should maybe be saved as a string in LB model.
-      GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function(data){
-        console.log('Type of config : ',typeof data);
-        var fixed= data;
+      GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function (data) {
+        console.log('Type of config : ', typeof data);
+        var fixed = data;
         fixed = fixed.replace(/\\r\\n/g, "\n");
         var find = '\\\\\\\\';
         var re = new RegExp(find, 'g');
@@ -330,7 +352,7 @@ define([
       $scope.group = data;
 
       GatewayData.ApplicationGroupController.getApplications($scope.group.id).then(function (data) {
-        $scope.allAppsInGroup =data;
+        $scope.allAppsInGroup = data;
       });
     });
 
@@ -340,10 +362,26 @@ define([
     };
 
 
+  });
+  gateway.controller('AppFormCtrl', function ($scope, $routeParams, GatewayData) {
+    console.log('$scope.onCreated', $scope.onCreated);
+    console.log('$scope.$parent[$scope.onCreated]', $scope.$parent[$scope.onCreated]);
 
+    $scope.localLb = angular.copy($scope.appObj);
+    if ($scope.localLb === undefined)
+      $scope.localLb = {};
+
+    console.log('App form controller!', $scope.localLb);
+
+    $scope.createOrUpdateApplication = function () {
+
+    };
+
+    GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
+      $scope.allAppGroups=data;
+    });
 
   });
-
 
   gateway.controller('PersonCtrl', function ($scope, $routeParams) {
     $scope.personId = $routeParams.id;

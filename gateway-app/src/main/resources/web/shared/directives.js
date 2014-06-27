@@ -36,11 +36,59 @@ define([ 'angular' ], function (angular) {
     };
   });
 
-  directives.directive('backButton', function(){
+  directives.directive('appForm', function () {
+    return {
+      restrict: 'E',
+      templateUrl: 'web/gateway/appform.html',
+      scope: {
+        appObj: '=',
+        onCreated: '='
+      },
+      controller: function ($scope, $routeParams, GatewayData) {
+       // console.log('$scope.onCreated', $scope.onCreated);
+       // console.log('$scope.$parent[$scope.onCreated]', $scope.$parent[$scope.onCreated]);
+
+        $scope.localApp = angular.copy($scope.appObj);
+        var isAppNew = $scope.localApp === undefined;
+        //console.log('IsNew : ', isAppNew);
+        if (isAppNew)
+          $scope.localApp = {};
+        else {
+          //No need to pass this information. also breaks the server if sent
+          delete $scope.localApp.loadBalancers;
+          delete $scope.localApp.applicationInstances;
+        }
+
+        //console.log('App form controller!', $scope.localLb);
+
+        $scope.createOrUpdateApplication = function () {
+          if (isAppNew) {
+            console.log('Creating NEW');
+            GatewayData.ApplicationController.create($scope.localApp).then(function (data) {
+              $scope.onCreated(data);
+            });
+          } else {
+            GatewayData.ApplicationController.update($scope.localApp.id, $scope.localApp).then(function(data){
+              console.log('Updating exisitng');
+              $scope.onCreated(data);
+            });
+
+          }
+        };
+
+        GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
+          $scope.allAppGroups = data;
+        });
+
+      }
+    };
+  });
+
+  directives.directive('backButton', function () {
     return {
       restrict: 'A',
 
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
         element.bind('click', goBack);
 
         function goBack() {

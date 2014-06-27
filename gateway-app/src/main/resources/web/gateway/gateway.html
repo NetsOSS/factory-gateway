@@ -8,7 +8,7 @@
         <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
 
             <div class="form-group">
-                <label for="inAppName">Name</label>
+                <label for="inAppGroupName">Name</label>
                 <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName" name="name"
                        required
                        placeholder="Enter application name">
@@ -30,57 +30,21 @@
         </div>
 
 
-
-        <a href="" ng-model="collapsedGroup" ng-click="collapsedGroup=!collapsedGroup"><strong>Toggle (show/hide)</strong> json data</a>
+        <a href="" ng-model="collapsedGroup" ng-click="collapsedGroup=!collapsedGroup"><strong>Toggle
+            (show/hide)</strong> json data</a>
 
         <div ng-show="collapsedGroup">
             <pre>{{allAppGroups|json}}</pre>
-         </div>
-
+        </div>
 
 
     </div>
 </div>
-<hr />
+<hr/>
 <div class="row">
 
     <div class="col-sm-6">
-        <h3>New Application </h3>
-
-        <form role="form" ng-submit="createApplication()" name="createAppForm">
-
-            <div class="form-group">
-                <label for="inAppName">Name</label>
-                <input type="text" ng-model="app.name" class="form-control" id="inAppName" name="name"
-                       required
-                       placeholder="Enter application name">
-            </div>
-            <div class="form-group">
-                <label for="inAppPublicUrl">Public Path</label>
-                <input type="text" ng-model="app.publicURL" class="form-control " id="inAppPublicUrl" name="publicUrl"
-                       required
-                       placeholder="Enter public url">
-            </div>
-
-            <div class="form-group">
-                <label for="selectAppGroup">Application Group</label>
-                <select ng-model="app.applicationGroupId" name="applicationGroupId" id="selectAppGroup"  ng-options=" v.id as v.name for v in allAppGroups" class="form-control">
-                    <option value="">Select group (or create one above)</option>
-                </select>
-            </div>
-
-
-
-
-
-
-
-
-
-
-
-            <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
-        </form>
+        <app-form on-created="onAppCreated"></app-form>
     </div>
 
 
@@ -90,15 +54,15 @@
 
         <div class="list-group">
             <a href="#/app/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
-                <b> {{a.name}}</b> {{a.publicURL}} ({{a.id}})
+                <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}})
             </a>
 
 
         </div>
 
 
-
-        <a href="" ng-model="collapsedApp" ng-click="collapsedApp=!collapsedApp"><strong>Toggle (show/hide)</strong> json data</a>
+        <a href="" ng-model="collapsedApp" ng-click="collapsedApp=!collapsedApp"><strong>Toggle (show/hide)</strong>
+            json data</a>
 
         <div ng-show="collapsedApp">
             <pre>{{allApps|json}}</pre>
@@ -106,7 +70,6 @@
     </div>
 
 </div>
-
 
 
 <hr>
@@ -170,7 +133,8 @@
 
         </div>
 
-        <a href="" ng-model="collapsedLB" ng-click="collapsedLB=!collapsedLB"><strong>Toggle (show/hide)</strong> json data</a>
+        <a href="" ng-model="collapsedLB" ng-click="collapsedLB=!collapsedLB"><strong>Toggle (show/hide)</strong> json
+            data</a>
 
         <div ng-show="collapsedLB">
             <pre>{{allLBs|json}}</pre>

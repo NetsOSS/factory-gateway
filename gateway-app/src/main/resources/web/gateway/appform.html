@@ -1,0 +1,37 @@
+<h3 ng-hide="appObj">New Application </h3>
+<h3 ng-show="appObj">Update Application </h3>
+
+<!--
+appObj:
+<pre>{{appObj}}</pre>
+localApp:
+<pre>{{localApp}}</pre>
+-->
+
+<form role="form" ng-submit="createOrUpdateApplication()" name="createAppForm">
+
+    <div class="form-group">
+        <label for="inAppName">Name</label>
+        <input type="text" ng-model="localApp.name" class="form-control" id="inAppName" name="name"
+               required
+               placeholder="Enter application name">
+    </div>
+    <div class="form-group">
+        <label for="inAppPublicUrl">Public Path</label>
+        <input type="text" ng-model="localApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
+               required
+               placeholder="Enter public url">
+    </div>
+
+    <div class="form-group" ng-hide="appObj">
+        <label for="selectAppGroup">Application Group</label>
+        <select ng-model="localApp.applicationGroupId" name="applicationGroupId" id="selectAppGroup"
+                ng-options=" v.id as v.name for v in allAppGroups" class="form-control">
+            <option value="">Select group (or create one above)</option>
+        </select>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" ng-show="appObj">Update</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" ng-hide="appObj">Create</button>
+</form>
