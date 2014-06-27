@@ -198,7 +198,7 @@ define([
     $scope.removeLoadBalancer = function () {
       GatewayData.LoadBalancerController.remove($scope.lb.id).then(function (data) {
         history.back();
-        $scope.$apply();
+        $scope.$$phase || $scope.$apply(); // Safe apply
       });
     };
 
