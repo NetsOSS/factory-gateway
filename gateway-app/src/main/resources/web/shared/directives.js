@@ -32,7 +32,29 @@ define([ 'angular' ], function (angular) {
       //template: "<div><span>{{mandateperson.id}}<span><input type='text' ng-model='mandateperson.firstname' /></div>",
       //scope: { mandateperson: '=' },
       scope: false,
-      controller: 'LoadBalancerFormCtrl'
+      controller: function ($scope, $routeParams, GatewayData) {
+        $scope.isNewLb = $scope.lb == null;
+        console.log('LB in form: ', $scope.lb);
+        if ($scope.lb != null) {
+          $scope.isNewLb = $scope.lb.id == null;
+          console.log('cecking id');
+        }
+
+        $scope.updateOrCreateLB = function () {
+          console.log('LB in form: ', $scope.lb);
+          if ($scope.lb.id != null) {
+            console.log('Updateing LB');
+            $scope.lb.applications = [];
+            GatewayData.LoadBalancerController.update($scope.lb.id, $scope.lb);
+          } else {
+            console.log('Createing LB');
+            GatewayData.LoadBalancerController.create($scope.lb).then(function (data) {
+              $scope.allLBs.push(data);
+            });
+          }
+        };
+      }
+      //controller: 'LoadBalancerFormCtrl'
     };
   });
 
@@ -58,8 +80,6 @@ define([ 'angular' ], function (angular) {
           delete $scope.localApp.loadBalancers;
           delete $scope.localApp.applicationInstances;
         }
-
-        //console.log('App form controller!', $scope.localLb);
 
         $scope.createOrUpdateApplication = function () {
           if (isAppNew) {

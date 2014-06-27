@@ -40,6 +40,9 @@
         <h3>Add new application (from existing applications) </h3>
 
         <div class="list-group">
+
+
+
             <a class="list-group-item" ng-repeat="a in allLBList">
                 <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
                 <button type="button" ng-click="addAppToLB(a.id)" class="btn btn-primary btn-sm pull-right">Add</button>
