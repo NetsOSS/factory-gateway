@@ -5,8 +5,11 @@ import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +28,7 @@ public class ConfigGeneratorService {
 
     public String generateConfig(LoadBalancer loadBalancer) {
 
+        String haproxyInstallationPath = loadBalancer.getInstallationPath();
 
         List<String> rules = new ArrayList<>();
         List<String> backends = new ArrayList<>();
@@ -93,6 +97,7 @@ public class ConfigGeneratorService {
         pw.println(TAB + "global");
         pw.println(TAB2 + "daemon");
         pw.println(TAB2 + "maxconn 256");
+        pw.println(TAB2 + "pidfile haproxy.pid");
         pw.println();
         pw.println(TAB + "defaults");
         pw.println(TAB2 + "mode http");
@@ -108,5 +113,9 @@ public class ConfigGeneratorService {
         pw.println(TAB2 + "stats enable");
         pw.println(TAB2 + "stats uri /proxy-stats");
         pw.println(TAB2 + "stats admin if TRUE");
+    }
+
+    private void writeFile(String fileName, String fileContents) throws IOException {
+        Files.write(Paths.get(fileName), fileContents.getBytes());
     }
 }
