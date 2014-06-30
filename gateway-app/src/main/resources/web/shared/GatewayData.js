@@ -373,6 +373,20 @@ define([], function () {
     this.resolve.PersonController.search = function (GatewayData, $route) {
       return PersonController.search($route.current.params.name);
     };
+    this.StatusController = {};
+    this.StatusController.readCSV = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/load-balancers/{id}/getCSV';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    var StatusController = this.StatusController;
+    this.resolve.StatusController = {};
+    this.resolve.StatusController.readCSV = function (GatewayData, $route) {
+      return StatusController.readCSV($route.current.params.id);
+    };
   }
   
   return GatewayData;
