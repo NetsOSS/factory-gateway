@@ -12,7 +12,6 @@
   </parent>
 
   <artifactId>gateway-requirements-test</artifactId>
-  <name>Gateway :: Requirements Test</name>
 
   <dependencies>
     <dependency>
