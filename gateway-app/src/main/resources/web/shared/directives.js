@@ -6,7 +6,7 @@ define([ 'angular' ], function (angular) {
 
   var INTEGER_REGEXP = /^\-?\d+$/;
   directives.directive('integer', function () {
-    console.log('hei ');
+
     return {
       require: 'ngModel',
       link: function (scope, elm, attrs, ctrl) {

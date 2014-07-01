@@ -1,8 +1,7 @@
-
 <h3 ng-show="!isNewLb">Update Load Balancer </h3>
 <h3 ng-show="isNewLb">New Load Balancer </h3>
 
-<form role="form" ng-submit="updateOrCreateLB()">
+<form role="form" ng-submit="updateOrCreateLB()" name="lbform" novalidate>
 
     <div class="form-group">
         <label for="inLbName">Name</label>
@@ -18,15 +17,25 @@
     </div>
     <div class="form-group">
         <label for="inLbHost">Installation Path</label>
-        <input type="text" ng-model="lb.installationPath" class="form-control " id="inLbPath"
+        <input type="text" ng-model="lb.installationPath" class="form-control " id="inLbPath" name="lbPath" ng-pattern="/^/[a-zA-Z]+/"
                required
                placeholder="Enter path">
+        <span class="bg-danger" ng-show="lbform.lbPath.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+
+
     </div>
     <div class="form-group">
         <label for="inLbPublicPort">Public Port</label>
-        <input type="number" ng-model="lb.publicPort" class="form-control " id="inLbPublicPort"
-               required
+        <input type="number" ng-model="lb.publicPort" class="form-control " id="inLbPublicPort" min="1" max="65535"
+               name="publicPort"
+               required integer
                placeholder="Enter public port">
+        <span class="bg-danger" ng-show="lbform.publicPort.$error.integer">This is not valid integer!</span>
+        <span class="bg-danger" ng-show="lbform.publicPort.$error.min || lbform.publicPort.$error.max">  The value must be in range 1 to 65535!</span>
+
+
+
+
     </div>
     <div class="form-group">
         <label for="inLbHost">SSH Key</label>
@@ -36,7 +45,7 @@
     </div>
 
 
-    <button type="submit" class="btn btn-primary" ng-hide="lb.id">Create</button>
+    <button type="submit" class="btn btn-primary" ng-hide="lb.id"  ng-disabled="lbform.$invalid ">Create</button>
     <button type="submit" class="btn btn-primary" ng-show="lb.id">Update</button>
 </form>
 <!--

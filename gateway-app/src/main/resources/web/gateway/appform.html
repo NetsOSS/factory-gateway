@@ -8,7 +8,7 @@ localApp:
 <pre>{{localApp}}</pre>
 -->
 
-<form role="form" ng-submit="createOrUpdateApplication()" name="createAppForm">
+<form role="form" ng-submit="createOrUpdateApplication()" name="createAppForm" novalidate>
 
     <div class="form-group">
         <label for="inAppName">Name</label>
@@ -18,20 +18,21 @@ localApp:
     </div>
     <div class="form-group">
         <label for="inAppPublicUrl">Public Path</label>
-        <input type="text" ng-model="localApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
+        <input type="text" ng-model="localApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl" ng-pattern="/^/[a-zA-Z]+/"
                required
                placeholder="Enter public url">
+        <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
     </div>
 
     <div class="form-group" ng-hide="appObj">
         <label for="selectAppGroup">Application Group</label>
         <select ng-model="localApp.applicationGroupId" name="applicationGroupId" id="selectAppGroup"
-                ng-options=" v.id as v.name for v in allAppGroups" class="form-control">
+                ng-options=" v.id as v.name for v in allAppGroups" class="form-control" required>
             <option value="">Select group (or create one above)</option>
         </select>
     </div>
 
 
     <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" ng-show="appObj">Update</button>
-    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" ng-hide="appObj">Create</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" ng-hide="appObj" >Create</button>
 </form>

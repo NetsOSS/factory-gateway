@@ -27,11 +27,33 @@
         <div class="list-group">
             <a class="list-group-item" ng-repeat="a in inLBList">
                 <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
+
                 <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">Remove
                 </button>
             </a>
         </div>
 
+
+        <div class="list-group">
+            <a class="list-group-item ">
+                <h4 class="list-group-item-heading">Finch /finch (36000) GroupId: 35000</h4>
+                <p class="list-group-item-text">
+
+                    <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">Remove
+                    </button>
+                    <ul>
+                <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
+                <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
+                    </ul>
+                </p>
+            </a>
+        </div>
+        <div class="list-group">
+            <a href="#" class="list-group-item ">
+                <h4 class="list-group-item-heading">App2</h4>
+                <p class="list-group-item-text">inst1<br>inst2</p>
+            </a>
+        </div>
 
     </div>
 

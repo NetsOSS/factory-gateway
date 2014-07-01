@@ -50,8 +50,9 @@
             </div>
             <div class="form-group">
                 <label for="inAppInstPath">Path</label>
-                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath" required
+                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath" ng-pattern="/^/[a-zA-Z]+/" name="path"required
                        placeholder="Enter path / url">
+                <span class="bg-danger" ng-show="form.path.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
             </div>
 
             <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Submit</button>
