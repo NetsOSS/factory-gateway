@@ -1,14 +1,10 @@
 package eu.nets.factory.gateway.model;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -44,7 +40,7 @@ public class LoadBalancer extends AbstractEntity{
         this.installationPath = installationPath;
         this.sshKey = sshKey;
         this.publicPort = publicPort;
-        this.applications = new ArrayList<Application>();
+        this.applications = new ArrayList<>();
     }
 
     public LoadBalancer() { }

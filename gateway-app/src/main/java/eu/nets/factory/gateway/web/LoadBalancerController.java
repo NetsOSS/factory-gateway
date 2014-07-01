@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -67,11 +65,11 @@ public class LoadBalancerController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/findBySsh/{sshKey}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LoadBalancerModel findBySshKey(@PathVariable String ssh) {
-        log.info("LoadBalancerController.findBySshKey, name={}", ssh);
+    public LoadBalancerModel findBySshKey(@PathVariable String sshKey) {
+        log.info("LoadBalancerController.findBySshKey, name={}", sshKey);
         List<LoadBalancer> all = loadBalancerRepository.findAll();
         for (LoadBalancer l : all) {
-            if (l.getSshKey().equals(ssh)) {
+            if (l.getSshKey().equals(sshKey)) {
                 return new LoadBalancerModel(l);
             }
         }

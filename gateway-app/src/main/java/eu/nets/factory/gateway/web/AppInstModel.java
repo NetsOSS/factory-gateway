@@ -1,6 +1,5 @@
 package eu.nets.factory.gateway.web;
 
-import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 
 public  class AppInstModel {
@@ -12,7 +11,6 @@ public  class AppInstModel {
     public String host;
     public Integer port;
     public Long applicationId;
-    //public AppModel application;
 
 
     public AppInstModel() { }

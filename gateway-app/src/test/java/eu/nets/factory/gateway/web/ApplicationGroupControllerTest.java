@@ -2,10 +2,6 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.ApplicationGroup;
-import eu.nets.factory.gateway.model.ApplicationGroupRepository;
-import eu.nets.factory.gateway.model.ApplicationRepository;
-import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,12 +37,6 @@ public class ApplicationGroupControllerTest {
     ApplicationInstanceController applicationInstanceController;
 
     @Autowired
-    private ApplicationGroupRepository applicationGroupRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private InitTestClass initTestClass;
     @Before
     public void Before() {
@@ -57,9 +47,7 @@ public class ApplicationGroupControllerTest {
     public void testListAllAppGroups() throws Exception {
         List<AppGroupModel> appGroupModels = applicationGroupController.listAllAppGroups();
         assertThat(appGroupModels).isNotNull().hasSize(3);
-        Collections.sort(appGroupModels, (o1, o2) -> {
-            return o1.id.compareTo(o2.id);
-        });
+        Collections.sort(appGroupModels, (o1, o2) -> o1.id.compareTo(o2.id));
         assertThat(appGroupModels.get(1)).isNotNull();
         assertThat(appGroupModels.get(1).name).isNotNull().isEqualTo("GroupTwo");
     }

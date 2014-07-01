@@ -1,10 +1,7 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.GatewayException;
-import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
-import eu.nets.factory.gateway.model.LoadBalancerRepository;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,13 +31,7 @@ public class LoadBalancerControllerTest {
     LoadBalancerController loadBalancerController;
 
     @Autowired
-    private LoadBalancerRepository loadBalancerRepository;
-
-    @Autowired
     ApplicationController applicationController;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private InitTestClass initTestClass;
@@ -53,7 +44,7 @@ public class LoadBalancerControllerTest {
     public void testListAllLoadBalancers() throws Exception {
         List<LoadBalancerModel> loadBalancerModels = loadBalancerController.listAllLoadBalancers();
         assertThat(loadBalancerModels).isNotNull().hasSize(3);
-        Collections.sort(loadBalancerModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(loadBalancerModels, (o1, o2) -> o1.id.compareTo(o2.id));
         assertThat(loadBalancerModels.get(1)).isNotNull();
         assertThat(loadBalancerModels.get(1).name).isNotNull().isEqualTo("Knut");
     }

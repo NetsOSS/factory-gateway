@@ -1,12 +1,9 @@
 package eu.nets.factory.gateway.web;
 
-import eu.nets.factory.gateway.model.Application;
-import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import static java.util.stream.Collectors.toList;
 
 public class LoadBalancerModel {
@@ -17,7 +14,7 @@ public class LoadBalancerModel {
     public String host;
     public String sshKey;
     public int publicPort;
-    public List<AppModel> applications = new ArrayList<AppModel>();
+    public List<AppModel> applications = new ArrayList<>();
 
 
     public LoadBalancerModel() { }
@@ -32,12 +29,7 @@ public class LoadBalancerModel {
             this.applications = loadBalancer.getApplications().stream().map(AppModel::summary).collect(toList());
         }
     }
-/*
-    public LoadBalancerModel(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-*/
+
     public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey, int publicPort) {
         this.id = id;
         this.name = name;

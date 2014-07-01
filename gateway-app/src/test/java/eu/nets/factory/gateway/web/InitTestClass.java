@@ -5,10 +5,7 @@ import eu.nets.factory.gateway.model.ApplicationGroup;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
-
-import javax.transaction.Transactional;
 
 @Component
 public class InitTestClass {

@@ -2,10 +2,7 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
-import junit.framework.TestCase;
-import org.fest.assertions.Assert;
-import org.fest.assertions.Assertions;
-import org.fest.assertions.CollectionAssert;
+import org.springframework.transaction.annotation.Transactional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,11 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import eu.nets.factory.gateway.web.ApplicationController;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -74,7 +67,7 @@ public class ApplicationControllerTest {
         AppInstModel appInstModel;
         LoadBalancerModel loadBalancerModel;
         List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(appModels, (o1, o2) -> o1.getId().compareTo(o2.getId()));
 
         assertNotNull(methodId + ": received null-pointer: 'appModels'", appModels);
         assertEquals(methodId + ": expected list 'applications' to be of size 3, got " + appModels.size(), 3, appModels.size());
@@ -110,7 +103,7 @@ public class ApplicationControllerTest {
         assertNotNull(partId + "received null-pointer: 'applicationInstances'", appModel.applicationInstances);
         assertEquals(partId + "expected list 'applicationInstances' to be of size 2, found size " + appModel.applicationInstances.size(), 2, appModel.applicationInstances.size());
         List<AppInstModel> appInstModels = appModel.applicationInstances;
-        Collections.sort(appInstModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(appInstModels, (o1, o2) -> o1.id.compareTo(o2.id));
         appInstModel = appInstModels.get(0);
         assertEquals(partId + "expected 'Grandiosa 1.0', got '" + appInstModel.name + "'", "Grandiosa 1.0", appInstModel.name);
         appInstModel = appInstModels.get(1);
@@ -146,15 +139,8 @@ public class ApplicationControllerTest {
         AppModel appModel;
         List<AppModel> appModels;
 
-        /*
-        assertThat(applicationController.search("A")).isNotNull().hasSize(1);
-        assertThat(applicationController.search("A").get(0).name).isNotNull().isEqualTo("Alpha");
-        assertThat(applicationController.search("a")).isNotNull().hasSize(3);
-        */
-
         partId = methodId + " - 1: "; // search for last object
         appModels = applicationController.search("Alpha");
-        //Collections.sort(appModels, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
         assertNotNull(partId + "received null-pointer: 'appModels'", appModels);
         assertEquals(partId + "expected list 'appModels' to be of size 1, found size " + appModels.size(), 1, appModels.size());
         appModel = appModels.get(0);
@@ -162,7 +148,6 @@ public class ApplicationControllerTest {
 
         partId = methodId + " - 2: "; // search for middle object
         appModels = applicationController.search("Grandiosa");
-        //Collections.sort(appModels, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
         assertNotNull(partId + "received null-pointer: 'appModels'", appModels);
         assertEquals(partId + "expected list 'appModels' to be of size 1, found size " + appModels.size(), 1, appModels.size());
         appModel = appModels.get(0);
@@ -170,7 +155,6 @@ public class ApplicationControllerTest {
 
         partId = methodId + " - 3: "; // search for first object
         appModels = applicationController.search("Kamino");
-        //Collections.sort(appModels, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
         assertNotNull(partId + "received null-pointer: 'appModels'", appModels);
         assertEquals(partId + "expected list 'appModels' to be of size 1, found size " + appModels.size(), 1, appModels.size());
         appModel = appModels.get(0);
@@ -178,7 +162,6 @@ public class ApplicationControllerTest {
 
         partId = methodId + " - 4: "; // search for nonexistent object
         appModels = applicationController.search("Batman");
-        //Collections.sort(appModels, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
         assertNotNull(partId + "received null-pointer: 'appModels'", appModels);
         assertEquals(partId + "expected list 'appModels' to be of size 0, found size " + appModels.size(), 0, appModels.size());
     }
@@ -190,7 +173,7 @@ public class ApplicationControllerTest {
         AppModel appModel;
 
         List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(appModels, (o1, o2) -> o1.getId().compareTo(o2.getId()));
 
         partId = methodId + " - 1: "; // find last object
         appModel = appModels.get(2);
@@ -218,7 +201,7 @@ public class ApplicationControllerTest {
         partId = methodId + " - 1: "; // create application
         List<ApplicationGroup> applicationGroups = applicationGroupRepository.findAll();
         assertNotNull(partId + "received null-pointer: 'applicationGroups'", applicationGroups);
-        Collections.sort(applicationGroups, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(applicationGroups, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         AppGroupModel appGroupModel = new AppGroupModel(applicationGroups.get(0));
         assertNotNull(partId + "received null-pointer: 'appGroupModel'", appGroupModel);
         Application application = new Application("Beta", "/beta", applicationGroupRepository.findOne(appGroupModel.getId()));
@@ -229,12 +212,12 @@ public class ApplicationControllerTest {
         assertNotNull(partId + "received null-pointer from create", appModel);
         assertEquals(partId + "expected 'Beta', got '" + appModel.name + "'", "Beta", appModel.name);
         applicationGroups = applicationGroupRepository.findAll();
-        Collections.sort(applicationGroups, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(applicationGroups, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         appGroupModel = new AppGroupModel(applicationGroups.get(0));
         assertNotNull(partId + "received null-pointer: 'applications'", appGroupModel.applications);
         assertEquals(partId + "expected list 'appModels' to be of size 2, found size " + appGroupModel.applications.size() + "", 2, appGroupModel.applications.size());
         List<AppModel> appModels =  appGroupModel.applications;
-        Collections.sort(appModels, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(appModels, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         assertEquals(partId + "expected 'Beta', got '" + appModels.get(1).getName() + "'", "Beta", appModels.get(1).getName());
 
         partId = methodId + " - 2: "; // add ApplicationInstance - testRemove
@@ -249,7 +232,7 @@ public class ApplicationControllerTest {
         application = applicationRepository.findOne(appModel.getId());
         List<ApplicationInstance> applicationInstances = application.getApplicationInstances();
         assertNotNull(partId + "received null-pointer: 'applicationInstances'", applicationInstances);
-        Collections.sort(applicationInstances, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(applicationInstances, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         assertEquals(partId + "expected list 'applicationInstances' to be of size 2, found size " + applicationInstances.size(), 2, applicationInstances.size());
         assertEquals(partId + "expected 'Beta 1.0', got '" + applicationInstances.get(0).getName() + "'", "Beta 1.0", applicationInstances.get(0).getName());
         assertNotNull(partId + "received null-pointer: 'application'", applicationInstance.getApplication());
@@ -257,7 +240,7 @@ public class ApplicationControllerTest {
 
         partId = methodId + " - 3: "; // add LoadBalancer - testRemove
         List<LoadBalancer> loadBalancers = loadBalancerRepository.findAll();
-        Collections.sort(loadBalancers, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(loadBalancers, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancers.get(0));
         assertNotNull(partId + "received null-pointer: 'loadBalancerModel'", loadBalancerModel);
         loadBalancerController.addApplication(loadBalancerModel.id, application.getId());
@@ -267,11 +250,11 @@ public class ApplicationControllerTest {
         application = applicationRepository.findOne(appModel.getId());
         List<LoadBalancer> appLoadBalancers = application.getLoadBalancers();
         assertNotNull(partId + "received null-pointer: 'loadBalancers'", appLoadBalancers);
-        Collections.sort(appLoadBalancers, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(appLoadBalancers, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         //assertEquals(partId + "expected list 'loadBalancers' to be of size 2, found size " + appLoadBalancers.size(), 2, appLoadBalancers.size());
         //assertEquals(partId + "expected 'Per', got '" + appLoadBalancers.get(0).getName() + "'", "Per", appLoadBalancers.get(0).getName());
         loadBalancers = loadBalancerRepository.findAll();
-        Collections.sort(loadBalancers, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
+        Collections.sort(loadBalancers, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         loadBalancerModel = new LoadBalancerModel(loadBalancers.get(0));
         appModels = loadBalancerModel.applications;
         assertNotNull(partId + "received null-pointer: 'applications'", appModels);
@@ -319,7 +302,7 @@ public class ApplicationControllerTest {
 
         partId = methodId + " - 2: "; // linked ApplicationInstances were also removed from repository
         List<AppInstModel> appInstModels = appModel.applicationInstances;
-        Collections.sort(appInstModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(appInstModels, (o1, o2) -> o1.id.compareTo(o2.id));
         assertFalse(partId + "expected null-pointer on ApplicationInstanceID " + appInstModels.get(0).id, applicationInstanceRepository.exists(appInstModels.get(0).id));
         assertFalse(partId + "expected null-pointer on ApplicationInstanceID " + appInstModels.get(1).id, applicationInstanceRepository.exists(appInstModels.get(1).id));
 
@@ -329,7 +312,7 @@ public class ApplicationControllerTest {
 
         partId = methodId + " - 4: "; // removed from list in LoadBalancers
         List<LoadBalancerModel> loadBalancerModels = appModel.loadBalancers;
-        Collections.sort(loadBalancerModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(loadBalancerModels, (o1, o2) -> o1.id.compareTo(o2.id));
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(loadBalancerModels.get(0).id);
         LoadBalancer loadBalancer2 = loadBalancerRepository.findOne(loadBalancerModels.get(1).id);
         assertEquals(partId + "expected list 'applications' to be of size 1, found size " + loadBalancer.getApplications().size(), 1, loadBalancer.getApplications().size());
@@ -343,7 +326,7 @@ public class ApplicationControllerTest {
 
         partId = methodId + " - 1: ";
         List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
         AppModel appModel = appModels.get(0);
         String oldName = appModel.name;
         String oldUrl = appModel.publicUrl;
@@ -351,7 +334,7 @@ public class ApplicationControllerTest {
         appModel.publicUrl = "/delta";
         applicationController.update(appModel.getId(), appModel);
         appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
         appModel = appModels.get(0);
         assertEquals(partId + "expected 'Delta', got '" + appModel.name + "'", "Delta", appModel.name);
         assertEquals(partId + "expected '/delta', got '" + appModel.publicUrl + "'", "/delta", appModel.publicUrl);
@@ -379,7 +362,7 @@ public class ApplicationControllerTest {
         String partId;
 
         List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
         assertEquals(classId + "expected list 'appModels' to be of size 3, found size " + appModels.size(), 3, appModels.size());
 
         partId = methodId + " - 1: ";
@@ -397,7 +380,7 @@ public class ApplicationControllerTest {
         String partId;
 
         List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
 
         partId = methodId + " - 1: ";
         assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(0).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(0).getId()).size());

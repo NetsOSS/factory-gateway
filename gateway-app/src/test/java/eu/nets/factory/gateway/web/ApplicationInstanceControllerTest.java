@@ -3,10 +3,7 @@ package eu.nets.factory.gateway.web;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
-import eu.nets.factory.gateway.model.ApplicationInstanceRepository;
 import eu.nets.factory.gateway.model.ApplicationRepository;
-import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,9 +36,6 @@ public class ApplicationInstanceControllerTest {
     ApplicationController applicationController;
 
     @Autowired
-    private ApplicationInstanceRepository applicationInstanceRepository;
-
-    @Autowired
     private ApplicationRepository applicationRepository;
 
     @Autowired
@@ -56,7 +50,7 @@ public class ApplicationInstanceControllerTest {
     public void testListAllAppInsts() throws Exception {
         List<AppInstModel> appInstModels = applicationInstanceController.listAllAppInsts();
         assertThat(appInstModels).isNotNull().hasSize(3);
-        Collections.sort(appInstModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
+        Collections.sort(appInstModels, (o1, o2) -> o1.id.compareTo(o2.id));
         assertThat(appInstModels.get(1)).isNotNull();
         assertThat(appInstModels.get(1).name).isNotNull().isEqualTo("Grandiosa 1.0");
     }

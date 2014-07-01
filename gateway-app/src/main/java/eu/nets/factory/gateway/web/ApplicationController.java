@@ -1,20 +1,19 @@
 package eu.nets.factory.gateway.web;
 
-        import edu.umd.cs.findbugs.ba.bcp.Load;
-        import eu.nets.factory.gateway.GatewayException;
-        import eu.nets.factory.gateway.model.*;
-        import org.slf4j.Logger;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.stereotype.Controller;
-        import org.springframework.web.bind.annotation.*;
+import eu.nets.factory.gateway.GatewayException;
+import eu.nets.factory.gateway.model.*;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-        import javax.transaction.Transactional;
-        import java.util.Iterator;
-        import java.util.List;
+import javax.transaction.Transactional;
+import java.util.Iterator;
+import java.util.List;
 
-        import static java.util.stream.Collectors.toList;
-        import static org.slf4j.LoggerFactory.getLogger;
-        import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import static java.util.stream.Collectors.toList;
+import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 /**
  * Created by kwlar on 19.06.2014.

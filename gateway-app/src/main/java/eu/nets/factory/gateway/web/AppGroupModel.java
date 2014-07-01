@@ -1,6 +1,5 @@
 package eu.nets.factory.gateway.web;
 
-import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationGroup;
 
 import java.util.List;
