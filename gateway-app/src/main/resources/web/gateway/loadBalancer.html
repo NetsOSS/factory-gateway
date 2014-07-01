@@ -30,6 +30,8 @@
         <th>Total Sessions</th>
         <th>Bytes in</th>
         <th>Bytes out</th>
+        <th>Last change in status</th>
+        <th>Downtime</th>
         <th>Status</th>
         <!--<th ng-repeat="lb in app.loadBalancers">{{lb.name}}</th>-->
 
@@ -44,6 +46,8 @@
         <td>{{s.stot}}</td>
         <td>{{s.bin}}</td>
         <td>{{s.bout}}</td>
+        <td>{{s.lastchg}} s</td>
+        <td>{{s.downtime}} s</td>
 
         <td>{{s.status}}</td>
 

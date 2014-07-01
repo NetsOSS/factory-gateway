@@ -32,7 +32,7 @@ public class StatusControllerTest {
 
     @Autowired
     LoadBalancerController loadBalancerController;
-
+    /*
     @Test
     public void testParseCSV() throws Exception{
 
@@ -211,5 +211,5 @@ public class StatusControllerTest {
             assertEquals(fields[55], list.get(i).lastsess);
 
         }
-    }
+    }*/
 }
