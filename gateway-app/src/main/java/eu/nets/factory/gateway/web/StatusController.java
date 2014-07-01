@@ -4,6 +4,7 @@ import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.model.LoadBalancerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,15 +29,7 @@ public class StatusController {
     @Autowired
     LoadBalancerRepository loadBalancerRepository;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/getCSV", produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String readCSV(LoadBalancerModel loadBalancerModel) {
-
-        LoadBalancer loadBalancer = loadBalancerRepository.findOne(loadBalancerModel.id);
-        if(loadBalancer == null) {
-            return null;
-        }
-        loadBalancerModel = new LoadBalancerModel(loadBalancer);
+    public String readCSV(LoadBalancer loadBalancer) {
         String csvString = "";
         int port = loadBalancer.getPublicPort()+1;
         String csvFile = "http://vm-stapp-145:" + port + "/proxy-stats;csv";
@@ -64,8 +57,6 @@ public class StatusController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/parseCSV", produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
     public List<StatusModel> parseCSV(String csvString) {
         List<StatusModel> list = new ArrayList<StatusModel>();
 
@@ -142,6 +133,17 @@ public class StatusController {
 
         }
         return list;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/status", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<StatusModel> getStatusForLoadbalancer(@PathVariable Long id) {
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        if(loadBalancer == null) {
+            return null;
+        }
+        String csvString = readCSV(loadBalancer);
+        return parseCSV(csvString);
     }
 
 }
