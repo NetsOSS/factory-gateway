@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.ApplicationInstanceRepository;
@@ -75,7 +76,7 @@ public class ApplicationInstanceControllerTest {
     @Test
     public void testCreate() throws Exception {
         Application application =  applicationRepository.findOne(applicationController.search("Kamino").get(0).getId());
-        ApplicationInstance applicationInstance = new ApplicationInstance("Beta 1.0", "host", 8080, "www.beta.no/1.0", application);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Beta 1.0", "host", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = applicationInstanceController.create(application.getId(), new AppInstModel(applicationInstance));
         assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(4);
         assertThat(applicationInstanceController.search("Beta 1.0")).isNotNull().hasSize(1);
@@ -83,9 +84,21 @@ public class ApplicationInstanceControllerTest {
         assertThat(appInstModel).isNotNull();
         assertThat(appInstModel.name).isNotNull().isEqualTo("Beta 1.0");
         assertThat(appInstModel.host).isNotNull().isEqualTo("host");
-        assertThat(appInstModel.path).isNotNull().isEqualTo("www.beta.no/1.0");
+        assertThat(appInstModel.path).isNotNull().isEqualTo("/beta/1.0");
         assertThat(appInstModel.port).isNotNull().isEqualTo(8080);
         assertThat(appInstModel.applicationId).isNotNull().isEqualTo(application.getId());
+    }
+
+    @Test()
+    public void testCreateUniqueName() throws Exception {
+        Application application = applicationRepository.findByNameLike("Kamino").get(0);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Alpha 1.0", "X", 123, "X", application);
+        AppInstModel appInstModel = new AppInstModel(applicationInstance);
+        try {
+            applicationInstanceController.create(application.getId(), appInstModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -110,7 +123,7 @@ public class ApplicationInstanceControllerTest {
 
         AppInstModel appInstModel = applicationInstanceController.search("Kamino 1.0").get(0);
         appInstModel.name = "Kamino 1.1";
-        appInstModel.path = "www.kamino.no/1.1";
+        appInstModel.path = "/kamino/1.1";
         appInstModel.host = "new host";
         appInstModel.port = 8090;
         appInstModel = applicationInstanceController.update(appInstModel.id, appInstModel);
@@ -119,7 +132,18 @@ public class ApplicationInstanceControllerTest {
         assertThat(applicationInstanceController.search("Kamino 1.1").get(0).name).isNotNull().isEqualTo("Kamino 1.1");
         assertThat(appInstModel.name).isNotNull().isEqualTo("Kamino 1.1");
         assertThat(appInstModel.host).isNotNull().isEqualTo("new host");
-        assertThat(appInstModel.path).isNotNull().isEqualTo("www.kamino.no/1.1");
+        assertThat(appInstModel.path).isNotNull().isEqualTo("/kamino/1.1");
         assertThat(appInstModel.port).isNotNull().isEqualTo(8090);
+    }
+
+    @Test
+    public void testUpdateUniqueName() throws Exception {
+        AppInstModel appInstModel = applicationInstanceController.search("Kamino 1.0").get(0);
+        appInstModel.name = "Alpha 1.0";
+        try {
+            applicationInstanceController.update(appInstModel.id, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 }

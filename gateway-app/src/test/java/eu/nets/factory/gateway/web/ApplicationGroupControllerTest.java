@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.ApplicationGroup;
 import eu.nets.factory.gateway.model.ApplicationGroupRepository;
 import eu.nets.factory.gateway.model.ApplicationRepository;
@@ -86,6 +87,17 @@ public class ApplicationGroupControllerTest {
         assertThat(appGroupModel.name).isNotNull().isEqualTo("GroupX");
     }
 
+    @Test()
+    public void testCreateUniqueName() throws Exception {
+        ApplicationGroup applicationGroup = new ApplicationGroup("GroupTwo");
+        AppGroupModel appGroupModel = new AppGroupModel(applicationGroup);
+        try {
+            applicationGroupController.create(appGroupModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
+    }
+
     @Test
     public void testRemove() throws Exception {
         assertThat(applicationGroupController.listAllAppGroups().size()).isNotNull().isEqualTo(3);
@@ -112,6 +124,17 @@ public class ApplicationGroupControllerTest {
         assertThat(applicationGroupController.listAllAppGroups().size()).isNotNull().isEqualTo(3);
         assertThat(applicationGroupController.search("GroupX").get(0).name).isNotNull().isEqualTo("GroupX");
         assertThat(appGroupModel.name).isNotNull().isEqualTo("GroupX");
+    }
+
+    @Test
+    public void testUpdateUniqueName() throws Exception {
+        AppGroupModel appGroupModel = applicationGroupController.search("GroupOne").get(0);
+        appGroupModel.name = "GroupThree";
+        try {
+            applicationGroupController.update(appGroupModel.getId(), appGroupModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test

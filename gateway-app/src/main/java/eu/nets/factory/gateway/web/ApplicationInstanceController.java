@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.ApplicationInstanceRepository;
@@ -66,6 +67,8 @@ public class ApplicationInstanceController {
     public AppInstModel create(@PathVariable long applicationId, @RequestBody AppInstModel applicationInstanceModel) {
         log.info("ApplicationInstanceController.create AppId={} host= {}",applicationId, applicationInstanceModel.host);
 
+        assertNameUnique(applicationInstanceModel.name);
+
         Application application = applicationRepository.findOne(applicationId);
         ApplicationInstance applicationInstance = new ApplicationInstance(applicationInstanceModel.name, applicationInstanceModel.host, applicationInstanceModel.port, applicationInstanceModel.path, application);
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
@@ -75,6 +78,12 @@ public class ApplicationInstanceController {
 
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());
      }
+
+    private void assertNameUnique(String name) {
+        if(applicationInstanceRepository.countByName(name) > 0L) {
+            throw new GatewayException("Could not create Application Instance. Name '" + name + "' already exists.");
+        }
+    }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
     @ResponseBody //has to be here
@@ -93,6 +102,8 @@ public class ApplicationInstanceController {
     @ResponseBody
     public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel applicationInstanceModel) {
         log.info("ApplicationInstanceController.update");
+
+        assertNameUnique(applicationInstanceModel.name);
 
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
         applicationInstance.setName(applicationInstanceModel.name);

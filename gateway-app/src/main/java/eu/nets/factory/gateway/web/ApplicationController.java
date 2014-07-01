@@ -1,6 +1,7 @@
 package eu.nets.factory.gateway.web;
 
         import edu.umd.cs.findbugs.ba.bcp.Load;
+        import eu.nets.factory.gateway.GatewayException;
         import eu.nets.factory.gateway.model.*;
         import org.slf4j.Logger;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,8 @@ public class ApplicationController {
     public AppModel create(@RequestBody AppModel applicationModel) {
         log.info("ApplicationController.create");
 
+        assertNameUnique(applicationModel.name);
+
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(applicationModel.getApplicationGroupId());
         Application application = new Application(applicationModel.getName(), applicationModel.getPublicUrl(), applicationGroup);
         application = applicationRepository.save(application);
@@ -81,6 +84,12 @@ public class ApplicationController {
         applicationGroupRepository.save(applicationGroup);
 
         return new AppModel(application);
+    }
+
+    private void assertNameUnique(String name) {
+        if(applicationRepository.countByName(name) > 0L) {
+            throw new GatewayException("Could not create Application. Name '" + name + "' already exists.");
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
@@ -114,6 +123,8 @@ public class ApplicationController {
     @ResponseBody
     public AppModel update(@PathVariable Long id, @RequestBody AppModel appModel) {
         log.info("ApplicationController.update");
+
+        assertNameUnique(appModel.getName());
 
         Application application = applicationRepository.findOne(id);
         application.setName(appModel.getName());

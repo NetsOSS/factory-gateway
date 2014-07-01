@@ -2,7 +2,9 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationGroup;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 

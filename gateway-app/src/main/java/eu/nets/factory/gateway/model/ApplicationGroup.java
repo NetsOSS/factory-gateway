@@ -1,9 +1,10 @@
 package eu.nets.factory.gateway.model;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +13,11 @@ import java.util.List;
  */
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = "name")})
 public class ApplicationGroup extends AbstractEntity {
 
-    @NotNull
+    @NotBlank
     private String name;
 
     @OneToMany(mappedBy = "applicationGroup")//, fetch = FetchType.EAGER)

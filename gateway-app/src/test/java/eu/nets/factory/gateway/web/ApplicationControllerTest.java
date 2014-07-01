@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import junit.framework.TestCase;
 import org.fest.assertions.Assert;
@@ -81,7 +82,7 @@ public class ApplicationControllerTest {
         partId = methodId + " - 1: "; //check 'completeness' of first object
         appModel = appModels.get(0);
         assertEquals(partId + "expected 'Kamino', got '" + appModel.name + "'", "Kamino", appModel.name);
-        assertEquals(partId + "expected 'www.kamino.no', got '" + appModel.publicUrl + "'", "www.kamino.no", appModel.publicUrl);
+        assertEquals(partId + "expected '/kamino', got '" + appModel.publicUrl + "'", "/kamino", appModel.publicUrl);
 
         assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
         groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
@@ -100,7 +101,7 @@ public class ApplicationControllerTest {
         partId = methodId + " - 2: "; // check 'completeness' of middle object
         appModel = appModels.get(1);
         assertEquals(partId + "expected 'Grandiosa', got '" + appModel.name + "'", "Grandiosa", appModel.name);
-        assertEquals(partId + "expected 'www.grandiosa.no', got '" + appModel.publicUrl + "'", "www.grandiosa.no", appModel.publicUrl);
+        assertEquals(partId + "expected '/grandiosa', got '" + appModel.publicUrl + "'", "/grandiosa", appModel.publicUrl);
 
         assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
         groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
@@ -123,7 +124,7 @@ public class ApplicationControllerTest {
         partId = methodId + " - 3: "; // check 'completeness' of last object
         appModel = appModels.get(2);
         assertEquals(partId + "expected 'Alpha', got '" + appModel.name + "'", "Alpha", appModel.name);
-        assertEquals(partId + "expected 'www.alpha.no', got '" + appModel.publicUrl + "'", "www.alpha.no", appModel.publicUrl);
+        assertEquals(partId + "expected '/alpha', got '" + appModel.publicUrl + "'", "/alpha", appModel.publicUrl);
 
         assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
         groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
@@ -144,6 +145,12 @@ public class ApplicationControllerTest {
         String partId;
         AppModel appModel;
         List<AppModel> appModels;
+
+        /*
+        assertThat(applicationController.search("A")).isNotNull().hasSize(1);
+        assertThat(applicationController.search("A").get(0).name).isNotNull().isEqualTo("Alpha");
+        assertThat(applicationController.search("a")).isNotNull().hasSize(3);
+        */
 
         partId = methodId + " - 1: "; // search for last object
         appModels = applicationController.search("Alpha");
@@ -209,13 +216,12 @@ public class ApplicationControllerTest {
         String partId;
 
         partId = methodId + " - 1: "; // create application
-
         List<ApplicationGroup> applicationGroups = applicationGroupRepository.findAll();
         assertNotNull(partId + "received null-pointer: 'applicationGroups'", applicationGroups);
         Collections.sort(applicationGroups, (o1, o2) -> { return o1.getId().compareTo(o2.getId()); });
         AppGroupModel appGroupModel = new AppGroupModel(applicationGroups.get(0));
         assertNotNull(partId + "received null-pointer: 'appGroupModel'", appGroupModel);
-        Application application = new Application("Beta", "www.beta.no", applicationGroupRepository.findOne(appGroupModel.getId()));
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findOne(appGroupModel.getId()));
         assertNotNull(partId + "received null-pointer: 'application'", application);
         AppModel appModel = new AppModel(application);
         assertNotNull(partId + "received null-pointer: 'appModel'", application);
@@ -233,11 +239,11 @@ public class ApplicationControllerTest {
 
         partId = methodId + " - 2: "; // add ApplicationInstance - testRemove
         application = applicationRepository.findOne(appModel.getId());
-        ApplicationInstance applicationInstance = new ApplicationInstance("Beta 1.0", "hostX", 8080, "www.beta.no/1.0", application);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Beta 1.0", "hostX", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
         assertNotNull(partId + "received null-pointer: 'appInstModel'", appInstModel);
         applicationInstanceController.create(application.getId(), appInstModel);
-        ApplicationInstance applicationInstance2 = new ApplicationInstance("Beta 1.1", "hostX", 8080, "www.beta.no/1.1", application);
+        ApplicationInstance applicationInstance2 = new ApplicationInstance("Beta 1.1", "hostX", 8080, "/beta/1.1", application);
         AppInstModel appInstModel2 = new AppInstModel(applicationInstance2);
         applicationInstanceController.create(application.getId(), appInstModel2);
         application = applicationRepository.findOne(appModel.getId());
@@ -271,6 +277,29 @@ public class ApplicationControllerTest {
         assertNotNull(partId + "received null-pointer: 'applications'", appModels);
         assertEquals(partId + "expected list 'applications' to be of size 2, found size " + appModels.size(), 2, appModels.size());
         assertEquals(partId + "expected 'Beta', got '" + appModels.get(1).getName() + "'", "Beta", appModels.get(1).getName());
+    }
+
+    @Test()
+    public void testCreateUniqueName() throws Exception {
+        //same name, same ApplicationGroup
+        ApplicationGroup applicationGroup = applicationGroupRepository.findByNameLike("GroupTwo").get(0);
+        Application application = new Application("Alpha", "X", applicationGroup);
+        AppModel appModel = new AppModel(application);
+        try {
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
+
+        //same name, different ApplicationGroup
+        applicationGroup = applicationGroupRepository.findByNameLike("GroupOne").get(0);
+        application = new Application("Alpha", "X", applicationGroup);
+        appModel = new AppModel(application);
+        try {
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -319,18 +348,29 @@ public class ApplicationControllerTest {
         String oldName = appModel.name;
         String oldUrl = appModel.publicUrl;
         appModel.name = "Delta";
-        appModel.publicUrl = "www.delta.no";
+        appModel.publicUrl = "/delta";
         applicationController.update(appModel.getId(), appModel);
         appModels = applicationController.listAllApps();
         Collections.sort(appModels, (o1, o2) -> { return o1.id.compareTo(o2.id); });
         appModel = appModels.get(0);
         assertEquals(partId + "expected 'Delta', got '" + appModel.name + "'", "Delta", appModel.name);
-        assertEquals(partId + "expected 'www.delta.no', got '" + appModel.publicUrl + "'", "www.delta.no", appModel.publicUrl);
+        assertEquals(partId + "expected '/delta', got '" + appModel.publicUrl + "'", "/delta", appModel.publicUrl);
 
         // sett back to old values
         appModel.name = oldName;
         appModel.publicUrl = oldUrl;
         applicationController.update(appModel.getId(), appModel);
+    }
+
+    @Test
+    public void testUpdateUniqueName() throws Exception {
+        AppModel appModel = applicationController.search("Kamino").get(0);
+        appModel.name = "Alpha";
+        try {
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test

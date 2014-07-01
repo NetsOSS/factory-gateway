@@ -53,9 +53,9 @@ public class InitTestClass {
         groupModelThree = applicationGroupController.create(groupModelThree);
 
         //Applications
-        Application applicationOne = new Application("Kamino", "www.kamino.no", groupOne);
-        Application applicationTwo = new Application("Grandiosa", "www.grandiosa.no", groupTwo);
-        Application applicationThree = new Application("Alpha", "www.alpha.no", groupTwo);
+        Application applicationOne = new Application("Kamino", "/kamino", groupOne);
+        Application applicationTwo = new Application("Grandiosa", "/grandiosa", groupTwo);
+        Application applicationThree = new Application("Alpha", "/alpha", groupTwo);
         AppModel appModelOne = new AppModel(applicationOne);
         AppModel appModelTwo = new AppModel(applicationTwo);
         AppModel appModelThree = new AppModel(applicationThree);
@@ -68,9 +68,9 @@ public class InitTestClass {
         appModelThree = applicationController.create(appModelThree);
 
         //ApplicationInstances
-        ApplicationInstance appInstOne = new ApplicationInstance("Kamino 1.0", "hostOne", 8080, "www.kamino.no/1.0", applicationOne);
-        ApplicationInstance appInstTwo = new ApplicationInstance("Grandiosa 1.0", "hostTwo", 8080, "www.grandiosa.no/1.0", applicationTwo);
-        ApplicationInstance appInstThree = new ApplicationInstance("Alpha 1.0", "hostThree", 8080, "www.alpha.no/1.0", applicationTwo);
+        ApplicationInstance appInstOne = new ApplicationInstance("Kamino 1.0", "hostOne", 8080, "/kamino/1.0", applicationOne);
+        ApplicationInstance appInstTwo = new ApplicationInstance("Grandiosa 1.0", "hostTwo", 8080, "/grandiosa/1.0", applicationTwo);
+        ApplicationInstance appInstThree = new ApplicationInstance("Alpha 1.0", "hostThree", 8080, "/alpha/1.0", applicationTwo);
         AppInstModel instModelOne = new AppInstModel(appInstOne);
         AppInstModel instModelTwo = new AppInstModel(appInstTwo);
         AppInstModel instModelThree = new AppInstModel(appInstThree);

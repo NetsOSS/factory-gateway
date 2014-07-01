@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.model.LoadBalancerRepository;
@@ -86,6 +87,39 @@ public class LoadBalancerControllerTest {
         assertThat(loadBalancerModel.name).isNotNull().isEqualTo("Batman");
     }
 
+    @Test()
+    public void testCreateUniqueName() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Knut", "X", "X", "X", 567);
+        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
+        try {
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
+    }
+
+    @Test()
+    public void testCreateUniqueHostInstallationPath() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "instPathTwo", "X", 567);
+        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
+        try {
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
+    }
+
+    @Test()
+    public void testCreateUniqueHostPublicPort() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "X", "X", 234);
+        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
+        try {
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
+    }
+
     @Test
     public void testRemove() throws Exception {
         assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(3);
@@ -107,11 +141,47 @@ public class LoadBalancerControllerTest {
 
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Knut").get(0);
         loadBalancerModel.name = "Batman";
+        loadBalancerModel.host = "Alfred";
         loadBalancerModel = loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
 
         assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(3);
         assertThat(loadBalancerController.search("Batman").get(0).name).isNotNull().isEqualTo("Batman");
         assertThat(loadBalancerModel.name).isNotNull().isEqualTo("Batman");
+    }
+
+    @Test
+    public void testUpdateUniqueName() throws Exception {
+        LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+        loadBalancerModel.name = "Hans";
+        try {
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
+    }
+
+    @Test
+    public void testUpdateUniqueHostInstallationPath() throws Exception {
+        LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+        loadBalancerModel.host = "hostTwo";
+        loadBalancerModel.installationPath = "instPathTwo";
+        try {
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
+    }
+
+    @Test
+    public void testUpdateUniqueHostPublicPort() throws Exception {
+        LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+        loadBalancerModel.host = "hostTwo";
+        loadBalancerModel.publicPort = 234;
+        try {
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test

@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,9 +74,17 @@ public class ApplicationGroupController {
     public AppGroupModel create(@RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.create");
 
+        assertNameUnique(appGroupModel.name);
+
         ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
         applicationGroup = applicationGroupRepository.save(applicationGroup);
         return new AppGroupModel(applicationGroup);
+    }
+
+    private void assertNameUnique(String name) {
+        if(applicationGroupRepository.countByName(name) > 0L) {
+            throw new GatewayException("Could not create Application Group. Name '" + name + "' already exists.");
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/application-groups/{id}")
@@ -110,6 +119,8 @@ public class ApplicationGroupController {
     @ResponseBody
     public AppGroupModel update(@PathVariable Long id, @RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.update");
+
+        assertNameUnique(appGroupModel.name);
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
         applicationGroup.setName(appGroupModel.name);

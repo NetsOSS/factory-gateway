@@ -3,10 +3,14 @@ package eu.nets.factory.gateway.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,12 +21,14 @@ import java.util.Set;
  */
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"})})
 public class Application extends AbstractEntity {
 
-    @NotNull
+    @NotBlank
     private String name;
 
-    @NotNull
+    @Pattern(regexp = "^/[a-zA-Z].*")
     @Column(nullable = false, name = "publicurl")
     private String publicUrl;
 

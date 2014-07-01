@@ -1,5 +1,8 @@
 package eu.nets.factory.gateway.model;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -8,21 +11,24 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = "name"),
+        @UniqueConstraint(columnNames = {"host", "installationPath"}),
+        @UniqueConstraint(columnNames = {"host", "publicPort"})})
 public class LoadBalancer extends AbstractEntity{
 
-    @NotNull
+    @NotBlank
     private String name;
 
-    @NotNull
+    @NotBlank
     private String host;
 
-    @NotNull
+    @NotBlank
     private String installationPath;
 
-    @NotNull
+    @NotBlank
     private String sshKey;
 
-    @NotNull
     private int publicPort;
 
     @ManyToMany(targetEntity = Application.class, mappedBy = "loadBalancers")//(fetch = FetchType.EAGER)

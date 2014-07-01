@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import eu.nets.factory.gateway.GatewayException;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,6 +33,7 @@ public class GatewayExceptionControllerAdvice {
         }
 
         ConstraintViolationException cve = findRelatedException(e, ConstraintViolationException.class);
+        GatewayException ge = findRelatedException(e, GatewayException.class);
 
         int status = INTERNAL_SERVER_ERROR.value();
         StringBuilder s;
@@ -42,6 +44,10 @@ public class GatewayExceptionControllerAdvice {
             for (ConstraintViolation<?> v : cve.getConstraintViolations()) {
                 s.append("The field '").append(v.getPropertyPath()).append("' ").append(v.getMessage()).append(". ");
             }
+        } else if(ge != null) {
+            status = BAD_REQUEST.value();
+            s = new StringBuilder(ge.getMessage());
+
         } else {
             StringWriter buf = new StringWriter();
             e.printStackTrace(new PrintWriter(buf));

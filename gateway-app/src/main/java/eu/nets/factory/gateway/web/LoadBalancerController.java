@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.service.ConfigGeneratorService;
 import org.slf4j.Logger;
@@ -82,10 +83,32 @@ public class LoadBalancerController {
     public LoadBalancerModel create(@RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.create");
 
+        assertNameUnique(loadBalancerModel.name);
+        assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
+        assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
+
         LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort);
         loadBalancer = loadBalancerRepository.save(loadBalancer);
 
         return new LoadBalancerModel(loadBalancer); //.getId(), loadBalancer.getName());
+    }
+
+    private void assertNameUnique(String name) {
+        if(loadBalancerRepository.countByName(name) > 0L) {
+            throw new GatewayException("Could not create Load Balancer. Name '" + name + "' already exists.");
+        }
+    }
+
+    private void assertHostInstallationPathUnique(String host, String installationPath) {
+        if(loadBalancerRepository.countByHostInstallationPath(host, installationPath) > 0L) {
+            throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - installation path '" + installationPath + "' already exists.");
+        }
+    }
+
+    private void assertHostPublicPortUnique(String host, int publicPort) {
+        if(loadBalancerRepository.countByHostPublicPort(host, publicPort) > 0L) {
+            throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - public port '" + publicPort + "' already exists.");
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/load-balancers/{id}")
@@ -105,6 +128,10 @@ public class LoadBalancerController {
     @ResponseBody
     public LoadBalancerModel update(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.update");
+
+        assertNameUnique(loadBalancerModel.name);
+        assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
+        assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         loadBalancer.setName(loadBalancerModel.name);
