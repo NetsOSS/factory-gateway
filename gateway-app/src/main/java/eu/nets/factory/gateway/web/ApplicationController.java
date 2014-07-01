@@ -71,6 +71,10 @@ public class ApplicationController {
         return new AppModel(application);
     }
 
+    private void assertValidId(Long id) {
+        findById(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppModel create(@RequestBody AppModel applicationModel) {
@@ -99,10 +103,9 @@ public class ApplicationController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationController.remove");
 
+        assertValidId(id);
+
         Application application = applicationRepository.findOne(id);
-        if(application == null) {
-            return;
-        }
         List<ApplicationInstance> instances = application.getApplicationInstances();
         for(ApplicationInstance instance: instances) {
             applicationInstanceRepository.delete(instance);
@@ -126,6 +129,7 @@ public class ApplicationController {
     public AppModel update(@PathVariable Long id, @RequestBody AppModel appModel) {
         log.info("ApplicationController.update");
 
+        assertValidId(id);
         assertNameUnique(appModel.getName());
 
         Application application = applicationRepository.findOne(id);
@@ -140,8 +144,10 @@ public class ApplicationController {
     @ResponseBody
     public AppGroupModel getApplicationGroup(@PathVariable Long id) {
         log.info("ApplicationController.getGroup");
-        Application application = applicationRepository.findOne(id);
 
+        assertValidId(id);
+
+        Application application = applicationRepository.findOne(id);
         return new AppGroupModel(application.getApplicationGroup());
     }
 
@@ -149,8 +155,10 @@ public class ApplicationController {
     @ResponseBody
     public List<LoadBalancerModel> getLoadBalancers(@PathVariable Long id) {
         log.info("ApplicationController.getLoadBalancers");
-        Application application = applicationRepository.findOne(id);
 
+        assertValidId(id);
+
+        Application application = applicationRepository.findOne(id);
         return application.getLoadBalancers().stream().map(LoadBalancerModel::new).collect(toList());
     }
 }

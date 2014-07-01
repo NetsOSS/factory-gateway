@@ -66,6 +66,10 @@ public class ApplicationInstanceController {
         return new AppInstModel(applicationInstance);
     }
 
+    private void assertValidId(Long id) {
+        findById(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel create(@PathVariable long applicationId, @RequestBody AppInstModel applicationInstanceModel) {
@@ -94,6 +98,8 @@ public class ApplicationInstanceController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationInstanceController.remove");
 
+        assertValidId(id);
+
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
         Application application = applicationInstance.getApplication();
         application.removeApplicationInstance(applicationInstance);
@@ -107,6 +113,7 @@ public class ApplicationInstanceController {
     public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel applicationInstanceModel) {
         log.info("ApplicationInstanceController.update");
 
+        assertValidId(id);
         assertNameUnique(applicationInstanceModel.name);
 
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);

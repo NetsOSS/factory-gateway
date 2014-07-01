@@ -10,6 +10,10 @@ public class EntityNotFoundException extends GatewayException {
         super("Could not find " + entityName + " with ID '" + id + "'.");
     }
 
+    public EntityNotFoundException(String entityName, String sshKey) {
+        super("Could not find " + entityName + " with ssh key '" + sshKey + "'.");
+    }
+
     public HttpStatus getHttpStatus() {
         return HttpStatus.NOT_FOUND;
     }

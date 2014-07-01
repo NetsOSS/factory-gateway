@@ -187,10 +187,11 @@ public class ApplicationControllerTest {
         appModel = appModels.get(1); // find middle object
         assertEquals(partId + "expected '" + appModel.name + "', got '" + applicationController.findById(appModel.getId()).name + "'", appModel.name, applicationController.findById(appModel.getId()).name);
 
-        /*
-        partId = methodId + " - 4: "; // attempt to find nonexistent object
-        assertNull(partId + "expected null-pointer on applicationID 10'", applicationController.findById(10L));
-        */
+        try {
+            applicationController.findById(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -317,6 +318,12 @@ public class ApplicationControllerTest {
         LoadBalancer loadBalancer2 = loadBalancerRepository.findOne(loadBalancerModels.get(1).id);
         assertEquals(partId + "expected list 'applications' to be of size 1, found size " + loadBalancer.getApplications().size(), 1, loadBalancer.getApplications().size());
         assertEquals(partId + "expected list 'applications' to be of size 2, found size " + loadBalancer2.getApplications().size(), 2, loadBalancer2.getApplications().size());
+
+        try {
+            applicationController.remove(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -328,8 +335,6 @@ public class ApplicationControllerTest {
         List<AppModel> appModels = applicationController.listAllApps();
         Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
         AppModel appModel = appModels.get(0);
-        String oldName = appModel.name;
-        String oldUrl = appModel.publicUrl;
         appModel.name = "Delta";
         appModel.publicUrl = "/delta";
         applicationController.update(appModel.getId(), appModel);
@@ -339,10 +344,12 @@ public class ApplicationControllerTest {
         assertEquals(partId + "expected 'Delta', got '" + appModel.name + "'", "Delta", appModel.name);
         assertEquals(partId + "expected '/delta', got '" + appModel.publicUrl + "'", "/delta", appModel.publicUrl);
 
-        // sett back to old values
-        appModel.name = oldName;
-        appModel.publicUrl = oldUrl;
-        applicationController.update(appModel.getId(), appModel);
+        try {
+            applicationController.update(-1L, appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
+
     }
 
     @Test
@@ -372,6 +379,12 @@ public class ApplicationControllerTest {
         assertEquals(partId + "expected applicationGroupID " + appModels.get(1).applicationGroupId + ", got '" + applicationController.getApplicationGroup(appModels.get(1).getId()).getId() + "'", appModels.get(1).applicationGroupId, applicationController.getApplicationGroup(appModels.get(1).getId()).getId());
         assertNotNull(partId + "received null-pointer: 'applicationGroup'", applicationController.getApplicationGroup(appModels.get(2).getId()));
         assertEquals(partId + "expected applicationGroupID " + appModels.get(2).applicationGroupId + ", got '" + applicationController.getApplicationGroup(appModels.get(2).getId()).getId() + "'", appModels.get(2).applicationGroupId, applicationController.getApplicationGroup(appModels.get(2).getId()).getId());
+
+        try {
+            applicationController.getApplicationGroup(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -386,5 +399,11 @@ public class ApplicationControllerTest {
         assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(0).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(0).getId()).size());
         assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(1).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(1).getId()).size());
         assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(2).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(2).getId()).size());
+
+        try {
+            applicationController.getLoadBalancers(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 }

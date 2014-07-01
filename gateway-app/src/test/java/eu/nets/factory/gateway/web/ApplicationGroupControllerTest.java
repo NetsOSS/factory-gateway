@@ -62,6 +62,12 @@ public class ApplicationGroupControllerTest {
     public void testFindById() throws Exception {
         assertThat(applicationGroupController.findById(applicationGroupController.listAllAppGroups().get(2).id)).isNotNull();
         assertThat(applicationGroupController.findById(applicationGroupController.listAllAppGroups().get(2).id).name).isNotNull().isEqualTo("GroupThree");
+
+        try {
+            applicationGroupController.findById(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -99,6 +105,12 @@ public class ApplicationGroupControllerTest {
         assertThat(applicationGroupController.search("GroupOne")).isNotNull().hasSize(0);
         assertThat(applicationController.search("Kamino")).isNotNull().hasSize(0);
         assertThat(applicationInstanceController.search("Kamino 1.0")).isNotNull().hasSize(0);
+
+        try {
+            applicationGroupController.remove(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -112,12 +124,19 @@ public class ApplicationGroupControllerTest {
         assertThat(applicationGroupController.listAllAppGroups().size()).isNotNull().isEqualTo(3);
         assertThat(applicationGroupController.search("GroupX").get(0).name).isNotNull().isEqualTo("GroupX");
         assertThat(appGroupModel.name).isNotNull().isEqualTo("GroupX");
+
+        try {
+            applicationGroupController.update(-1L, appGroupModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
     public void testUpdateUniqueName() throws Exception {
         AppGroupModel appGroupModel = applicationGroupController.search("GroupOne").get(0);
         appGroupModel.name = "GroupThree";
+
         try {
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
@@ -132,6 +151,12 @@ public class ApplicationGroupControllerTest {
         assertThat(applicationGroupController.getApplications(applicationGroupController.search("GroupThree").get(0).getId())).isNotNull().hasSize(0);
 
         assertThat(applicationGroupController.getApplications(applicationGroupController.search("GroupOne").get(0).getId()).get(0).name).isNotNull().isEqualTo("Kamino");
+
+        try {
+            applicationGroupController.getApplications(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test

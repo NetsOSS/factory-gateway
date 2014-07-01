@@ -65,6 +65,11 @@ public class ApplicationInstanceControllerTest {
     public void testFindById() throws Exception {
         assertThat(applicationInstanceController.findById(applicationInstanceController.listAllAppInsts().get(2).id)).isNotNull();
         assertThat(applicationInstanceController.findById(applicationInstanceController.listAllAppInsts().get(2).id).name).isNotNull().isEqualTo("Alpha 1.0");
+        try {
+            applicationController.findById(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -106,9 +111,11 @@ public class ApplicationInstanceControllerTest {
         assertThat(applicationController.search("Grandiosa").get(0).applicationInstances.size()).isNotNull().isEqualTo(1);
         assertThat(applicationController.search("Grandiosa").get(0).applicationInstances.get(0).name).isNotNull().isEqualTo("Grandiosa 1.0");
 
-        applicationInstanceController.remove(applicationInstanceController.search("Kamino 1.0").get(0).id);
-        assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(1);
-        assertThat(applicationController.search("Kamino").get(0).applicationInstances.size()).isNotNull().isEqualTo(0);
+        try {
+            applicationInstanceController.remove(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -128,6 +135,12 @@ public class ApplicationInstanceControllerTest {
         assertThat(appInstModel.host).isNotNull().isEqualTo("new host");
         assertThat(appInstModel.path).isNotNull().isEqualTo("/kamino/1.1");
         assertThat(appInstModel.port).isNotNull().isEqualTo(8090);
+
+        try {
+            applicationInstanceController.update(-1L, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test

@@ -73,6 +73,10 @@ public class ApplicationGroupController {
         return new AppGroupModel(applicationGroup);
     }
 
+    private void assertValidId(Long id) {
+        findById(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel create(@RequestBody AppGroupModel appGroupModel) {
@@ -95,6 +99,8 @@ public class ApplicationGroupController {
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("ApplicationGroupController.remove");
+
+        assertValidId(id);
 
         ApplicationGroup applicationGroup =  applicationGroupRepository.findOne(id);
         List<Application> list = applicationGroup.getApplications();
@@ -124,6 +130,7 @@ public class ApplicationGroupController {
     public AppGroupModel update(@PathVariable Long id, @RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.update");
 
+        assertValidId(id);
         assertNameUnique(appGroupModel.name);
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
@@ -137,6 +144,9 @@ public class ApplicationGroupController {
     @ResponseBody
     public List<AppModel> getApplications(@PathVariable Long id) {
         log.info("ApplicationGroupController.getApplications() LORD   id= {}",id);
+
+        assertValidId(id);
+
         ApplicationGroup g = applicationGroupRepository.findOne(id);
         log.info("ApplicationGroupController.getApplications() : isNull ? {} ",g==null);
         log.info("ApplicationGroupController.getApplications() : name {}",g.getName());

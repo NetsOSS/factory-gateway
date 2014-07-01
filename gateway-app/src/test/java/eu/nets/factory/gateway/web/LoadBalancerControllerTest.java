@@ -59,12 +59,24 @@ public class LoadBalancerControllerTest {
     public void testFindById() throws Exception {
         assertThat(loadBalancerController.findById(loadBalancerController.listAllLoadBalancers().get(2).id)).isNotNull();
         assertThat(loadBalancerController.findById(loadBalancerController.listAllLoadBalancers().get(2).id).name).isNotNull().isEqualTo("Hans");
+
+        try {
+            loadBalancerController.findById(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
     public void testFindBySshKey() throws Exception {
         assertThat(loadBalancerController.findBySshKey("sshTwo")).isNotNull();
         assertThat(loadBalancerController.findBySshKey("sshTwo").name).isNotNull().isEqualTo("Knut");
+
+        try {
+            loadBalancerController.findBySshKey("derp");
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -124,6 +136,12 @@ public class LoadBalancerControllerTest {
 
         assertThat(applicationController.search("Grandiosa").get(0).loadBalancers).isNotNull().hasSize(0);
         assertThat(applicationController.search("Alpha").get(0).loadBalancers).isNotNull().hasSize(0);
+
+        try {
+            loadBalancerController.remove(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -138,12 +156,19 @@ public class LoadBalancerControllerTest {
         assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(3);
         assertThat(loadBalancerController.search("Batman").get(0).name).isNotNull().isEqualTo("Batman");
         assertThat(loadBalancerModel.name).isNotNull().isEqualTo("Batman");
+
+        try {
+            loadBalancerController.update(-1L, loadBalancerModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
     public void testUpdateUniqueName() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
         loadBalancerModel.name = "Hans";
+
         try {
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
@@ -181,12 +206,30 @@ public class LoadBalancerControllerTest {
         assertThat(loadBalancerController.search("Hans").get(0).applications).isNotNull().hasSize(1);
         assertThat(loadBalancerController.search("Hans").get(0).applications.get(0).name).isNotNull().isEqualTo("Kamino");
         assertThat(applicationController.search("Kamino").get(0).loadBalancers).isNotNull().hasSize(2);
+
+        try {
+            loadBalancerController.addApplication(-1L, applicationController.search("Kamino").get(0).id);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
+
+        try {
+            loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, -1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
     public void testGetApplications() throws Exception {
         assertThat(loadBalancerController.getApplications(loadBalancerController.search("Knut").get(0).id)).isNotNull().hasSize(2);
         assertThat(loadBalancerController.getApplications(loadBalancerController.search("Per").get(0).id).get(0).name).isNotNull().isEqualTo("Kamino");
+
+        try {
+            loadBalancerController.getApplications(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test
@@ -195,6 +238,18 @@ public class LoadBalancerControllerTest {
         assertThat(loadBalancerController.search("Knut").get(0).applications).isNotNull().hasSize(1);
         assertThat(loadBalancerController.search("Knut").get(0).applications.get(0).name).isNotNull().isEqualTo("Grandiosa");
         assertThat(applicationController.search("Alpha").get(0).loadBalancers).isNotNull().hasSize(0);
+
+        try {
+            loadBalancerController.addApplication(-1L, applicationController.search("Alpha").get(0).id);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
+
+        try {
+            loadBalancerController.addApplication(loadBalancerController.search("Knut").get(0).id, -1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
     }
 
     @Test

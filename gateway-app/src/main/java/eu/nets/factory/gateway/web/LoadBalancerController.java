@@ -10,13 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -76,6 +70,10 @@ public class LoadBalancerController {
         return new LoadBalancerModel(loadBalancer);
     }
 
+    private void assertValidId(Long id) {
+        findById(id);
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/findBySsh/{sshKey}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public LoadBalancerModel findBySshKey(@PathVariable String sshKey) {
@@ -86,7 +84,8 @@ public class LoadBalancerController {
                 return new LoadBalancerModel(l);
             }
         }
-        return null;
+
+        throw new EntityNotFoundException("LoadBalancer", sshKey);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -127,6 +126,8 @@ public class LoadBalancerController {
     public void remove(@PathVariable Long id) {
         log.info("LoadBalancerController.remove");
 
+        assertValidId(id);
+
         List<Application> applications = loadBalancerRepository.findOne(id).getApplications();
         for(Application application : applications) {
             application.removeLoadBalancer(loadBalancerRepository.findOne(id));
@@ -140,6 +141,7 @@ public class LoadBalancerController {
     public LoadBalancerModel update(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.update");
 
+        assertValidId(id);
         assertNameUnique(loadBalancerModel.name);
         assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
         assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
@@ -159,6 +161,12 @@ public class LoadBalancerController {
     @ResponseBody
     public LoadBalancerModel addApplication(@PathVariable Long id, @RequestBody Long applicationId) {
         log.info("LoadBalancerController.addApplication() LB.id={} , App.id={} ",id,applicationId);
+
+        assertValidId(id);
+        if(applicationRepository.findOne(applicationId) == null) {
+            throw new EntityNotFoundException("Application", applicationId);
+        }
+
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         loadBalancer.addApplication(applicationRepository.findOne(applicationId));
         loadBalancer = loadBalancerRepository.save(loadBalancer);
@@ -169,6 +177,9 @@ public class LoadBalancerController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppModel> getApplications(@PathVariable Long id) {
+
+        assertValidId(id);
+
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         return loadBalancer.getApplications().stream().map(AppModel::new).collect(toList());
     }
@@ -177,6 +188,12 @@ public class LoadBalancerController {
     @ResponseBody
     public LoadBalancerModel removeApplicationFromLoadbalancer(@PathVariable Long id, @RequestBody Long applicationId) {
         log.info("LoadBalancerController.removeApplication() LB.id={} , App.id={} ",id,applicationId);
+
+        assertValidId(id);
+        if(applicationRepository.findOne(applicationId) == null) {
+            throw new EntityNotFoundException("Application", applicationId);
+        }
+
         Application application = applicationRepository.findOne(applicationId);
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
 
@@ -191,6 +208,8 @@ public class LoadBalancerController {
     @ResponseBody
     public String pushConfiguration(@PathVariable Long id) {
         log.info("LoadBalancerController.pushConfiguration() LB.id={}",id);
+
+        assertValidId(id);
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         String installationPath = loadBalancer.getInstallationPath();
