@@ -36,26 +36,26 @@ public class StatusControllerTest {
     @Test
     public void testParseCSV() throws Exception{
 
-        String csvString = "# pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,comp_in,comp_out,comp_byp,comp_rsp,lastsess,/*" +
-                "http-in,FRONTEND,,,4,6,2000,633,435989,10271083,0,0,0,,,,,OPEN,,,,,,,,,1,1,0,,,,0,0,0,49,,,,0,580,127,18,143,0,,0,70,868,,,0,0,0,0,,/*" +
-                "Kamino,Kamino1,0,0,0,0,32,0,0,0,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,2,1,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,/*" +
-                "Kamino,Kamino2,0,0,0,0,32,0,0,0,,0,,0,0,0,0,MAINT,1,1,0,0,1,40,40,,1,2,2,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,/*" +
-                "Kamino,BACKEND,0,0,0,0,200,0,0,0,0,0,,0,0,0,0,UP,1,1,0,,0,7076,0,,1,2,0,,0,,1,0,,0,,,,0,0,0,0,0,0,,,,,0,0,0,0,0,0,-1,/*" +
-                "Finch,Finch2,0,0,0,1,32,52,27089,557647,,0,,0,0,0,0,MAINT,1,1,0,0,1,44,44,,1,3,1,,51,,2,0,,8,L4OK,,0,0,40,10,2,0,0,0,,,,11,0,,,,,55,/*" +
-                "Finch,Finch6,0,0,0,2,32,171,88947,2278932,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,3,2,,170,,2,0,,19,L4OK,,0,0,145,24,2,0,0,0,,,,29,0,,,,,27,/*" +
-                "Finch,Finch3,0,0,0,2,32,172,89414,2291404,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,3,3,,170,,2,0,,19,L4OK,,0,0,139,29,4,0,0,0,,,,40,0,,,,,27,/*" +
-                "Finch,Finch5,0,0,0,1,32,53,27580,761580,,0,,0,0,0,0,MAINT,1,1,0,0,1,44,44,,1,3,4,,51,,2,0,,8,L4OK,,0,0,42,8,3,0,0,0,,,,15,0,,,,,54,/*" +
-                "Finch,Finch1,0,0,0,2,32,174,90856,2359426,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,3,5,,169,,2,0,,19,L4OK,,0,0,134,35,5,0,0,0,,,,38,0,,,,,27,/*" +
-                "Finch,Finch4,0,0,0,1,32,51,26563,780304,,0,,0,0,0,0,MAINT,1,1,0,0,1,44,44,,1,3,6,,51,,2,0,,8,L4OK,,0,0,40,11,0,0,0,0,,,,13,0,,,,,54,/*" +
-                "Finch,Finch7,0,0,0,1,32,52,27053,1211474,,0,,0,0,0,0,MAINT,1,1,0,0,1,44,44,,1,3,7,,51,,2,0,,8,L4OK,,0,0,40,10,2,0,0,0,,,,12,0,,,,,54,/*" +
-                "Finch,BACKEND,0,0,0,5,200,725,377502,10240767,0,0,,0,0,0,0,UP,3,3,0,,0,7076,0,,1,3,0,,713,,1,0,,57,,,,0,580,127,18,0,0,,,,,158,0,0,0,0,0,27,/*" +
-                "Sekot,Sekot2,0,0,0,0,32,0,0,0,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,4,1,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,/*" +
-                "Sekot,Sekot1,0,0,0,0,32,0,0,0,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,4,2,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,/*" +
-                "Sekot,BACKEND,0,0,0,0,200,0,0,0,0,0,,0,0,0,0,UP,2,2,0,,0,7076,0,,1,4,0,,0,,1,0,,0,,,,0,0,0,0,0,0,,,,,0,0,0,0,0,0,-1,/*" +
-                "stats,FRONTEND,,,2,3,2000,39,15177,349183,0,0,5,,,,,OPEN,,,,,,,,,1,5,0,,,,0,1,0,3,,,,0,30,2,5,11,0,,1,4,49,,,0,0,0,0,,/*" +
+        String csvString = "# pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,comp_in,comp_out,comp_byp,comp_rsp,lastsess,\n" +
+                "http-in,FRONTEND,,,4,6,2000,633,435989,10271083,0,0,0,,,,,OPEN,,,,,,,,,1,1,0,,,,0,0,0,49,,,,0,580,127,18,143,0,,0,70,868,,,0,0,0,0,,\n" +
+                "Kamino,Kamino1,0,0,0,0,32,0,0,0,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,2,1,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,\n" +
+                "Kamino,Kamino2,0,0,0,0,32,0,0,0,,0,,0,0,0,0,MAINT,1,1,0,0,1,40,40,,1,2,2,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,\n" +
+                "Kamino,BACKEND,0,0,0,0,200,0,0,0,0,0,,0,0,0,0,UP,1,1,0,,0,7076,0,,1,2,0,,0,,1,0,,0,,,,0,0,0,0,0,0,,,,,0,0,0,0,0,0,-1,\n" +
+                "Finch,Finch2,0,0,0,1,32,52,27089,557647,,0,,0,0,0,0,MAINT,1,1,0,0,1,44,44,,1,3,1,,51,,2,0,,8,L4OK,,0,0,40,10,2,0,0,0,,,,11,0,,,,,55,\n" +
+                "Finch,Finch6,0,0,0,2,32,171,88947,2278932,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,3,2,,170,,2,0,,19,L4OK,,0,0,145,24,2,0,0,0,,,,29,0,,,,,27,\n" +
+                "Finch,Finch3,0,0,0,2,32,172,89414,2291404,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,3,3,,170,,2,0,,19,L4OK,,0,0,139,29,4,0,0,0,,,,40,0,,,,,27,\n" +
+                "Finch,Finch5,0,0,0,1,32,53,27580,761580,,0,,0,0,0,0,MAINT,1,1,0,0,1,44,44,,1,3,4,,51,,2,0,,8,L4OK,,0,0,42,8,3,0,0,0,,,,15,0,,,,,54,\n" +
+                "Finch,Finch1,0,0,0,2,32,174,90856,2359426,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,3,5,,169,,2,0,,19,L4OK,,0,0,134,35,5,0,0,0,,,,38,0,,,,,27,\n" +
+                "Finch,Finch4,0,0,0,1,32,51,26563,780304,,0,,0,0,0,0,MAINT,1,1,0,0,1,44,44,,1,3,6,,51,,2,0,,8,L4OK,,0,0,40,11,0,0,0,0,,,,13,0,,,,,54,\n" +
+                "Finch,Finch7,0,0,0,1,32,52,27053,1211474,,0,,0,0,0,0,MAINT,1,1,0,0,1,44,44,,1,3,7,,51,,2,0,,8,L4OK,,0,0,40,10,2,0,0,0,,,,12,0,,,,,54,\n" +
+                "Finch,BACKEND,0,0,0,5,200,725,377502,10240767,0,0,,0,0,0,0,UP,3,3,0,,0,7076,0,,1,3,0,,713,,1,0,,57,,,,0,580,127,18,0,0,,,,,158,0,0,0,0,0,27,\n" +
+                "Sekot,Sekot2,0,0,0,0,32,0,0,0,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,4,1,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,\n" +
+                "Sekot,Sekot1,0,0,0,0,32,0,0,0,,0,,0,0,0,0,UP,1,1,0,0,0,7076,0,,1,4,2,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,\n" +
+                "Sekot,BACKEND,0,0,0,0,200,0,0,0,0,0,,0,0,0,0,UP,2,2,0,,0,7076,0,,1,4,0,,0,,1,0,,0,,,,0,0,0,0,0,0,,,,,0,0,0,0,0,0,-1,\n" +
+                "stats,FRONTEND,,,2,3,2000,39,15177,349183,0,0,5,,,,,OPEN,,,,,,,,,1,5,0,,,,0,1,0,3,,,,0,30,2,5,11,0,,1,4,49,,,0,0,0,0,,\n" +
                 "stats,BACKEND,0,0,0,1,200,11,15177,349183,0,0,,11,0,0,0,UP,0,0,0,,0,7076,0,,1,5,0,,0,,1,0,,2,,,,0,0,0,0,11,0,,,,,0,0,0,0,0,0,0,";
 
-        String[] models = csvString.split("/*");
+        String[] models = csvString.split("\n");
         for(int i = 0; i < models.length; i++) {
             System.out.println(models[i]);
         }
@@ -139,7 +139,7 @@ public class StatusControllerTest {
 
        LoadBalancer loadBalancer = new LoadBalancer("Grandiosa", "127.0.0.1", "/instPath", "sshKey", 10003);
        LoadBalancerModel loadBalancerModel = loadBalancerController.create(new LoadBalancerModel(loadBalancer));
-       String csvString = statusController.readCSV(loadBalancerModel);
+       String csvString = statusController.readCSV(loadBalancer);
 
         List<StatusModel> list = statusController.parseCSV(csvString);
         String[] models = csvString.split("\n");

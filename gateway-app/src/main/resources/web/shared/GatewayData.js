@@ -374,29 +374,18 @@ define([], function () {
       return PersonController.search($route.current.params.name);
     };
     this.StatusController = {};
-    this.StatusController.parseCSV = function (id) {
+    this.StatusController.getStatusForLoadbalancer = function (id) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/load-balancers/{id}/parseCSV';
-      req.url = req.url.replace(/{id}/, id);
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.StatusController.readCSV = function (id) {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/load-balancers/{id}/getCSV';
+      req.url = prefix + '/data/load-balancers/{id}/status';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
     };
     var StatusController = this.StatusController;
     this.resolve.StatusController = {};
-    this.resolve.StatusController.parseCSV = function (GatewayData, $route) {
-      return StatusController.parseCSV($route.current.params.id);
-    };
-    this.resolve.StatusController.readCSV = function (GatewayData, $route) {
-      return StatusController.readCSV($route.current.params.id);
+    this.resolve.StatusController.getStatusForLoadbalancer = function (GatewayData, $route) {
+      return StatusController.getStatusForLoadbalancer($route.current.params.id);
     };
   }
   

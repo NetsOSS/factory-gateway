@@ -39,13 +39,15 @@ public class StatusController {
         BufferedReader rd;
         String line;
         String result = "";
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter pw = new PrintWriter(stringWriter);
         try {
             url = new URL(csvFile);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             while ((line = rd.readLine()) != null) {
-                result += line;
+                pw.println(line);
             }
             rd.close();
         } catch (IOException e) {
@@ -54,7 +56,7 @@ public class StatusController {
             e.printStackTrace();
         }
 
-        return result;
+        return stringWriter.toString();
     }
 
     public List<StatusModel> parseCSV(String csvString) {
