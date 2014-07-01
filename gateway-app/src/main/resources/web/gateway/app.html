@@ -1,21 +1,51 @@
-<h1>Application  : {{app.name}} {{app.publicUrl}} </h1>
+<h1>Application : {{app.name}} {{app.publicUrl}} </h1>
 
 
 <ul class="list-unstyled">
     <li>ID : {{app.id}}</li>
-    <li>Number of instances : {{app.applications.length}}</li>
+    <li>Number of instances : {{app.applicationInstances.length}}</li>
     <li>In group : {{appGroup.name}} ({{app.applicationGroupId}})</li>
 
 </ul>
-   <!--
+
+
+<h3>Status</h3>
+<h3>{{app.name}} is running in load balancer : </h3>
+
+<table class="table">
+
+    <thead>
+    <tr>
+        <th>Application instance</th>
+        <th ng-repeat="lb in app.loadBalancers">{{lb.name}}</th>
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr ng-repeat="appInst in app.applicationInstances">
+        <td>{{appInst.name}}</td>
+        <td>Status</td>
+        <td>Status</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="list-group">
+    <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in app.loadBalancers">
+        <b> {{lb.name}}</b> ({{lb.id}}) {{lb.host}}:{{lb.port}}{{lb.installationPath}}
+    </a>
+
+</div>
+<!--
 
 <div class="progress progress-striped active">
-    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-        <span class="sr-only">100% Complete (success)</span>
-    </div>
+ <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+     <span class="sr-only">100% Complete (success)</span>
+ </div>
 </div>
 -->
-
+<hr>
 <div class="row">
     <div class="col-sm-6">
 
@@ -50,7 +80,8 @@
             </div>
             <div class="form-group">
                 <label for="inAppInstPath">Path</label>
-                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath" ng-pattern="/^/[a-zA-Z]+/" name="path"required
+                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                       ng-pattern="/^/[a-zA-Z]+/" name="path" required
                        placeholder="Enter path / url">
                 <span class="bg-danger" ng-show="form.path.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
             </div>
@@ -66,7 +97,7 @@
 
     <div class="col-sm-6">
 
-        <h3>All Application Instances of '{{app.name}}'  </h3>
+        <h3>All Application Instances of '{{app.name}}' </h3>
 
         <div class="list-group">
             <a href="#/appInst/{{a.id}}" class="list-group-item" ng-repeat="a in app.applicationInstances">
@@ -76,7 +107,8 @@
         </div>
 
 
-        <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle (show/hide)</strong> json data</a>
+        <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
+            (show/hide)</strong> json data</a>
 
         <div ng-show="collapsedAppInst">
             <pre>{{app.applications|json}}</pre>
@@ -85,7 +117,33 @@
     </div>
 
 </div>
-<button type="button" class="btn btn-danger" ng-click="removeApp()">Delete application</button>
-<hr>
 
-<app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone" ></app-form>
+<hr>
+<!-- Not used
+<app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone"></app-form>
+-->
+
+<h3>Update application</h3>
+<form role="form" ng-submit="updateApplication()" name="createAppForm" novalidate>
+
+    <div class="form-group">
+        <label for="inAppName">Name</label>
+        <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
+               required
+               placeholder="Enter application name">
+    </div>
+    <div class="form-group">
+        <label for="inAppPublicUrl">Public Path</label>
+        <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
+               ng-pattern="/^/[a-zA-Z]+/"
+               required
+               placeholder="Enter public url">
+        <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Update</button>
+</form>
+
+
+<hr>
+<button type="button" class="btn btn-danger" ng-click="removeApp()">Delete application</button>

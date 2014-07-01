@@ -10,10 +10,49 @@
     <li>sshKey : {{lb.sshKey}}</li>
     <li>Number of applications : {{lb.applications.length}}</li>
 </ul>
-<button type="button" class="btn btn-danger" ng-click="removeLoadBalancer()">Delete</button>
-
 <a href="" ng-model="collapsedLBJSON" ng-click="collapsedLBJSON=!collapsedLBJSON"><strong>Toggle
     (show/hide)</strong> json data</a>
+
+
+
+
+
+
+<hr>
+
+<table class="table">
+
+    <thead>
+    <tr>
+        <th>Proxy Name</th>
+        <th>Service Name</th>
+        <th>Current Sessions</th>
+        <th>Total Sessions</th>
+        <th>Bytes in</th>
+        <th>Bytes out</th>
+        <th>Status</th>
+        <!--<th ng-repeat="lb in app.loadBalancers">{{lb.name}}</th>-->
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr ng-repeat="s in rawStatus" ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.status]">
+        <td>{{s.pxname}}</td>
+        <td>{{s.svname}}</td>
+        <td>{{s.scur}}</td>
+        <td>{{s.stot}}</td>
+        <td>{{s.bin}}</td>
+        <td>{{s.bout}}</td>
+
+        <td>{{s.status}}</td>
+
+    </tr>
+    </tbody>
+</table>
+
+<!--<pre>{{rawStatus}}</pre>-->
+<hr>
 
 <div ng-show="collapsedLBJSON">
     <pre>{{lb|json}}</pre>
@@ -37,20 +76,23 @@
         <div class="list-group">
             <a class="list-group-item ">
                 <h4 class="list-group-item-heading">Finch /finch (36000) GroupId: 35000</h4>
+
                 <p class="list-group-item-text">
 
-                    <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">Remove
+                    <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">
+                        Remove
                     </button>
-                    <ul>
-                <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
-                <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
-                    </ul>
+                <ul>
+                    <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
+                    <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
+                </ul>
                 </p>
             </a>
         </div>
         <div class="list-group">
             <a href="#" class="list-group-item ">
                 <h4 class="list-group-item-heading">App2</h4>
+
                 <p class="list-group-item-text">inst1<br>inst2</p>
             </a>
         </div>
@@ -62,7 +104,6 @@
         <h3>Add new application (from existing applications) </h3>
 
         <div class="list-group">
-
 
 
             <a class="list-group-item" ng-repeat="a in allLBList">
@@ -77,7 +118,9 @@
 <hr>
 <div class="row">
 
-    <button type="button" class="btn btn-primary" ng-model="collapseConfig" ng-click="collapseConfig=!collapseConfig">Show/Hide HA Proxy config file</button>
+    <button type="button" class="btn btn-primary" ng-model="collapseConfig" ng-click="collapseConfig=!collapseConfig">
+        Show/Hide HA Proxy config file
+    </button>
 
     <!--<p style="white-space: pre;">{{ configFile}}</p>-->
 
@@ -89,8 +132,8 @@
 </div>
 
 
-
-
 <hr>
 
-<lb-form ng-if="lbLoadingDone" ></lb-form>
+<lb-form ng-if="lbLoadingDone"></lb-form>
+
+<button type="button" class="btn btn-danger" ng-click="removeLoadBalancer()">Delete</button>

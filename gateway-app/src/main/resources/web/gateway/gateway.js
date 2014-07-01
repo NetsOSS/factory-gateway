@@ -66,16 +66,16 @@ define([
     });
 
     //Callback to be called from AppForm. To update the list with the new application.
-    $scope.onAppCreated = function (data) {
-      $scope.allApps.push(data);
-    };
+    /*$scope.onAppCreated = function (data) {
+     $scope.allApps.push(data);
+     };
 
-    $scope.createApplication = function () {
-      console.log("New application : ", $scope.app);
-      GatewayData.ApplicationController.create($scope.app).then(function (data) {
-        $scope.allApps.push(data);
-      });
-    };
+     $scope.createApplication = function () {
+     console.log("New application : ", $scope.app);
+     GatewayData.ApplicationController.create($scope.app).then(function (data) {
+     $scope.allApps.push(data);
+     });
+     };*/
 
     // ----------------------- Load balancer functions ------------------------------------
     GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
@@ -113,6 +113,7 @@ define([
         $scope.app = data;
         $scope.localApp = angular.copy($scope.app);
         $scope.onAppLoadDone = true;
+        $scope.newApp = angular.copy($scope.app);
 
         //Find more info  (name) about the group it belongs too.
         GatewayData.ApplicationGroupController.findById($scope.app.applicationGroupId).then(function (data) {
@@ -121,6 +122,7 @@ define([
       });
     };
 
+
     $scope.onUpdatedApp();
 
     $scope.removeApp = function () {
@@ -128,6 +130,13 @@ define([
       GatewayData.ApplicationController.remove($scope.app.id).then(function (data) {
         history.back();
         $scope.$apply();
+      });
+    };
+
+
+    $scope.updateApplication = function () {
+      GatewayData.ApplicationController.update($scope.newApp.id, $scope.newApp).then(function (data) {
+        $scope.app = data;
       });
     };
 
@@ -173,6 +182,8 @@ define([
     $scope.lbLoadingDone = false;
 
     var LBid = $routeParams.id;
+
+
 
     GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
       $scope.lb = data;
@@ -236,10 +247,19 @@ define([
 
     };
 
+
+    //----- Status proxy
+    GatewayData.StatusController.getStatusForLoadbalancer($routeParams.id).then(function (data) {
+      $scope.rawStatus =data;
+    });
+
   });
 
   //    ----------------------- App Group Controller ------------------------------------
   gateway.controller('AppGroupCtrl', function ($scope, $routeParams, $location, GatewayData) {
+    $scope.newApp = {};
+    $scope.newApp.applicationGroupId = $routeParams.id;
+
     GatewayData.ApplicationGroupController.findById($routeParams.id).then(function (data) {
       $scope.group = data;
 
@@ -251,6 +271,12 @@ define([
     $scope.removeGroup = function () {
       GatewayData.ApplicationGroupController.remove($routeParams.id);
       $location.path("/");
+    };
+
+    $scope.createApplication = function () {
+      GatewayData.ApplicationController.create($scope.newApp).then(function (data) {
+        $scope.allAppsInGroup.push(data);
+      });
     };
 
 

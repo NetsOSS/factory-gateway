@@ -14,4 +14,26 @@ Nothing more here..
 
 </div>
 
+<h3>New application to this group</h3>
+<form role="form" ng-submit="createApplication()" name="createAppForm" novalidate>
+
+    <div class="form-group">
+        <label for="inAppName">Name</label>
+        <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
+               required
+               placeholder="Enter application name">
+    </div>
+    <div class="form-group">
+        <label for="inAppPublicUrl">Public Path</label>
+        <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
+               ng-pattern="/^/[a-zA-Z]+/"
+               required
+               placeholder="Enter public url">
+        <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
+</form>
+<hr>
+
 <button type="button" class="btn btn-danger" ng-click="removeGroup()">Delete group</button>
