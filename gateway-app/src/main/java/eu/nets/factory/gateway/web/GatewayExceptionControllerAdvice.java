@@ -45,9 +45,8 @@ public class GatewayExceptionControllerAdvice {
                 s.append("The field '").append(v.getPropertyPath()).append("' ").append(v.getMessage()).append(". ");
             }
         } else if(ge != null) {
-            status = BAD_REQUEST.value();
+            status = ge.getHttpStatus().value(); //BAD_REQUEST.value();
             s = new StringBuilder(ge.getMessage());
-
         } else {
             StringWriter buf = new StringWriter();
             e.printStackTrace(new PrintWriter(buf));

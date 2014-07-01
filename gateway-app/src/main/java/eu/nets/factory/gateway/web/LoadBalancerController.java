@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.service.ConfigGeneratorService;
@@ -60,7 +61,10 @@ public class LoadBalancerController {
     @ResponseBody
     public LoadBalancerModel findById(@PathVariable Long id) {
         log.info("LoadBalancerController.findById, name={}", id);
-        return new LoadBalancerModel(loadBalancerRepository.findOne(id));
+
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        if(loadBalancer == null) { throw new EntityNotFoundException("LoadBalancer", id); }
+        return new LoadBalancerModel(loadBalancer);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/findBySsh/{sshKey}", produces = APPLICATION_JSON_VALUE)

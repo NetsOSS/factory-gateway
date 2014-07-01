@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import org.slf4j.Logger;
@@ -57,15 +58,17 @@ public class ApplicationController {
             applications = applicationRepository.findByNameLike("%" + name + "%");
         }
 
-        return applications.stream().
-                map(AppModel::new).collect(toList());
+        return applications.stream().map(AppModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppModel findById(@PathVariable Long id) {
         log.info("ApplicationController.findById, name={}", id);
-        return new AppModel(applicationRepository.findOne(id));
+
+        Application application = applicationRepository.findOne(id);
+        if(application == null) { throw new EntityNotFoundException("Application", id); }
+        return new AppModel(application);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

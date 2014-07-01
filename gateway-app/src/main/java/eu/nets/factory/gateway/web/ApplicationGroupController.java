@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import org.slf4j.Logger;
@@ -66,7 +67,10 @@ public class ApplicationGroupController {
     @ResponseBody
     public AppGroupModel findById(@PathVariable Long id) {
         log.info("ApplicationGroupController.findById, name={}", id);
-        return new AppGroupModel(applicationGroupRepository.findOne(id));
+
+        ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
+        if(applicationGroup == null) { throw new EntityNotFoundException("ApplicationGroup", id); }
+        return new AppGroupModel(applicationGroup);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

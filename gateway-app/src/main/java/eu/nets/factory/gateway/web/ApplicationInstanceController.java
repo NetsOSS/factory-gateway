@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
@@ -59,7 +60,10 @@ public class ApplicationInstanceController {
     @ResponseBody
     public AppInstModel findById(@PathVariable Long id) {
         log.info("ApplicationInstanceController.findById, name={}", id);
-        return new AppInstModel(applicationInstanceRepository.findOne(id));
+
+        ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
+        if(applicationInstance == null) { throw new EntityNotFoundException("ApplicationInstance", id); }
+        return new AppInstModel(applicationInstance);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
