@@ -30,7 +30,7 @@ public class MyAppSettings {
     }
 
     public boolean migrateDatabase() {
-        return environment.acceptsProfiles("local") && !getDatabaseUrl().contains("h2");
+        return !getDatabaseUrl().contains("h2");
     }
 
     public String getDatabaseUrl() {
