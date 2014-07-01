@@ -4,6 +4,7 @@ import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.service.ConfigGeneratorService;
+import eu.nets.factory.gateway.service.FileWriterService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -32,6 +38,9 @@ public class LoadBalancerController {
 
     @Autowired
     private ConfigGeneratorService configGeneratorService;
+
+    @Autowired
+    private FileWriterService fileWriterService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -180,7 +189,14 @@ public class LoadBalancerController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/config")
     @ResponseBody
-    public String pushConfiguration(HttpServletResponse response, @PathVariable Long id) {
-        return configGeneratorService.generateConfig(loadBalancerRepository.findOne(id));
+    public String pushConfiguration(@PathVariable Long id) {
+        log.info("LoadBalancerController.pushConfiguration() LB.id={}",id);
+
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        String installationPath = loadBalancer.getInstallationPath();
+
+        String strConfig = configGeneratorService.generateConfig(loadBalancer);
+        fileWriterService.writeConfigFile(installationPath, "haproxy.cfg", strConfig);
+        return strConfig;
     }
 }
