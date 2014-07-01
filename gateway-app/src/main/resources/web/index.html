@@ -1,75 +1,109 @@
 <!DOCTYPE html>
 <head>
-  <script type="text/javascript">
-    var require = {
-      paths: {
-        'domReady': 'bower/requirejs-domready/domReady',
-        'angular': 'bower/angular/angular',
-        'angular-route': 'bower/angular-route/angular-route',
-        'angular-ui-date': 'bower/angular-ui-date/src/date',
-        'jquery': 'bower/jquery/dist/jquery',
-        'lodash': 'bower/lodash/dist/lodash'
-      },
+    <script type="text/javascript">
+        var require = {
+            paths: {
+                'domReady': 'bower/requirejs-domready/domReady',
+                'angular': 'bower/angular/angular',
+                'bootstrap': 'bower/bootstrap/dist/js/bootstrap.min',
+                'angular-route': 'bower/angular-route/angular-route',
+                'angular-ui-date': 'bower/angular-ui-date/src/date',
+                'jquery': 'bower/jquery/dist/jquery',
+                'lodash': 'bower/lodash/dist/lodash'
+            },
 
-      shim: {
-        'angular': {
-          exports: 'angular',
-          deps: ['jquery']
-        },
-        'angular-route': {
-          deps: ['angular']
-        },
-        'angular-ui-date': {
-          deps: ['angular']
-        },
-        'jquery': {
-        }
-      }
-    };
-  </script>
-  <script src="web/bower/requirejs/require.js" data-main="web/gateway-main.js"></script>
-  <link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap.css"/>
+            shim: {
+                'angular': {
+                    exports: 'angular',
+                    deps: ['jquery']
+                },
+                'angular-route': {
+                    deps: ['angular']
+                },
+                'angular-ui-date': {
+                    deps: ['angular']
+                },
+                'bootstrap': {
+                    deps: ['jquery']
+                },
+                'jquery': {
+                }
+            }
+        };
+    </script>
+    <script src="web/bower/requirejs/require.js" data-main="web/gateway-main.js"></script>
+    <link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap.css"/>
 
-    <link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap-theme.min.css"/>
+    <!--<link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap-theme.min.css"/>-->
     <!-- -->
+    <style>
+        .alert-messages {
+            position: fixed;
+            width: 100%;
+            z-index: 10000;
 
-   <title>Gateway</title>
+        }
+    </style>
+
+    <title>Gateway</title>
 </head>
 <body>
 <nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Nets Gateway</a>
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Nets Gateway</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <!-- <ul class="nav navbar-nav">
+
+                <li><a href="#">Link </a></li>
+
+              </ul>
+      -->
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"> v1.1.2 ALPHA</a></li>
+
+            </ul>
+
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-       <!-- <ul class="nav navbar-nav">
-
-           <li><a href="#">Link </a></li>
-
-         </ul>
- -->
-         <ul class="nav navbar-nav navbar-right">
-           <li><a href="#"> v1.1.2 ALPHA</a></li>
-
-         </ul>
-
-       </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    <!-- /.container-fluid -->
 </nav>
+
+<div  class="alert-messages" >
+    <div class="container">
+        <div class="row" id="messageDisplay" style="display:none">
+
+            <div class="col-md-6 col-md-offset-6">
+
+                <div class="alert alert-danger alert-dismissible">
+                    <!-- <button type="button" class="close" onclick="$('#messageDisplay').hide()">x</button>-->
+                    <button type="button" class="close" onclick="$('#messageDisplay').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <span id="MessageDisplayText">asdasda sada sda sdassssssssssssssssssssssss aaa  </span>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>    </div>
 
 <div class="container">
 
-  <div ng-view></div>
+    <div ng-view></div>
 </div>
 </body>
 </html>

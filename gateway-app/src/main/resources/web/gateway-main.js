@@ -2,6 +2,7 @@
 
 require([
   'angular',
+  'bootstrap',
   './shared',
   './gateway/gateway'
 ], function (angular) {
@@ -9,3 +10,4 @@ require([
     angular.bootstrap(document, ['gateway']);
   });
 });
+

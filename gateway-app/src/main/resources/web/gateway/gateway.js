@@ -7,7 +7,8 @@ define([
   var templatePrefix = require.toUrl("./");
   var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives']);
 
-  gateway.config(function ($routeProvider) {
+
+  gateway.config(function ($routeProvider, $httpProvider) {
     $routeProvider.
         when('/', {
           controller: 'FrontPageCtrl',
@@ -35,6 +36,39 @@ define([
           templateUrl: templatePrefix + "appGroup.html"
         })
     ;
+
+    $httpProvider.interceptors.push(['$q', function ($q) {
+      return {
+        //http://blog.brunoscopelliti.com/xhr-interceptor-in-an-angularjs-web-app
+
+        /* All the following methods are optional */
+        response: function (response) {
+          // response.status === 200
+          return response || $q.when(response);
+        },
+
+        responseError: function (rejection) {
+          // Called when another XHR request returns with an error status code.
+
+          if (rejection.status == 400) {
+            //alert(rejection.data);
+            // $scope.messageError=rejection.data;
+
+            $("#MessageDisplayText").text(rejection.data);
+            $("#messageDisplay").show();
+          } else if (rejection.status == 404) {
+            window.location = "./";
+            return;
+          } else {
+            console.log("New unknown error : ", rejection);
+          }
+          return $q.reject(rejection);
+        }
+
+      }
+
+    }]);
+
   });
 
   gateway.controller('FrontPageCtrl', function ($location, $scope, GatewayData) {
@@ -184,7 +218,6 @@ define([
     var LBid = $routeParams.id;
 
 
-
     GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
       $scope.lb = data;
       $scope.lbLoadingDone = true;
@@ -250,7 +283,7 @@ define([
 
     //----- Status proxy
     GatewayData.StatusController.getStatusForLoadbalancer($routeParams.id).then(function (data) {
-      $scope.rawStatus =data;
+      $scope.rawStatus = data;
     });
 
   });
