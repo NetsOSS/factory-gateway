@@ -146,6 +146,9 @@ public class ApplicationInstanceControllerTest {
     @Test
     public void testUpdateUniqueName() throws Exception {
         AppInstModel appInstModel = applicationInstanceController.search("Kamino 1.0").get(0);
+
+        assertThat(applicationInstanceController.update(appInstModel.id, appInstModel)).isNotNull();
+
         appInstModel.name = "Alpha 1.0";
         try {
             applicationInstanceController.update(appInstModel.id, appInstModel);

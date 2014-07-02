@@ -32,9 +32,6 @@ public class ApplicationGroupController {
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private ApplicationController applicationController;
-
-    @Autowired
     private LoadBalancerRepository loadBalancerRepository;
 
     @Autowired
@@ -131,7 +128,7 @@ public class ApplicationGroupController {
         log.info("ApplicationGroupController.update");
 
         assertValidId(id);
-        assertNameUnique(appGroupModel.name);
+        if(!(applicationGroupRepository.findOne(id).getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
         applicationGroup.setName(appGroupModel.name);

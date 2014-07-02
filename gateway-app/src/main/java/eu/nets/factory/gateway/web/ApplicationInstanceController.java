@@ -110,17 +110,17 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel applicationInstanceModel) {
+    public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.update");
 
         assertValidId(id);
-        assertNameUnique(applicationInstanceModel.name);
+        if(!(applicationInstanceRepository.findOne(id).getName().equals(appInstModel.name))) { assertNameUnique(appInstModel.name); }
 
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
-        applicationInstance.setName(applicationInstanceModel.name);
-        applicationInstance.setPath(applicationInstanceModel.path);
-        applicationInstance.setHost(applicationInstanceModel.host);
-        applicationInstance.setPort(applicationInstanceModel.port);
+        applicationInstance.setName(appInstModel.name);
+        applicationInstance.setPath(appInstModel.path);
+        applicationInstance.setHost(appInstModel.host);
+        applicationInstance.setPort(appInstModel.port);
 
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());

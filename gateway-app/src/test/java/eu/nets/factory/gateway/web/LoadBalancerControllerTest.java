@@ -167,8 +167,15 @@ public class LoadBalancerControllerTest {
     @Test
     public void testUpdateUniqueName() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
-        loadBalancerModel.name = "Hans";
 
+        loadBalancerModel.host = "X";
+        loadBalancerModel.installationPath = "X";
+        loadBalancerModel.sshKey = "X";
+        loadBalancerModel.publicPort = 987;
+
+        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isNotNull();
+
+        loadBalancerModel.name = "Hans";
         try {
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
@@ -179,6 +186,13 @@ public class LoadBalancerControllerTest {
     @Test
     public void testUpdateUniqueHostInstallationPath() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+
+        loadBalancerModel.name = "X";
+        loadBalancerModel.sshKey = "X";
+        loadBalancerModel.publicPort = 987;
+
+        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isNotNull();
+
         loadBalancerModel.host = "hostTwo";
         loadBalancerModel.installationPath = "instPathTwo";
         try {
@@ -191,6 +205,13 @@ public class LoadBalancerControllerTest {
     @Test
     public void testUpdateUniqueHostPublicPort() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+
+        loadBalancerModel.name = "X";
+        loadBalancerModel.installationPath = "X";
+        loadBalancerModel.sshKey = "X";
+
+        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isNotNull();
+
         loadBalancerModel.host = "hostTwo";
         loadBalancerModel.publicPort = 234;
         try {

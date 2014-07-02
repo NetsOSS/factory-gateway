@@ -135,8 +135,10 @@ public class ApplicationGroupControllerTest {
     @Test
     public void testUpdateUniqueName() throws Exception {
         AppGroupModel appGroupModel = applicationGroupController.search("GroupOne").get(0);
-        appGroupModel.name = "GroupThree";
 
+        assertThat(applicationGroupController.update(appGroupModel.id, appGroupModel)).isNotNull();
+
+        appGroupModel.name = "GroupThree";
         try {
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");

@@ -130,7 +130,7 @@ public class ApplicationController {
         log.info("ApplicationController.update");
 
         assertValidId(id);
-        assertNameUnique(appModel.getName());
+        if(!(applicationRepository.findOne(id).getName().equals(appModel.name))) { assertNameUnique(appModel.name); }
 
         Application application = applicationRepository.findOne(id);
         application.setName(appModel.getName());

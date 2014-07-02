@@ -142,11 +142,11 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.update");
 
         assertValidId(id);
-        assertNameUnique(loadBalancerModel.name);
-        assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
-        assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
-
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        if(!(loadBalancer.getName().equals(loadBalancerModel.name))) { assertNameUnique(loadBalancerModel.name); }
+        if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getInstallationPath().equals(loadBalancerModel.installationPath))) { assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath); }
+        if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getPublicPort() == loadBalancerModel.publicPort)) { assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort); }
+
         loadBalancer.setName(loadBalancerModel.name);
         loadBalancer.setHost(loadBalancerModel.host);
         loadBalancer.setInstallationPath(loadBalancerModel.installationPath);

@@ -355,6 +355,9 @@ public class ApplicationControllerTest {
     @Test
     public void testUpdateUniqueName() throws Exception {
         AppModel appModel = applicationController.search("Kamino").get(0);
+
+        assertThat(applicationController.update(appModel.id, appModel)).isNotNull();
+
         appModel.name = "Alpha";
         try {
             applicationController.update(appModel.getId(), appModel);

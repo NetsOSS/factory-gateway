@@ -210,12 +210,12 @@ define([], function () {
       req.params.name = name;
       return $http(req).then(getData);
     };
-    this.ApplicationInstanceController.update = function (id, applicationInstanceModel) {
+    this.ApplicationInstanceController.update = function (id, appInstModel) {
       var req = {};
       req.method = 'PUT';
       req.url = prefix + '/data/instances/{id}';
       req.url = req.url.replace(/{id}/, id);
-      req.data = applicationInstanceModel;
+      req.data = appInstModel;
       req.params = {};
       return $http(req).then(getData);
     };
