@@ -236,6 +236,7 @@ public class LoadBalancerController {
 
         // Start HAProxy
         String command = installationPath + "/" + LB_EXECUTABLE + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";
+        log.debug(command);
         try {
             Runtime.getRuntime().exec(command);
         } catch (IOException e) {
