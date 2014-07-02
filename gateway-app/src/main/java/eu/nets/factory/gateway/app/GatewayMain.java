@@ -112,6 +112,8 @@ public class GatewayMain {
 
     protected void configureLogback() throws Exception {
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+        context.reset();
+
         GenericConfigurator configurator = new JoranConfigurator();
         configurator.setContext(context);
 

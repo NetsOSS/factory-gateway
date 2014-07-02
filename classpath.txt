@@ -1,1 +1,1 @@
-eu.nets.factory:gateway:1.0:pom
+eu.nets.factory:gateway:develop-SNAPSHOT:pom

@@ -3,11 +3,11 @@
 <!--
 Add debug="true" on the <configuration> element to get more info while Logback loads classes and configures itself.
 -->
-<configuration>
+<configuration scan="1s">
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <File>logs/myapp.log</File>
+    <File>logs/gateway.log</File>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <FileNamePattern>logs/invoice-test-bench.log.%d{yyyy-MM}</FileNamePattern>
+      <FileNamePattern>logs/gateway.log.%d{yyyy-MM-dd}</FileNamePattern>
     </rollingPolicy>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} %msg%n</pattern>
