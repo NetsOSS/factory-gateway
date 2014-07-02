@@ -84,19 +84,24 @@
 
 <div  class="alert-messages" >
     <div class="container">
-        <div class="row" id="messageDisplay" style="display:none">
+        <div class="row"  >
 
             <div class="col-md-6 col-md-offset-6">
 
-                <div class="alert alert-danger alert-dismissible">
-                    <!-- <button type="button" class="close" onclick="$('#messageDisplay').hide()">x</button>-->
+                <div class="alert alert-danger alert-dismissible" id="messageDisplay" style="display:none">
+
                     <button type="button" class="close" onclick="$('#messageDisplay').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <span id="MessageDisplayText">asdasda sada sda sdassssssssssssssssssssssss aaa  </span>
-
-
-
-
                 </div>
+
+                <div class="alert alert-success alert-dismissible" id="messageDisplaySuccess" style="display:none">
+
+                    <button type="button" class="close" onclick="$('#messageDisplaySuccess').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <span id="MessageDisplaySuccessText">aa</span>
+                </div>
+
+
+
             </div>
         </div>
     </div>    </div>

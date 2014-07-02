@@ -44,6 +44,12 @@ define([
         /* All the following methods are optional */
         response: function (response) {
           // response.status === 200
+          if(response.config.method=="PUT"){
+            //console.log("Update successfully" ,response);
+            $("#MessageDisplaySuccessText").text("Updated "+response.data.name+" successfully.");
+            $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
+          }
+          //console.log("Response: ",response)
           return response || $q.when(response);
         },
 
