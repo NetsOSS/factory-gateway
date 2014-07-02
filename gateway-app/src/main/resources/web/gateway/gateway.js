@@ -252,6 +252,11 @@ define([
       });
     };
 
+    $scope.startLoadBalancer = function () {
+      console.log("start LoadBalancer function");
+      GatewayData.LoadBalancerController.startLoadBalancer($scope.lb.id);
+    };
+
 
     var reloadAppLists = function () {
       $scope.inLBList = [];
