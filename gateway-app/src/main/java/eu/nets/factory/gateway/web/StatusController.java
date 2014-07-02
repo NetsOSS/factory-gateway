@@ -85,6 +85,7 @@ public class StatusController {
         List<StatusModel> list = new ArrayList<StatusModel>();
 
         String[] names = csvString.get(0).split(",");
+        names[0] = names[0].replaceAll("# ", "");
         boolean start = false;
 
 
@@ -102,11 +103,6 @@ public class StatusController {
             }
         }
 
-        for(StatusModel mod: list) {
-            for(int i = 0; i < names.length; i++) {
-                System.out.println("HEI " + names[i] + " " + mod.data.get(names[i]));
-            }
-        }
         return list;
     }
 
