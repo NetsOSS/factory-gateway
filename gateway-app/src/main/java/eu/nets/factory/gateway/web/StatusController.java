@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.transaction.Transactional;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,7 +73,7 @@ public class StatusController {
         HttpURLConnection conn;
         BufferedReader rd;
         String line;
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         StringWriter stringWriter = new StringWriter();
         PrintWriter pw = new PrintWriter(stringWriter);
         int count = 0;
@@ -85,47 +85,40 @@ public class StatusController {
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             while ((line = rd.readLine()) != null) {
-                //result.add(line);
                 pw.println(line);
                 count++;
             }
             rd.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         for(int i = 0; i < count; i++) {
-            String tmp = stringWriter.toString().split("\n")[i];
-            //tmp = tmp.replaceAll("\\r\\n|\\r|\\n", "");
-            result.add(tmp);
+            result.add(stringWriter.toString().replaceAll("\n", ""));
 
         }
         return result;
     }
 
     public List<StatusModel> parseCSV(List<String> csvString) {
+        if(!(csvString.get(0).startsWith("# ")) && (csvString.get(1).startsWith("http-in"))) {
+            throw new GatewayException("Unrecognized format in CSV file. Expected first line to start with '# ', and second line to start with 'http-in'");
+        }
 
-        List<StatusModel> list = new ArrayList<StatusModel>();
+        List<StatusModel> list = new ArrayList<>();
 
         String[] names = csvString.get(0).split(",");
         names[0] = names[0].replaceAll("# ", "");
-        boolean start = false;
 
+        for(int i = 1; i < csvString.size(); i++) {
+            StatusModel statusModel = new StatusModel();
+            String csvLine = csvString.get(i).substring(0, csvString.get(i).length()-1);
+            String[] splitCsvString = csvLine.split(",", -1);
 
-        for(int i = 0; i < csvString.size(); i++) {
-            if(csvString.get(i).startsWith("http-in")) {
-                start = true;
+            for (int j = 0; j < splitCsvString.length; j++) {
+                statusModel.data.put(names[j], splitCsvString[j]);
             }
-            if(start) {
-                StatusModel statusModel = new StatusModel();
-                for (int j = 0; j < names.length; j++) {
-                    statusModel.data.put(names[j], csvString.get(i).split(",")[j]);
-
-                }
-                list.add(statusModel);
-            }
+            list.add(statusModel);
         }
 
         return list;
