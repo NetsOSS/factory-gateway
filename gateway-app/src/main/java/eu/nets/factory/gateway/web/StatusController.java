@@ -116,7 +116,8 @@ public class StatusController {
             String[] splitCsvString = csvLine.split(",", -1);
 
             for (int j = 0; j < splitCsvString.length; j++) {
-                statusModel.data.put(names[j], splitCsvString[j]);
+                if(names.length-1 >j && splitCsvString.length-1>j)
+                 statusModel.data.put(names[j], splitCsvString[j]);
             }
             list.add(statusModel);
         }

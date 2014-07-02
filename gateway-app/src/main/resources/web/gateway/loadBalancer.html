@@ -9,11 +9,13 @@
     <li>Port : {{lb.publicPort}}</li>
     <li>sshKey : {{lb.sshKey}}</li>
     <li>Number of applications : {{lb.applications.length}}</li>
+    <li>Stats page : <a href="http://{{lb.host}}:{{lb.publicPort+1}}/proxy-stats">{{lb.host}}:{{lb.publicPort+1}}/proxy-stats</a></li>
 </ul>
 <!-- Button trigger modal -->
 <button class="btn btn-info" data-toggle="modal" data-target="#myModal">
     Edit
 </button>
+        <a href="{{lb.host}}:{{lb.port+1}}">Stats page</a>
 <a href="" ng-model="collapsedLBJSON" ng-click="collapsedLBJSON=!collapsedLBJSON"><strong>Toggle
     (show/hide)</strong> json data</a>
 <div ng-show="collapsedLBJSON">
@@ -37,7 +39,6 @@
     </tr>
     </thead>
 
-
     <tbody>
     <tr ng-repeat="s in rawStatus"
         ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.data.status]">
@@ -56,6 +57,7 @@
     </tr>
     </tbody>
 </table>
+
 <!--
 <pre>
     {{rawStatus[0].data | json}}
