@@ -1,6 +1,5 @@
 package eu.nets.factory.gateway.web;
 
-import com.sun.xml.internal.ws.api.message.Packet;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
