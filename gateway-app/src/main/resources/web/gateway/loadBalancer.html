@@ -38,16 +38,17 @@
     </tr>
     </thead>
 
+
     <tbody>
-    <tr ng-repeat="s in rawStatus" ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.status]">
-        <td>{{s.pxname}}</td>
-        <td>{{s.svname}}</td>
-        <td>{{s.scur}}</td>
-        <td>{{s.stot}}</td>
-        <td>{{s.bin}}</td>
-        <td>{{s.bout}}</td>
-        <td>{{s.lastchg}} s</td>
-        <td>{{s.downtime}} s</td>
+    <tr ng-repeat="s in rawStatus[0]" ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.status]">
+        <td>{{s.data.pxname}}</td>
+        <td>{{s.data.svname}}</td>
+        <td>{{s.data.scur}}</td>
+        <td>{{s.data.stot}}</td>
+        <td>{{s.data.bin}}</td>
+        <td>{{s.data.bout}}</td>
+        <td>{{s.data.lastchg}} s</td>
+        <td>{{s.data.downtime}} s</td>
 
         <td>{{s.status}}</td>
 
