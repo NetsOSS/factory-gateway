@@ -226,7 +226,7 @@ public class LoadBalancerController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/start")
     @ResponseBody
-    public void startLoadBalancer(@PathVariable Long id) {
+    public String startLoadBalancer(@PathVariable Long id) {
         log.info("LoadBalancerController.startLoadBalancer() LB.id={}",id);
 
         assertValidId(id);
@@ -244,5 +244,6 @@ public class LoadBalancerController {
             throw new GatewayException(errorMessage);
         }
         log.info("started LoadBalancer");
+        return "success";
     }
 }
