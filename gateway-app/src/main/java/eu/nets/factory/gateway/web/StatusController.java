@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import com.sun.xml.internal.ws.api.message.Packet;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
@@ -84,7 +85,6 @@ public class StatusController {
         List<StatusModel> list = new ArrayList<StatusModel>();
 
         String[] names = csvString.get(0).split(",");
-        names[0] = names[0].replaceAll("# ", "");
         boolean start = false;
 
 
@@ -95,11 +95,16 @@ public class StatusController {
             if(start) {
                 StatusModel statusModel = new StatusModel();
                 for (int j = 0; j < names.length; j++) {
-                    if (!names[j].equals("\r")) {
-                        statusModel.data.put(names[j], csvString.get(i).split(",")[j]);
-                    }
+                    statusModel.data.put(names[j], csvString.get(i).split(",")[j]);
+
                 }
                 list.add(statusModel);
+            }
+        }
+
+        for(StatusModel mod: list) {
+            for(int i = 0; i < names.length; i++) {
+                System.out.println("HEI " + names[i] + " " + mod.data.get(names[i]));
             }
         }
         return list;

@@ -312,6 +312,15 @@ define([], function () {
       req.params.name = name;
       return $http(req).then(getData);
     };
+    this.LoadBalancerController.startLoadBalancer = function (id, payload) {
+      var req = {};
+      req.method = 'POST';
+      req.url = prefix + '/data/load-balancers/{id}/start';
+      req.url = req.url.replace(/{id}/, id);
+      req.data = payload;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.LoadBalancerController.update = function (id, loadBalancerModel) {
       var req = {};
       req.method = 'PUT';
