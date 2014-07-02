@@ -68,6 +68,8 @@ public class ApplicationController {
 
         Application application = applicationRepository.findOne(id);
         if(application == null) { throw new EntityNotFoundException("Application", id); }
+
+
         return new AppModel(application);
     }
 

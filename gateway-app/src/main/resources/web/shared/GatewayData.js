@@ -382,10 +382,21 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.StatusController.sendEmail = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/load-balancers/sendEmail/{id}';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     var StatusController = this.StatusController;
     this.resolve.StatusController = {};
     this.resolve.StatusController.getStatusForLoadbalancer = function (GatewayData, $route) {
       return StatusController.getStatusForLoadbalancer($route.current.params.id);
+    };
+    this.resolve.StatusController.sendEmail = function (GatewayData, $route) {
+      return StatusController.sendEmail($route.current.params.id);
     };
   }
   

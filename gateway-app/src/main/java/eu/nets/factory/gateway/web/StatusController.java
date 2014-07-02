@@ -1,7 +1,10 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.model.LoadBalancerRepository;
+import eu.nets.factory.gateway.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +31,12 @@ public class StatusController {
 
     @Autowired
     LoadBalancerRepository loadBalancerRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    EmailService emailService;
 
     public String readCSV(LoadBalancer loadBalancer) {
         String csvString = "";
@@ -147,5 +156,16 @@ public class StatusController {
         String csvString = readCSV(loadBalancer);
         return parseCSV(csvString);
     }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/sendEmail/{id}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String sendEmail(@PathVariable Long id) {
+        Application app = applicationRepository.findOne(id);
+
+        emailService.sendEmail();
+        return "Sending email status of "+app.getName()+" to "+app.getEmails();
+    }
+
 
 }
