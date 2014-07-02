@@ -224,7 +224,8 @@ public class LoadBalancerController {
         return strConfig;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/start")
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/start")
+    @ResponseBody
     public void startLoadBalancer(@PathVariable Long id) {
         log.info("LoadBalancerController.startLoadBalancer() LB.id={}",id);
 
