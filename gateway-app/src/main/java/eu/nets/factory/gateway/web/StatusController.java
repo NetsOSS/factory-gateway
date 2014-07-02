@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -37,6 +38,31 @@ public class StatusController {
 
     @Autowired
     EmailService emailService;
+
+    public HashMap<LoadBalancer, List<StatusModel>> getServerStatusForApplication(@PathVariable Long id) {
+        return null;
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/backend-status", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public HashMap<Long, StatusModel> getBackendStatusForApplication(@PathVariable Long id) {
+
+        HashMap<Long, StatusModel> hashMap = new HashMap<Long, StatusModel>();
+        Application application = applicationRepository.findOne(id);
+
+        List<LoadBalancer> loadBalancers = application.getLoadBalancers();
+        for(LoadBalancer loadBalancer: loadBalancers) {
+            List<StatusModel> models = parseCSV(readCSV(loadBalancer));
+            for(StatusModel model: models) {
+                if(model.data.get("pxname").equals(application.getName()) && model.data.get("svname").equals("BACKEND")) {
+                    hashMap.put(loadBalancer.getId(), model);
+                }
+            }
+        }
+
+        return hashMap;
+    }
 
     public List<String> readCSV(LoadBalancer loadBalancer) {
 

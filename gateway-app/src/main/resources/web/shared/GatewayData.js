@@ -385,6 +385,14 @@ define([], function () {
       return PersonController.search($route.current.params.name);
     };
     this.StatusController = {};
+    this.StatusController.getBackendStatusForApplication = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/applications/{id}/backend-status';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.StatusController.getStatusForLoadbalancer = function (id) {
       var req = {};
       req.method = 'GET';
@@ -403,6 +411,9 @@ define([], function () {
     };
     var StatusController = this.StatusController;
     this.resolve.StatusController = {};
+    this.resolve.StatusController.getBackendStatusForApplication = function (GatewayData, $route) {
+      return StatusController.getBackendStatusForApplication($route.current.params.id);
+    };
     this.resolve.StatusController.getStatusForLoadbalancer = function (GatewayData, $route) {
       return StatusController.getStatusForLoadbalancer($route.current.params.id);
     };
