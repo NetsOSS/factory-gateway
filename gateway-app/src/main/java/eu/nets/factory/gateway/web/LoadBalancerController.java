@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -22,6 +23,10 @@ import static org.springframework.util.MimeTypeUtils.*;
 public class LoadBalancerController {
 
     private final Logger log = getLogger(getClass());
+
+    private static final String LB_EXECUTABLE = "haproxy";
+    private static final String CFG_FILE = "haproxy.cfg";
+    private static final String PID_FILE = "haproxy.pid";
 
     @Autowired
     private LoadBalancerRepository loadBalancerRepository;
@@ -215,7 +220,28 @@ public class LoadBalancerController {
         String installationPath = loadBalancer.getInstallationPath();
 
         String strConfig = configGeneratorService.generateConfig(loadBalancer);
-        fileWriterService.writeConfigFile(installationPath, "haproxy.cfg", strConfig);
+        fileWriterService.writeConfigFile(installationPath, CFG_FILE, strConfig);
         return strConfig;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/start")
+    public void startLoadBalancer(@PathVariable Long id) {
+        log.info("LoadBalancerController.startLoadBalancer() LB.id={}",id);
+
+        assertValidId(id);
+
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        String installationPath = loadBalancer.getInstallationPath();
+
+        // Start HAProxy
+        String command = installationPath + "/" + LB_EXECUTABLE + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";
+        try {
+            Runtime.getRuntime().exec(command);
+        } catch (IOException e) {
+            String errorMessage = "Loadbalancer could not be started: " + e.getLocalizedMessage();
+            log.warn(errorMessage, e);
+            throw new GatewayException(errorMessage);
+        }
+        log.info("started LoadBalancer");
     }
 }
