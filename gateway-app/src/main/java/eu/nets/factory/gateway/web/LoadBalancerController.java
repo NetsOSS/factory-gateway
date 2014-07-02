@@ -238,7 +238,8 @@ public class LoadBalancerController {
         String command = installationPath + "/" + LB_EXECUTABLE + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";
         log.debug(command);
         try {
-            Runtime.getRuntime().exec(command);
+            Process process = Runtime.getRuntime().exec(command);
+            log.debug("Is process is alive? - " + process.isAlive());
         } catch (IOException e) {
             String errorMessage = "Loadbalancer could not be started: " + e.getLocalizedMessage();
             log.warn(errorMessage, e);
