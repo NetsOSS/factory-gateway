@@ -10,18 +10,19 @@
     <li>sshKey : {{lb.sshKey}}</li>
     <li>Number of applications : {{lb.applications.length}}</li>
 </ul>
+<!-- Button trigger modal -->
+<button class="btn btn-info" data-toggle="modal" data-target="#myModal">
+    Edit
+</button>
 <a href="" ng-model="collapsedLBJSON" ng-click="collapsedLBJSON=!collapsedLBJSON"><strong>Toggle
     (show/hide)</strong> json data</a>
-
-
-
-
-
+<div ng-show="collapsedLBJSON">
+    <pre>{{lb|json}}</pre>
+</div>
 
 <hr>
-
+<h3>Status</h3>
 <table class="table">
-
     <thead>
     <tr>
         <th>Proxy Name</th>
@@ -33,14 +34,14 @@
         <th>Last change in status</th>
         <th>Downtime</th>
         <th>Status</th>
-        <!--<th ng-repeat="lb in app.loadBalancers">{{lb.name}}</th>-->
-
     </tr>
     </thead>
 
 
     <tbody>
-    <tr ng-repeat="s in rawStatus[0]" ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.status]">
+    <tr ng-repeat="s in rawStatus"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.data.status]">
+
         <td>{{s.data.pxname}}</td>
         <td>{{s.data.svname}}</td>
         <td>{{s.data.scur}}</td>
@@ -50,18 +51,19 @@
         <td>{{s.data.lastchg}} s</td>
         <td>{{s.data.downtime}} s</td>
 
-        <td>{{s.status}}</td>
+        <td>{{s.data.status}}</td>
 
     </tr>
     </tbody>
 </table>
-
-<!--<pre>{{rawStatus}}</pre>-->
+<!--
+<pre>
+    {{rawStatus[0].data | json}}
+</pre>
+-->
 <hr>
 
-<div ng-show="collapsedLBJSON">
-    <pre>{{lb|json}}</pre>
-</div>
+
 
 
 <div class="row">
@@ -77,31 +79,31 @@
             </a>
         </div>
 
-<!--
-        <div class="list-group">
-            <a class="list-group-item ">
-                <h4 class="list-group-item-heading">Finch /finch (36000) GroupId: 35000</h4>
+        <!--
+                <div class="list-group">
+                    <a class="list-group-item ">
+                        <h4 class="list-group-item-heading">Finch /finch (36000) GroupId: 35000</h4>
 
-                <p class="list-group-item-text">
+                        <p class="list-group-item-text">
 
-                    <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">
-                        Remove
-                    </button>
-                <ul>
-                    <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
-                    <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
-                </ul>
-                </p>
-            </a>
-        </div>
-        <div class="list-group">
-            <a href="#" class="list-group-item ">
-                <h4 class="list-group-item-heading">App2</h4>
+                            <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">
+                                Remove
+                            </button>
+                        <ul>
+                            <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
+                            <li> server Finch1 127.0.0.1:7272/finch maxconn 32 check</li>
+                        </ul>
+                        </p>
+                    </a>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item ">
+                        <h4 class="list-group-item-heading">App2</h4>
 
-                <p class="list-group-item-text">inst1<br>inst2</p>
-            </a>
-        </div>
--->
+                        <p class="list-group-item-text">inst1<br>inst2</p>
+                    </a>
+                </div>
+        -->
     </div>
 
 
@@ -129,7 +131,7 @@
 
     <!--<p style="white-space: pre;">{{ configFile}}</p>-->
 
-    <div ng-show="!collapseConfig">
+    <div ng-show="collapseConfig">
 
         <pre>{{configFile}}</pre>
     </div>
@@ -139,7 +141,33 @@
 
 <hr>
 
-<lb-form ng-if="lbLoadingDone"></lb-form>
-        <hr>
-<button type="button" class="btn btn-warning" ng-click="startLoadBalancer()"><span class="glyphicon glyphicon-trash"></span> Start LoadBalancer</button>
-<button type="button" class="btn btn-danger" ng-click="removeLoadBalancer()"><span class="glyphicon glyphicon-trash"></span> Delete LB</button>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Update</h4>
+            </div>
+            <div class="modal-body">
+                <lb-form ng-if="lbLoadingDone"></lb-form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+<button type="button" class="btn btn-warning" ng-click="startLoadBalancer()"><span
+        class="glyphicon glyphicon-play"></span> Start LoadBalancer
+</button>
+<button type="button" class="btn btn-danger" ng-click="removeLoadBalancer()"><span
+        class="glyphicon glyphicon-trash"></span> Delete LB
+</button>
