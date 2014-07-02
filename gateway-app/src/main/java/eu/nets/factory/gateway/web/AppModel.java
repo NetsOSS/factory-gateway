@@ -16,6 +16,7 @@ public  class AppModel {
     public List<AppInstModel> applicationInstances = new ArrayList<>();
     public List<LoadBalancerModel> loadBalancers = new ArrayList<>();
     public Long applicationGroupId;
+    public String emails;
 
     public AppModel() { }
 
@@ -25,18 +26,19 @@ public  class AppModel {
     }
 
     private AppModel(Application application, Boolean summary) {
-        this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup());
+        this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup(),application.getEmails());
         if(!summary) {
             this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
             this.loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
         }
     }
 
-    public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup) {
+    public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup,String emails) {
         this.id = id;
         this.name = name;
         this.publicUrl = url;
         this.applicationGroupId = applicationGroup.getId();
+        this.emails=emails;
     }
 
     public static AppModel summary(Application application) {
@@ -54,4 +56,7 @@ public  class AppModel {
 
     public Long getApplicationGroupId() { return applicationGroupId; }
 
+    public String getEmails() {
+        return emails;
+    }
 }

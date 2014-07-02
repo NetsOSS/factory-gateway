@@ -43,15 +43,23 @@ public class Application extends AbstractEntity {
     //@Cascade(CascadeType.DELETE)
     private ApplicationGroup applicationGroup;
 
+    private String emails;
 
-    public Application(String name, String url, ApplicationGroup applicationGroup) {
+    public Application(String name, String url, ApplicationGroup applicationGroup, String emails) {
         this.name = name;
         this.publicUrl = url;
         this.applicationGroup = applicationGroup;
+        this.emails=emails;
     }
 
     public Application(){}
 
+    public String getEmails() {
+        return emails;
+    }
+    public void setEmails(String emails) {
+        this.emails = emails;
+    }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

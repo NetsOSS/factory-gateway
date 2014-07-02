@@ -50,9 +50,9 @@ public class InitTestClass {
         groupModelThree = applicationGroupController.create(groupModelThree);
 
         //Applications
-        Application applicationOne = new Application("Kamino", "/kamino", groupOne);
-        Application applicationTwo = new Application("Grandiosa", "/grandiosa", groupTwo);
-        Application applicationThree = new Application("Alpha", "/alpha", groupTwo);
+        Application applicationOne = new Application("Kamino", "/kamino", groupOne,"");
+        Application applicationTwo = new Application("Grandiosa", "/grandiosa", groupTwo,"");
+        Application applicationThree = new Application("Alpha", "/alpha", groupTwo,"");
         AppModel appModelOne = new AppModel(applicationOne);
         AppModel appModelTwo = new AppModel(applicationTwo);
         AppModel appModelThree = new AppModel(applicationThree);

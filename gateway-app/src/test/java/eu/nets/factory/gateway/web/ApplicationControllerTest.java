@@ -205,7 +205,7 @@ public class ApplicationControllerTest {
         Collections.sort(applicationGroups, (o1, o2) -> o1.getId().compareTo(o2.getId()));
         AppGroupModel appGroupModel = new AppGroupModel(applicationGroups.get(0));
         assertNotNull(partId + "received null-pointer: 'appGroupModel'", appGroupModel);
-        Application application = new Application("Beta", "/beta", applicationGroupRepository.findOne(appGroupModel.getId()));
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findOne(appGroupModel.getId()),"");
         assertNotNull(partId + "received null-pointer: 'application'", application);
         AppModel appModel = new AppModel(application);
         assertNotNull(partId + "received null-pointer: 'appModel'", application);
@@ -267,7 +267,7 @@ public class ApplicationControllerTest {
     public void testCreateUniqueName() throws Exception {
         //same name, same ApplicationGroup
         ApplicationGroup applicationGroup = applicationGroupRepository.findByNameLike("GroupTwo").get(0);
-        Application application = new Application("Alpha", "X", applicationGroup);
+        Application application = new Application("Alpha", "X", applicationGroup,"");
         AppModel appModel = new AppModel(application);
         try {
             applicationController.create(appModel);
@@ -277,7 +277,7 @@ public class ApplicationControllerTest {
 
         //same name, different ApplicationGroup
         applicationGroup = applicationGroupRepository.findByNameLike("GroupOne").get(0);
-        application = new Application("Alpha", "X", applicationGroup);
+        application = new Application("Alpha", "X", applicationGroup,"");
         appModel = new AppModel(application);
         try {
             applicationController.create(appModel);
