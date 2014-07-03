@@ -235,7 +235,7 @@ public class LoadBalancerController {
         String installationPath = loadBalancer.getInstallationPath();
 
         // Start HAProxy
-        String command = installationPath + "/" + LB_EXECUTABLE + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";
+        String command = installationPath + "/fbhjds" + LB_EXECUTABLE + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";
         log.debug(command);
         try {
             Process process = Runtime.getRuntime().exec(command);
