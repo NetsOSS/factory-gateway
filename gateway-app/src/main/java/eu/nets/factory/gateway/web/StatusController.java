@@ -93,10 +93,12 @@ public class StatusController {
             e.printStackTrace();
         }
 
-        for(int i = 0; i < count; i++) {
-            result.add(stringWriter.toString().replaceAll("\n", ""));
+        String[] sArr = stringWriter.toString().split("\n");
+        for(String s : sArr)
+            result.add(s);
 
-        }
+
+
         return result;
     }
 
@@ -133,6 +135,7 @@ public class StatusController {
             return null;
         }
         List<String> csvString = readCSV(loadBalancer);
+
         return parseCSV(csvString);
     }
 
