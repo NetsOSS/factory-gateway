@@ -7,7 +7,6 @@ import eu.nets.factory.gateway.service.ConfigGeneratorService;
 import eu.nets.factory.gateway.service.FileWriterService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,12 +44,6 @@ public class LoadBalancerController {
 
     @Autowired
     private GatewaySettings settings;
-
-    @Value("${haproxy.bin.windows}")
-    private String haproxyBinWindows;
-
-    @Value("${haproxy.bin.linux}")
-    private String haproxyBinLinux;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
