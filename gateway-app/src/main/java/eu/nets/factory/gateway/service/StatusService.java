@@ -4,6 +4,7 @@ import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.web.StatusModel;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,6 +20,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Created by kwlar on 03.07.2014.
  */
+@Service
 public class StatusService {
     private final Logger log = getLogger(getClass());
 
