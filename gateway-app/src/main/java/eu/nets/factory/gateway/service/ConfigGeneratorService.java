@@ -39,24 +39,24 @@ public class ConfigGeneratorService {
         for (Application application : loadBalancer.getApplications()) {
 
             StringWriter stringWriter = new StringWriter();
-            PrintWriter pw = new PrintWriter(stringWriter);
+            PrintWriter printWriter = new PrintWriter(stringWriter);
 
             // acl + use_backend
             rules.add("acl " + application.getName() + "rule path -m beg " + application.getPublicUrl());
             use_backends.add("use_backend " + application.getName() + " if " + application.getName() + "rule");
 
             // backend
-            pw.println();
-            pw.println(TAB + "backend " + application.getName());
-//            pw.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
+            printWriter.println();
+            printWriter.println(TAB + "backend " + application.getName());
+//            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
             // server
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                pw.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " maxconn 32 check");
+                printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " maxconn 32 check");
             }
             backends.add(stringWriter.toString());
-            stringWriter.flush();
-            pw.flush();
+            //stringWriter.flush();
+            //printWriter.flush();
         }
 
         return buildString(rules, backends, use_backends, loadBalancerPort);
@@ -64,32 +64,31 @@ public class ConfigGeneratorService {
 
     private String buildString(List<String> rules, List<String> backends, List<String> use_backends, int loadBalancerPort) {
         StringWriter stringWriter = new StringWriter();
-        PrintWriter pw = new PrintWriter(stringWriter);
+        PrintWriter printWriter = new PrintWriter(stringWriter);
 
-        writeDefaultsStart(pw);
+        writeDefaultsStart(printWriter);
 
-        pw.println(TAB2 + "bind *:" + loadBalancerPort);
+        printWriter.println(TAB2 + "bind *:" + loadBalancerPort);
 
         // Write content
         for (String rule : rules) {
-            pw.println(TAB2 + rule);
+            printWriter.println(TAB2 + rule);
         }
         for (String use_backend : use_backends) {
-            pw.println(TAB2 + use_backend);
+            printWriter.println(TAB2 + use_backend);
         }
         for(String backend : backends) {
-            pw.println(TAB2 + backend);
+            printWriter.println(TAB2 + backend);
         }
 
-        pw.println();
-        pw.println(TAB + "listen stats *:" + ++loadBalancerPort);
+        printWriter.println();
+        printWriter.println(TAB + "listen stats *:" + ++loadBalancerPort);
 
-        writeDefaultsEnd(pw);
-
+        writeDefaultsEnd(printWriter);
 
         String strConfig = stringWriter.toString();
-        stringWriter.flush();
-        pw.flush();
+        //stringWriter.flush();
+        //printWriter.flush();
         return strConfig;
     }
 
