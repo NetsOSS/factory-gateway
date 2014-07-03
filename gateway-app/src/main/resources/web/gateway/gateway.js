@@ -188,6 +188,11 @@ define([
       });
     };
 
+    //--- Status --
+    GatewayData.StatusController.getBackendStatusForApplication($routeParams.id).then(function (data) {
+      $scope.statusApp = data;
+    });
+
 
   });
 

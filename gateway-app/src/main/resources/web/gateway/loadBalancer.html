@@ -1,30 +1,33 @@
-<h1>Load Balancer</h1>
+<h1>Load Balancer : {{lb.name}} <small>({{lb.id}})</small></h1>
 
 
 <ul class="list-unstyled">
-    <li>ID : {{lb.id}}</li>
-    <li>Name : {{lb.name}}</li>
     <li>InstallationPath : {{lb.installationPath}}</li>
     <li>Host : {{lb.host}}</li>
     <li>Port : {{lb.publicPort}}</li>
     <li>sshKey : {{lb.sshKey}}</li>
     <li>Number of applications : {{lb.applications.length}}</li>
-    <li>Stats page : <a href="http://{{lb.host}}:{{lb.publicPort+1}}/proxy-stats">{{lb.host}}:{{lb.publicPort+1}}/proxy-stats</a></li>
+    <li>Stats page : <a href="http://{{lb.host}}:{{lb.publicPort+1}}/proxy-stats">{{lb.host}}:{{lb.publicPort+1}}/proxy-stats</a>
+    </li>
 </ul>
 <!-- Button trigger modal -->
 <button class="btn btn-info" data-toggle="modal" data-target="#myModal">
     Edit
 </button>
-        <a href="{{lb.host}}:{{lb.port+1}}">Stats page</a>
+<a href="{{lb.host}}:{{lb.port+1}}">Stats page</a>
 <a href="" ng-model="collapsedLBJSON" ng-click="collapsedLBJSON=!collapsedLBJSON"><strong>Toggle
     (show/hide)</strong> json data</a>
 <div ng-show="collapsedLBJSON">
-    <pre>{{lb|json}}</pre>
+    <pre>{{rawStatus|json}}</pre>
 </div>
 
 <hr>
-<h3>Status</h3>
-<table class="table">
+<h3>Status: <span class="text-success" ng-show="rawStatus">HAproxy is running  <span class="glyphicon glyphicon-thumbs-up"></span></span>
+           <span class="text-danger" ng-show="!rawStatus">HAproxy is not running <span class="glyphicon glyphicon-thumbs-down"></span></span>
+</h3>
+
+
+<table class="table" ng-show="rawStatus">
     <thead>
     <tr>
         <th>Proxy Name</th>
@@ -64,8 +67,6 @@
 </pre>
 -->
 <hr>
-
-
 
 
 <div class="row">
@@ -144,15 +145,13 @@
 <hr>
 
 
-
-
-
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">Update</h4>
             </div>
             <div class="modal-body">
