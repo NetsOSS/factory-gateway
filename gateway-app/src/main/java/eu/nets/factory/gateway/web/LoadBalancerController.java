@@ -7,7 +7,6 @@ import eu.nets.factory.gateway.service.ConfigGeneratorService;
 import eu.nets.factory.gateway.service.FileWriterService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,13 +41,7 @@ public class LoadBalancerController {
     private FileWriterService fileWriterService;
 
     @Autowired
-    private MyAppSettings settings;
-
-    @Value("${haproxy.bin.windows}")
-    private String haproxyBinWindows;
-
-    @Value("${haproxy.bin.linux}")
-    private String haproxyBinLinux;
+    private GatewaySettings settings;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -247,7 +240,7 @@ public class LoadBalancerController {
     private String start(LoadBalancer loadBalancer) {
         String installationPath = loadBalancer.getInstallationPath();
 
-        String bin = settings.isWindows() ? haproxyBinWindows : haproxyBinLinux;
+        String bin = settings.getHaproxyBin();
 
         // Start HAProxy
         String command = bin + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";

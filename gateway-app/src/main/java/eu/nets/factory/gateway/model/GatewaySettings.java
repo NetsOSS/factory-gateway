@@ -7,7 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyAppSettings {
+public class GatewaySettings {
 
     @Autowired
     private Environment environment;
@@ -78,5 +78,17 @@ public class MyAppSettings {
 
     public boolean isWindows() {
         return windows;
+    }
+
+    public String getHaproxyBin() {
+        if (unitTest) {
+            throw new RuntimeException("Not supported in unit tests.");
+        }
+
+        String haproxyBinWindows = environment.getRequiredProperty("haproxy.bin.windows");
+
+        String haproxyBinLinux = environment.getRequiredProperty("haproxy.bin.linux");
+
+        return windows ? haproxyBinWindows : haproxyBinLinux;
     }
 }

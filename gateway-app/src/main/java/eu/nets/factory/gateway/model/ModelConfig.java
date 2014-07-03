@@ -9,7 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
-import com.google.common.collect.ImmutableMap;
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.flywaydb.core.Flyway;
@@ -33,7 +32,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
-import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.orm.hibernate4.SpringSessionContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -80,7 +78,7 @@ public class ModelConfig {
     }
 
     @Bean(destroyMethod = "close")
-    BoneCPDataSource innerDataSource(MyAppSettings settings,
+    BoneCPDataSource innerDataSource(GatewaySettings settings,
                                      @Value("${database.testOnStart:true}") boolean testOnStart,
                                      @Value("${bonecp.partitionCount:1}") int partitionCount,
                                      @Value("${bonecp.acquireIncrement:1}") int acquireIncrement,
