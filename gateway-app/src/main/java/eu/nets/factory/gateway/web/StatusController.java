@@ -83,6 +83,17 @@ public class StatusController {
         return applicationStatusModel;
     }
 
+    public List<StatusModel> getServerStatus(List<StatusModel> statusModelsFromCSV, Application application ) {
+
+        List<StatusModel> models = new ArrayList<StatusModel>();
+        for(StatusModel statusModel: statusModelsFromCSV) {
+            if(statusModel.data.get("pxname").equals(application.getName()) && !statusModel.data.get("svname").equals("BACKEND")) {
+                models.add(statusModel);
+            }
+        }
+        return models;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/backend-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public HashMap<Long, StatusModel> getBackendStatusForApplication(@PathVariable Long id) {
@@ -99,14 +110,20 @@ public class StatusController {
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for(LoadBalancer loadBalancer: loadBalancers) {
             List<StatusModel> models = parseCSV(readCSV(loadBalancer));
-            for(StatusModel model: models) {
-                if(model.data.get("pxname").equals(application.getName()) && model.data.get("svname").equals("BACKEND")) {
-                    hashMap.put(loadBalancer.getId(), model);
-                }
-            }
+            hashMap.put(loadBalancer.getId(), getBackendServer(models, application));
         }
 
         return hashMap;
+    }
+
+    public StatusModel getBackendServer(List<StatusModel> models, Application application) {
+
+        for(StatusModel model: models) {
+            if(model.data.get("pxname").equals(application.getName()) && model.data.get("svname").equals("BACKEND")) {
+                return model;
+            }
+        }
+        return null;
     }
 
     public List<String> readCSV(LoadBalancer loadBalancer) {
