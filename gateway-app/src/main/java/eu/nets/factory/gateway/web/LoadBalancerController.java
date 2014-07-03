@@ -7,6 +7,7 @@ import eu.nets.factory.gateway.service.ConfigGeneratorService;
 import eu.nets.factory.gateway.service.FileWriterService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,6 @@ public class LoadBalancerController {
 
     private final Logger log = getLogger(getClass());
 
-    private static final String LB_EXECUTABLE = "haproxy";
     private static final String CFG_FILE = "haproxy.cfg";
     private static final String PID_FILE = "haproxy.pid";
 
@@ -40,6 +40,15 @@ public class LoadBalancerController {
 
     @Autowired
     private FileWriterService fileWriterService;
+
+    @Autowired
+    private MyAppSettings settings;
+
+    @Value("${haproxy.bin.windows}")
+    private String haproxyBinWindows;
+
+    @Value("${haproxy.bin.linux}")
+    private String haproxyBinLinux;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -224,18 +233,25 @@ public class LoadBalancerController {
         return strConfig;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/start")
-    @ResponseBody
-    public String startLoadBalancer(@PathVariable Long id) {
+    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/start")
+    public void startLoadBalancer(@PathVariable Long id) {
         log.info("LoadBalancerController.startLoadBalancer() LB.id={}",id);
 
         assertValidId(id);
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+
+        start(loadBalancer);
+    }
+
+    private String start(LoadBalancer loadBalancer) {
         String installationPath = loadBalancer.getInstallationPath();
 
+        String bin = settings.isWindows() ? haproxyBinWindows : haproxyBinLinux;
+
         // Start HAProxy
-        String command = installationPath + "/" + LB_EXECUTABLE + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";
+        String command = bin + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";
+
         log.debug(command);
         try {
             Process process = Runtime.getRuntime().exec(command);

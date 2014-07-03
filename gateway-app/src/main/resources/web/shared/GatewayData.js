@@ -312,11 +312,12 @@ define([], function () {
       req.params.name = name;
       return $http(req).then(getData);
     };
-    this.LoadBalancerController.startLoadBalancer = function (id) {
+    this.LoadBalancerController.startLoadBalancer = function (id, payload) {
       var req = {};
-      req.method = 'GET';
+      req.method = 'POST';
       req.url = prefix + '/data/load-balancers/{id}/start';
       req.url = req.url.replace(/{id}/, id);
+      req.data = payload;
       req.params = {};
       return $http(req).then(getData);
     };
@@ -348,9 +349,6 @@ define([], function () {
     };
     this.resolve.LoadBalancerController.search = function (GatewayData, $route) {
       return LoadBalancerController.search($route.current.params.name);
-    };
-    this.resolve.LoadBalancerController.startLoadBalancer = function (GatewayData, $route) {
-      return LoadBalancerController.startLoadBalancer($route.current.params.id);
     };
     this.PersonController = {};
     this.PersonController.create = function (personModel) {

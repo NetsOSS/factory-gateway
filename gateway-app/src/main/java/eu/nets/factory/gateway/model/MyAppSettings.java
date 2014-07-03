@@ -1,10 +1,10 @@
 package eu.nets.factory.gateway.model;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class MyAppSettings {
@@ -16,6 +16,8 @@ public class MyAppSettings {
 
     private boolean local;
 
+    private boolean windows;
+
     private boolean unitTest;
 
     @PostConstruct
@@ -23,6 +25,8 @@ public class MyAppSettings {
         userName = System.getProperty("user.name");
         local = environment.acceptsProfiles("local");
         unitTest = environment.acceptsProfiles("unitTest");
+
+        windows = System.getProperty("os.name").toLowerCase().contains("win");
     }
 
     public boolean loadResourcesFromDisk() {
@@ -49,8 +53,7 @@ public class MyAppSettings {
             throw new IllegalStateException("Could not find database URL for user " + userName);
         } else if (unitTest) {
             return "jdbc:h2:mem:.";
-        }
-            else {
+        } else {
             return environment.getRequiredProperty("database.url");
         }
     }
@@ -71,5 +74,9 @@ public class MyAppSettings {
 
     public boolean isLocal() {
         return local;
+    }
+
+    public boolean isWindows() {
+        return windows;
     }
 }
