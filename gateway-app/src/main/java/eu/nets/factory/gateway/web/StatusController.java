@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.transaction.Transactional;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -45,26 +49,38 @@ public class StatusController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/server-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public HashMap<Long, List<StatusModel>> getServerStatusForApplication(@PathVariable Long id) {
-        log.info("StatusController.getServerStatusForApplication, id={}", id);
+    public ApplicationStatusModel getServerStatusForApplication(@PathVariable Long id) {
 
-        HashMap<Long, List<StatusModel>> hashMap = new HashMap<>();
         Application application = applicationRepository.findOne(id);
-        if(application == null) { throw new EntityNotFoundException("Application", id); }
+        if(application == null) {
+            return null;
+        }
+
+        ApplicationStatusModel applicationStatusModel = new ApplicationStatusModel();
+        application.getApplicationInstances().
+                forEach(ai -> applicationStatusModel.applicationInstances.put(ai.getId(), new ApplicationInstanceStatusModel(ai)));
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for(LoadBalancer loadBalancer: loadBalancers) {
             List<StatusModel> statusModelsFromCSV = parseCSV(readCSV(loadBalancer));
-            List<StatusModel> models = new ArrayList<StatusModel>();
             for(StatusModel statusModel: statusModelsFromCSV) {
-                if(statusModel.data.get("pxname").equals(application.getName()) && !statusModel.data.get("svname").equals("BACKEND")) {
-                    models.add(statusModel);
+                if (!statusModel.data.get("pxname").equals(application.getName())) {
+                    continue;
+                }
+
+                String svname = statusModel.data.get("svname");
+
+                if (!svname.equals("BACKEND")) {
+                    applicationStatusModel.getByName(svname).ifPresent(m -> m.statuses.put(loadBalancer.getId(), statusModel.data));
+                }
+                else {
+
+                    applicationStatusModel.data.putAll(statusModel.data);
                 }
             }
-            hashMap.put(loadBalancer.getId(), models);
         }
 
-        return hashMap;
+        return applicationStatusModel;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/backend-status", produces = APPLICATION_JSON_VALUE)
@@ -75,6 +91,10 @@ public class StatusController {
         HashMap<Long, StatusModel> hashMap = new HashMap<>();
         Application application = applicationRepository.findOne(id);
         if(application == null) { throw new EntityNotFoundException("Application", id); }
+
+        if(application == null) {
+            return null;
+        }
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for(LoadBalancer loadBalancer: loadBalancers) {

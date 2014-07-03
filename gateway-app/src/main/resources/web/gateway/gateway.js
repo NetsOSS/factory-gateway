@@ -159,6 +159,7 @@ define([
         GatewayData.ApplicationGroupController.findById($scope.app.applicationGroupId).then(function (data) {
           $scope.appGroup = data;
         });
+        $scope.getStatusOfApplication();
       });
     };
 
@@ -189,10 +190,14 @@ define([
     };
 
     //--- Status --
-    GatewayData.StatusController.getBackendStatusForApplication($routeParams.id).then(function (data) {
-      $scope.statusApp = data;
-    });
-
+    $scope.getStatusOfApplication = function () {
+      GatewayData.StatusController.getBackendStatusForApplication($routeParams.id).then(function (data) {
+        $scope.statusApp = data;
+      });
+      GatewayData.StatusController.getServerStatusForApplication($routeParams.id).then(function (data) {
+        $scope.statusAppServers = data;
+      });
+    }
 
   });
 

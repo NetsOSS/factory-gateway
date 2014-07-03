@@ -9,10 +9,27 @@
 </ul>
 
 
-<h3>Status</h3>
-<h3>{{app.name}} is running in load balancer : </h3>
-<pre>{{statusApp}}</pre>
+<h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out : {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
 
+<h3>Instances / Servers: </h3>
+
+<div ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
+    <h4>App instance id : {{appInstId}}  {{appInstValue.name}}</h4>
+
+
+    <div ng-repeat="(lbId, status) in appInstValue.statuses">
+
+        <p> LB {{lbId}} | Server: name={{status.svname}}, status={{status.status}}</p>
+    </div>
+
+</div>
+<!--
+<table class="table">
+    <tr ng-repeat="(key,value) in statusAppServers">
+        <td>Key {{key}} , value:{{value}}</td>
+    </tr>
+
+</table>
 
 <table class="table">
 
@@ -26,19 +43,20 @@
 
     <tbody>
     <tr ng-repeat="appInst in app.applicationInstances">
-        <td>{{appInst.name}}</td>
-        <td>Status</td>
-        <td>Status</td>
+        <td>{{statusApp[72000].data.pxname}}</td>
+        <td>{{statusApp[72000].data.status}} : {{statusApp[72000].data.bin}}</td>
+
     </tr>
     </tbody>
 </table>
-
+<pre>{{statusApp|json}}</pre>
 <div class="list-group">
     <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in app.loadBalancers">
         <b> {{lb.name}}</b> ({{lb.id}}) {{lb.host}}:{{lb.port}}{{lb.installationPath}}
     </a>
 
 </div>
+-->
 <!--
 
 <div class="progress progress-striped active">
@@ -155,4 +173,6 @@
 
 
 <hr>
-<button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span> Delete application</button>
+<button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span>
+    Delete application
+</button>
