@@ -19,6 +19,14 @@ define([], function () {
     this.ApplicationController.findById = function (id) {
       var req = {};
       req.method = 'GET';
+      req.url = prefix + '/data/applications/{id}/models';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.findEntityById = function (id) {
+      var req = {};
+      req.method = 'GET';
       req.url = prefix + '/data/applications/{id}';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
@@ -77,6 +85,9 @@ define([], function () {
     this.resolve.ApplicationController.findById = function (GatewayData, $route) {
       return ApplicationController.findById($route.current.params.id);
     };
+    this.resolve.ApplicationController.findEntityById = function (GatewayData, $route) {
+      return ApplicationController.findEntityById($route.current.params.id);
+    };
     this.resolve.ApplicationController.getApplicationGroup = function (GatewayData, $route) {
       return ApplicationController.getApplicationGroup($route.current.params.id);
     };
@@ -99,6 +110,14 @@ define([], function () {
       return $http(req).then(getData);
     };
     this.ApplicationGroupController.findById = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/application-group/{id}/models';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationGroupController.findEntityById = function (id) {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/application-group/{id}';
@@ -160,6 +179,9 @@ define([], function () {
     this.resolve.ApplicationGroupController.findById = function (GatewayData, $route) {
       return ApplicationGroupController.findById($route.current.params.id);
     };
+    this.resolve.ApplicationGroupController.findEntityById = function (GatewayData, $route) {
+      return ApplicationGroupController.findEntityById($route.current.params.id);
+    };
     this.resolve.ApplicationGroupController.getApplications = function (GatewayData, $route) {
       return ApplicationGroupController.getApplications($route.current.params.id);
     };
@@ -180,6 +202,14 @@ define([], function () {
       return $http(req).then(getData);
     };
     this.ApplicationInstanceController.findById = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/instances/{id}/models';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationInstanceController.findEntityById = function (id) {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/instances/{id}';
@@ -224,6 +254,9 @@ define([], function () {
     this.resolve.ApplicationInstanceController.findById = function (GatewayData, $route) {
       return ApplicationInstanceController.findById($route.current.params.id);
     };
+    this.resolve.ApplicationInstanceController.findEntityById = function (GatewayData, $route) {
+      return ApplicationInstanceController.findEntityById($route.current.params.id);
+    };
     this.resolve.ApplicationInstanceController.listAllAppInsts = function (GatewayData, $route) {
       return ApplicationInstanceController.listAllAppInsts();
     };
@@ -251,7 +284,7 @@ define([], function () {
     this.LoadBalancerController.findById = function (id) {
       var req = {};
       req.method = 'GET';
-      req.url = prefix + '/data/load-balancers/{id}';
+      req.url = prefix + '/data/load-balancers/{id}/models';
       req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
@@ -261,6 +294,14 @@ define([], function () {
       req.method = 'GET';
       req.url = prefix + '/data/load-balancers/findBySsh/{sshKey}';
       req.url = req.url.replace(/{sshKey}/, sshKey);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.LoadBalancerController.findEntityById = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/load-balancers/{id}';
+      req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
     };
@@ -346,6 +387,9 @@ define([], function () {
     };
     this.resolve.LoadBalancerController.findBySshKey = function (GatewayData, $route) {
       return LoadBalancerController.findBySshKey($route.current.params.sshKey);
+    };
+    this.resolve.LoadBalancerController.findEntityById = function (GatewayData, $route) {
+      return LoadBalancerController.findEntityById($route.current.params.id);
     };
     this.resolve.LoadBalancerController.getApplications = function (GatewayData, $route) {
       return LoadBalancerController.getApplications($route.current.params.id);

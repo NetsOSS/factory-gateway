@@ -63,18 +63,21 @@ public class ApplicationController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppModel findById(@PathVariable Long id) {
-        log.info("ApplicationController.findById, id={}", id);
+    public Application findEntityById(@PathVariable Long id) {
+        log.info("ApplicationController.findEntityById, id={}", id);
 
         Application application = applicationRepository.findOne(id);
         if(application == null) { throw new EntityNotFoundException("Application", id); }
 
-
-        return new AppModel(application);
+        return application;
     }
 
-    private void assertValidId(Long id) {
-        findById(id);
+    @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/models", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppModel findById(@PathVariable Long id) {
+        log.info("ApplicationController.findById, id={}", id);
+
+        return new AppModel(findEntityById(id));
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -105,9 +108,7 @@ public class ApplicationController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationController.remove, id={}", id);
 
-        assertValidId(id);
-
-        Application application = applicationRepository.findOne(id);
+        Application application = findEntityById(id);
         List<ApplicationInstance> instances = application.getApplicationInstances();
         for(ApplicationInstance instance: instances) {
             applicationInstanceRepository.delete(instance);
@@ -131,10 +132,9 @@ public class ApplicationController {
     public AppModel update(@PathVariable Long id, @RequestBody AppModel appModel) {
         log.info("ApplicationController.update, id={}", id);
 
-        assertValidId(id);
-        if(!(applicationRepository.findOne(id).getName().equals(appModel.name))) { assertNameUnique(appModel.name); }
+        Application application = findEntityById(id);
+        if(!(application.getName().equals(appModel.name))) { assertNameUnique(appModel.name); }
 
-        Application application = applicationRepository.findOne(id);
         application.setName(appModel.getName());
         application.setPublicUrl(appModel.getPublicUrl());
         application.setEmails(appModel.getEmails());
@@ -148,9 +148,7 @@ public class ApplicationController {
     public AppGroupModel getApplicationGroup(@PathVariable Long id) {
         log.info("ApplicationController.getApplicationGroup, id={}", id);
 
-        assertValidId(id);
-
-        Application application = applicationRepository.findOne(id);
+        Application application = findEntityById(id);
         return new AppGroupModel(application.getApplicationGroup());
     }
 
@@ -159,9 +157,7 @@ public class ApplicationController {
     public List<LoadBalancerModel> getLoadBalancers(@PathVariable Long id) {
         log.info("ApplicationController.getLoadBalancers, id={}", id);
 
-        assertValidId(id);
-
-        Application application = applicationRepository.findOne(id);
+        Application application = findEntityById(id);
         return application.getLoadBalancers().stream().map(LoadBalancerModel::new).collect(toList());
     }
 }

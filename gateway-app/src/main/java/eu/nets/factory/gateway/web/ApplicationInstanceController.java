@@ -58,16 +58,21 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppInstModel findById(@PathVariable Long id) {
-        log.info("ApplicationInstanceController.findById, id={}", id);
+    public ApplicationInstance findEntityById(@PathVariable Long id) {
+        log.info("ApplicationInstanceController.findEntityById, id={}", id);
 
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
         if(applicationInstance == null) { throw new EntityNotFoundException("ApplicationInstance", id); }
-        return new AppInstModel(applicationInstance);
+
+        return applicationInstance;
     }
 
-    private void assertValidId(Long id) {
-        findById(id);
+    @RequestMapping(method = RequestMethod.GET, value = "/data/instances/{id}/models", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppInstModel findById(@PathVariable Long id) {
+        log.info("ApplicationInstanceController.findById, id={}", id);
+
+        return new AppInstModel(findEntityById(id));
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -100,9 +105,7 @@ public class ApplicationInstanceController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationInstanceController.remove, id={}", id);
 
-        assertValidId(id);
-
-        ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
+        ApplicationInstance applicationInstance = findEntityById(id);
         Application application = applicationInstance.getApplication();
         application.removeApplicationInstance(applicationInstance);
         applicationRepository.save(application);
@@ -115,10 +118,9 @@ public class ApplicationInstanceController {
     public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.update, id={}", id);
 
-        assertValidId(id);
-        if(!(applicationInstanceRepository.findOne(id).getName().equals(appInstModel.name))) { assertNameUnique(appInstModel.name); }
+        ApplicationInstance applicationInstance = findEntityById(id);
+        if(!(applicationInstance.getName().equals(appInstModel.name))) { assertNameUnique(appInstModel.name); }
 
-        ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
         applicationInstance.setName(appInstModel.name);
         applicationInstance.setPath(appInstModel.path);
         applicationInstance.setHost(appInstModel.host);

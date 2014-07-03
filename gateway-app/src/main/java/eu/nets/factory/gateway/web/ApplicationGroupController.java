@@ -62,16 +62,21 @@ public class ApplicationGroupController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-group/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppGroupModel findById(@PathVariable Long id) {
-        log.info("ApplicationGroupController.findById, id={}", id);
+    public ApplicationGroup findEntityById(@PathVariable Long id) {
+        log.info("ApplicationGroupController.findEntityById, id={}", id);
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
         if(applicationGroup == null) { throw new EntityNotFoundException("ApplicationGroup", id); }
-        return new AppGroupModel(applicationGroup);
+
+        return applicationGroup;
     }
 
-    private void assertValidId(Long id) {
-        findById(id);
+    @RequestMapping(method = RequestMethod.GET, value = "/data/application-group/{id}/models", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppGroupModel findById(@PathVariable Long id) {
+        log.info("ApplicationGroupController.findById, id={}", id);
+
+        return new AppGroupModel(findEntityById(id));
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -97,9 +102,7 @@ public class ApplicationGroupController {
     public void remove(@PathVariable Long id) {
         log.info("ApplicationGroupController.remove, id={}", id);
 
-        assertValidId(id);
-
-        ApplicationGroup applicationGroup =  applicationGroupRepository.findOne(id);
+        ApplicationGroup applicationGroup =  findEntityById(id);
         List<Application> list = applicationGroup.getApplications();
 
         for(Iterator<Application> it = list.iterator(); it.hasNext();) {
@@ -127,10 +130,9 @@ public class ApplicationGroupController {
     public AppGroupModel update(@PathVariable Long id, @RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.update, id={}", id);
 
-        assertValidId(id);
-        if(!(applicationGroupRepository.findOne(id).getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }
+        ApplicationGroup applicationGroup = findEntityById(id);
+        if(!(applicationGroup.getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }
 
-        ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
         applicationGroup.setName(appGroupModel.name);
 
         applicationGroup = applicationGroupRepository.save(applicationGroup);
@@ -142,13 +144,10 @@ public class ApplicationGroupController {
     public List<AppModel> getApplications(@PathVariable Long id) {
         log.info("ApplicationGroupController.getApplications() LORD   id= {}",id);
 
-        assertValidId(id);
+        ApplicationGroup applicationGroup = findEntityById(id);
+        log.info("ApplicationGroupController.getApplications() : name {}", applicationGroup.getName());
 
-        ApplicationGroup g = applicationGroupRepository.findOne(id);
-        log.info("ApplicationGroupController.getApplications() : isNull ? {} ",g==null);
-        log.info("ApplicationGroupController.getApplications() : name {}",g.getName());
-
-        return applicationGroupRepository.findOne(id).getApplications().stream().map(AppModel::new).collect(toList());
+        return applicationGroup.getApplications().stream().map(AppModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{id}/remove-application", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

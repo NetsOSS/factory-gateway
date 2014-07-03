@@ -34,6 +34,9 @@ public class LoadBalancerController {
     private ApplicationRepository applicationRepository;
 
     @Autowired
+    private ApplicationController applicationController;
+
+    @Autowired
     private ConfigGeneratorService configGeneratorService;
 
     @Autowired
@@ -71,16 +74,21 @@ public class LoadBalancerController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LoadBalancerModel findById(@PathVariable Long id) {
-        log.info("LoadBalancerController.findById, id={}", id);
+    public LoadBalancer findEntityById(@PathVariable Long id) {
+        log.info("LoadBalancerController.findEntityById, id={}", id);
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         if(loadBalancer == null) { throw new EntityNotFoundException("LoadBalancer", id); }
-        return new LoadBalancerModel(loadBalancer);
+
+        return loadBalancer;
     }
 
-    private void assertValidId(Long id) {
-        findById(id);
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/models", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LoadBalancerModel findById(@PathVariable Long id) {
+        log.info("LoadBalancerController.findById, id={}", id);
+
+        return new LoadBalancerModel(findEntityById(id));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/findBySsh/{sshKey}", produces = APPLICATION_JSON_VALUE)
@@ -141,11 +149,9 @@ public class LoadBalancerController {
     public void remove(@PathVariable Long id) {
         log.info("LoadBalancerController.remove, id={}", id);
 
-        assertValidId(id);
-
-        List<Application> applications = loadBalancerRepository.findOne(id).getApplications();
-        for(Application application : applications) {
-            application.removeLoadBalancer(loadBalancerRepository.findOne(id));
+        LoadBalancer loadBalancer = findEntityById(id);
+        for(Application application :loadBalancer.getApplications()) {
+            application.removeLoadBalancer((loadBalancer));
         }
 
          loadBalancerRepository.delete(id);
@@ -156,8 +162,7 @@ public class LoadBalancerController {
     public LoadBalancerModel update(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.update, id={}", id);
 
-        assertValidId(id);
-        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        LoadBalancer loadBalancer = findEntityById(id);
         if(!(loadBalancer.getName().equals(loadBalancerModel.name))) { assertNameUnique(loadBalancerModel.name); }
         if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getInstallationPath().equals(loadBalancerModel.installationPath))) { assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath); }
         if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getPublicPort() == loadBalancerModel.publicPort)) { assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort); }
@@ -177,16 +182,13 @@ public class LoadBalancerController {
     public LoadBalancerModel addApplication(@PathVariable Long id, @RequestBody Long applicationId) {
         log.info("LoadBalancerController.addApplication() LB.id={} , App.id={} ", id, applicationId);
 
-        assertValidId(id);
-        if(applicationRepository.findOne(applicationId) == null) {
-            throw new EntityNotFoundException("Application", applicationId);
-        }
+        LoadBalancer loadBalancer = findEntityById(id);
+        Application application = applicationController.findEntityById(applicationId);
 
-        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
-        loadBalancer.addApplication(applicationRepository.findOne(applicationId));
+        loadBalancer.addApplication(application);
         loadBalancer = loadBalancerRepository.save(loadBalancer);
-        Application application = applicationRepository.findOne(applicationId);
         application.addLoadBalancer(loadBalancer);
+
         return new LoadBalancerModel(loadBalancer);
     }
 
@@ -195,9 +197,7 @@ public class LoadBalancerController {
     public List<AppModel> getApplications(@PathVariable Long id) {
         log.info("LoadBalancerController.getApplications, id={}", id);
 
-        assertValidId(id);
-
-        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        LoadBalancer loadBalancer = findEntityById(id);
         return loadBalancer.getApplications().stream().map(AppModel::new).collect(toList());
     }
 
@@ -206,18 +206,14 @@ public class LoadBalancerController {
     public LoadBalancerModel removeApplicationFromLoadbalancer(@PathVariable Long id, @RequestBody Long applicationId) {
         log.info("LoadBalancerController.removeApplication(), id={} , App.id={}", id, applicationId);
 
-        assertValidId(id);
-        if(applicationRepository.findOne(applicationId) == null) {
-            throw new EntityNotFoundException("Application", applicationId);
-        }
-
-        Application application = applicationRepository.findOne(applicationId);
-        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        LoadBalancer loadBalancer = findEntityById(id);
+        Application application = applicationController.findEntityById(applicationId);
 
         application.removeLoadBalancer(loadBalancer);
         loadBalancer.removeApplication(application);
         applicationRepository.save(application);
         loadBalancerRepository.save(loadBalancer);
+
         return new LoadBalancerModel(loadBalancer);
     }
 
@@ -226,13 +222,12 @@ public class LoadBalancerController {
     public String pushConfiguration(@PathVariable Long id) {
         log.info("LoadBalancerController.pushConfiguration() id={}", id);
 
-        assertValidId(id);
-
-        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        LoadBalancer loadBalancer = findEntityById(id);
         String installationPath = loadBalancer.getInstallationPath();
 
         String strConfig = configGeneratorService.generateConfig(loadBalancer);
         fileWriterService.writeConfigFile(installationPath, CFG_FILE, strConfig);
+
         return strConfig;
     }
 
@@ -240,10 +235,7 @@ public class LoadBalancerController {
     public void startLoadBalancer(@PathVariable Long id) {
         log.info("LoadBalancerController.startLoadBalancer() id={}", id);
 
-        assertValidId(id);
-
-        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
-
+        LoadBalancer loadBalancer = findEntityById(id);
         start(loadBalancer);
     }
 
@@ -272,7 +264,7 @@ public class LoadBalancerController {
     public void getStatus(@PathVariable Long id) {
         log.info("LoadBalancerController.getStatus() LB.id={}",id);
 
-        assertValidId(id);
+        findEntityById(id);
         statusController.getStatusForLoadbalancer(id);
     }
 }
