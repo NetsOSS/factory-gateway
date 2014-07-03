@@ -391,6 +391,14 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.StatusController.getServerStatusForApplication = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/applications/{id}/server-status';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.StatusController.getStatusForLoadbalancer = function (id) {
       var req = {};
       req.method = 'GET';
@@ -411,6 +419,9 @@ define([], function () {
     this.resolve.StatusController = {};
     this.resolve.StatusController.getBackendStatusForApplication = function (GatewayData, $route) {
       return StatusController.getBackendStatusForApplication($route.current.params.id);
+    };
+    this.resolve.StatusController.getServerStatusForApplication = function (GatewayData, $route) {
+      return StatusController.getServerStatusForApplication($route.current.params.id);
     };
     this.resolve.StatusController.getStatusForLoadbalancer = function (GatewayData, $route) {
       return StatusController.getStatusForLoadbalancer($route.current.params.id);

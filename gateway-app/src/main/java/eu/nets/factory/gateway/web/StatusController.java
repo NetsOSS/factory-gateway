@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import edu.umd.cs.findbugs.ba.bcp.Load;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationRepository;
@@ -39,8 +40,29 @@ public class StatusController {
     @Autowired
     EmailService emailService;
 
-    public HashMap<LoadBalancer, List<StatusModel>> getServerStatusForApplication(@PathVariable Long id) {
-        return null;
+    @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/server-status", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public HashMap<Long, List<StatusModel>> getServerStatusForApplication(@PathVariable Long id) {
+
+        HashMap<Long, List<StatusModel>> hashMap = new HashMap<Long, List<StatusModel>>();
+        Application application = applicationRepository.findOne(id);
+        if(application == null) {
+            return null;
+        }
+
+        List<LoadBalancer> loadBalancers = application.getLoadBalancers();
+        for(LoadBalancer loadBalancer: loadBalancers) {
+            List<StatusModel> statusModelsFromCSV = parseCSV(readCSV(loadBalancer));
+            List<StatusModel> models = new ArrayList<StatusModel>();
+            for(StatusModel statusModel: statusModelsFromCSV) {
+                if(statusModel.data.get("pxname").equals(application.getName()) && !statusModel.data.get("svname").equals("BACKEND")) {
+                    models.add(statusModel);
+                }
+            }
+            hashMap.put(loadBalancer.getId(), models);
+        }
+
+        return hashMap;
     }
 
 
@@ -50,6 +72,10 @@ public class StatusController {
 
         HashMap<Long, StatusModel> hashMap = new HashMap<Long, StatusModel>();
         Application application = applicationRepository.findOne(id);
+
+        if(application == null) {
+            return null;
+        }
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for(LoadBalancer loadBalancer: loadBalancers) {
@@ -96,8 +122,6 @@ public class StatusController {
         String[] sArr = stringWriter.toString().split("\n");
         for(String s : sArr)
             result.add(s);
-
-
 
         return result;
     }
