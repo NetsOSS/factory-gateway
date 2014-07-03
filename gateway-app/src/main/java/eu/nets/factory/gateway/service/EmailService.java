@@ -12,7 +12,8 @@ public class EmailService {
     private final Logger log = getLogger(getClass());
 
     public void sendEmail(){
-        log.info("emailService. Not implemented yet ");
+        log.info("EmailService.sendEmail");
+        log.info("\temailService. Not implemented yet ");
 
 
     }

@@ -41,7 +41,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppModel> listAllApps() {
-        log.info("ApplicationController.list");
+        log.info("ApplicationController.listAllApps");
         return  applicationRepository.findAll().stream().map(AppModel::new).collect(toList());
     }
 
@@ -64,7 +64,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppModel findById(@PathVariable Long id) {
-        log.info("ApplicationController.findById, name={}", id);
+        log.info("ApplicationController.findById, id={}", id);
 
         Application application = applicationRepository.findOne(id);
         if(application == null) { throw new EntityNotFoundException("Application", id); }
@@ -103,7 +103,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
-        log.info("ApplicationController.remove");
+        log.info("ApplicationController.remove, id={}", id);
 
         assertValidId(id);
 
@@ -129,7 +129,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppModel update(@PathVariable Long id, @RequestBody AppModel appModel) {
-        log.info("ApplicationController.update");
+        log.info("ApplicationController.update, id={}", id);
 
         assertValidId(id);
         if(!(applicationRepository.findOne(id).getName().equals(appModel.name))) { assertNameUnique(appModel.name); }
@@ -146,7 +146,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/application-group", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel getApplicationGroup(@PathVariable Long id) {
-        log.info("ApplicationController.getGroup");
+        log.info("ApplicationController.getApplicationGroup, id={}", id);
 
         assertValidId(id);
 
@@ -157,7 +157,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<LoadBalancerModel> getLoadBalancers(@PathVariable Long id) {
-        log.info("ApplicationController.getLoadBalancers");
+        log.info("ApplicationController.getLoadBalancers, id={}", id);
 
         assertValidId(id);
 

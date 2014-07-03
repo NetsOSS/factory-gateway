@@ -36,7 +36,7 @@ public class ApplicationInstanceController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppInstModel> listAllAppInsts() {
-        log.info("ApplicationInstanceController.list");
+        log.info("ApplicationInstanceController.listAllAppInsts");
         return  applicationInstanceRepository.findAll().stream().map(AppInstModel::new).collect(toList());
     }
 
@@ -59,7 +59,7 @@ public class ApplicationInstanceController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel findById(@PathVariable Long id) {
-        log.info("ApplicationInstanceController.findById, name={}", id);
+        log.info("ApplicationInstanceController.findById, id={}", id);
 
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
         if(applicationInstance == null) { throw new EntityNotFoundException("ApplicationInstance", id); }
@@ -88,6 +88,8 @@ public class ApplicationInstanceController {
      }
 
     private void assertNameUnique(String name) {
+        log.info("ApplicationInstanceController.assertNameUnique, name={}", name);
+
         if(applicationInstanceRepository.countByName(name) > 0L) {
             throw new GatewayException("Could not create Application Instance. Name '" + name + "' already exists.");
         }
@@ -96,7 +98,7 @@ public class ApplicationInstanceController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
-        log.info("ApplicationInstanceController.remove");
+        log.info("ApplicationInstanceController.remove, id={}", id);
 
         assertValidId(id);
 
@@ -111,7 +113,7 @@ public class ApplicationInstanceController {
     @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
-        log.info("ApplicationInstanceController.update");
+        log.info("ApplicationInstanceController.update, id={}", id);
 
         assertValidId(id);
         if(!(applicationInstanceRepository.findOne(id).getName().equals(appInstModel.name))) { assertNameUnique(appInstModel.name); }

@@ -49,10 +49,10 @@ public class StatusControllerTest {
             csvString.set(i, csvString.get(i).replaceAll("\n", ""));
         }
 
-        //Get the list of statusmodel from controller
+        //Get the list of statusModels from controller
         List<StatusModel> parsedCsvString = statusController.parseCSV(csvString);
 
-        //First line in CSV is the column-names
+        //First line in CSV are the column-names
         String[] names = csvString.get(0).split(",");
         names[0] = names[0].replaceAll("# ", "");
 
@@ -63,47 +63,8 @@ public class StatusControllerTest {
                 rebuiltCsvString += parsedCsvString.get(i).data.get(names[j]) + ",";
             }
 
+            System.out.println(rebuiltCsvString);
             assertThat(rebuiltCsvString).isNotNull().isEqualTo(csvString.get(i+1));
-            //assertThat(rebuiltCsvString.substring(0, rebuiltCsvString.length()-1)).isNotNull().isEqualTo(csvString.get(i+1));
         }
-
-
-
-        /*
-        //First line in CSV is the column-names
-        String[] names = csvString.get(0).split(",");
-        names[0] = names[0].replaceAll("# ", "");
-
-        //Get the list of statusmodel from controller
-        List<StatusModel> list = statusController.parseCSV(csvString);
-
-        //Create new statusmodels to test with
-        List<StatusModel> testModels = new ArrayList<StatusModel>();
-        boolean start = false;
-
-        for(int i = 0; i < csvString.size(); i++) {
-            if(csvString.get(i).startsWith("http-in")) {
-                start = true;
-            }
-            if(start) {
-                StatusModel model = new StatusModel();
-                //System.out.println("\n\tsections: " + csvString.get(i).length());
-                for (int j = 0; j < names.length; j++) {
-                    model.data.put(names[j], csvString.get(i).split(",")[j]);
-                    //System.out.println("\t\t'" + model.data.get(names[j]) + "'");
-                }
-                testModels.add(model);
-            }
-        }
-
-        assertEquals(testModels.size(), list.size());
-
-        for(int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < names.length; j++) {
-                assertEquals(list.get(i).data.get(names[j]), testModels.get(i).data.get(names[j]));
-            }
-
-        }
-        */
     }
 }

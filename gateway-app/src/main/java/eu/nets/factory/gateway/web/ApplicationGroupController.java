@@ -40,7 +40,7 @@ public class ApplicationGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-groups", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppGroupModel> listAllAppGroups() {
-        log.info("ApplicationGroupController.list");
+        log.info("ApplicationGroupController.listAllAppGroups");
         return  applicationGroupRepository.findAll().stream().map(AppGroupModel::new).collect(toList());
     }
 
@@ -63,7 +63,7 @@ public class ApplicationGroupController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-group/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel findById(@PathVariable Long id) {
-        log.info("ApplicationGroupController.findById, name={}", id);
+        log.info("ApplicationGroupController.findById, id={}", id);
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
         if(applicationGroup == null) { throw new EntityNotFoundException("ApplicationGroup", id); }
@@ -95,7 +95,7 @@ public class ApplicationGroupController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/application-groups/{id}")
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
-        log.info("ApplicationGroupController.remove");
+        log.info("ApplicationGroupController.remove, id={}", id);
 
         assertValidId(id);
 
@@ -125,7 +125,7 @@ public class ApplicationGroupController {
     @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel update(@PathVariable Long id, @RequestBody AppGroupModel appGroupModel) {
-        log.info("ApplicationGroupController.update");
+        log.info("ApplicationGroupController.update, id={}", id);
 
         assertValidId(id);
         if(!(applicationGroupRepository.findOne(id).getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }
