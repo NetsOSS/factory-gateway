@@ -96,7 +96,7 @@ public class ConfigGeneratorService {
         pw.println(TAB + "global");
         pw.println(TAB2 + "daemon");
         pw.println(TAB2 + "maxconn 256");
-        pw.println(TAB2 + "pidfile haproxy.pid");
+//        pw.println(TAB2 + "pidfile haproxy.pid");
         pw.println();
         pw.println(TAB + "defaults");
         pw.println(TAB2 + "mode http");

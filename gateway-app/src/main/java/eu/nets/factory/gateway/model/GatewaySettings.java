@@ -85,10 +85,6 @@ public class GatewaySettings {
             throw new RuntimeException("Not supported in unit tests.");
         }
 
-        String haproxyBinWindows = environment.getRequiredProperty("haproxy.bin.windows");
-
-        String haproxyBinLinux = environment.getRequiredProperty("haproxy.bin.linux");
-
-        return windows ? haproxyBinWindows : haproxyBinLinux;
+        return windows ? environment.getRequiredProperty("haproxy.bin.windows") : environment.getRequiredProperty("haproxy.bin.linux");
     }
 }

@@ -2,21 +2,24 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
-import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationRepository;
+import eu.nets.factory.gateway.model.LoadBalancer;
+import eu.nets.factory.gateway.model.LoadBalancerRepository;
 import eu.nets.factory.gateway.service.ConfigGeneratorService;
 import eu.nets.factory.gateway.service.FileWriterService;
+import eu.nets.factory.gateway.service.HaProxyService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.util.MimeTypeUtils.*;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Controller
 @Transactional
@@ -25,7 +28,6 @@ public class LoadBalancerController {
     private final Logger log = getLogger(getClass());
 
     private static final String CFG_FILE = "haproxy.cfg";
-    private static final String PID_FILE = "haproxy.pid";
 
     @Autowired
     private LoadBalancerRepository loadBalancerRepository;
@@ -43,10 +45,10 @@ public class LoadBalancerController {
     private FileWriterService fileWriterService;
 
     @Autowired
-    private StatusController statusController;
+    private HaProxyService haProxyService;
 
     @Autowired
-    private GatewaySettings settings;
+    private StatusController statusController;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -236,28 +238,7 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.startLoadBalancer() id={}", id);
 
         LoadBalancer loadBalancer = findEntityById(id);
-        start(loadBalancer);
-    }
-
-    private String start(LoadBalancer loadBalancer) {
-        String installationPath = loadBalancer.getInstallationPath();
-
-        String bin = settings.getHaproxyBin();
-
-        // Start HAProxy
-        String command = bin + " -f " + installationPath + "/" + CFG_FILE + " -p " + installationPath + "/" + PID_FILE + " -sf $(cat " + installationPath + "/" + PID_FILE + ")";
-
-        log.debug(command);
-        try {
-            Process process = Runtime.getRuntime().exec(command);
-            log.debug("Is process is alive? - " + process.isAlive());
-        } catch (IOException e) {
-            String errorMessage = "Loadbalancer could not be started: " + e.getLocalizedMessage();
-            log.warn(errorMessage, e);
-            throw new GatewayException(errorMessage);
-        }
-        log.info("started LoadBalancer");
-        return "success";
+        haProxyService.start(loadBalancer);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/stats")
