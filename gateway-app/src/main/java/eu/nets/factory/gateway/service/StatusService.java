@@ -17,9 +17,6 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by kwlar on 03.07.2014.
- */
 @Service
 public class StatusService {
     private final Logger log = getLogger(getClass());

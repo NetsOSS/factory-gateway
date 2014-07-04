@@ -16,9 +16,6 @@ import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
-/**
- * Created by kwlar on 19.06.2014.
- */
 @Transactional
 @Controller
 public class ApplicationController {

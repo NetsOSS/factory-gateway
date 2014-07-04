@@ -6,10 +6,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by kwlar on 19.06.2014.
- */
-
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = "name")})
@@ -18,7 +14,7 @@ public class ApplicationGroup extends AbstractEntity {
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "applicationGroup")//, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "applicationGroup")
     private List<Application> applications = new ArrayList<>();
 
 

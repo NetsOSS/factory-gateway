@@ -10,10 +10,6 @@ import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by kwlar on 19.06.2014.
- */
-
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name"})})
@@ -26,7 +22,7 @@ public class Application extends AbstractEntity {
     @Column(nullable = false, name = "publicurl")
     private String publicUrl;
 
-    @ManyToMany//(fetch = FetchType.EAGER)
+    @ManyToMany
     //@Cascade(CascadeType.DELETE)
     @JoinTable(name = "load_balancer_application",
                 joinColumns = {@JoinColumn(name = "application_id")},

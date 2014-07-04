@@ -27,10 +27,7 @@ public class LoadBalancer extends AbstractEntity{
 
     private int publicPort;
 
-    @ManyToMany(targetEntity = Application.class, mappedBy = "loadBalancers")//(fetch = FetchType.EAGER)
-//    @JoinTable(name = "load_balancer_application",
-//            joinColumns = {@JoinColumn(name = "load_balancer_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "application_id")})
+    @ManyToMany(targetEntity = Application.class, mappedBy = "loadBalancers")
     private List<Application> applications;
 
 
@@ -85,7 +82,6 @@ public class LoadBalancer extends AbstractEntity{
     public List<Application> getApplications() {
         return applications;
     }
-    // public void setApplications(List<Application> applications) { this.applications = applications; }
     public void addApplication(Application application) {
         this.applications.add(application);
     }
