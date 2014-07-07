@@ -22,6 +22,10 @@ public class Application extends AbstractEntity {
     @Column(nullable = false, name = "publicurl")
     private String publicUrl;
 
+    @Pattern(regexp = "^/[a-zA-Z].*")
+    @Column(nullable = false, name = "checkpath")
+    private String checkPath;
+
     @ManyToMany
     //@Cascade(CascadeType.DELETE)
     @JoinTable(name = "load_balancer_application",
@@ -41,11 +45,12 @@ public class Application extends AbstractEntity {
 
     private String emails;
 
-    public Application(String name, String url, ApplicationGroup applicationGroup, String emails) {
+    public Application(String name, String url, ApplicationGroup applicationGroup, String emails, String checkPath) {
         this.name = name;
         this.publicUrl = url;
         this.applicationGroup = applicationGroup;
         this.emails=emails;
+        this.checkPath = checkPath;
     }
 
     public Application(){}
@@ -62,6 +67,14 @@ public class Application extends AbstractEntity {
 
     public String getPublicUrl(){ return publicUrl; }
     public void setPublicUrl(String url) { this.publicUrl = url; }
+
+    public String getCheckPath() {
+        return checkPath;
+    }
+
+    public void setCheckPath(String checkPath) {
+        this.checkPath = checkPath;
+    }
 
     public ApplicationGroup getApplicationGroup() {
         return applicationGroup;

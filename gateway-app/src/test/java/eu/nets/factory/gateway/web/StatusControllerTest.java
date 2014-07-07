@@ -64,7 +64,7 @@ public class StatusControllerTest {
         AppGroupModel groupModel = new AppGroupModel(groupOne);
         groupModel = applicationGroupController.create(groupModel);
 
-        Application application = new Application("Finch", "/finch", groupOne, "email");
+        Application application = new Application("Finch", "/finch", groupOne, "email", "/finch/ping");
         AppModel appModel = new AppModel(application);
         appModel.applicationGroupId = groupModel.getId();
         appModel = applicationController.create(appModel);

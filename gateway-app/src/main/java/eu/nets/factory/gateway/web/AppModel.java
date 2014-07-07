@@ -17,6 +17,7 @@ public  class AppModel {
     public List<LoadBalancerModel> loadBalancers = new ArrayList<>();
     public Long applicationGroupId;
     public String emails;
+    public String checkPath;
 
     public AppModel() { }
 
@@ -26,19 +27,20 @@ public  class AppModel {
     }
 
     private AppModel(Application application, Boolean summary) {
-        this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup(),application.getEmails());
+        this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup(),application.getEmails(), application.getCheckPath());
         if(!summary) {
             this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
             this.loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
         }
     }
 
-    public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup,String emails) {
+    public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup,String emails, String checkPath) {
         this.id = id;
         this.name = name;
         this.publicUrl = url;
         this.applicationGroupId = applicationGroup.getId();
         this.emails=emails;
+        this.checkPath = checkPath;
     }
 
     public static AppModel summary(Application application) {
@@ -58,5 +60,9 @@ public  class AppModel {
 
     public String getEmails() {
         return emails;
+    }
+
+    public String getCheckPath() {
+        return checkPath;
     }
 }

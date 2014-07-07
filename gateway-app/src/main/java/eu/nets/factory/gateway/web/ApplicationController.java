@@ -85,7 +85,7 @@ public class ApplicationController {
         assertNameUnique(applicationModel.name);
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(applicationModel.getApplicationGroupId());
-        Application application = new Application(applicationModel.getName(), applicationModel.getPublicUrl(), applicationGroup,applicationModel.getEmails());
+        Application application = new Application(applicationModel.getName(), applicationModel.getPublicUrl(), applicationGroup,applicationModel.getEmails(), applicationModel.getCheckPath());
         application = applicationRepository.save(application);
 
         applicationGroup.addApplication(application);
