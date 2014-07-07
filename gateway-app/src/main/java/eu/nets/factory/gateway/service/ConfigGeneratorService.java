@@ -48,6 +48,7 @@ public class ConfigGeneratorService {
             // backend
             printWriter.println();
             printWriter.println(TAB + "backend " + application.getName());
+            printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 //            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
             // server
