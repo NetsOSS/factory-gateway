@@ -46,7 +46,9 @@ public class StatusService {
             }
             bufferedReader.close();
         } catch (Exception e) {
-            e.printStackTrace();
+           // e.printStackTrace();
+            throw new GatewayException("Cannot connect to HAproxy.");
+
         }
 
         String[] sArr = stringWriter.toString().split("\n");
