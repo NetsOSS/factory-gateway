@@ -2,10 +2,7 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
-import eu.nets.factory.gateway.model.Application;
-import eu.nets.factory.gateway.model.ApplicationRepository;
-import eu.nets.factory.gateway.model.LoadBalancer;
-import eu.nets.factory.gateway.model.LoadBalancerRepository;
+import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.service.EmailService;
 import eu.nets.factory.gateway.service.StatusService;
 import org.slf4j.Logger;
@@ -38,6 +35,9 @@ public class StatusController {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ApplicationInstanceRepository applicationInstanceRepository;
 
     @Autowired
     StatusService statusService;
@@ -91,6 +91,29 @@ public class StatusController {
 
         return applicationStatusModel;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/applicationInstance/{id}/status", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public  HashMap<Long, StatusModel> getStatusForOneServer(@PathVariable Long id) {
+        log.info("StatusController.getStatusForOneServer, id={}", id);
+        ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
+
+        Application application = applicationInstance.getApplication();
+
+        HashMap<Long, StatusModel> appInstStatusModelList = new HashMap<>();
+        for(LoadBalancer lb : application.getLoadBalancers()){
+           List<StatusModel> list = statusService.getStatusForLoadBalancer(lb.getId());
+
+          for (StatusModel statusModel : list){
+              if(statusModel.data.get("svname").equals(applicationInstance.getName())){
+                  appInstStatusModelList.put(lb.getId(),statusModel);
+              }
+          }
+        }
+
+        return appInstStatusModelList;
+    }
+
 
     public List<StatusModel> getServerStatus(List<StatusModel> statusModelsFromCSV, Application application ) {
 
