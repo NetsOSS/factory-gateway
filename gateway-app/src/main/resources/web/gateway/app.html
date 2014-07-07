@@ -6,22 +6,35 @@
     <li>Number of instances : {{app.applicationInstances.length}}</li>
     <li>In group : {{appGroup.name}} ({{app.applicationGroupId}})</li>
 
+    <li>In load balancers:
+        <ul ng-repeat="lbForApp in app.loadBalancers">
+            <li>{{lbForApp.name}} ({{lbForApp.id}})</li>
+        </ul>
+    </li>
+
+
 </ul>
 
 
-<h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out : {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
+<h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out :
+    {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
 
 <h3>Instances / Servers: </h3>
+<div class="row">
+    <div class="col-sm-6 panel panel-default" ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
 
-<div ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
-    <h4>App instance id : {{appInstId}}  {{appInstValue.name}}</h4>
+        <div class="panel-body">
+            <h4>App instance id : {{appInstId}} {{appInstValue.name}}</h4>
+        </div>
 
+        <div ng-repeat="(lbId, status) in appInstValue.statuses">
 
-    <div ng-repeat="(lbId, status) in appInstValue.statuses">
+            <div class="alert" role="alert" ng-class="{OPEN:'alert-info', UP:'alert-success', MAINT:'alert-warning', DOWN:'alert-danger','':'active'}[status.status]">
+                LB {{lbId}} | Server: name={{status.svname}}, status={{status.status}} , in/out : {{status.bin}}/{{status.bout}}
+            </div>
+        </div>
 
-        <p> LB {{lbId}} | Server: name={{status.svname}}, status={{status.status}}</p>
     </div>
-
 </div>
 <!--
 <table class="table">
