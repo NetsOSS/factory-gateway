@@ -10,6 +10,7 @@ import eu.nets.factory.gateway.service.EmailService;
 import eu.nets.factory.gateway.service.StatusService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,12 @@ public class StatusController {
     @Autowired
     EmailService emailService;
 
+
+
+
+
+
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/server-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public ApplicationStatusModel getServerStatusForApplication(@PathVariable Long id) {
@@ -61,7 +68,8 @@ public class StatusController {
         for(LoadBalancer loadBalancer: loadBalancers) {
 
             try {
-                List<StatusModel> statusModelsFromCSV = parseCSV(readCSV(loadBalancer));
+
+                List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(id);
                 for (StatusModel statusModel : statusModelsFromCSV) {
                     if (!statusModel.data.get("pxname").equals(application.getName())) {
                         continue;
@@ -110,7 +118,9 @@ public class StatusController {
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for(LoadBalancer loadBalancer: loadBalancers) {
-            List<StatusModel> models = parseCSV(readCSV(loadBalancer));
+
+            List<StatusModel> models =  statusService.getStatusForLoadBalancer(loadBalancer.getId());
+
             hashMap.put(loadBalancer.getId(), getBackendServer(models, application));
         }
 
@@ -126,12 +136,13 @@ public class StatusController {
         }
         return null;
     }
-
-    public List<String> readCSV(LoadBalancer loadBalancer) {
+    //Should be private. but used in test. fix later
+   public List<String> readCSV(LoadBalancer loadBalancer) {
         log.info("StatusController.getStatus");
+     // return  statusService.getStatusForLoadBalancer(loadBalancer.getId());
         return statusService.readCSV(loadBalancer);
     }
-
+    //Should be private. but used in test. fix later
     public List<StatusModel> parseCSV(List<String> csvString) {
         log.info("StatusController.parseCSV");
         return statusService.parseCSV(csvString);
@@ -145,9 +156,7 @@ public class StatusController {
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         if(loadBalancer == null) { throw new EntityNotFoundException("LoadBalancer", id); }
 
-        List<String> csvString = readCSV(loadBalancer);
-
-        return parseCSV(csvString);
+        return statusService.getStatusForLoadBalancer(id);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/sendEmail/{id}", produces = APPLICATION_JSON_VALUE)
