@@ -2,308 +2,315 @@
 
 
 <ul class="list-unstyled">
-    <li>ID : {{app.id}}</li>
-    <li>Number of instances : {{app.applicationInstances.length}}</li>
-    <li>In group : {{appGroup.name}} ({{app.applicationGroupId}})</li>
-    <li>Check path : {{app.checkPath}}</li>
+  <li>ID : {{app.id}}</li>
+  <li>Number of instances : {{app.applicationInstances.length}}</li>
+  <li>In group : {{appGroup.name}} ({{app.applicationGroupId}})</li>
+  <li>Check path : {{app.checkPath}}</li>
 
-    <li>In load balancers:
-        <ul ng-repeat="lbForApp in app.loadBalancers">
-            <li>{{lbForApp.name}} ({{lbForApp.id}})</li>
-        </ul>
-    </li>
+  <li>In load balancers:
+    <ul ng-repeat="lbForApp in app.loadBalancers">
+      <li>{{lbForApp.name}} ({{lbForApp.id}})</li>
+    </ul>
+  </li>
 
 
 </ul>
 
 
 <h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out :
-    {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
+  {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
 
 <h3>Instances / Servers: </h3>
 <div class="row">
-    <div class="col-sm-6" ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">App instance : <b>{{appInstValue.name}}</b> ({{appInstId}})</h3>
-            </div>
-            <div class="panel-body">
-                <div ng-repeat="(lbId, status) in appInstValue.statuses">
+  <div class="col-sm-6" ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">App instance : <b>{{appInstValue.name}}</b> ({{appInstId}})</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-repeat="(lbId, status) in appInstValue.statuses">
 
-                    <div class="alert" role="alert"
-                         ng-class="{OPEN:'alert-info', UP:'alert-success', MAINT:'alert-warning', DOWN:'alert-danger','':'active'}[status.status]">
-                        LB {{lbId}} | status={{status.status}} , in/out :
-                        {{status.bin}}/{{status.bout}}
-                        <button type="button" class="btn btn-info pull-right" ng-click="showModalDetail(status)">
-                            Details
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
+          <div class="alert" role="alert"
+               ng-class="{OPEN:'alert-info', UP:'alert-success', MAINT:'alert-warning', DOWN:'alert-danger','':'active'}[status.status]">
+            LB {{lbId}} | status={{status.status}} , in/out :
+            {{status.bin}}/{{status.bout}}
+            <button type="button" class="btn btn-info pull-right" ng-click="showModalDetail(status)">
+              Details
+            </button>
+          </div>
         </div>
-    </div>
-    <!--
-    <table class="table">
-        <tr ng-repeat="(key,value) in statusAppServers">
-            <td>Key {{key}} , value:{{value}}</td>
-        </tr>
+      </div>
 
-    </table>
-
-    <table class="table">
-
-        <thead>
-        <tr>
-            <th>Application instance</th>
-            <th ng-repeat="lb in app.loadBalancers">{{lb.name}}</th>
-
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr ng-repeat="appInst in app.applicationInstances">
-            <td>{{statusApp[72000].data.pxname}}</td>
-            <td>{{statusApp[72000].data.status}} : {{statusApp[72000].data.bin}}</td>
-
-        </tr>
-        </tbody>
-    </table>
-    <pre>{{statusApp|json}}</pre>
-    <div class="list-group">
-        <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in app.loadBalancers">
-            <b> {{lb.name}}</b> ({{lb.id}}) {{lb.host}}:{{lb.port}}{{lb.installationPath}}
-        </a>
 
     </div>
-    -->
-    <!--
+  </div>
+  <!--
+  <table class="table">
+      <tr ng-repeat="(key,value) in statusAppServers">
+          <td>Key {{key}} , value:{{value}}</td>
+      </tr>
 
-    <div class="progress progress-striped active">
-     <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-         <span class="sr-only">100% Complete (success)</span>
-     </div>
-    </div>
-    -->
-    <hr>
-    <div class="row">
-        <div class="col-sm-6">
+  </table>
 
-            <h3>New Application Instance</h3>
+  <table class="table">
 
-            <form role="form" ng-submit="saveAppInst()" name="form">
+      <thead>
+      <tr>
+          <th>Application instance</th>
+          <th ng-repeat="lb in app.loadBalancers">{{lb.name}}</th>
 
-                <div class="form-group" ng-class="{'has-error': form.name.$invalid && !form.name.$pristine}">
-                    <label for="inAppInstName">Name</label>
-                    <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
-                           required
-                           placeholder="Enter name">
-                </div>
-                <div class="form-group" ng-class="{'has-error': form.host.$invalid && !form.host.$pristine}">
-                    <label for="inAppInstHost">Host</label>
-                    <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
-                           required
-                           placeholder="Enter host">
-                </div>
-                <div class="form-group">
-                    <label for="inAppInstPort">Port</label>
-                    <input type="number" ng-model="appInst.port" min="1" max="65535" class="form-control"
-                           id="inAppInstPort"
-                           name="port"
-                           required
-                           integer
-                           placeholder="Enter port">
-                    <span ng-show="form.port.$error.integer">This is not valid integer!</span>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr ng-repeat="appInst in app.applicationInstances">
+          <td>{{statusApp[72000].data.pxname}}</td>
+          <td>{{statusApp[72000].data.status}} : {{statusApp[72000].data.bin}}</td>
+
+      </tr>
+      </tbody>
+  </table>
+  <pre>{{statusApp|json}}</pre>
+  <div class="list-group">
+      <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in app.loadBalancers">
+          <b> {{lb.name}}</b> ({{lb.id}}) {{lb.host}}:{{lb.port}}{{lb.installationPath}}
+      </a>
+
+  </div>
+  -->
+  <!--
+
+  <div class="progress progress-striped active">
+   <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+       <span class="sr-only">100% Complete (success)</span>
+   </div>
+  </div>
+  -->
+  <hr>
+  <div class="row">
+    <div class="col-sm-6">
+
+      <h3>New Application Instance</h3>
+
+      <form role="form" ng-submit="saveAppInst()" name="form">
+
+        <div class="form-group" ng-class="{'has-error': form.name.$invalid && !form.name.$pristine}">
+          <label for="inAppInstName">Name</label>
+          <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
+                 required
+                 placeholder="Enter name">
+        </div>
+        <div class="form-group" ng-class="{'has-error': form.host.$invalid && !form.host.$pristine}">
+          <label for="inAppInstHost">Host</label>
+          <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
+                 required
+                 placeholder="Enter host">
+        </div>
+        <div class="form-group">
+          <label for="inAppInstPort">Port</label>
+          <input type="number" ng-model="appInst.port" min="1" max="65535" class="form-control"
+                 id="inAppInstPort"
+                 name="port"
+                 required
+                 integer
+                 placeholder="Enter port">
+          <span ng-show="form.port.$error.integer">This is not valid integer!</span>
                  <span ng-show="form.port.$error.min || form.port.$error.max">
 
       The value must be in range 1 to 65535!</span>
 
-                </div>
-                <div class="form-group">
-                    <label for="inAppInstPath">Path</label>
-                    <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                           ng-pattern="/^/[a-zA-Z]+/" name="path" required
-                           placeholder="Enter path / url">
-                    <span class="bg-danger" ng-show="form.path.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
-                </div>
-
-                <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Submit</button>
-            </form>
-
-            <div class="alert alert-success" ng-show="newAppInstAlertSuccess">Application is added successfully (refresh
-                browser)
-            </div>
+        </div>
+        <div class="form-group">
+          <label for="inAppInstPath">Path</label>
+          <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                 ng-pattern="/^/[a-zA-Z]+/" name="path" required
+                 placeholder="Enter path / url">
+          <span class="bg-danger" ng-show="form.path.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
         </div>
 
+        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Submit</button>
+      </form>
 
-        <div class="col-sm-6">
+      <div class="alert alert-success" ng-show="newAppInstAlertSuccess">Application is added successfully (refresh
+        browser)
+      </div>
+    </div>
 
-            <h3>All Application Instances of '{{app.name}}' </h3>
 
-            <div class="list-group">
-                <a href="#/appInst/{{a.id}}" class="list-group-item" ng-repeat="a in app.applicationInstances">
-                    <b> {{a.name}}</b> ({{a.id}}) {{a.host}}/{{a.path}}:{{a.port}}
-                </a>
+    <div class="col-sm-6">
 
+      <h3>All Application Instances of '{{app.name}}' </h3>
+
+      <div class="list-group">
+        <div class="list-group-item" ng-repeat="a in app.applicationInstances">
+          <div class="row">
+            <div class="col-md-10">
+              <b> {{a.name}}</b> ({{a.id}}) {{a.host}}/{{a.path}}:{{a.port}}
             </div>
-
-
-            <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
-                (show/hide)</strong> json data</a>
-
-            <div ng-show="collapsedAppInst">
-                <pre>{{app.applications|json}}</pre>
+            <div class="col-md-1"><a class="btn btn-danger btn-sm pull-right" href="#/appInst/{{a.id}}">Explore</a>
             </div>
-
+            <div class="col-md-1"><a class="btn btn-danger btn-sm pull-right"
+                                     href="http://{{a.host}}:{{a.port}}{{app.checkPath}}">Visit</a></div>
+          </div>
         </div>
+      </div>
+
+
+      <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
+        (show/hide)</strong> json data</a>
+
+      <div ng-show="collapsedAppInst">
+        <pre>{{app.applications|json}}</pre>
+      </div>
 
     </div>
 
-    <hr>
-    <!-- Not used
-    <app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone"></app-form>
-    -->
+  </div>
 
-    <h3>Update application</h3>
+  <hr>
+  <!-- Not used
+  <app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone"></app-form>
+  -->
 
-    <form role="form" ng-submit="updateApplication()" name="createAppForm" novalidate>
+  <h3>Update application</h3>
 
-        <div class="form-group">
-            <label for="inAppName">Name</label>
-            <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
-                   required
-                   placeholder="Enter application name">
-        </div>
-        <div class="form-group">
-            <label for="inAppPublicUrl">Public Path</label>
-            <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
-                   ng-pattern="/^/[a-zA-Z]+/"
-                   required
-                   placeholder="Enter public url">
-            <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
-        </div>
-        <div class="form-group">
-            <label for="inAppPublicUrl">Emails (for notification). Separate by ,</label>
-            <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
-                   required
-                   placeholder="Enter email(s)">
-        </div>
-        <div class="form-group">
-            <label for="inAppCheckPath">Check path</label>
-            <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath" name="checkPath"
-                   required
-                   placeholder="Enter check path">
-        </div>
+  <form role="form" ng-submit="updateApplication()" name="createAppForm" novalidate>
 
-
-        <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Update</button>
-    </form>
+    <div class="form-group">
+      <label for="inAppName">Name</label>
+      <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
+             required
+             placeholder="Enter application name">
+    </div>
+    <div class="form-group">
+      <label for="inAppPublicUrl">Public Path</label>
+      <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
+             ng-pattern="/^/[a-zA-Z]+/"
+             required
+             placeholder="Enter public url">
+      <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+    </div>
+    <div class="form-group">
+      <label for="inAppPublicUrl">Emails (for notification). Separate by ,</label>
+      <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
+             required
+             placeholder="Enter email(s)">
+    </div>
+    <div class="form-group">
+      <label for="inAppCheckPath">Check path</label>
+      <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath" name="checkPath"
+             required
+             placeholder="Enter check path">
+    </div>
 
 
-    <hr>
-    <button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span>
-        Delete application
-    </button>
+    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Update</button>
+  </form>
+
+
+  <hr>
+  <button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span>
+    Delete application
+  </button>
 
 
 </div>
 
 <!-- Button trigger modal -->
 <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalAppInstDetails">
-    Launch demo modal
+  Launch demo modal
 </button>
 
 <!-- Modal -->
 <div class="modal fade bs-example-modal-lg" id="modalAppInstDetails" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel"> {{currModalStatus.pxname}}: {{currModalStatus.svname}}</h4>
-            </div>
-            <div class="modal-body">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel"> {{currModalStatus.pxname}}: {{currModalStatus.svname}}</h4>
+      </div>
+      <div class="modal-body">
 
-                <h3>Sessions</h3>
+        <h3>Sessions</h3>
 
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Current sessions</th>
-                        <th>Total sessions</th>
-                        <th>Max sessions</th>
-                        <th>Limit sessions</th>
-                    </tr>
-                    </thead>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Current sessions</th>
+            <th>Total sessions</th>
+            <th>Max sessions</th>
+            <th>Limit sessions</th>
+          </tr>
+          </thead>
 
-                    <tbody>
-                    <tr>
-                        <td>{{currModalStatus.scur}}</td>
-                        <td>{{currModalStatus.stot}}</td>
-                        <td>{{currModalStatus.smax}}</td>
-                        <td>{{currModalStatus.slim}}</td>
-                    </tr>
-                    </tbody>
+          <tbody>
+          <tr>
+            <td>{{currModalStatus.scur}}</td>
+            <td>{{currModalStatus.stot}}</td>
+            <td>{{currModalStatus.smax}}</td>
+            <td>{{currModalStatus.slim}}</td>
+          </tr>
+          </tbody>
 
-                </table>
-
-
-                <h3>Server</h3>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Last change</th>
-                        <th>Total downtime</th>
-                        <th>Check status (layer)</th>
-
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr>
-                        <td>{{currModalStatus.status}}</td>
-                        <td>{{currModalStatus.lastchg}} s</td>
-                        <td>{{currModalStatus.downtime}} s</td>
-                        <td>{{currModalStatus.check_status}} s</td>
-
-                    </tr>
-                    </tbody>
-
-                </table>
+        </table>
 
 
-                <h3>Traffic</h3>
+        <h3>Server</h3>
 
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Bytes in</th>
-                        <th>Bytes out</th>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Status</th>
+            <th>Last change</th>
+            <th>Total downtime</th>
+            <th>Check status (layer)</th>
+
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr>
+            <td>{{currModalStatus.status}}</td>
+            <td>{{currModalStatus.lastchg}} s</td>
+            <td>{{currModalStatus.downtime}} s</td>
+            <td>{{currModalStatus.check_status}} s</td>
+
+          </tr>
+          </tbody>
+
+        </table>
 
 
-                    </tr>
-                    </thead>
+        <h3>Traffic</h3>
 
-                    <tbody>
-                    <tr>
-                        <td>{{currModalStatus.bin}}</td>
-                        <td>{{currModalStatus.bout}} s</td>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Bytes in</th>
+            <th>Bytes out</th>
 
 
-                    </tr>
-                    </tbody>
+          </tr>
+          </thead>
 
-                </table>
+          <tbody>
+          <tr>
+            <td>{{currModalStatus.bin}}</td>
+            <td>{{currModalStatus.bout}} s</td>
 
-                {{currModalStatus |json}}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
+
+          </tr>
+          </tbody>
+
+        </table>
+
+        {{currModalStatus |json}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
 </div>
