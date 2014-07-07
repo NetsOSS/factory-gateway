@@ -1,6 +1,7 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.EntityNotFoundException;
+import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
@@ -58,21 +59,25 @@ public class StatusController {
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for(LoadBalancer loadBalancer: loadBalancers) {
-            List<StatusModel> statusModelsFromCSV = parseCSV(readCSV(loadBalancer));
-            for(StatusModel statusModel: statusModelsFromCSV) {
-                if (!statusModel.data.get("pxname").equals(application.getName())) {
-                    continue;
-                }
 
-                String svname = statusModel.data.get("svname");
+            try {
+                List<StatusModel> statusModelsFromCSV = parseCSV(readCSV(loadBalancer));
+                for (StatusModel statusModel : statusModelsFromCSV) {
+                    if (!statusModel.data.get("pxname").equals(application.getName())) {
+                        continue;
+                    }
 
-                if (!svname.equals("BACKEND")) {
-                    applicationStatusModel.getByName(svname).ifPresent(m -> m.statuses.put(loadBalancer.getId(), statusModel.data));
-                }
-                else {
+                    String svname = statusModel.data.get("svname");
 
-                    applicationStatusModel.data.putAll(statusModel.data);
+                    if (!svname.equals("BACKEND")) {
+                        applicationStatusModel.getByName(svname).ifPresent(m -> m.statuses.put(loadBalancer.getId(), statusModel.data));
+                    } else {
+
+                        applicationStatusModel.data.putAll(statusModel.data);
+                    }
                 }
+            } catch (GatewayException gateWay) {
+                gateWay.printStackTrace();
             }
         }
 
