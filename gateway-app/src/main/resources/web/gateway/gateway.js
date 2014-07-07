@@ -197,7 +197,14 @@ define([
       GatewayData.StatusController.getServerStatusForApplication($routeParams.id).then(function (data) {
         $scope.statusAppServers = data;
       });
-    }
+    };
+
+    $scope.currModalStatus = {};
+    $scope.showModalDetail = function (statusObj) {
+      $scope.currModalStatus=statusObj;
+      $('#modalAppInstDetails').modal('show');
+
+    };
 
   });
 
