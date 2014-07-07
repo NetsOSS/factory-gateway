@@ -64,7 +64,7 @@ public class StatusControllerTest {
         AppGroupModel groupModel = new AppGroupModel(groupOne);
         groupModel = applicationGroupController.create(groupModel);
 
-        Application application = new Application("Finch", "/finch", new ApplicationGroup("Online Banking"), "email");
+        Application application = new Application("Finch", "/finch", groupOne, "email");
         AppModel appModel = new AppModel(application);
         appModel.applicationGroupId = groupModel.getId();
         appModel = applicationController.create(appModel);
@@ -91,16 +91,16 @@ public class StatusControllerTest {
         csvString.add("stats,BACKEND,0,0,0,1,200,7,13388,130089,0,0,,7,0,0,0,UP,0,0,0,,0,11616,0,,1,3,0,,0,,1,0,,1,,,,0,0,0,0,7,0,,,,,0,0,0,0,0,0,0,\n");
 
         List<StatusModel> statusModels = statusController.parseCSV(csvString);
-        String[] names = "# pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,comp_in,comp_out,comp_byp,comp_rsp,lastsess,".split(",");
+
+        String[] names = "pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,comp_in,comp_out,comp_byp,comp_rsp,lastsess,".split(",");
         String[] testValues = "Finch,BACKEND,0,0,0,0,200,0,0,0,0,0,,0,0,0,0,UP,2,2,0,,0,11616,0,,1,2,0,,0,,1,0,,0,,,,0,0,0,0,0,0,,,,,0,0,0,0,0,0,-1,".split(",");
 
         List<LoadBalancerModel> loadBalancers = applicationController.getLoadBalancers(appModel.getId());
         for(LoadBalancerModel loadBalancer: loadBalancers) {
             StatusModel backend = statusController.getBackendServer(statusModels, application);
-            System.out.println("SNORRE");
+
             for(int i = 0; i < names.length; i++) {
-                //assertThat(backend.data.get(names[i])).isNotNull().isEqualTo(testValues[i]);
-               System.out.println("SNORRE " + backend.data.get(names[i]));
+                assertThat(backend.data.get(names[i])).isNotNull().isEqualTo(testValues[i]);
             }
         }
     }
