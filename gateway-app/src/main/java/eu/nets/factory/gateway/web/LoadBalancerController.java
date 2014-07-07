@@ -233,19 +233,13 @@ public class LoadBalancerController {
         return strConfig;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/start")
-    public void startLoadBalancer(@PathVariable Long id) {
+    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/start", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LoadBalancerModel startLoadBalancer(@PathVariable Long id) {
         log.info("LoadBalancerController.startLoadBalancer() id={}", id);
 
         LoadBalancer loadBalancer = findEntityById(id);
         haProxyService.start(loadBalancer);
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/stats")
-    public void getStatus(@PathVariable Long id) {
-        log.info("LoadBalancerController.getStatus() LB.id={}",id);
-
-        findEntityById(id);
-        statusController.getStatusForLoadbalancer(id);
+        return new LoadBalancerModel(loadBalancer);
     }
 }
