@@ -45,18 +45,26 @@ public class StatusService {
     private HashMap<Long, List<StatusModel>> loadBalancerStatuses = new HashMap<>();
 
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 10000)
     public void autoPoll() {
         log.info("StatusService.autoPoll {} , #loadBalancers {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
         List<LoadBalancer> lbList = loadBalancerRepository.findAll();
 
         for (LoadBalancer lb : lbList) {
-            List<StatusModel> listStatus = parseCSV(readCSV(lb));
+            try {
+                List<StatusModel> listStatus = parseCSV(readCSV(lb));
+                List<StatusModel> oldlistStatusList = loadBalancerStatuses.get(lb.getId());
 
-            List<StatusModel> oldlistStatusList = loadBalancerStatuses.get(lb.getId());
-            if (oldlistStatusList != null)
-                checkForChangesInStatus(oldlistStatusList, listStatus);
-            loadBalancerStatuses.put(lb.getId(), listStatus);
+                if (oldlistStatusList != null)
+                    checkForChangesInStatus(oldlistStatusList, listStatus);
+                loadBalancerStatuses.put(lb.getId(), listStatus);
+
+            }catch (GatewayException ge){
+
+                log.info("StatusService.autoPoll {} at {}:{} is offline. Cannot be reached. ",lb.getName(),lb.getHost(),lb.getPublicPort());
+            }
+
+
 
 
         }
@@ -124,7 +132,7 @@ public class StatusService {
             bufferedReader.close();
         } catch (Exception e) {
             // e.printStackTrace();
-            throw new GatewayException("Cannot connect to HAproxy.");
+            throw new GatewayException("Cannot connect to HAproxy. "+loadBalancer.getName()+" with csv at : "+csvFile);
 
         }
 
