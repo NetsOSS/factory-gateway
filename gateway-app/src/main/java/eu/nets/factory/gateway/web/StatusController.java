@@ -69,7 +69,7 @@ public class StatusController {
 
             try {
 
-                List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(id);
+                List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(loadBalancer.getId());
                 for (StatusModel statusModel : statusModelsFromCSV) {
                     if (!statusModel.data.get("pxname").equals(application.getName())) {
                         continue;
