@@ -21,4 +21,10 @@ public  class StatusModel {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "("+data.get("pxname")+" :  "+data.get("svname")+")";
+
+    }
 }

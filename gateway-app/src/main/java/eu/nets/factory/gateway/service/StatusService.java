@@ -1,8 +1,11 @@
 package eu.nets.factory.gateway.service;
 
 import eu.nets.factory.gateway.GatewayException;
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.model.LoadBalancerRepository;
+import eu.nets.factory.gateway.web.ApplicationController;
 import eu.nets.factory.gateway.web.LoadBalancerController;
 import eu.nets.factory.gateway.web.LoadBalancerModel;
 import eu.nets.factory.gateway.web.StatusModel;
@@ -31,6 +34,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class StatusService {
     private final Logger log = getLogger(getClass());
 
+    @Autowired
+    private ApplicationController applicationController;
 
     @Autowired
     LoadBalancerRepository loadBalancerRepository;
@@ -41,8 +46,8 @@ public class StatusService {
 
 
     @Scheduled(fixedRate = 5000)
-    public void autoGather() {
-        log.info("StatusService.autoGather {}, lbSize: {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
+    public void autoPoll() {
+        log.info("StatusService.autoPoll {} , #loadBalancers {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
         List<LoadBalancer> lbList = loadBalancerRepository.findAll();
 
         for (LoadBalancer lb : lbList) {
@@ -52,7 +57,7 @@ public class StatusService {
             if (oldlistStatusList != null)
                 checkForChangesInStatus(oldlistStatusList, listStatus);
             loadBalancerStatuses.put(lb.getId(), listStatus);
-            //log.info("StatusService.autoGather demo String {}" , listStatus.toString());
+
 
         }
 
@@ -70,7 +75,18 @@ public class StatusService {
             String oldStatus = oldStatusModel.data.get("status");
             String newStatus = newStatusModel.data.get("status");
             if (!oldStatus.equals(newStatus)) {
-                log.info("StatusService.checkForChangesInStatus() : {} went from status {} -> {}", oldStatusModel.data.get("svname"), oldStatus, newStatus);
+                log.info("StatusService.checkForChangesInStatus() : {} went from status {} -> {}", oldStatusModel, oldStatus, newStatus);
+
+                String appName = newStatusModel.data.get("pxname");
+
+                Application application = applicationController.getApplicationByExactName(appName);
+                if (application == null) {
+                    log.info("Error getting the application, Should never happen?");
+                    continue;
+                }
+                log.info("StatusService.checkForChangesInStatus() : Sending email to :  {}", application.getEmails());
+
+
             }
 
 

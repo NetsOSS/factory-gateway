@@ -58,6 +58,29 @@ public class ApplicationController {
         return applications.stream().map(AppModel::new).collect(toList());
     }
 
+
+    public Application getApplicationByExactName(String name){
+        //Method for getting exactly one or none. Must be the exact application defined by its name.
+        List<Application> applications;
+
+        if (name == null) {
+            applications = applicationRepository.findAll();
+        } else {
+            applications = applicationRepository.findByNameLike(name);
+        }
+        if(applications.size()==0)
+            return null;
+        if(applications.size()==1)
+            return applications.get(0);
+
+        for (Application app : applications){
+            if(name.equals(app.getName()))
+                return app;
+        }
+        return null;
+
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Application findEntityById(@PathVariable Long id) {
