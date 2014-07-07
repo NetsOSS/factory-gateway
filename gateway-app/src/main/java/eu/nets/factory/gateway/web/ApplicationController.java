@@ -158,6 +158,7 @@ public class ApplicationController {
         application.setName(appModel.getName());
         application.setPublicUrl(appModel.getPublicUrl());
         application.setEmails(appModel.getEmails());
+        application.setCheckPath(appModel.getCheckPath());
 
         application = applicationRepository.save(application);
         return new AppModel(application);
