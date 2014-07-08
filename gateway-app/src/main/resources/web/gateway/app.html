@@ -273,9 +273,9 @@
           <tbody>
           <tr>
             <td>{{currModalStatus.status}}</td>
-            <td>{{currModalStatus.lastchg}} s</td>
-            <td>{{currModalStatus.downtime}} s</td>
-            <td>{{currModalStatus.check_status}} s</td>
+            <td>{{currModalStatus.lastchg | secondstime}}</td>
+            <td>{{currModalStatus.downtime | secondstime}}</td>
+            <td>{{currModalStatus.check_status}}</td>
 
           </tr>
           </tbody>

@@ -5,7 +5,7 @@ define([
   'angular'
 ], function (require, angular) {
   var templatePrefix = require.toUrl("./");
-  var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives']);
+  var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives','shared.filters']);
 
 
   gateway.config(function ($routeProvider, $httpProvider) {
