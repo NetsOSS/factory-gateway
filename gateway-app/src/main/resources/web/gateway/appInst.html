@@ -1,64 +1,164 @@
-
 <div class="row">
-    <h1>Application Instance Details</h1>
+  <h1>Application Instance: {{appInst.name}}</h1>
+  <ul class="list-unstyled">
+    <li>ID : {{appInst.id}}</li>
+    <li>Host : {{appInst.host}}</li>
+    <li>Port : {{appInst.port}}</li>
+    <li>Path : {{appInst.path}}</li>
 
+    <li>In load balancers:
+      <ul ng-repeat="lbForApp in app.loadBalancers">
+        <li>{{lbForApp.name}} ({{lbForApp.id}})</li>
+      </ul>
+      <ul ng-show="!rawStatusForOneInst">No loadbalancers associated with this application instance
+      </ul>
 
+    </li>
+    <button class="btn btn-info" data-toggle="modal" data-target="#myModal">
+      Edit
+    </button>
+    <button type="button" class="btn btn-danger" ng-click="deleteAppInst()">Delete</button>
 
-    <div class="col-sm-6">
-        <h3>Status</h3>
+  </ul>
 
-       <!-- <button type="button" class="btn btn-success">Start</button>
-        <button type="button" class="btn btn-warning">Stop</button>
-        <div class="alert alert-success">The instance is running
-
-            <div class="pull-right">
-
-            </div>
-
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+              class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Update</h4>
         </div>
-
-        <div class="alert alert-warning">The instance is not enabled
-
-            <div class="pull-right">
-
-            </div>
-
-        </div>
-
--->
-    </div>
-    <div class="col-sm-6">
-        <h3>Update</h3>
-
-        <form role="form" ng-submit="updateAppInst()">
-
+        <div class="modal-body">
+          <h3 class="modal-title">Update application instance</h3>
+          <form role="form" ng-submit="updateAppInst()">
 
             <div class="form-group">
-                <label for="inAppInstName">Name</label>
-                <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName">
+              <label for="inAppInstName">Name</label>
+              <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName">
             </div>
 
             <div class="form-group">
-                <label for="inAppInstHost">Host</label>
-                <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
-                       required
-                       placeholder="Enter host">
+              <label for="inAppInstHost">Host</label>
+              <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
+                     required
+                     placeholder="Enter host">
             </div>
             <div class="form-group">
-                <label for="inAppInstPort">Port</label>
-                <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
-                       placeholder="Enter port">
+              <label for="inAppInstPort">Port</label>
+              <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
+                     placeholder="Enter port">
             </div>
             <div class="form-group">
-                <label for="inAppInstPath">Path</label>
-                <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                       placeholder="Enter path / url">
+              <label for="inAppInstPath">Path</label>
+              <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                     placeholder="Enter path / url">
             </div>
 
             <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Update</button>
-        </form>
-
-        <button type="button" class="btn btn-danger" ng-click="deleteAppInst()">Delete</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
-</div>
-<a href back-button>back</a>
+  </div>
+
+
+  <div class="col-sm-12">
+    <h3>Status: <span class="text-success" ng-show="rawStatusForOneInst">HAproxy is running  <span
+        class="glyphicon glyphicon-thumbs-up"></span></span>
+    <span class="text-danger" ng-show="!rawStatusForOneInst">No HAproxy associated with this application instance is running <span
+        class="glyphicon glyphicon-thumbs-down"></span></span>
+    </h3>
+    <table class="table" ng-show="rawStatusForOneInst">
+      <thead>
+      <tr>
+        <th>LoadBalancer</th>
+        <th>Proxy Name</th>
+        <th>Service Name</th>
+        <th>Current Sessions</th>
+        <th>Total Sessions</th>
+        <th>Bytes in</th>
+        <th>Bytes out</th>
+        <th>Last change in status</th>
+        <th>Downtime</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+          ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+
+        <td>{{lbId}}</td>
+        <td>{{value.data.pxname}}</td>
+        <td>{{value.data.svname}}</td>
+        <td>{{value.data.scur}}</td>
+        <td>{{value.data.stot}}</td>
+        <td>{{value.data.bin}}</td>
+        <td>{{value.data.bout}}</td>
+        <td>{{value.data.lastchg}}</td>
+        <td>{{value.data.downtime}}</td>
+        <td>{{value.data.status}}</td>
+
+
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- <button type="button" class="btn btn-success">Start</button>
+     <button type="button" class="btn btn-warning">Stop</button>
+     <div class="alert alert-success">The instance is running
+
+         <div class="pull-right">
+
+         </div>
+
+     </div>
+
+     <div class="alert alert-warning">The instance is not enabled
+
+         <div class="pull-right">
+
+         </div>
+
+     </div>
+
+-->
+    <!--</div>
+    <div class="col-sm-6">
+      <h3>Update</h3>
+
+      <form role="form" ng-submit="updateAppInst()">
+
+
+        <div class="form-group">
+          <label for="inAppInstName">Name</label>
+          <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName">
+        </div>
+
+        <div class="form-group">
+          <label for="inAppInstHost">Host</label>
+          <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
+                 required
+                 placeholder="Enter host">
+        </div>
+        <div class="form-group">
+          <label for="inAppInstPort">Port</label>
+          <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
+                 placeholder="Enter port">
+        </div>
+        <div class="form-group">
+          <label for="inAppInstPath">Path</label>
+          <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                 placeholder="Enter path / url">
+        </div>
+
+        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Update</button>
+      </form>
+
+      <button type="button" class="btn btn-danger" ng-click="deleteAppInst()">Delete</button>
+    </div>
+  </div>
+  <a href back-button>back</a>
