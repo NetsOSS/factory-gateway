@@ -3,7 +3,6 @@ package eu.nets.factory.gateway.web;
 import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
-import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.model.LoadBalancerRepository;
 import eu.nets.factory.gateway.service.ConfigGeneratorService;
@@ -33,9 +32,6 @@ public class LoadBalancerController {
     private LoadBalancerRepository loadBalancerRepository;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private ApplicationController applicationController;
 
     @Autowired
@@ -47,8 +43,6 @@ public class LoadBalancerController {
     @Autowired
     private HaProxyService haProxyService;
 
-    @Autowired
-    private StatusController statusController;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -119,7 +113,7 @@ public class LoadBalancerController {
         LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort);
         loadBalancer = loadBalancerRepository.save(loadBalancer);
 
-        return new LoadBalancerModel(loadBalancer); //.getId(), loadBalancer.getName());
+        return new LoadBalancerModel(loadBalancer);
     }
 
     private void assertNameUnique(String name) {
@@ -152,7 +146,8 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.remove, id={}", id);
 
         LoadBalancer loadBalancer = findEntityById(id);
-        for(Application application :loadBalancer.getApplications()) {
+
+        for(Application application : loadBalancer.getApplications()) {
             application.removeLoadBalancer((loadBalancer));
         }
 
@@ -165,6 +160,7 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.update, id={}", id);
 
         LoadBalancer loadBalancer = findEntityById(id);
+
         if(!(loadBalancer.getName().equals(loadBalancerModel.name))) { assertNameUnique(loadBalancerModel.name); }
         if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getInstallationPath().equals(loadBalancerModel.installationPath))) { assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath); }
         if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getPublicPort() == loadBalancerModel.publicPort)) { assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort); }
@@ -175,8 +171,7 @@ public class LoadBalancerController {
         loadBalancer.setSshKey(loadBalancerModel.sshKey);
         loadBalancer.setPublicPort(loadBalancerModel.publicPort);
 
-        loadBalancer = loadBalancerRepository.save(loadBalancer);
-        return new LoadBalancerModel(loadBalancer); //.getId(), loadBalancer.getName());
+        return new LoadBalancerModel(loadBalancer);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -188,7 +183,6 @@ public class LoadBalancerController {
         Application application = applicationController.findEntityById(applicationId);
 
         loadBalancer.addApplication(application);
-        loadBalancer = loadBalancerRepository.save(loadBalancer);
         application.addLoadBalancer(loadBalancer);
 
         return new LoadBalancerModel(loadBalancer);
@@ -213,8 +207,6 @@ public class LoadBalancerController {
 
         application.removeLoadBalancer(loadBalancer);
         loadBalancer.removeApplication(application);
-        applicationRepository.save(application);
-        loadBalancerRepository.save(loadBalancer);
 
         return new LoadBalancerModel(loadBalancer);
     }

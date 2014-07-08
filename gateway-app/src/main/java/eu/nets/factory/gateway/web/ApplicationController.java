@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.Iterator;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -27,12 +26,6 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationGroupRepository applicationGroupRepository;
-
-    @Autowired
-    private ApplicationInstanceRepository applicationInstanceRepository;
-
-    @Autowired
-    private LoadBalancerRepository loadBalancerRepository;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications", produces = APPLICATION_JSON_VALUE)
@@ -100,7 +93,7 @@ public class ApplicationController {
         return new AppModel(findEntityById(id));
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppModel create(@RequestBody AppModel applicationModel) {
         log.info("ApplicationController.create");
@@ -112,7 +105,6 @@ public class ApplicationController {
         application = applicationRepository.save(application);
 
         applicationGroup.addApplication(application);
-        applicationGroupRepository.save(applicationGroup);
 
         return new AppModel(application);
     }
@@ -129,30 +121,22 @@ public class ApplicationController {
         log.info("ApplicationController.remove, id={}", id);
 
         Application application = findEntityById(id);
-        List<ApplicationInstance> instances = application.getApplicationInstances();
-        for(ApplicationInstance instance: instances) {
-            applicationInstanceRepository.delete(instance);
-        }
-        List<LoadBalancer> loadBalancers = application.getLoadBalancers();
-        for(Iterator<LoadBalancer> it = loadBalancers.iterator(); it.hasNext();) {
-            LoadBalancer l = it.next();
-            l.removeApplication(application);
-            //it.remove();
-            loadBalancerRepository.save(l);
-        }
-        ApplicationGroup group = application.getApplicationGroup();
-        group.removeApplication(application);
 
-        applicationGroupRepository.save(group);
-        applicationRepository.delete(id);
+        for(LoadBalancer loadBalancer : application.getLoadBalancers()) {
+            loadBalancer.removeApplication(application);
+        }
+
+        ApplicationGroup applicationGroup = application.getApplicationGroup();
+        applicationGroup.removeApplication(application);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppModel update(@PathVariable Long id, @RequestBody AppModel appModel) {
         log.info("ApplicationController.update, id={}", id);
 
         Application application = findEntityById(id);
+
         if(!(application.getName().equals(appModel.name))) { assertNameUnique(appModel.name); }
 
         application.setName(appModel.getName());
@@ -160,7 +144,6 @@ public class ApplicationController {
         application.setEmails(appModel.getEmails());
         application.setCheckPath(appModel.getCheckPath());
 
-        application = applicationRepository.save(application);
         return new AppModel(application);
     }
 

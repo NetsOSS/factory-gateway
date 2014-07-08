@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.Iterator;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -24,14 +23,6 @@ public class ApplicationGroupController {
     @Autowired
     private ApplicationGroupRepository applicationGroupRepository;
 
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private LoadBalancerRepository loadBalancerRepository;
-
-    @Autowired
-    private ApplicationInstanceRepository applicationInstanceRepository;
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-groups", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -75,7 +66,7 @@ public class ApplicationGroupController {
         return new AppGroupModel(findEntityById(id));
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel create(@RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.create");
@@ -84,6 +75,7 @@ public class ApplicationGroupController {
 
         ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
         applicationGroup = applicationGroupRepository.save(applicationGroup);
+
         return new AppGroupModel(applicationGroup);
     }
 
@@ -99,23 +91,11 @@ public class ApplicationGroupController {
         log.info("ApplicationGroupController.remove, id={}", id);
 
         ApplicationGroup applicationGroup =  findEntityById(id);
-        List<Application> list = applicationGroup.getApplications();
 
-        for(Iterator<Application> it = list.iterator(); it.hasNext();) {
-            Application application = it.next();
-            List<ApplicationInstance> instances = application.getApplicationInstances();
-            for(ApplicationInstance instance: instances) {
-                applicationInstanceRepository.delete(instance);
-
-                List<LoadBalancer> loadBalancers = application.getLoadBalancers();
-                for(Iterator<LoadBalancer> loadIt = loadBalancers.iterator(); loadIt.hasNext();) {
-                    LoadBalancer l = loadIt.next();
-                    loadIt.remove();
-                    loadBalancerRepository.save(l);
-                }
+        for(Application application : applicationGroup.getApplications()) {
+            for(LoadBalancer loadBalancer : application.getLoadBalancers()) {
+                loadBalancer.removeApplication(application);
             }
-            it.remove();
-            applicationRepository.delete(application.getId());
         }
 
         applicationGroupRepository.delete(id);
@@ -127,11 +107,11 @@ public class ApplicationGroupController {
         log.info("ApplicationGroupController.update, id={}", id);
 
         ApplicationGroup applicationGroup = findEntityById(id);
+
         if(!(applicationGroup.getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }
 
         applicationGroup.setName(appGroupModel.name);
 
-        applicationGroup = applicationGroupRepository.save(applicationGroup);
         return new AppGroupModel(applicationGroup);
     }
 

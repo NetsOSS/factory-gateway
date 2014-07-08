@@ -14,7 +14,7 @@ public class ApplicationGroup extends AbstractEntity {
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "applicationGroup")
+    @OneToMany(mappedBy = "applicationGroup", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Application> applications = new ArrayList<>();
 
 

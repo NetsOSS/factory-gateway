@@ -27,20 +27,17 @@ public class Application extends AbstractEntity {
     private String checkPath;
 
     @ManyToMany
-    //@Cascade(CascadeType.DELETE)
     @JoinTable(name = "load_balancer_application",
                 joinColumns = {@JoinColumn(name = "application_id")},
                 inverseJoinColumns = {@JoinColumn(name = "load_balancer_id")})
-    private List<LoadBalancer> loadBalancers = new ArrayList<>(); //<LoadBalancer>();
+    private List<LoadBalancer> loadBalancers = new ArrayList<>();
 
-    //@Cascade(CascadeType.DELETE)
-    @OneToMany(mappedBy = "application")//, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "application", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<ApplicationInstance> applicationInstances = new ArrayList<>();
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "application_group")
-    //@Cascade(CascadeType.DELETE)
     private ApplicationGroup applicationGroup;
 
     private String emails;

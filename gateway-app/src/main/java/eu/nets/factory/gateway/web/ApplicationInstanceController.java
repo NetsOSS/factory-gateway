@@ -72,7 +72,7 @@ public class ApplicationInstanceController {
         return new AppInstModel(findEntityById(id));
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel create(@PathVariable long applicationId, @RequestBody AppInstModel applicationInstanceModel) {
         log.info("ApplicationInstanceController.create AppId={} host= {}",applicationId, applicationInstanceModel.host);
@@ -84,7 +84,6 @@ public class ApplicationInstanceController {
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
 
         application.addApplicationInstance(applicationInstance);
-        applicationRepository.save(application);
 
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());
      }
@@ -103,19 +102,18 @@ public class ApplicationInstanceController {
         log.info("ApplicationInstanceController.remove, id={}", id);
 
         ApplicationInstance applicationInstance = findEntityById(id);
+
         Application application = applicationInstance.getApplication();
         application.removeApplicationInstance(applicationInstance);
-        applicationRepository.save(application);
-
-        applicationInstanceRepository.delete(id);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}", consumes =APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.update, id={}", id);
 
         ApplicationInstance applicationInstance = findEntityById(id);
+
         if(!(applicationInstance.getName().equals(appInstModel.name))) { assertNameUnique(appInstModel.name); }
 
         applicationInstance.setName(appInstModel.name);
@@ -123,7 +121,6 @@ public class ApplicationInstanceController {
         applicationInstance.setHost(appInstModel.host);
         applicationInstance.setPort(appInstModel.port);
 
-        applicationInstance = applicationInstanceRepository.save(applicationInstance);
         return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());
 
     }

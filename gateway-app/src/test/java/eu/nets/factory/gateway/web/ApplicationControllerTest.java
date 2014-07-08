@@ -2,7 +2,6 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
-import org.springframework.transaction.annotation.Transactional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,13 +34,13 @@ public class ApplicationControllerTest {
     ApplicationInstanceController applicationInstanceController;
 
     @Autowired
+    ApplicationGroupController applicationGroupController;
+
+    @Autowired
     LoadBalancerController loadBalancerController;
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ApplicationInstanceRepository applicationInstanceRepository;
 
     @Autowired
     private ApplicationGroupRepository applicationGroupRepository;
@@ -288,36 +288,25 @@ public class ApplicationControllerTest {
 
     @Test
     public void testRemove() throws Exception {
-        String methodId = classId + " - testRemove";
-        String partId;
 
-        testCreate();
+        //AppModel appModel = applicationController.search("Grandiosa").get(0);
+        //assertThat(appModel).isNotNull().isNotEqualTo(applicationController.search("Grandiosa").get(0)); // ?
 
-        partId = methodId + " - 1: "; // remove application from repository
-        assertEquals(partId + "expected list 'applications' to be of size 4, found size " + applicationController.listAllApps().size(), 4, applicationController.listAllApps().size());
-        AppModel appModel = applicationController.search("Beta").get(0);
-        applicationController.remove(appModel.getId());
-        //assertNotNull(partId + "received null-pointer: 'applicationRepository'", applicationRepository);
-        //assertNotNull(partId + "received null-pointer: 'applicationsRepository.findAll'", applicationRepository.findAll());
-        assertEquals(partId + "expected list 'applications' to be of size 3, found size " + applicationController.listAllApps().size(), 3, applicationController.listAllApps().size());
+        applicationController.remove(applicationController.search("Grandiosa").get(0).getId());
+        assertThat(applicationController.listAllApps().size()).isNotNull().isEqualTo(2);
 
-        partId = methodId + " - 2: "; // linked ApplicationInstances were also removed from repository
-        List<AppInstModel> appInstModels = appModel.applicationInstances;
-        Collections.sort(appInstModels, (o1, o2) -> o1.id.compareTo(o2.id));
-        assertFalse(partId + "expected null-pointer on ApplicationInstanceID " + appInstModels.get(0).id, applicationInstanceRepository.exists(appInstModels.get(0).id));
-        assertFalse(partId + "expected null-pointer on ApplicationInstanceID " + appInstModels.get(1).id, applicationInstanceRepository.exists(appInstModels.get(1).id));
+        assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(1);
+        assertThat(applicationInstanceController.listAllAppInsts().get(0).name).isNotNull().isNotEqualTo("Grandiosa 1.0").isNotEqualTo("Alpha 1.0");
 
-        partId = methodId + " - 3: "; // removed from list in ApplicationGroup
-        ApplicationGroup applicationGroup = applicationGroupRepository.findOne(appModel.applicationGroupId);
-        assertEquals(partId + "expected list 'applications' to be of size 1, found size " + applicationGroup.getApplications().size(), 1, applicationGroup.getApplications().size());
+        assertThat(applicationGroupController.listAllAppGroups()).isNotNull().hasSize(3);
+        //assertThat(applicationGroupController.search("GroupTwo").get(0).applications.contains(appModel)).isNotNull().isEqualTo(false); //is 'contains' safe?
+        assertThat(applicationGroupController.search("GroupTwo").get(0).applications.size()).isNotNull().isEqualTo(1);
+        assertThat(applicationGroupController.search("GroupTwo").get(0).applications.get(0).name).isNotNull().isNotEqualTo("Grandiosa");
 
-        partId = methodId + " - 4: "; // removed from list in LoadBalancers
-        List<LoadBalancerModel> loadBalancerModels = appModel.loadBalancers;
-        Collections.sort(loadBalancerModels, (o1, o2) -> o1.id.compareTo(o2.id));
-        LoadBalancer loadBalancer = loadBalancerRepository.findOne(loadBalancerModels.get(0).id);
-        LoadBalancer loadBalancer2 = loadBalancerRepository.findOne(loadBalancerModels.get(1).id);
-        assertEquals(partId + "expected list 'applications' to be of size 1, found size " + loadBalancer.getApplications().size(), 1, loadBalancer.getApplications().size());
-        assertEquals(partId + "expected list 'applications' to be of size 2, found size " + loadBalancer2.getApplications().size(), 2, loadBalancer2.getApplications().size());
+        assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(3);
+        //assertThat(loadBalancerController.search("Knut").get(0).applications.contains(appModel)).isNotNull().isEqualTo(false); //is 'contains' safe?
+        assertThat(loadBalancerController.search("Knut").get(0).applications.size()).isNotNull().isEqualTo(1);
+        assertThat(loadBalancerController.search("Knut").get(0).applications.get(0).name).isNotNull().isNotEqualTo("Grandiosa");
 
         try {
             applicationController.remove(-1L);

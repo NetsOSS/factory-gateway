@@ -26,7 +26,6 @@ public class ApplicationInstance extends AbstractEntity {
     private String path;
 
     @ManyToOne
-    @JoinColumn(name = "application")
     private Application application;
 
     public ApplicationInstance(String name, String host, int port, String path, Application application) {

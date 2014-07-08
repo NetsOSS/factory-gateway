@@ -100,10 +100,12 @@ public class ApplicationGroupControllerTest {
 
         applicationGroupController.remove(applicationGroupController.search("GroupOne").get(0).getId());
         assertThat(applicationGroupController.listAllAppGroups().size()).isNotNull().isEqualTo(2);
-        assertThat(applicationController.listAllApps().size()).isNotNull().isEqualTo(2);
-        assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(2);
         assertThat(applicationGroupController.search("GroupOne")).isNotNull().hasSize(0);
+
+        assertThat(applicationController.listAllApps().size()).isNotNull().isEqualTo(2);
         assertThat(applicationController.search("Kamino")).isNotNull().hasSize(0);
+
+        assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(2);
         assertThat(applicationInstanceController.search("Kamino 1.0")).isNotNull().hasSize(0);
 
         try {

@@ -108,6 +108,7 @@ public class ApplicationInstanceControllerTest {
 
         applicationInstanceController.remove(applicationInstanceController.search("Alpha 1.0").get(0).id);
         assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(2);
+
         assertThat(applicationController.search("Grandiosa").get(0).applicationInstances.size()).isNotNull().isEqualTo(1);
         assertThat(applicationController.search("Grandiosa").get(0).applicationInstances.get(0).name).isNotNull().isEqualTo("Grandiosa 1.0");
 
