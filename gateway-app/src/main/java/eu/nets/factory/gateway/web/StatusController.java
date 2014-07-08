@@ -98,6 +98,10 @@ public class StatusController {
         log.info("StatusController.getStatusForOneServer, id={}", id);
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
 
+        if(applicationInstance == null) {
+            throw new EntityNotFoundException("ApplicationInstance", id);
+        }
+
         Application application = applicationInstance.getApplication();
 
         HashMap<Long, StatusModel> appInstStatusModelList = new HashMap<>();
@@ -111,6 +115,9 @@ public class StatusController {
           }
         }
 
+        if(appInstStatusModelList.isEmpty()) {
+            return null;
+        }
         return appInstStatusModelList;
     }
 

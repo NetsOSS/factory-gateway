@@ -5,160 +5,308 @@
     <li>Host : {{appInst.host}}</li>
     <li>Port : {{appInst.port}}</li>
     <li>Path : {{appInst.path}}</li>
-
     <li>In load balancers:
       <ul ng-repeat="lbForApp in app.loadBalancers">
         <li>{{lbForApp.name}} ({{lbForApp.id}})</li>
-      </ul>
-      <ul ng-show="!rawStatusForOneInst">No loadbalancers associated with this application instance
-      </ul>
 
+      </ul>
     </li>
+    <ul ng-show="!rawStatusForOneInst">No loadbalancers associated with this application instance
+    </ul>
     <button class="btn btn-info" data-toggle="modal" data-target="#myModal">
       Edit
     </button>
     <button type="button" class="btn btn-danger" ng-click="deleteAppInst()">Delete</button>
 
   </ul>
+</div>
 
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-              class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Update</h4>
-        </div>
-        <div class="modal-body">
-          <h3 class="modal-title">Update application instance</h3>
-          <form role="form" ng-submit="updateAppInst()">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Update</h4>
+      </div>
+      <div class="modal-body">
+        <h3 class="modal-title">Update application instance</h3>
 
-            <div class="form-group">
-              <label for="inAppInstName">Name</label>
-              <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName">
-            </div>
+        <form role="form" ng-submit="updateAppInst()">
 
-            <div class="form-group">
-              <label for="inAppInstHost">Host</label>
-              <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
-                     required
-                     placeholder="Enter host">
-            </div>
-            <div class="form-group">
-              <label for="inAppInstPort">Port</label>
-              <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
-                     placeholder="Enter port">
-            </div>
-            <div class="form-group">
-              <label for="inAppInstPath">Path</label>
-              <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                     placeholder="Enter path / url">
-            </div>
+          <div class="form-group">
+            <label for="inAppInstName">Name</label>
+            <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName">
+          </div>
 
-            <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Update</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+          <div class="form-group">
+            <label for="inAppInstHost">Host</label>
+            <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
+                   required
+                   placeholder="Enter host">
+          </div>
+          <div class="form-group">
+            <label for="inAppInstPort">Port</label>
+            <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
+                   placeholder="Enter port">
+          </div>
+          <div class="form-group">
+            <label for="inAppInstPath">Path</label>
+            <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                   placeholder="Enter path / url">
+          </div>
+
+          <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Update</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
 
 
-  <div class="col-sm-12">
-    <h3>Status: <span class="text-success" ng-show="rawStatusForOneInst">HAproxy is running  <span
-        class="glyphicon glyphicon-thumbs-up"></span></span>
+<div class="row">
+  <h3>Status: <span class="text-success" ng-show="rawStatusForOneInst">HAproxy is running  <span
+      class="glyphicon glyphicon-thumbs-up"></span></span>
     <span class="text-danger" ng-show="!rawStatusForOneInst">No HAproxy associated with this application instance is running <span
         class="glyphicon glyphicon-thumbs-down"></span></span>
-    </h3>
-    <table class="table" ng-show="rawStatusForOneInst">
-      <thead>
-      <tr>
-        <th>LoadBalancer</th>
-        <th>Proxy Name</th>
-        <th>Service Name</th>
-        <th>Current Sessions</th>
-        <th>Total Sessions</th>
-        <th>Bytes in</th>
-        <th>Bytes out</th>
-        <th>Last change in status</th>
-        <th>Downtime</th>
-        <th>Status</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
-          ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
-
-        <td>{{lbId}}</td>
-        <td>{{value.data.pxname}}</td>
-        <td>{{value.data.svname}}</td>
-        <td>{{value.data.scur}}</td>
-        <td>{{value.data.stot}}</td>
-        <td>{{value.data.bin}}</td>
-        <td>{{value.data.bout}}</td>
-        <td>{{value.data.lastchg}}</td>
-        <td>{{value.data.downtime}}</td>
-        <td>{{value.data.status}}</td>
-
-
-      </tr>
-      </tbody>
-    </table>
-
-    <!-- <button type="button" class="btn btn-success">Start</button>
-     <button type="button" class="btn btn-warning">Stop</button>
-     <div class="alert alert-success">The instance is running
-
-         <div class="pull-right">
-
-         </div>
-
-     </div>
-
-     <div class="alert alert-warning">The instance is not enabled
-
-         <div class="pull-right">
-
-         </div>
-
-     </div>
-
+  </h3>
+</div>
+<!-- Tabs for showing status
 -->
-    <!--</div>
-    <div class="col-sm-6">
-      <h3>Update</h3>
 
-      <form role="form" ng-submit="updateAppInst()">
+<ul class="nav nav-tabs row" role="tablist">
+  <li class="active"><a href="#queue" role="tab" data-toggle="tab">Queue</a></li>
+  <li><a href="#sessionRate" role="tab" data-toggle="tab">Session rate</a></li>
+  <li><a href="#sessions" role="tab" data-toggle="tab">Sessions</a></li>
+  <li><a href="#bytes" role="tab" data-toggle="tab">Bytes</a></li>
+  <li><a href="#denied" role="tab" data-toggle="tab">Denied</a></li>
+  <li><a href="#errors" role="tab" data-toggle="tab">Errors</a></li>
+  <li><a href="#warnings" role="tab" data-toggle="tab">Warnings</a></li>
+  <li><a href="#server" role="tab" data-toggle="tab">Server</a></li>
+</ul>
 
+<div class="tab-content row ">
+<div class="tab-pane active" id="queue">
+  <table class="table" ng-show="rawStatusForOneInst">
+    <thead>
+    <tr>
+      <th>LoadBalancer</th>
+      <th>Proxy Name</th>
+      <th>Server Name</th>
+      <th>Current Queue</th>
+      <th>Max Queue</th>
+      <th>Queue limit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+      <td>{{lbId}}</td>
+      <td>{{value.data.pxname}}</td>
+      <td>{{value.data.svname}}</td>
+      <td>{{value.data.qcur}}</td>
+      <td>{{value.data.qmax}}</td>
+      <td>{{value.data.qlimit}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
-        <div class="form-group">
-          <label for="inAppInstName">Name</label>
-          <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName">
-        </div>
+<div class="tab-pane" id="sessionRate">
+  <table class="table" ng-show="rawStatusForOneInst">
+    <thead>
+    <tr>
+      <th>LoadBalancer</th>
+      <th>Proxy Name</th>
+      <th>Server Name</th>
+      <th>Current</th>
+      <th>Max</th>
+      <th>Limit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+      <td>{{lbId}}</td>
+      <td>{{value.data.pxname}}</td>
+      <td>{{value.data.svname}}</td>
+      <td>{{value.data.rate}}</td>
+      <td>{{value.data.rate_max}}</td>
+      <td>{{value.data.rate_lim}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
-        <div class="form-group">
-          <label for="inAppInstHost">Host</label>
-          <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
-                 required
-                 placeholder="Enter host">
-        </div>
-        <div class="form-group">
-          <label for="inAppInstPort">Port</label>
-          <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
-                 placeholder="Enter port">
-        </div>
-        <div class="form-group">
-          <label for="inAppInstPath">Path</label>
-          <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                 placeholder="Enter path / url">
-        </div>
+<div class="tab-pane" id="sessions">
+  <table class="table" ng-show="rawStatusForOneInst">
+    <thead>
+    <tr>
+      <th>LoadBalancer</th>
+      <th>Proxy Name</th>
+      <th>Server Name</th>
+      <th>Current</th>
+      <th>Max</th>
+      <th>Limit</th>
+      <th>Total</th>
+      <th>LbTot</th>
+      <th>Last</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+      <td>{{lbId}}</td>
+      <td>{{value.data.pxname}}</td>
+      <td>{{value.data.svname}}</td>
+      <td>{{value.data.scur}}</td>
+      <td>{{value.data.smax}}</td>
+      <td>{{value.data.slim}}</td>
+      <td>{{value.data.stot}}</td>
+      <td>{{value.data.lbtot}}</td>
+      <td>{{value.data.lastsess}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
-        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Update</button>
-      </form>
+<div class="tab-pane" id="bytes">
+  <table class="table" ng-show="rawStatusForOneInst">
+    <thead>
+    <tr>
+      <th>LoadBalancer</th>
+      <th>Proxy Name</th>
+      <th>Server Name</th>
+      <th>Bytes In</th>
+      <th>Bytes Out</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+      <td>{{lbId}}</td>
+      <td>{{value.data.pxname}}</td>
+      <td>{{value.data.svname}}</td>
+      <td>{{value.data.bin | bytes}}</td>
+      <td>{{value.data.bout | bytes}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
-      <button type="button" class="btn btn-danger" ng-click="deleteAppInst()">Delete</button>
-    </div>
-  </div>
-  <a href back-button>back</a>
+<div class="tab-pane" id="denied">
+  <table class="table" ng-show="rawStatusForOneInst">
+    <thead>
+    <tr>
+      <th>LoadBalancer</th>
+      <th>Proxy Name</th>
+      <th>Server Name</th>
+      <th>Denied Requests</th>
+      <th>Denied Responses</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+      <td>{{lbId}}</td>
+      <td>{{value.data.pxname}}</td>
+      <td>{{value.data.svname}}</td>
+      <td>{{value.data.dreq}}</td>
+      <td>{{value.data.dresp}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="tab-pane" id="errors">
+  <table class="table" ng-show="rawStatusForOneInst">
+    <thead>
+    <tr>
+      <th>LoadBalancer</th>
+      <th>Proxy Name</th>
+      <th>Server Name</th>
+      <th>Request Errors</th>
+      <th>Connection Errors</th>
+      <th>Response Errors</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+      <td>{{lbId}}</td>
+      <td>{{value.data.pxname}}</td>
+      <td>{{value.data.svname}}</td>
+      <td>{{value.data.ereq}}</td>
+      <td>{{value.data.econ}}</td>
+      <td>{{value.data.eresp}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="tab-pane" id="warnings">
+  <table class="table" ng-show="rawStatusForOneInst">
+    <thead>
+    <tr>
+      <th>LoadBalancer</th>
+      <th>Proxy Name</th>
+      <th>Server Name</th>
+      <th>Retries (warning)</th>
+      <th>Redispatches (warning)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+      <td>{{lbId}}</td>
+      <td>{{value.data.pxname}}</td>
+      <td>{{value.data.svname}}</td>
+      <td>{{value.data.wretr}}</td>
+      <td>{{value.data.wredis}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="tab-pane" id="server">
+  <table class="table" ng-show="rawStatusForOneInst">
+    <thead>
+    <tr>
+      <th>LoadBalancer</th>
+      <th>Proxy Name</th>
+      <th>Server Name</th>
+      <th>Status</th>
+      <th>Last Change In Status</th>
+      <th>Weight</th>
+      <th>Active</th>
+      <th>Backup</th>
+      <th>Failed Checks</th>
+      <th>Checkdown</th>
+      <th>Downtime</th>
+      <th>Throttle (warmup status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(lbId,value) in rawStatusForOneInst"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[value.data.status]">
+      <td>{{lbId}}</td>
+      <td>{{value.data.pxname}}</td>
+      <td>{{value.data.svname}}</td>
+      <td>{{value.data.status}}</td>
+      <td>{{value.data.lastchg | secondstime}}</td>
+      <td>{{value.data.weight}}</td>
+      <td>{{value.data.act}}</td>
+      <td>{{value.data.bck}}</td>
+      <td>{{value.data.chkfail}}</td>
+      <td>{{value.data.chkdown}}</td>
+      <td>{{value.data.downtime | secondstime}}</td>
+      <td>{{value.data.throttle}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</div>
