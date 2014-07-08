@@ -9,7 +9,7 @@
 
   <li>In load balancers:
     <ul ng-repeat="lbForApp in app.loadBalancers">
-      <li>{{lbForApp.name}} ({{lbForApp.id}})</li>
+      <li><a href = "#/lb/{{lbForApp.id}}"> {{lbForApp.name}} ({{lbForApp.id}})</a></li>
     </ul>
   </li>
 

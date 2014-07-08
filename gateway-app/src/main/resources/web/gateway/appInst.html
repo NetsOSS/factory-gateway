@@ -6,10 +6,10 @@
     <li>Port : {{appInst.port}}</li>
     <li>Path : {{appInst.path}}</li>
     <li>In load balancers:
-      <ul ng-repeat="lbForApp in app.loadBalancers">
-        <li>{{lbForApp.name}} ({{lbForApp.id}})</li>
-
+      <ul ng-repeat="(lb, value) in rawStatusForOneInst">
+        <li><a href="#/lb/{{lb}}">{{lb}}</a></li>
       </ul>
+
     </li>
     <ul ng-show="!rawStatusForOneInst">No loadbalancers associated with this application instance
     </ul>
