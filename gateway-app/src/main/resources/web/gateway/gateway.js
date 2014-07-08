@@ -5,7 +5,7 @@ define([
   'angular'
 ], function (require, angular) {
   var templatePrefix = require.toUrl("./");
-  var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives','shared.filters']);
+  var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives', 'shared.filters']);
 
 
   gateway.config(function ($routeProvider, $httpProvider) {
@@ -44,9 +44,9 @@ define([
         /* All the following methods are optional */
         response: function (response) {
           // response.status === 200
-          if(response.config.method=="PUT"){
+          if (response.config.method == "PUT") {
             //console.log("Update successfully" ,response);
-            $("#MessageDisplaySuccessText").text("Updated "+response.data.name+" successfully.");
+            $("#MessageDisplaySuccessText").text("Updated " + response.data.name + " successfully.");
             $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
           }
           //console.log("Response: ",response)
@@ -201,7 +201,7 @@ define([
 
     $scope.currModalStatus = {};
     $scope.showModalDetail = function (statusObj) {
-      $scope.currModalStatus=statusObj;
+      $scope.currModalStatus = statusObj;
       $('#modalAppInstDetails').modal('show');
 
     };
@@ -232,10 +232,11 @@ define([
 
 
   //    ----------------------- Load balancer Controller ------------------------------------
-  gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, GatewayData) {
+  gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, $timeout, GatewayData) {
     $scope.inLBList = [];
     $scope.allLBList = [];
 
+    $scope.autoRefresh = false;
     $scope.lbLoadingDone = false;
 
     var LBid = $routeParams.id;
@@ -309,10 +310,44 @@ define([
     };
 
 
-    //----- Status proxy
-    GatewayData.StatusController.getStatusForLoadbalancer($routeParams.id).then(function (data) {
-      $scope.rawStatus = data;
+    //----- Status proxy -----------------------
+    var poller = null;
+    $scope.startStopAutoRefresh = function () {
+      $scope.autoRefresh = !$scope.autoRefresh;
+
+      if ($scope.autoRefresh) {
+        console.log('Starting poller!');
+        loadStatus();
+
+      } else {
+        console.log('Stopped poller!');
+        $timeout.cancel(poller);
+      }
+    };
+
+    var loadStatus = function(){
+      console.log('Loading status');
+      GatewayData.StatusController.getStatusForLoadbalancer($routeParams.id).then(function (data) {
+        $scope.rawStatus = data;
+      });
+
+      if($scope.autoRefresh){
+        poller= $timeout(loadStatus, 5000);
+      }
+
+    };
+    loadStatus();
+
+    //Clean up. Stop poling if leaving page
+    $scope.$on('$locationChangeStart', function(){
+      $timeout.cancel(poller);
     });
+    $scope.$on('$destroy', function(){
+      $timeout.cancel(poller);
+    });
+
+
+
 
   });
 
