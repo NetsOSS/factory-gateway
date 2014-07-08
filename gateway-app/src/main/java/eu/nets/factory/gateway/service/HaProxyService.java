@@ -7,9 +7,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -43,10 +41,10 @@ public class HaProxyService {
 
         // Read pid-file if exists, and add pid as argument to do a "graceful" restart
         if (Files.exists(Paths.get(installationPath + "/" + PID_FILE))) {
-            BufferedReader reader = null;
             try {
-                reader = Files.newBufferedReader(Paths.get(installationPath + "/" + PID_FILE));
+                BufferedReader reader = Files.newBufferedReader(Paths.get(installationPath + "/" + PID_FILE));
                 String pid = reader.readLine();
+                reader.close();
                 commands.add("-sf");
                 commands.add(pid);
             } catch (IOException e) {
@@ -65,8 +63,8 @@ public class HaProxyService {
         // Redirect output to a log file - (Works on the Linux server. Use console output for local Windows (see below))
         File logFile = new File(installationPath + "/" + LOG_FILE);
         pb.redirectErrorStream(true);
-        pb.redirectOutput(ProcessBuilder.Redirect.appendTo(logFile));
-        pb.redirectError(ProcessBuilder.Redirect.appendTo(logFile));
+        pb.redirectOutput(ProcessBuilder.Redirect.to(logFile));
+        pb.redirectError(ProcessBuilder.Redirect.to(logFile));
 
 //        Log to console
 //        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -74,12 +72,20 @@ public class HaProxyService {
 
         // Start HAProxy
         try {
-            pb.start();
-        } catch (IOException e) {
+            Process process = pb.start();
+
+            // Check exit value, to see if HAProxy was successfully restarted
+            process.waitFor();
+            if (process.exitValue() != 0) {
+                String errorMessage = "Loadbalancer could not be started. Check logfile " + installationPath + "/" + LOG_FILE;
+                log.warn(errorMessage);
+                throw new GatewayException(errorMessage);
+            }
+        } catch (IOException | InterruptedException e) {
             String errorMessage = "Loadbalancer could not be started: " + e.getLocalizedMessage();
             log.warn(errorMessage, e);
             throw new GatewayException(errorMessage);
         }
-        log.info("started LoadBalancer");
+        log.info("Started LoadBalancer");
     }
 }
