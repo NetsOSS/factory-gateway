@@ -36,15 +36,17 @@
       <div class="modal-body">
         <h3 class="modal-title">New Application Instance</h3>
 
-        <form role="form" ng-submit="saveAppInst()">
+        <form role="form" ng-submit="saveAppInst()" name="newInstanceForm">
 
-          <div class="form-group" ng-class="{'has-error': form.name.$invalid && !form.name.$pristine}">
+          <div class="form-group" ng-class="{'has-error': newInstanceForm.name.$invalid && newInstanceForm.name.$dirty}">
             <label for="inAppInstName">Name</label>
             <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
+                   ng-pattern="/^\S+$/"
                    required
                    placeholder="Enter name">
+            <span class="bg-danger" ng-show="newInstanceForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
           </div>
-          <div class="form-group" ng-class="{'has-error': form.host.$invalid && !form.host.$pristine}">
+          <div class="form-group" ng-class="{'has-error': newInstanceForm.host.$invalid && newInstanceForm.host.$dirty}">
             <label for="inAppInstHost">Host</label>
             <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
                    required
@@ -58,21 +60,19 @@
                    required
                    integer
                    placeholder="Enter port">
-            <span ng-show="form.port.$error.integer">This is not valid integer!</span>
-                 <span ng-show="form.port.$error.min || form.port.$error.max">
-
-      The value must be in range 1 to 65535!</span>
+            <span class="bg-danger" ng-show="newInstanceForm.port.$error.integer">This is not valid integer!</span>
+            <span class="bg-danger" ng-show="newInstanceForm.port.$error.min || newInstanceForm.port.$error.max">The value must be in range 1 to 65535!</span>
 
           </div>
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error': newInstanceForm.path.$invalid && newInstanceForm.path.$dirty}">
             <label for="inAppInstPath">Path</label>
             <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                   ng-pattern="/^/[a-zA-Z]+/" name="path" required
+                   ng-pattern="/^/[a-zA-Z]+\S*$/" name="path" required
                    placeholder="Enter path / url">
-            <span class="bg-danger" ng-show="form.path.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+            <span class="bg-danger" ng-show="newInstanceForm.path.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Submit</button>
+          <button type="submit" class="btn btn-primary" ng-disabled="newInstanceForm.$invalid ">Submit</button>
         </form>
 
       </div>
@@ -95,37 +95,40 @@
       <div class="modal-body">
         <h3 class="modal-title">Update application</h3>
 
-        <form role="form" ng-submit="updateApplication()">
+        <form role="form" ng-submit="updateApplication()" name="editAppForm">
 
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error': editAppForm.name.$invalid && editAppForm.name.$dirty}">
             <label for="inAppName">Name</label>
-            <input type="text" ng-model="app.name" class="form-control" id="inAppName">
+            <input type="text" ng-model="app.name" class="form-control" id="inAppName" name="name" ng-pattern="/^\S+$/" required/>
+            <span class="bg-danger" ng-show="editAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error': editAppForm.publicUrl.$invalid && editAppForm.publicUrl.$dirty}">
             <label for="inAppPublicUrl">Public Path</label>
             <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
-                   ng-pattern="/^/[a-zA-Z]+/"
+                   ng-pattern="/^/[a-zA-Z]+\S*$/"
                    required
-                   placeholder="Enter public url">
-            <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+                   placeholder="Enter public path">
+            <span class="bg-danger" ng-show="editAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error': editAppForm.emails.$invalid && editAppForm.emails.$dirty}">
             <label for="inAppEmails">Emails (for notification). Separate by ,</label>
             <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
                    required
                    placeholder="Enter email(s)">
           </div>
 
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error': editAppForm.checkPath.$invalid && editAppForm.checkPath.$dirty}">
             <label for="inAppCheckPath">Check path</label>
             <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath" name="checkPath"
+                   ng-pattern="/^/[a-zA-Z]+\S*$/"
                    required
                    placeholder="Enter check path">
+            <span class="bg-danger" ng-show="editAppForm.checkPath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Update</button>
+          <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
         </form>
       </div>
       <div class="modal-footer">
