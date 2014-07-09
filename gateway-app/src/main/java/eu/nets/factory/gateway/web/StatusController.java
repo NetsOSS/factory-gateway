@@ -46,17 +46,12 @@ public class StatusController {
     EmailService emailService;
 
 
-
-
-
-
-
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/server-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public ApplicationStatusModel getServerStatusForApplication(@PathVariable Long id) {
 
         Application application = applicationRepository.findOne(id);
-        if(application == null) {
+        if (application == null) {
             return null;
         }
 
@@ -65,11 +60,12 @@ public class StatusController {
                 forEach(ai -> applicationStatusModel.applicationInstances.put(ai.getId(), new ApplicationInstanceStatusModel(ai)));
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
-        for(LoadBalancer loadBalancer: loadBalancers) {
+        for (LoadBalancer loadBalancer : loadBalancers) {
 
             try {
 
                 List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(loadBalancer.getId());
+
                 for (StatusModel statusModel : statusModelsFromCSV) {
                     if (!statusModel.data.get("pxname").equals(application.getName())) {
                         continue;
@@ -94,39 +90,39 @@ public class StatusController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applicationInstance/{id}/status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public  HashMap<Long, StatusModel> getStatusForOneServer(@PathVariable Long id) {
+    public HashMap<Long, StatusModel> getStatusForOneServer(@PathVariable Long id) {
         log.info("StatusController.getStatusForOneServer, id={}", id);
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
 
-        if(applicationInstance == null) {
+        if (applicationInstance == null) {
             throw new EntityNotFoundException("ApplicationInstance", id);
         }
 
         Application application = applicationInstance.getApplication();
 
         HashMap<Long, StatusModel> appInstStatusModelList = new HashMap<>();
-        for(LoadBalancer lb : application.getLoadBalancers()){
-           List<StatusModel> list = statusService.getStatusForLoadBalancer(lb.getId());
+        for (LoadBalancer lb : application.getLoadBalancers()) {
+            List<StatusModel> list = statusService.getStatusForLoadBalancer(lb.getId());
 
-          for (StatusModel statusModel : list){
-              if(statusModel.data.get("svname").equals(applicationInstance.getName())){
-                  appInstStatusModelList.put(lb.getId(),statusModel);
-              }
-          }
+            for (StatusModel statusModel : list) {
+                if (statusModel.data.get("svname").equals(applicationInstance.getName())) {
+                    appInstStatusModelList.put(lb.getId(), statusModel);
+                }
+            }
         }
 
-        if(appInstStatusModelList.isEmpty()) {
+        if (appInstStatusModelList.isEmpty()) {
             return null;
         }
         return appInstStatusModelList;
     }
 
 
-    public List<StatusModel> getServerStatus(List<StatusModel> statusModelsFromCSV, Application application ) {
+    public List<StatusModel> getServerStatus(List<StatusModel> statusModelsFromCSV, Application application) {
 
         List<StatusModel> models = new ArrayList<StatusModel>();
-        for(StatusModel statusModel: statusModelsFromCSV) {
-            if(statusModel.data.get("pxname").equals(application.getName()) && !statusModel.data.get("svname").equals("BACKEND")) {
+        for (StatusModel statusModel : statusModelsFromCSV) {
+            if (statusModel.data.get("pxname").equals(application.getName()) && !statusModel.data.get("svname").equals("BACKEND")) {
                 models.add(statusModel);
             }
         }
@@ -140,16 +136,18 @@ public class StatusController {
 
         HashMap<Long, StatusModel> hashMap = new HashMap<>();
         Application application = applicationRepository.findOne(id);
-        if(application == null) { throw new EntityNotFoundException("Application", id); }
+        if (application == null) {
+            throw new EntityNotFoundException("Application", id);
+        }
 
-        if(application == null) {
+        if (application == null) {
             return null;
         }
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
-        for(LoadBalancer loadBalancer: loadBalancers) {
+        for (LoadBalancer loadBalancer : loadBalancers) {
 
-            List<StatusModel> models =  statusService.getStatusForLoadBalancer(loadBalancer.getId());
+            List<StatusModel> models = statusService.getStatusForLoadBalancer(loadBalancer.getId());
 
             hashMap.put(loadBalancer.getId(), getBackendServer(models, application));
         }
@@ -158,20 +156,24 @@ public class StatusController {
     }
 
     public StatusModel getBackendServer(List<StatusModel> models, Application application) {
+        if (models == null)
+            return null;
 
-        for(StatusModel model: models) {
-            if(model.data.get("pxname").equals(application.getName()) && model.data.get("svname").equals("BACKEND")) {
+        for (StatusModel model : models) {
+            if (model.data.get("pxname").equals(application.getName()) && model.data.get("svname").equals("BACKEND")) {
                 return model;
             }
         }
         return null;
     }
+
     //Should be private. but used in test. fix later
-   public List<String> readCSV(LoadBalancer loadBalancer) {
+    public List<String> readCSV(LoadBalancer loadBalancer) {
         log.info("StatusController.getStatus");
-     // return  statusService.getStatusForLoadBalancer(loadBalancer.getId());
+        // return  statusService.getStatusForLoadBalancer(loadBalancer.getId());
         return statusService.readCSV(loadBalancer);
     }
+
     //Should be private. but used in test. fix later
     public List<StatusModel> parseCSV(List<String> csvString) {
         log.info("StatusController.parseCSV");
@@ -184,7 +186,9 @@ public class StatusController {
         log.info("StatusController.getStatusForLoadBalancer, id={}", id);
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
-        if(loadBalancer == null) { throw new EntityNotFoundException("LoadBalancer", id); }
+        if (loadBalancer == null) {
+            throw new EntityNotFoundException("LoadBalancer", id);
+        }
 
         return statusService.getStatusForLoadBalancer(id);
     }
@@ -195,7 +199,9 @@ public class StatusController {
         log.info("StatusController.sendEmail, id={}", id);
 
         Application application = applicationRepository.findOne(id);
-        if(application == null) { throw new EntityNotFoundException("Application", id); }
+        if (application == null) {
+            throw new EntityNotFoundException("Application", id);
+        }
 
         emailService.sendEmail();
         return "Sent email status of " + application.getName() + " to " + application.getEmails();

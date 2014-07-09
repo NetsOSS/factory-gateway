@@ -51,17 +51,17 @@ public class StatusService {
         List<LoadBalancer> lbList = loadBalancerRepository.findAll();
 
         for (LoadBalancer lb : lbList) {
+            List<StatusModel> oldlistStatusList = loadBalancerStatuses.get(lb.getId());
             try {
-                List<StatusModel> listStatus = parseCSV(readCSV(lb));
-                List<StatusModel> oldlistStatusList = loadBalancerStatuses.get(lb.getId());
-
+                List<StatusModel> listStatus = parseCSV(readCSV(lb)); //throws exception if failed
                 if (oldlistStatusList != null)
                     checkForChangesInStatus(oldlistStatusList, listStatus);
                 loadBalancerStatuses.put(lb.getId(), listStatus);
 
             }catch (GatewayException ge){
-
-                log.info("StatusService.autoPoll {} at {}:{} is offline. Cannot be reached. ",lb.getName(),lb.getHost(),lb.getPublicPort());
+                //happens when a haproxy is offline
+                loadBalancerStatuses.put(lb.getId(), null);
+                log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'",lb.getName(),lb.getHost(),lb.getPublicPort(),ge.getMessage());
             }
 
 
