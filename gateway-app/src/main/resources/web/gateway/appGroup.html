@@ -23,17 +23,19 @@ Nothing more here..
             <div class="form-group">
                 <label for="inAppName">Name</label>
                 <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
+                       ng-pattern="/^\S$/"
                        required
                        placeholder="Enter application name">
+              <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
             </div>
             <div class="form-group">
                 <label for="inAppPublicUrl">Public Path</label>
                 <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl"
                        name="publicUrl"
-                       ng-pattern="/^/[a-zA-Z]+/"
+                       ng-pattern="/^/[a-zA-Z]+\S*$/"
                        required
                        placeholder="Enter public url">
-                <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+                <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
             </div>
             <div class="form-group">
                 <label for="inAppPublicUrl">Emails (for notification). Separate by ,</label>
@@ -44,10 +46,10 @@ Nothing more here..
           <div class="form-group">
             <label for="inAppCheckPath">Check path</label>
             <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath" name="checkpath"
-                   ng-pattern="/^/[a-zA-Z]+/"
+                   ng-pattern="/^/[a-zA-Z]+\S*$/"
                    required
                    placeholder="Enter check path">
-            <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+            <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
             <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
