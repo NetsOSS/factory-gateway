@@ -145,11 +145,19 @@
 
 <h3>Instances / Servers: </h3>
 <div class="row">
-  <div class="col-sm-6" ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
+  <div class="col-sm-8" ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
     <div class="panel panel-info">
-      <div class="panel-heading">
-        <h3 class="panel-title">App instance : <b>{{appInstValue.name}}</b> ({{appInstId}})</h3>
+      <div class="panel-heading col-sm-12">
+        <h3 class="panel-title col-md-8">App instance : <b>{{appInstValue.name}}</b> ({{appInstId}}) </h3>
+        <a class="btn btn-default btn-sm pull-right col-md-3" href="#/appInst/{{appInstId}}">Full Haproxy Details</a>
+
+        <div ng-repeat="a in app.applicationInstances | filter:appInstId">
+          <a class="btn btn-default btn-sm pull-right col-md-1"
+             href="http://{{a.host}}:{{a.port}}{{app.checkPath}}">Visit</a>
+        </div>
       </div>
+      <hr>
+      <hr>
       <div class="panel-body">
         <div ng-repeat="(lbId, status) in appInstValue.statuses">
 
@@ -163,8 +171,6 @@
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 </div>
@@ -173,23 +179,6 @@
 <div class="row">
 
   <div class="col-sm-6">
-
-    <h3>All Application Instances of '{{app.name}}' </h3>
-
-    <div class="list-group">
-      <div class="list-group-item" ng-repeat="a in app.applicationInstances">
-        <div class="row">
-          <div class="col-md-10">
-            <b> {{a.name}}</b> ({{a.id}}) {{a.host}}/{{a.path}}:{{a.port}}
-          </div>
-          <div class="col-md-1"><a class="btn btn-primary btn-sm pull-right" href="#/appInst/{{a.id}}">Explore</a>
-          </div>
-          <div class="col-md-1"><a class="btn btn-primary btn-sm pull-right"
-                                   href="http://{{a.host}}:{{a.port}}{{app.checkPath}}">Visit</a></div>
-        </div>
-      </div>
-    </div>
-
 
     <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
       (show/hide)</strong> json data</a>

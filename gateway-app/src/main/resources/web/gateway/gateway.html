@@ -2,68 +2,66 @@
 
 <div class="row">
 
-    <div class="col-sm-6">
-        <h3>New Application Group </h3>
+  <div class="col-sm-6">
+    <h3>New Application Group </h3>
 
-        <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
+    <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
 
-            <div class="form-group">
-                <label for="inAppGroupName">Name</label>
-                <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName" name="name"
-                       required
-                       placeholder="Enter application name">
-            </div>
-            <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
-        </form>
-    </div>
+      <div class="form-group">
+        <label for="inAppGroupName">Name</label>
+        <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName" name="name"
+               required
+               placeholder="Enter application name">
+      </div>
+      <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
+    </form>
+  </div>
 
-    <div class="col-sm-6">
+  <div class="col-sm-6">
 
-        <h3>All Application Groups</h3>
+    <h3>All Application Groups</h3>
 
-        <div class="list-group">
-            <a href="#/group/{{appGroup.id}}" class="list-group-item" ng-repeat="appGroup in allAppGroups">
-                <b> {{appGroup.name}}</b> ({{appGroup.id}})
-            </a>
-
-
-        </div>
-
-
-        <a href="" ng-model="collapsedGroup" ng-click="collapsedGroup=!collapsedGroup"><strong>Toggle
-            (show/hide)</strong> json data</a>
-
-        <div ng-show="collapsedGroup">
-            <pre>{{allAppGroups|json}}</pre>
-        </div>
+    <div class="list-group">
+      <a href="#/group/{{appGroup.id}}" class="list-group-item" ng-repeat="appGroup in allAppGroups">
+        <b> {{appGroup.name}}</b> ({{appGroup.id}})
+      </a>
 
 
     </div>
+
+
+    <a href="" ng-model="collapsedGroup" ng-click="collapsedGroup=!collapsedGroup"><strong>Toggle
+      (show/hide)</strong> json data</a>
+
+    <div ng-show="collapsedGroup">
+      <pre>{{allAppGroups|json}}</pre>
+    </div>
+
+
+  </div>
 </div>
 <hr/>
 <div class="row">
 
 
+  <div class="col-sm-6">
 
+    <h3>All Applications</h3>
 
-    <div class="col-sm-6">
-
-        <h3>All Applications</h3>
-
-        <div class="list-group">
-            <a href="#/app/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
-                <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}})
-            </a>
-        </div>
-
-
-        <a href="" ng-model="collapsedApp" ng-click="collapsedApp=!collapsedApp"><strong>Toggle (show/hide)</strong>
-            json data</a>
-
-        <div ng-show="collapsedApp">
-            <pre>{{allApps|json}}</pre>
-        </div>
+    <div class="list-group">
+      <a href="#/app/{{a.id}}" class="list-group-item" ng-repeat="a in allApps">
+        <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}})
+      </a>
     </div>
+
+
+    <a href="" ng-model="collapsedApp" ng-click="collapsedApp=!collapsedApp"><strong>Toggle (show/hide)</strong>
+      json data</a>
+
+    <div ng-show="collapsedApp">
+      <pre>{{allApps|json}}</pre>
+    </div>
+  </div>
 
 </div>
 
@@ -72,93 +70,94 @@
 
 
 <div class="row">
-    <div class="col-sm-6">
-        <lb-form></lb-form>
-    </div>
+  <div class="col-sm-6">
+    <lb-form></lb-form>
+  </div>
 
 
-    <div class="col-sm-6">
+  <div class="col-sm-6">
 
-        <h3>All Load Balancers</h3>
-
-
-        <div class="list-group">
-            <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in allLBs">
-                <b> {{lb.name}}</b> {{lb.installationPath}} {{lb.sshKey}} ({{lb.id}})
-            </a>
+    <h3>All Load Balancers</h3>
 
 
-        </div>
-
-        <a href="" ng-model="collapsedLB" ng-click="collapsedLB=!collapsedLB"><strong>Toggle (show/hide)</strong> json
-            data</a>
-
-        <div ng-show="collapsedLB">
-            <pre>{{allLBs|json}}</pre>
-        </div>
+    <div class="list-group">
+      <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in allLBs">
+        <b> {{lb.name}}</b> {{lb.installationPath}} {{lb.sshKey}} ({{lb.id}})
+      </a>
 
 
     </div>
+
+    <a href="" ng-model="collapsedLB" ng-click="collapsedLB=!collapsedLB"><strong>Toggle (show/hide)</strong> json
+      data</a>
+
+    <div ng-show="collapsedLB">
+      <pre>{{allLBs|json}}</pre>
+    </div>
+
+
+  </div>
 
 </div>
-<!--
 <hr>
+  <!--
+  <hr>
 
 
-<h1>Person (demo) </h1>
+  <h1>Person (demo) </h1>
 
-<div class="row">
-    <div class="col-sm-6"><h3>New person</h3>
+  <div class="row">
+      <div class="col-sm-6"><h3>New person</h3>
 
-        <form role="form" ng-submit="savePerson()">
+          <form role="form" ng-submit="savePerson()">
 
-            <div class="form-group">
-                <label for="n">Name</label>
-                <input type="text" ng-model="person.name" class="form-control" id="n" placeholder="Enter name">
-            </div>
+              <div class="form-group">
+                  <label for="n">Name</label>
+                  <input type="text" ng-model="person.name" class="form-control" id="n" placeholder="Enter name">
+              </div>
 
-            <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-
-
-        <div class="alert alert-success" ng-show="showNewPersonAlert">Person is added successfully</div>
-        <hr>
-        <h4>Search</h4>
-
-        <form role="form">
-
-            <div class="form-group">
-                <label for="n">Name</label>
-                <input type="text" ng-model="searchInput" class="form-control" placeholder="Keywords..."
-                       ng-change="search()">
-            </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+          </form>
 
 
-        </form>
+          <div class="alert alert-success" ng-show="showNewPersonAlert">Person is added successfully</div>
+          <hr>
+          <h4>Search</h4>
+
+          <form role="form">
+
+              <div class="form-group">
+                  <label for="n">Name</label>
+                  <input type="text" ng-model="searchInput" class="form-control" placeholder="Keywords..."
+                         ng-change="search()">
+              </div>
 
 
-        <pre>{{searchRes|json}}</pre>
-
-    </div>
-    <div class="col-sm-6">
-
-        <h3>All persons</h3>
+          </form>
 
 
+          <pre>{{searchRes|json}}</pre>
 
-        <div class="list-group">
-            <a href="#/person/{{p.id}}" class="list-group-item" ng-repeat="p in persons">
-                <b> {{p.name}}</b> ({{p.id}})
-            </a>
+      </div>
+      <div class="col-sm-6">
 
-        </div>
-
-        <h4>Raw</h4>
-        <pre>{{persons|json}}</pre>
+          <h3>All persons</h3>
 
 
-    </div>
-</div>
+
+          <div class="list-group">
+              <a href="#/person/{{p.id}}" class="list-group-item" ng-repeat="p in persons">
+                  <b> {{p.name}}</b> ({{p.id}})
+              </a>
+
+          </div>
+
+          <h4>Raw</h4>
+          <pre>{{persons|json}}</pre>
 
 
--->
+      </div>
+  </div>
+
+
+  -->
