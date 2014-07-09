@@ -22,10 +22,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -51,16 +48,16 @@ public class StatusService {
         List<LoadBalancer> lbList = loadBalancerRepository.findAll();
 
         for (LoadBalancer lb : lbList) {
-            List<StatusModel> oldlistStatusList = loadBalancerStatuses.get(lb.getId());
+            List<StatusModel> oldListStatusList = loadBalancerStatuses.get(lb.getId());
             try {
                 List<StatusModel> listStatus = parseCSV(readCSV(lb)); //throws exception if failed
-                if (oldlistStatusList != null)
-                    checkForChangesInStatus(oldlistStatusList, listStatus);
+                if (oldListStatusList != null && !oldListStatusList.isEmpty())
+                    checkForChangesInStatus(oldListStatusList, listStatus);
                 loadBalancerStatuses.put(lb.getId(), listStatus);
 
             }catch (GatewayException ge){
                 //happens when a haproxy is offline
-                loadBalancerStatuses.put(lb.getId(), null);
+                loadBalancerStatuses.put(lb.getId(), Collections.<StatusModel>emptyList());
                 log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'",lb.getName(),lb.getHost(),lb.getPublicPort(),ge.getMessage());
             }
 
@@ -101,6 +98,7 @@ public class StatusService {
         }
 
     }
+
 
     public List<StatusModel> getStatusForLoadBalancer(Long loadBalancerId) {
         return loadBalancerStatuses.get(loadBalancerId);

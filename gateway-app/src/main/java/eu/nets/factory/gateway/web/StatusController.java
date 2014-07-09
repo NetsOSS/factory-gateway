@@ -76,7 +76,7 @@ public class StatusController {
                     if (!svname.equals("BACKEND")) {
                         applicationStatusModel.getByName(svname).ifPresent(m -> m.statuses.put(loadBalancer.getId(), statusModel.data));
                     } else {
-
+                        //FRONTEND
                         applicationStatusModel.data.putAll(statusModel.data);
                     }
                 }
@@ -140,9 +140,6 @@ public class StatusController {
             throw new EntityNotFoundException("Application", id);
         }
 
-        if (application == null) {
-            return null;
-        }
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for (LoadBalancer loadBalancer : loadBalancers) {
@@ -189,8 +186,9 @@ public class StatusController {
         if (loadBalancer == null) {
             throw new EntityNotFoundException("LoadBalancer", id);
         }
-
-        return statusService.getStatusForLoadBalancer(id);
+        //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
+        List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
+        return list.isEmpty() ? null : list;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/sendEmail/{id}", produces = APPLICATION_JSON_VALUE)
