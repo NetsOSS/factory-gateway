@@ -9,16 +9,136 @@
 
   <li>In load balancers:
     <ul ng-repeat="lbForApp in app.loadBalancers">
-      <li><a href = "#/lb/{{lbForApp.id}}"> {{lbForApp.name}} ({{lbForApp.id}})</a></li>
+      <li><a href="#/lb/{{lbForApp.id}}"> {{lbForApp.name}} ({{lbForApp.id}})</a></li>
     </ul>
   </li>
 
+  <button class="btn btn-info" data-toggle="modal" data-target="#myModal">Edit Application</button>
+
+  <button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span>
+    Delete Application
+  </button>
+
+  <button class="btn btn-info" data-toggle="modal" data-target="#myInstModal">Create Instance</button>
 
 </ul>
 
 
+<div class="modal fade" id="myInstModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">New Instance</h4>
+      </div>
+      <div class="modal-body">
+        <h3 class="modal-title">New Application Instance</h3>
+
+        <form role="form" ng-submit="saveAppInst()">
+
+          <div class="form-group" ng-class="{'has-error': form.name.$invalid && !form.name.$pristine}">
+            <label for="inAppInstName">Name</label>
+            <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
+                   required
+                   placeholder="Enter name">
+          </div>
+          <div class="form-group" ng-class="{'has-error': form.host.$invalid && !form.host.$pristine}">
+            <label for="inAppInstHost">Host</label>
+            <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
+                   required
+                   placeholder="Enter host">
+          </div>
+          <div class="form-group">
+            <label for="inAppInstPort">Port</label>
+            <input type="number" ng-model="appInst.port" min="1" max="65535" class="form-control"
+                   id="inAppInstPort"
+                   name="port"
+                   required
+                   integer
+                   placeholder="Enter port">
+            <span ng-show="form.port.$error.integer">This is not valid integer!</span>
+                 <span ng-show="form.port.$error.min || form.port.$error.max">
+
+      The value must be in range 1 to 65535!</span>
+
+          </div>
+          <div class="form-group">
+            <label for="inAppInstPath">Path</label>
+            <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                   ng-pattern="/^/[a-zA-Z]+/" name="path" required
+                   placeholder="Enter path / url">
+            <span class="bg-danger" ng-show="form.path.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Submit</button>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Update</h4>
+      </div>
+      <div class="modal-body">
+        <h3 class="modal-title">Update application</h3>
+
+        <form role="form" ng-submit="updateApplication()">
+
+          <div class="form-group">
+            <label for="inAppName">Name</label>
+            <input type="text" ng-model="app.name" class="form-control" id="inAppName">
+          </div>
+
+          <div class="form-group">
+            <label for="inAppPublicUrl">Public Path</label>
+            <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
+                   ng-pattern="/^/[a-zA-Z]+/"
+                   required
+                   placeholder="Enter public url">
+            <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="inAppEmails">Emails (for notification). Separate by ,</label>
+            <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
+                   required
+                   placeholder="Enter email(s)">
+          </div>
+
+          <div class="form-group">
+            <label for="inAppCheckPath">Check path</label>
+            <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath" name="checkPath"
+                   required
+                   placeholder="Enter check path">
+          </div>
+
+          <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Update</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+
 <h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out :
   {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
+
 
 <h3>Instances / Servers: </h3>
 <div class="row">
@@ -44,182 +164,50 @@
 
     </div>
   </div>
-  <!--
-  <table class="table">
-      <tr ng-repeat="(key,value) in statusAppServers">
-          <td>Key {{key}} , value:{{value}}</td>
-      </tr>
+</div>
 
-  </table>
+<hr>
+<div class="row">
 
-  <table class="table">
+  <div class="col-sm-6">
 
-      <thead>
-      <tr>
-          <th>Application instance</th>
-          <th ng-repeat="lb in app.loadBalancers">{{lb.name}}</th>
+    <h3>All Application Instances of '{{app.name}}' </h3>
 
-      </tr>
-      </thead>
-
-      <tbody>
-      <tr ng-repeat="appInst in app.applicationInstances">
-          <td>{{statusApp[72000].data.pxname}}</td>
-          <td>{{statusApp[72000].data.status}} : {{statusApp[72000].data.bin}}</td>
-
-      </tr>
-      </tbody>
-  </table>
-  <pre>{{statusApp|json}}</pre>
-  <div class="list-group">
-      <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in app.loadBalancers">
-          <b> {{lb.name}}</b> ({{lb.id}}) {{lb.host}}:{{lb.port}}{{lb.installationPath}}
-      </a>
-
-  </div>
-  -->
-  <!--
-
-  <div class="progress progress-striped active">
-   <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-       <span class="sr-only">100% Complete (success)</span>
-   </div>
-  </div>
-  -->
-  <hr>
-  <div class="row">
-    <div class="col-sm-6">
-
-      <h3>New Application Instance</h3>
-
-      <form role="form" ng-submit="saveAppInst()" name="form">
-
-        <div class="form-group" ng-class="{'has-error': form.name.$invalid && !form.name.$pristine}">
-          <label for="inAppInstName">Name</label>
-          <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
-                 required
-                 placeholder="Enter name">
-        </div>
-        <div class="form-group" ng-class="{'has-error': form.host.$invalid && !form.host.$pristine}">
-          <label for="inAppInstHost">Host</label>
-          <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
-                 required
-                 placeholder="Enter host">
-        </div>
-        <div class="form-group">
-          <label for="inAppInstPort">Port</label>
-          <input type="number" ng-model="appInst.port" min="1" max="65535" class="form-control"
-                 id="inAppInstPort"
-                 name="port"
-                 required
-                 integer
-                 placeholder="Enter port">
-          <span ng-show="form.port.$error.integer">This is not valid integer!</span>
-                 <span ng-show="form.port.$error.min || form.port.$error.max">
-
-      The value must be in range 1 to 65535!</span>
-
-        </div>
-        <div class="form-group">
-          <label for="inAppInstPath">Path</label>
-          <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                 ng-pattern="/^/[a-zA-Z]+/" name="path" required
-                 placeholder="Enter path / url">
-          <span class="bg-danger" ng-show="form.path.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
-        </div>
-
-        <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid ">Submit</button>
-      </form>
-
-      <div class="alert alert-success" ng-show="newAppInstAlertSuccess">Application is added successfully (refresh
-        browser)
-      </div>
-    </div>
-
-
-    <div class="col-sm-6">
-
-      <h3>All Application Instances of '{{app.name}}' </h3>
-
-      <div class="list-group">
-        <div class="list-group-item" ng-repeat="a in app.applicationInstances">
-          <div class="row">
-            <div class="col-md-10">
-              <b> {{a.name}}</b> ({{a.id}}) {{a.host}}/{{a.path}}:{{a.port}}
-            </div>
-            <div class="col-md-1"><a class="btn btn-danger btn-sm pull-right" href="#/appInst/{{a.id}}">Explore</a>
-            </div>
-            <div class="col-md-1"><a class="btn btn-danger btn-sm pull-right"
-                                     href="http://{{a.host}}:{{a.port}}{{app.checkPath}}">Visit</a></div>
+    <div class="list-group">
+      <div class="list-group-item" ng-repeat="a in app.applicationInstances">
+        <div class="row">
+          <div class="col-md-10">
+            <b> {{a.name}}</b> ({{a.id}}) {{a.host}}/{{a.path}}:{{a.port}}
           </div>
+          <div class="col-md-1"><a class="btn btn-primary btn-sm pull-right" href="#/appInst/{{a.id}}">Explore</a>
+          </div>
+          <div class="col-md-1"><a class="btn btn-primary btn-sm pull-right"
+                                   href="http://{{a.host}}:{{a.port}}{{app.checkPath}}">Visit</a></div>
         </div>
       </div>
+    </div>
 
 
-      <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
-        (show/hide)</strong> json data</a>
+    <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
+      (show/hide)</strong> json data</a>
 
-      <div ng-show="collapsedAppInst">
-        <pre>{{app.applications|json}}</pre>
-      </div>
-
+    <div ng-show="collapsedAppInst">
+      <pre>{{app.applications|json}}</pre>
     </div>
 
   </div>
-
-  <hr>
-  <!-- Not used
-  <app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone"></app-form>
-  -->
-
-  <h3>Update application</h3>
-
-  <form role="form" ng-submit="updateApplication()" name="createAppForm" novalidate>
-
-    <div class="form-group">
-      <label for="inAppName">Name</label>
-      <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
-             required
-             placeholder="Enter application name">
-    </div>
-    <div class="form-group">
-      <label for="inAppPublicUrl">Public Path</label>
-      <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
-             ng-pattern="/^/[a-zA-Z]+/"
-             required
-             placeholder="Enter public url">
-      <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
-    </div>
-    <div class="form-group">
-      <label for="inAppPublicUrl">Emails (for notification). Separate by ,</label>
-      <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
-             required
-             placeholder="Enter email(s)">
-    </div>
-    <div class="form-group">
-      <label for="inAppCheckPath">Check path</label>
-      <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath" name="checkPath"
-             required
-             placeholder="Enter check path">
-    </div>
-
-
-    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Update</button>
-  </form>
-
-
-  <hr>
-  <button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span>
-    Delete application
-  </button>
-
 
 </div>
 
-<!-- Button trigger modal -->
-<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalAppInstDetails">
-  Launch demo modal
-</button>
+</hr>
+<!-- Not used
+<app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone"></app-form>
+-->
+
+<hr>
+
+</div>
+
 
 <!-- Modal -->
 <div class="modal fade bs-example-modal-lg" id="modalAppInstDetails" tabindex="-1" role="dialog"
