@@ -2,22 +2,11 @@
 
 <div class="row">
 
-    <div class="col-sm-4">
-        <h3>New Application Group </h3>
+    <!--<div class="col-sm-4">
 
-        <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
-
-            <div class="form-group">
-                <label for="inAppGroupName">Name</label>
-                <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName" name="name"
-                       required
-                       placeholder="Enter application group name">
-            </div>
-            <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
-        </form>
     </div>
-
-    <div class="col-sm-8">
+-->
+    <div class="col-sm-12">
 
         <h3>All Application Groups</h3>
 
@@ -67,6 +56,18 @@
         </div>
 
 
+        <h3>New Application Group </h3>
+
+        <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
+
+            <div class="form-group">
+                <label for="inAppGroupName">Name</label>
+                <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName" name="name"
+                       required
+                       placeholder="Enter application group name">
+            </div>
+            <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
+        </form>
         <!--<div class="list-group">
             <a href="#/group/{{appGroup.id}}" class="list-group-item" ng-repeat="appGroup in allAppGroups">
                 <b> {{appGroup.name}}</b> ({{appGroup.id}})
