@@ -60,29 +60,40 @@ public class StatusController {
                 forEach(ai -> applicationStatusModel.applicationInstances.put(ai.getId(), new ApplicationInstanceStatusModel(ai)));
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
+
         for (LoadBalancer loadBalancer : loadBalancers) {
 
-            try {
 
-                List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(loadBalancer.getId());
-
-                for (StatusModel statusModel : statusModelsFromCSV) {
-                    if (!statusModel.data.get("pxname").equals(application.getName())) {
-                        continue;
-                    }
-
-                    String svname = statusModel.data.get("svname");
-
-                    if (!svname.equals("BACKEND")) {
-                        applicationStatusModel.getByName(svname).ifPresent(m -> m.statuses.put(loadBalancer.getId(), statusModel.data));
-                    } else {
-                        //FRONTEND
-                        applicationStatusModel.data.putAll(statusModel.data);
-                    }
+            List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(loadBalancer.getId());
+            if (statusModelsFromCSV.isEmpty()) {
+                //HAproxy Not running
+                /*
+                For all loadbalancer that this application has.
+                If the load balancer is not running.
+                Add all applicationinstances as not running.
+                 */
+                log.info("");
+                for(ApplicationInstance applicationInstance : application.getApplicationInstances()){
+                    applicationStatusModel.applicationInstances.put(loadBalancer.getId(),null);
                 }
-            } catch (GatewayException gateWay) {
-                gateWay.printStackTrace();
+                //applicationStatusModel.data.put(loadBalancer.getId(),null);
+
             }
+            for (StatusModel statusModel : statusModelsFromCSV) {
+                if (!statusModel.data.get("pxname").equals(application.getName())) {
+                    continue;
+                }
+
+                String svname = statusModel.data.get("svname");
+
+                if (!svname.equals("BACKEND")) {
+                    applicationStatusModel.getByName(svname).ifPresent(m -> m.statuses.put(loadBalancer.getId(), statusModel.data));
+                } else {
+                    //FRONTEND
+                    applicationStatusModel.data.putAll(statusModel.data);
+                }
+            }
+
         }
 
         return applicationStatusModel;
@@ -188,13 +199,21 @@ public class StatusController {
     @ResponseBody
     public String sendEmail(@PathVariable Long id) {
         log.info("StatusController.sendEmail, id={}", id);
-
-        Application application = applicationRepository.findOne(id);
-        if (application == null) {
-            throw new EntityNotFoundException("Application", id);
+       if(id.equals(new Long(1))){
+           log.info("StatusController.sendEmail V 1");
+           emailService.email1();
+       } if(id.equals(new Long(2))){
+            log.info("StatusController.sendEmail V 3");
+            emailService.email2();
+        }
+        if(id.equals(new Long(3))){
+            log.info("StatusController.sendEmail V 3");
+            emailService.email3();
         }
 
-        emailService.sendEmail();
-        return "Sent email status of " + application.getName() + " to " + application.getEmails();
+
+
+
+        return "Sent email, maybe?? ";
     }
 }
