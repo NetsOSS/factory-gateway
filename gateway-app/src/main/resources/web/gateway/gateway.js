@@ -195,9 +195,9 @@ define([
 
         //--- Status --
         $scope.getStatusOfApplication = function () {
-            GatewayData.StatusController.getBackendStatusForApplication($routeParams.id).then(function (data) {
-                $scope.statusApp = data;
-            });
+            /*GatewayData.StatusController.getBackendStatusForApplication($routeParams.id).then(function (data) {
+                //$scope.statusApp = data;
+            });*/
             GatewayData.StatusController.getServerStatusForApplication($routeParams.id).then(function (data) {
                 $scope.statusAppServers = data;
             });
