@@ -1,0 +1,7 @@
+<h1>All Load Balancers </h1>
+
+<div ng-repeat = "lbStatus in allLbs.status">
+  <a> {{lbStatus.data.svname}}</a>
+</div>
+<pre>
+    {{allLbs|json}}</pre>

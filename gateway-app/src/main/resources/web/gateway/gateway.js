@@ -35,6 +35,10 @@ define([
                 controller: 'AppGroupCtrl',
                 templateUrl: templatePrefix + "appGroup.html"
             })
+            .when('/allLb', {
+                controller: 'LoadBalancersCtrl',
+                templateUrl: templatePrefix + "allLoadBalancers.html"
+            })
         ;
 
         $httpProvider.interceptors.push(['$q', function ($q) {
@@ -376,11 +380,27 @@ define([
             });
         };
 
-
     });
 
     gateway.controller('PersonCtrl', function ($scope, $routeParams) {
         $scope.personId = $routeParams.id;
     });
 
+    gateway.controller('LoadBalancersCtrl', function ($scope, $routeParams, $location, GatewayData) {
+        $scope.allLbs={};
+        GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
+            $scope.allLbs = data;
+            for(var i=0;i<$scope.allLbs.length;i++){
+                var currObj =    $scope.allLbs[i];
+                GatewayData.StatusController.getStatusForLoadbalancer(currObj.id).then(function (data) {
+
+                    currObj["status"]=data;
+                    console.log(currObj[status]);
+
+                });
+            }
+
+        });
+
+    });
 });
