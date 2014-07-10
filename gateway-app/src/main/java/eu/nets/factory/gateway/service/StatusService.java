@@ -6,12 +6,14 @@ import eu.nets.factory.gateway.web.ApplicationController;
 import eu.nets.factory.gateway.web.LoadBalancerController;
 import eu.nets.factory.gateway.web.LoadBalancerModel;
 import eu.nets.factory.gateway.web.StatusModel;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -25,11 +27,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 @EnableScheduling
+@Transactional
 public class StatusService {
     private final Logger log = getLogger(getClass());
 
     @Autowired
     private ApplicationController applicationController;
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @Autowired
     LoadBalancerRepository loadBalancerRepository;
@@ -94,8 +99,8 @@ public class StatusService {
                     log.info("Error getting the application, Should never happen?");
                     continue;
                 }
-                log.info("StatusService.checkForChangesInStatus() : Sending email to :  {}", application.getEmails());
 
+                log.info("StatusService.checkForChangesInStatus() : Sending email to :  {}", application.getEmails());
 
                 ApplicationInstance instance =null;
                 for(ApplicationInstance applicationInstance : application.getApplicationInstances()){
@@ -107,11 +112,12 @@ public class StatusService {
 
 
                 StringBuilder message = new StringBuilder();
-                message.append("Application : "+application.getName()+" "+application.getPublicUrl()+" in group: "+application.getApplicationGroup().getName()+"\n");
-                message.append("Affected application instance : "+instance.getName()+" "+instance.getHost()+":"+instance.getPort()+""+instance.getPath()+"\n");
-                message.append("\t went from status "+oldStatus+" to "+newStatus+". \n");
+                message.append("Application : " + application.getName() + " " + application.getPublicUrl() + " in group: " + application.getApplicationGroup().getName() + "\n");
+                message.append("Affected application instance : " + instance.getName() + " " + instance.getHost() + ":" + instance.getPort() + "" + instance.getPath() + "\n");
+                message.append("\t went from status " + oldStatus + " to " + newStatus + ". \n");
 
                 message.append("In loadbalancer "+lb.getName()+"  "+lb.getHost()+". \n");
+                log.info("Email msg: {}",message.toString());
                 emailService.sendEmail(application.getEmails(), "HaProxy change in status", message.toString());
 
 
