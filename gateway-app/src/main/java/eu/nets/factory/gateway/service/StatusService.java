@@ -94,6 +94,7 @@ public class StatusService {
 
                 String appName = newStatusModel.data.get("pxname");
 
+
                 Application application = applicationController.getApplicationByExactName(appName);
                 if (application == null) {
                     log.info("Error getting the application, Should never happen?");
@@ -112,11 +113,11 @@ public class StatusService {
 
 
                 StringBuilder message = new StringBuilder();
-                message.append("Application : " + application.getName() + " " + application.getPublicUrl() + " in group: " + application.getApplicationGroup().getName() + "\n");
-                message.append("Affected application instance : " + instance.getName() + " " + instance.getHost() + ":" + instance.getPort() + "" + instance.getPath() + "\n");
+                message.append("Application : " + application.getName() + " in group: " + application.getApplicationGroup().getName() + "\n");
+                message.append("\nApplication instance : " + instance.getName() + " " + instance.getHost() + ":" + instance.getPort() + "" + instance.getPath() + "\n");
                 message.append("\t went from status " + oldStatus + " to " + newStatus + ". \n");
 
-                message.append("In loadbalancer "+lb.getName()+"  "+lb.getHost()+". \n");
+                message.append("In loadbalancer "+lb.getName()+"  "+lb.getHost()+":"+lb.getPublicPort()+". \n");
                 log.info("Email msg: {}",message.toString());
                 emailService.sendEmail(application.getEmails(), "HaProxy change in status", message.toString());
 
