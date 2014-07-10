@@ -113,8 +113,8 @@ public class StatusService {
 
 
                 StringBuilder message = new StringBuilder();
-                message.append("Application : " + application.getName() + " in group: " + application.getApplicationGroup().getName() + "\n");
-                message.append("\nApplication instance : " + instance.getName() + " " + instance.getHost() + ":" + instance.getPort() + "" + instance.getPath() + "\n");
+                message.append("Application : " + application.getName() + " in group: " + application.getApplicationGroup().getName() + ".\n");
+                message.append("\nApplication instance : " + instance.getName() + " " + instance.getHost() + ":" + instance.getPort() + "" + instance.getPath() + ".\n");
                 message.append("\t went from status " + oldStatus + " to " + newStatus + ". \n");
 
                 message.append("In loadbalancer "+lb.getName()+"  "+lb.getHost()+":"+lb.getPublicPort()+". \n");
