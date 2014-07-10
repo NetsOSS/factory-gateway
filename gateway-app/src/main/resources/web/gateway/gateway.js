@@ -90,26 +90,6 @@ define([
   gateway.controller('FrontPageCtrl', function ($location, $scope, GatewayData) {
     $scope.allApps = [];
 
-
-    // ----------------------- Person functions ------------------------------------
-    GatewayData.PersonController.list().then(function (data) {
-      $scope.persons = data;
-    });
-
-
-    $scope.savePerson = function () {
-      GatewayData.PersonController.create($scope.person).then(function (data) {
-        $scope.persons.push(data);
-      });
-    };
-    $scope.search = function () {
-      //console.log("Search : ", $scope.searchInput);
-      GatewayData.PersonController.search($scope.searchInput).then(function (data) {
-        $scope.searchRes = data;
-      });
-    };
-
-
     // ----------------------- Application functions ------------------------------------
     GatewayData.ApplicationController.listAllApps().then(function (data) {
       $scope.allApps = data;
@@ -151,11 +131,19 @@ define([
 
 
     $scope.currAppGroupSelected = {};
-    $scope.showCreateApplicationForGroup = function (appGroupId) {
-      console.log("show modal");
-      $scope.currAppGroupSelected = appGroupId;
+    $scope.showCreateApplicationForGroup = function (appGroup) {
+      console.log("show modal ", appGroup);
+      $scope.currAppGroupSelected= appGroup;
       $('#modalCreateApp').modal('show');
 
+    };
+
+    $scope.createApplication = function () {
+      $scope.newApp.applicationGroupId = $scope.currAppGroupSelected.id;
+      GatewayData.ApplicationController.create($scope.newApp).then(function (data) {
+        $scope.currAppGroupSelected.applications.push(data);
+
+      });
     };
 
 

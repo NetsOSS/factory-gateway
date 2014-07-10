@@ -13,7 +13,7 @@
                         <span class="glyphicon glyphicon-collapse-down"></span>
                         {{appGroup.name}}
                         <div class="pull-right">
-                            <a ng-click="showCreateApplicationForGroup(appGroup.id)" class="whitelink">
+                            <a href="" ng-click="showCreateApplicationForGroup(appGroup)" class="whitelink">
                                 <span class="glyphicon glyphicon-plus "></span>
                                 New application
                             </a>
@@ -30,7 +30,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapseGroup{{appGroup.id}}" class="panel-collapse collapse">
+            <div id="collapseGroup{{appGroup.id}}" class="panel-collapse collapse ">
                 <div class="panel-body">
 
                     <div class="list-group">
@@ -120,11 +120,11 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title" id=modalCreateAppLabel"> Title</h4>
+                <h4 class="modal-title" id=modalCreateAppLabel">  New application to {{currAppGroupSelected.name}}</h4>
             </div>
             <div class="modal-body">
 
-                <h3>New application to this group</h3>
+
 
                 <form role="form" ng-submit="createApplication()" name="createAppForm" novalidate>
 
