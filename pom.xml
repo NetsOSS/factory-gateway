@@ -28,6 +28,7 @@
     <version.slf4j>1.7.6</version.slf4j>
     <version.spring>4.0.5.RELEASE</version.spring>
     <version.spring-data>1.5.0.RELEASE</version.spring-data>
+    <version.javax-mail>1.5.2</version.javax-mail>
   </properties>
 
   <prerequisites>

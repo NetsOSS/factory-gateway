@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.nets.factory.gateway.model.GatewaySettings;
+import eu.nets.factory.gateway.service.MailConfig;
 import eu.nets.factory.gateway.service.ServiceConfig;
 import eu.nets.factory.gateway.web.jackson.GatewayObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import org.springframework.web.servlet.view.InternalResourceView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @ComponentScan(basePackageClasses = WebConfig.class)
-@Import({eu.nets.factory.gateway.model.ModelConfig.class, ServiceConfig.class})
+@Import({eu.nets.factory.gateway.model.ModelConfig.class, ServiceConfig.class, MailConfig.class})
 @EnableTransactionManagement
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
