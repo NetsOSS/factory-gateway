@@ -44,7 +44,7 @@ public class StatusService {
 
     @Scheduled(fixedRate = 5000)
     public void autoPoll() {
-        log.info("StatusService.autoPoll {} , #loadBalancers {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
+        //log.info("StatusService.autoPoll {} , #loadBalancers {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
         List<LoadBalancer> lbList = loadBalancerRepository.findAll();
 
         for (LoadBalancer lb : lbList) {
@@ -57,8 +57,14 @@ public class StatusService {
 
             } catch (GatewayException ge) {
                 //happens when a haproxy is offline
-                loadBalancerStatuses.put(lb.getId(), Collections.<StatusModel>emptyList());
-                log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'", lb.getName(), lb.getHost(), lb.getPublicPort(), ge.getMessage());
+                //if (oldListStatusList.isEmpty()) {
+                    //Was offline last time also. No need to send emails.
+
+                //} else {
+                    loadBalancerStatuses.put(lb.getId(), Collections.<StatusModel>emptyList());
+                    //log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'", lb.getName(), lb.getHost(), lb.getPublicPort(), ge.getMessage());
+
+              //  }
             }
         }
 

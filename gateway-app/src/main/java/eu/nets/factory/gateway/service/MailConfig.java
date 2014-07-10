@@ -36,9 +36,9 @@ public class MailConfig {
     private Properties getMailProperties() {
         Properties properties = new Properties();
         properties.setProperty("mail.transport.protocol", "smtp");
-        properties.setProperty("mail.smtp.auth", "false");
-        properties.setProperty("mail.smtp.starttls.enable", "false");
-        properties.setProperty("mail.debug", "false");
+        //properties.setProperty("mail.smtp.auth", "false");
+       // properties.setProperty("mail.smtp.starttls.enable", "false");
+       // properties.setProperty("mail.debug", "false");
         return properties;
     }
 }
