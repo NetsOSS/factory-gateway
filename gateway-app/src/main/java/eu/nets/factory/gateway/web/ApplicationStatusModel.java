@@ -8,8 +8,17 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 public class ApplicationStatusModel {
+    /**
+     * Map. Key: Loadbalancer ID
+     */
     public Map<Long, ApplicationInstanceStatusModel> applicationInstances = new HashMap<>();
+
+    /**
+     * Backend, total of all instances
+     */
     public HashMap<String, String> data = new HashMap<String, String>();
+
+
     public ApplicationStatusModel() {
     }
 
