@@ -2,90 +2,74 @@
 
 <div class="row">
 
-    <!--<div class="col-sm-4">
+    <h3>All Application Groups</h3>
 
-    </div>
--->
-    <div class="col-sm-12">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-primary" ng-repeat="appGroup in allAppGroups">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseGroup{{appGroup.id}}">
 
-        <h3>All Application Groups</h3>
-
-
-        <div class="panel-group" id="accordion">
-            <div class="panel panel-primary" ng-repeat="appGroup in allAppGroups">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseGroup{{appGroup.id}}">
-
-                            <span class="glyphicon glyphicon-collapse-down"></span>
-                            {{appGroup.name}}
-                            <div class="pull-right">
-                                <a href="" class="whitelink">
-                                    <span class="glyphicon glyphicon-plus "></span>
-                                    New application
-                                </a>
-
-                                <a href="#/group/{{appGroup.id}}" class="whitelink">
-                                    <span class="glyphicon glyphicon-info-sign "></span>
-                                    More info
-                                </a>
-
-                                <!--<span class="glyphicon glyphicon-eye-open "></span>-->
-                            </div>
-
-
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapseGroup{{appGroup.id}}" class="panel-collapse collapse">
-                    <div class="panel-body">
-
-                        <div class="list-group">
-                            <a href="#/app/{{appInGroup.id}}" class="list-group-item"
-                               ng-repeat="appInGroup in appGroup.applications">
-                                <span class="badge">{{appInGroup.applicationInstances.length}}</span>
-                                <b> {{appInGroup.name}}</b> {{appInGroup.publicUrl}}
+                        <span class="glyphicon glyphicon-collapse-down"></span>
+                        {{appGroup.name}}
+                        <div class="pull-right">
+                            <a ng-click="showCreateApplicationForGroup(appGroup.id)" class="whitelink">
+                                <span class="glyphicon glyphicon-plus "></span>
+                                New application
                             </a>
+
+                            <a href="#/group/{{appGroup.id}}" class="whitelink">
+                                <span class="glyphicon glyphicon-info-sign "></span>
+                                More info
+                            </a>
+
+                            <!--<span class="glyphicon glyphicon-eye-open "></span>-->
                         </div>
 
 
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseGroup{{appGroup.id}}" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <div class="list-group">
+                        <a href="#/app/{{appInGroup.id}}" class="list-group-item"
+                           ng-repeat="appInGroup in appGroup.applications">
+                            <span class="badge">{{appInGroup.applicationInstances.length}}</span>
+                            <b> {{appInGroup.name}}</b> {{appInGroup.publicUrl}}
+                        </a>
                     </div>
+
+
                 </div>
             </div>
-
         </div>
-
-
-        <h3>New Application Group </h3>
-
-        <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
-
-            <div class="form-group">
-                <label for="inAppGroupName">Name</label>
-                <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName" name="name"
-                       required
-                       placeholder="Enter application group name">
-            </div>
-            <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
-        </form>
-        <!--<div class="list-group">
-            <a href="#/group/{{appGroup.id}}" class="list-group-item" ng-repeat="appGroup in allAppGroups">
-                <b> {{appGroup.name}}</b> ({{appGroup.id}})
-            </a>
-
-
-        </div>-->
-
-
-        <a href="" ng-model="collapsedGroup" ng-click="collapsedGroup=!collapsedGroup"><strong>Toggle
-            (show/hide)</strong> json data</a>
-
-        <div ng-show="collapsedGroup">
-            <pre>{{allAppGroups|json}}</pre>
-        </div>
-
 
     </div>
+
+
+    <h3>New Application Group </h3>
+
+    <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
+
+        <div class="form-group">
+            <label for="inAppGroupName">Name</label>
+            <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName" name="name"
+                   required
+                   placeholder="Enter application group name">
+        </div>
+        <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
+    </form>
+
+    <a href="" ng-model="collapsedGroup" ng-click="collapsedGroup=!collapsedGroup"><strong>Toggle
+        (show/hide)</strong> json data</a>
+
+    <div ng-show="collapsedGroup">
+        <pre>{{allAppGroups|json}}</pre>
+    </div>
+
+
 </div>
 
 
@@ -125,64 +109,64 @@
     </div>
 
 </div>
-<!--
 <hr>
 
 
-<h1>Person (demo) </h1>
-
-<div class="row">
-    <div class="col-sm-6"><h3>New person</h3>
-
-        <form role="form" ng-submit="savePerson()">
-
-            <div class="form-group">
-                <label for="n">Name</label>
-                <input type="text" ng-model="person.name" class="form-control" id="n" placeholder="Enter name">
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" id="modalCreateApp" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id=modalCreateAppLabel"> Title</h4>
             </div>
+            <div class="modal-body">
 
-            <button type="submit" class="btn btn-default">Submit</button>
-        </form>
+                <h3>New application to this group</h3>
 
+                <form role="form" ng-submit="createApplication()" name="createAppForm" novalidate>
 
-        <div class="alert alert-success" ng-show="showNewPersonAlert">Person is added successfully</div>
-        <hr>
-        <h4>Search</h4>
+                    <div class="form-group">
+                        <label for="inAppName">Name</label>
+                        <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
+                               ng-pattern="/^\S+$/"
+                               required
+                               placeholder="Enter application name">
+                        <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="inAppPublicUrl">Public Path</label>
+                        <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl"
+                               name="publicUrl"
+                               ng-pattern="/^/[a-zA-Z]+\S*$/"
+                               required
+                               placeholder="Enter public url">
+                        <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="inAppPublicUrl">Emails (for notification). Separate by ,</label>
+                        <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
+                               required
+                               placeholder="Enter email(s)">
+                    </div>
+                    <div class="form-group">
+                        <label for="inAppCheckPath">Check path</label>
+                        <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath" name="checkpath"
+                               ng-pattern="/^/[a-zA-Z]+\S*$/"
+                               required
+                               placeholder="Enter check path">
+                        <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                    </div>
 
-        <form role="form">
+                    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
+                </form>
 
-            <div class="form-group">
-                <label for="n">Name</label>
-                <input type="text" ng-model="searchInput" class="form-control" placeholder="Keywords..."
-                       ng-change="search()">
             </div>
-
-
-        </form>
-
-
-        <pre>{{searchRes|json}}</pre>
-
-    </div>
-    <div class="col-sm-6">
-
-        <h3>All persons</h3>
-
-
-
-        <div class="list-group">
-            <a href="#/person/{{p.id}}" class="list-group-item" ng-repeat="p in persons">
-                <b> {{p.name}}</b> ({{p.id}})
-            </a>
-
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
-
-        <h4>Raw</h4>
-        <pre>{{persons|json}}</pre>
-
-
     </div>
 </div>
-
-
--->
