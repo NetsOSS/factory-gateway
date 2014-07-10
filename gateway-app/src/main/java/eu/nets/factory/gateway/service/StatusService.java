@@ -55,15 +55,11 @@ public class StatusService {
                     checkForChangesInStatus(oldListStatusList, listStatus);
                 loadBalancerStatuses.put(lb.getId(), listStatus);
 
-            }catch (GatewayException ge){
+            } catch (GatewayException ge) {
                 //happens when a haproxy is offline
                 loadBalancerStatuses.put(lb.getId(), Collections.<StatusModel>emptyList());
-                log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'",lb.getName(),lb.getHost(),lb.getPublicPort(),ge.getMessage());
+                log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'", lb.getName(), lb.getHost(), lb.getPublicPort(), ge.getMessage());
             }
-
-
-
-
         }
 
     }
@@ -130,7 +126,7 @@ public class StatusService {
             bufferedReader.close();
         } catch (Exception e) {
             // e.printStackTrace();
-            throw new GatewayException("Cannot connect to HAproxy. "+loadBalancer.getName()+" with csv at : "+csvFile);
+            throw new GatewayException("Cannot connect to HAproxy. " + loadBalancer.getName() + " with csv at : " + csvFile);
 
         }
 

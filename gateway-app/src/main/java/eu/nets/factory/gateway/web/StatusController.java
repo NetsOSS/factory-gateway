@@ -118,17 +118,9 @@ public class StatusController {
     }
 
 
-    public List<StatusModel> getServerStatus(List<StatusModel> statusModelsFromCSV, Application application) {
-
-        List<StatusModel> models = new ArrayList<StatusModel>();
-        for (StatusModel statusModel : statusModelsFromCSV) {
-            if (statusModel.data.get("pxname").equals(application.getName()) && !statusModel.data.get("svname").equals("BACKEND")) {
-                models.add(statusModel);
-            }
-        }
-        return models;
-    }
-
+    /*
+    Possibly an unnecessary method
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/backend-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public HashMap<Long, StatusModel> getBackendStatusForApplication(@PathVariable Long id) {
@@ -191,6 +183,7 @@ public class StatusController {
         return list.isEmpty() ? null : list;
     }
 
+    // Test metode - kan fjernes
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/sendEmail/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public String sendEmail(@PathVariable Long id) {
