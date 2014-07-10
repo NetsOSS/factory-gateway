@@ -392,6 +392,8 @@ define([
     $scope.createApplication = function () {
       GatewayData.ApplicationController.create($scope.newApp).then(function (data) {
         $scope.allAppsInGroup.push(data);
+        $scope.newApp = {};
+        $scope.newApp.applicationGroupId = $routeParams.id;
       });
     };
 
