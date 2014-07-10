@@ -49,10 +49,15 @@ define([
                 response: function (response) {
                     // response.status === 200
                     if (response.config.method == "PUT") {
-                        //console.log("Update successfully" ,response);
-                        $("#MessageDisplaySuccessText").text("Updated " + response.data.name + " successfully.");
-                        $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
+                      //console.log("Update successfully" ,response);
+                      $("#MessageDisplaySuccessText").text("Updated " + response.data.name + " successfully.");
+                      $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
                     }
+                      if ( response.config.method == "POST") {
+                        //console.log("Update successfully" ,response);
+                        $("#MessageDisplaySuccessText").text("Created " + response.data.name + " successfully.");
+                        $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
+                      }
                     //console.log("Response: ",response)
                     return response || $q.when(response);
                 },
@@ -65,7 +70,8 @@ define([
                         // $scope.messageError=rejection.data;
 
                         $("#MessageDisplayText").text(rejection.data);
-                        $("#messageDisplay").show();
+                        $("#messageDisplay").show().delay(5000).fadeOut('slow');
+
                     } else if (rejection.status == 404) {
                         window.location = "./";
                         return;
