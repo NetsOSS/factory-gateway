@@ -1,10 +1,7 @@
 package eu.nets.factory.gateway.service;
 
 import eu.nets.factory.gateway.GatewayException;
-import eu.nets.factory.gateway.model.Application;
-import eu.nets.factory.gateway.model.ApplicationRepository;
-import eu.nets.factory.gateway.model.LoadBalancer;
-import eu.nets.factory.gateway.model.LoadBalancerRepository;
+import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.web.ApplicationController;
 import eu.nets.factory.gateway.web.LoadBalancerController;
 import eu.nets.factory.gateway.web.LoadBalancerModel;
@@ -55,9 +52,10 @@ public class StatusService {
         for (LoadBalancer lb : lbList) {
             List<StatusModel> oldListStatusList = loadBalancerStatuses.get(lb.getId());
             try {
-                List<StatusModel> listStatus = parseCSV(readCSV(lb)); //throws exception if failed
+                List<StatusModel> listStatus = parseCSV(readCSV(lb),lb); //throws exception if failed
                 if (oldListStatusList != null && !oldListStatusList.isEmpty())
-                    checkForChangesInStatus(oldListStatusList, listStatus);
+                    checkForChangesInStatus(oldListStatusList, listStatus,lb);
+
                 loadBalancerStatuses.put(lb.getId(), listStatus);
 
             } catch (GatewayException ge) {
@@ -76,7 +74,7 @@ public class StatusService {
     }
 
     //Checks if the state has changes for a status model. Not a fast implementation O(n^2). Could be better.
-    private void checkForChangesInStatus(List<StatusModel> oldlistStatus, List<StatusModel> newlistStatus) {
+    private void checkForChangesInStatus(List<StatusModel> oldlistStatus, List<StatusModel> newlistStatus,LoadBalancer lb) {
         for (StatusModel oldStatusModel : oldlistStatus) {
             int index = newlistStatus.indexOf(oldStatusModel);
             if (index == -1) {
@@ -97,8 +95,24 @@ public class StatusService {
                     continue;
                 }
                 log.info("StatusService.checkForChangesInStatus() : Sending email to :  {}", application.getEmails());
-                String message = appName+" went from status "+oldStatus+" to "+newStatus+". ";
-                emailService.sendEmail(application.getEmails(),"HaProxy change in status",message);
+
+
+                ApplicationInstance instance =null;
+                for(ApplicationInstance applicationInstance : application.getApplicationInstances()){
+                    if(newStatusModel.data.get("svname").equals(applicationInstance.getName()))
+                        instance=applicationInstance;
+                }
+                if(instance==null)
+                    continue;
+
+
+                StringBuilder message = new StringBuilder();
+                message.append("Application : "+application.getName()+" "+application.getPublicUrl()+" in group: "+application.getApplicationGroup().getName()+"\n");
+                message.append("Affected application instance : "+instance.getName()+" "+instance.getHost()+":"+instance.getPort()+""+instance.getPath()+"\n");
+                message.append("\t went from status "+oldStatus+" to "+newStatus+". \n");
+
+                message.append("In loadbalancer "+lb.getName()+"  "+lb.getHost()+". \n");
+                emailService.sendEmail(application.getEmails(), "HaProxy change in status", message.toString());
 
 
             }
@@ -152,6 +166,13 @@ public class StatusService {
 
     //Should be private. but used in test. fix later
     public List<StatusModel> parseCSV(List<String> csvStrings) {
+
+
+        return parseCSV(csvStrings,null);
+    }
+
+    //Should be private. but used in test. fix later
+    public List<StatusModel> parseCSV(List<String> csvStrings,LoadBalancer lb) {
         //log.info("StatusService.parseCSV");
 
         if (csvStrings == null) {
@@ -178,7 +199,8 @@ public class StatusService {
                 if (j < names.length) // should not be necessary
                     statusModel.data.put(names[j], splitCsvString[j]);
             }
-
+            if(lb!=null)
+             statusModel.data.put("lbname",lb.getName());
             list.add(statusModel);
         }
 

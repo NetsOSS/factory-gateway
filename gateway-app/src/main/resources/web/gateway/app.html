@@ -163,8 +163,8 @@
 
           <div class="alert" role="alert"
                ng-class="{OPEN:'alert-info', UP:'alert-success', MAINT:'alert-warning', DOWN:'alert-danger','':'active'}[status.status]">
-            LB {{lbId}} | status={{status.status}} , in/out :
-            {{status.bin}}/{{status.bout}}
+            {{status.lbname}} | status={{status.status}} , in/out :
+            {{status.bin |bytes}}/{{status.bout| bytes}}
             <button type="button" class="btn btn-info pull-right" ng-click="showModalDetail(status)">
               Details
             </button>
@@ -277,8 +277,8 @@
 
           <tbody>
           <tr>
-            <td>{{currModalStatus.bin}}</td>
-            <td>{{currModalStatus.bout}} s</td>
+            <td>{{currModalStatus.bin | bytes}}</td>
+            <td>{{currModalStatus.bout | bytes}} s</td>
 
 
           </tr>
@@ -286,7 +286,7 @@
 
         </table>
 
-        {{currModalStatus |json}}
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
