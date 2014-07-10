@@ -191,6 +191,7 @@ public class StatusController {
         }
         //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
         List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
+        if(list==null) return null;
         return list.isEmpty() ? null : list;
     }
 
@@ -199,17 +200,6 @@ public class StatusController {
     @ResponseBody
     public String sendEmail(@PathVariable Long id) {
         log.info("StatusController.sendEmail, id={}", id);
-       if(id.equals(new Long(1))){
-           log.info("StatusController.sendEmail V 1");
-           emailService.email1();
-       } if(id.equals(new Long(2))){
-            log.info("StatusController.sendEmail V 3");
-            emailService.email2();
-        }
-        if(id.equals(new Long(3))){
-            log.info("StatusController.sendEmail V 3");
-            emailService.email3();
-        }
 
 
 

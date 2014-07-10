@@ -37,6 +37,11 @@ public class StatusService {
     @Autowired
     LoadBalancerRepository loadBalancerRepository;
 
+    @Autowired
+    EmailService emailService;
+
+
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private HashMap<Long, List<StatusModel>> loadBalancerStatuses = new HashMap<>();
@@ -92,6 +97,8 @@ public class StatusService {
                     continue;
                 }
                 log.info("StatusService.checkForChangesInStatus() : Sending email to :  {}", application.getEmails());
+                String message = appName+" went from status "+oldStatus+" to "+newStatus+". ";
+                emailService.sendEmail(application.getEmails(),"HaProxy change in status",message);
 
 
             }
