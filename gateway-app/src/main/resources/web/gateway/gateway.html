@@ -100,10 +100,13 @@
 
     <div class="col-sm-6">
 
-        <h3>All Load Balancers</h3>
+        <h3>Load Balancers</h3>
 
 
         <div class="list-group">
+          <a href="#/allLb" class="list-group-item" >
+            <b>All Load Balancers</b>
+          </a>
             <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in allLBs">
                 <b> {{lb.name}}</b> {{lb.installationPath}} {{lb.sshKey}} ({{lb.id}})
             </a>
