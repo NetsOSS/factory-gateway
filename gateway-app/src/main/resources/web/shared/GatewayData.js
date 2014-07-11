@@ -443,6 +443,13 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.StatusController.getStatusForAllLoadbalancers = function () {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/all-load-alancers/status';
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.StatusController.getStatusForLoadbalancer = function (id) {
       var req = {};
       req.method = 'GET';
@@ -482,6 +489,9 @@ define([], function () {
     };
     this.resolve.StatusController.getServerStatusForApplication = function (GatewayData, $route) {
       return StatusController.getServerStatusForApplication($route.current.params.id);
+    };
+    this.resolve.StatusController.getStatusForAllLoadbalancers = function (GatewayData, $route) {
+      return StatusController.getStatusForAllLoadbalancers();
     };
     this.resolve.StatusController.getStatusForLoadbalancer = function (GatewayData, $route) {
       return StatusController.getStatusForLoadbalancer($route.current.params.id);

@@ -409,21 +409,10 @@ define([
   });
 
   gateway.controller('LoadBalancersCtrl', function ($scope, $routeParams, $location, GatewayData) {
-    $scope.allLbs = {};
-    GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
-      $scope.allLbs = data;
-      for (var i = 0; i < $scope.allLbs.length; i++) {
+    GatewayData.StatusController.getStatusForAllLoadbalancers().then(function (data) {
+        $scope.allStatus = data;
 
-        var currObj = $scope.allLbs[i];
-        currObj["status"] = {};
-        GatewayData.StatusController.getStatusForLoadbalancer(currObj.id).then(function (data) {
-          console.log("i :"+i+" LBid:"+currObj.id);
-          currObj["status"] = data;
-          console.log(currObj.status);
-
-        });
-      }
-
+        GatewayData.StatusController.isLoadBalancerOnline()
     });
 
   });

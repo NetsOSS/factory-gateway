@@ -1,7 +1,62 @@
 <h1>All Load Balancers </h1>
+<hr>
 
-<div ng-repeat = "lbStatus in allLbs">
-  <a> {{lbStatus.status.data.svname}}</a>
+<div ng-repeat="(lbName, lbStatus) in allStatus">
+  <h3>Status for {{lbName}}:
+    <span class="text-success" ng-show="lbStatus">HAproxy is running<span
+        class="glyphicon glyphicon-thumbs-up"></span></span>
+    <span class="text-danger" ng-show="!lbStatus">HAproxy is not running<span
+        class="glyphicon glyphicon-thumbs-down"></span></span>
+  </h3>
+
+  <table class="table">
+    <thread>
+      <tr>
+        <th>Proxy Name</th>
+        <th>Service Name</th>
+        <th>Current Sessions</th>
+        <th>Total Sessions</th>
+        <th>Bytes in</th>
+        <th>Bytes out</th>
+        <th>Last change in status</th>
+        <th>Downtime</th>
+        <th>Status</th>
+        <th>{{lb.name}}</th>
+      </tr>
+    </thread>
+    <tbody>
+    <tr ng-repeat="data in lbStatus"
+        ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[data.data.status]"
+        ng-show="lbStatus">
+      <td>{{data.data.pxname}}</td>
+      <td>{{data.data.svname}}</td>
+      <td>{{data.data.scur}}</td>
+      <td>{{data.data.stot}}</td>
+      <td>{{data.data.bin | bytes}}</td>
+      <td>{{data.data.bout| bytes}}</td>
+      <td>{{data.data.lastchg | secondstime}}</td>
+      <td>{{data.data.downtime | secondstime}}</td>
+      <td>{{data.data.status}}</td>
+    </tr>
+
+    <tr class="danger" ng-show="!lbStatus">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>Offline</td>
+    </tr>
+    </tbody>
+  </table>
 </div>
+
+
+
 <pre>
-    {{allLbs|json}}</pre>
+  {{allStatus|json}}
+</pre>
+

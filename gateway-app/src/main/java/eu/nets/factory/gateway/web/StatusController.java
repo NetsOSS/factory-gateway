@@ -227,4 +227,26 @@ public class StatusController {
 
         return "Sent email, maybe?? ";
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/all-load-alancers/status", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public HashMap<String, List<StatusModel>> getStatusForAllLoadbalancers() {
+
+        HashMap<String, List<StatusModel>> map = new HashMap<>();
+        List<LoadBalancer> loadBalancers = loadBalancerRepository.findAll();
+        if(loadBalancers.size() == 0) {
+            return null;
+        }
+        for(LoadBalancer loadBalancer: loadBalancers) {
+            if(isLoadBalancerOnline(loadBalancer.getId())) {
+                List<StatusModel> list = statusService.getStatusForLoadBalancer(loadBalancer.getId());
+                map.put(loadBalancer.getName(), list);
+
+            } else {
+                map.put(loadBalancer.getName(), null);
+            }
+
+        }
+        return map;
+    }
 }
