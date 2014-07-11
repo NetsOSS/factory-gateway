@@ -31,8 +31,6 @@
 <hr>
 
 
-
-
 <h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out :
     {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
 
@@ -58,8 +56,13 @@
 
                     <div class="alert" role="alert"
                          ng-class="{OPEN:'alert-info', UP:'alert-success', MAINT:'alert-warning', DOWN:'alert-danger',offline:'alert-danger','':'active'}[status.status]">
-                        {{status.lbname}} | status={{status.status}} , in/out :
-                        {{status.bin |bytes}}/{{status.bout| bytes}}
+                        <span ng-show="status.status=='offline'">
+                            The loadbalancer {{status.lbname}} is offline.
+                        </span>
+                        <span ng-hide="status.status=='offline'">
+                            {{status.lbname}} | status={{status.status}} , in/out :
+                        {{status.bin |bytes}}/{{status.bout| bytes}}</span>
+
                         <button type="button" class="btn btn-info pull-right" ng-click="showModalDetail(status)">
                             Details
                         </button>
@@ -72,12 +75,12 @@
 
 <hr>
 <div class="row">
-        <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
-            (show/hide)</strong> json data</a>
+    <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
+        (show/hide)</strong> json data</a>
 
-        <div ng-show="collapsedAppInst">
-            <pre>{{app.applications|json}}</pre>
-        </div>
+    <div ng-show="collapsedAppInst">
+        <pre>{{app.applications|json}}</pre>
+    </div>
 </div>
 
 <table class="table">
