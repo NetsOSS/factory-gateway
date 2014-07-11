@@ -412,7 +412,7 @@ define([
     GatewayData.StatusController.getStatusForAllLoadbalancers().then(function (data) {
         $scope.allStatus = data;
 
-        GatewayData.StatusController.isLoadBalancerOnline()
+
     });
 
   });
