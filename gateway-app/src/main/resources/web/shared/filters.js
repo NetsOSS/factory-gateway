@@ -30,6 +30,8 @@ define([ 'angular' ], function (angular) {
   });
   filters.filter('bytes', function(){
     return function(bytes){
+      if(isNaN(bytes))
+        return "";
       //http://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
       if(bytes == 0) return '0 Byte';
       var k = 1000;
