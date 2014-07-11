@@ -82,7 +82,7 @@
         <pre>{{app.applications|json}}</pre>
     </div>
 </div>
-
+<div class="row">
 <table class="table">
 
     <thead>
@@ -93,13 +93,16 @@
     <tbody ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
     <tr>
         <td>{{appInstValue.name}}</td>
-        <td ng-repeat="lbStatus in appInstValue.statuses">{{lbStatus.status}}</td>
+        <td ng-repeat="lbStatus in appInstValue.statuses"
+            ng-class="{OPEN:'info', UP:'success', MAINT:'warning', offline:'danger', DOWN:'danger','':'active'}[lbStatus.status]">
+            {{lbStatus.status}}
+        </td>
 
     </tr>
     </tbody>
 
 </table>
-
+</div>
 </hr>
 <!-- Not used
 <app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone"></app-form>
