@@ -459,6 +459,14 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.StatusController.isLoadBalancerOnline = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/load-balancers/{id}/statusIsOnline';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.StatusController.sendEmail = function (id) {
       var req = {};
       req.method = 'GET';
@@ -480,6 +488,9 @@ define([], function () {
     };
     this.resolve.StatusController.getStatusForOneServer = function (GatewayData, $route) {
       return StatusController.getStatusForOneServer($route.current.params.id);
+    };
+    this.resolve.StatusController.isLoadBalancerOnline = function (GatewayData, $route) {
+      return StatusController.isLoadBalancerOnline($route.current.params.id);
     };
     this.resolve.StatusController.sendEmail = function (GatewayData, $route) {
       return StatusController.sendEmail($route.current.params.id);

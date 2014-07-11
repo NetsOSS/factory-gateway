@@ -1,195 +1,101 @@
 <h1>Application : {{app.name}} {{app.publicUrl}} </h1>
 
-
 <ul class="list-unstyled">
-  <li>ID : {{app.id}}</li>
-  <li>Number of instances : {{app.applicationInstances.length}}</li>
-  <li>In group : {{appGroup.name}} ({{app.applicationGroupId}})</li>
-  <li>Check path : {{app.checkPath}}</li>
+    <li>ID : {{app.id}}</li>
+    <li>Number of instances : {{app.applicationInstances.length}}</li>
+    <li>In group : {{appGroup.name}} ({{app.applicationGroupId}})</li>
+    <li>Check path : {{app.checkPath}}</li>
 
-  <li>In load balancers:
-    <ul ng-repeat="lbForApp in app.loadBalancers">
-      <li><a href="#/lb/{{lbForApp.id}}"> {{lbForApp.name}} ({{lbForApp.id}})</a></li>
-    </ul>
-  </li>
+    <li>In load balancers:
+        <ul ng-repeat="lbForApp in app.loadBalancers">
+            <li><a href="#/lb/{{lbForApp.id}}"> {{lbForApp.name}} ({{lbForApp.id}})</a></li>
+        </ul>
+    </li>
 
-  <button class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-tag"></span>  Edit Application</button>
-
-  <button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span>
-    Delete Application
-  </button>
-
-  <button class="btn btn-info" data-toggle="modal" data-target="#myInstModal"><span class="glyphicon glyphicon-plus"></span>  Create Instance</button>
 
 </ul>
 
+<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-tag"></span>
+    Edit Application
+</button>
 
-<div class="modal fade" id="myInstModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-            class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myInstModalLabel">New Instance</h4>
-      </div>
-      <div class="modal-body">
-        <h3 class="modal-title">New Application Instance</h3>
+<button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span>
+    Delete Application
+</button>
 
-        <form role="form" ng-submit="saveAppInst()" name="newInstanceForm">
+<button class="btn btn-info" data-toggle="modal" data-target="#myInstModal"><span
+        class="glyphicon glyphicon-plus"></span> Create Instance
+</button>
 
-          <div class="form-group" ng-class="{'has-error': newInstanceForm.name.$invalid && newInstanceForm.name.$dirty}">
-            <label for="inAppInstName">Name</label>
-            <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
-                   ng-pattern="/^\S+$/"
-                   required
-                   placeholder="Enter name">
-            <span class="bg-danger" ng-show="newInstanceForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
-          </div>
-          <div class="form-group" ng-class="{'has-error': newInstanceForm.host.$invalid && newInstanceForm.host.$dirty}">
-            <label for="inAppInstHost">Host</label>
-            <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
-                   required
-                   placeholder="Enter host">
-          </div>
-          <div class="form-group">
-            <label for="inAppInstPort">Port</label>
-            <input type="number" ng-model="appInst.port" min="1" max="65535" class="form-control"
-                   id="inAppInstPort"
-                   name="port"
-                   required
-                   integer
-                   placeholder="Enter port">
-            <span class="bg-danger" ng-show="newInstanceForm.port.$error.integer">This is not valid integer!</span>
-            <span class="bg-danger" ng-show="newInstanceForm.port.$error.min || newInstanceForm.port.$error.max">The value must be in range 1 to 65535!</span>
 
-          </div>
-          <div class="form-group" ng-class="{'has-error': newInstanceForm.path.$invalid && newInstanceForm.path.$dirty}">
-            <label for="inAppInstPath">Path</label>
-            <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                   ng-pattern="/^/[a-zA-Z]+\S*$/" name="path" required
-                   placeholder="Enter path / url">
-            <span class="bg-danger" ng-show="newInstanceForm.path.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-          </div>
-
-          <button type="submit" class="btn btn-primary" ng-disabled="newInstanceForm.$invalid ">Submit</button>
-        </form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-            class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Update</h4>
-      </div>
-      <div class="modal-body">
-        <h3 class="modal-title">Update application</h3>
-
-        <form role="form" ng-submit="updateApplication()" name="editAppForm">
-
-          <div class="form-group" ng-class="{'has-error': editAppForm.name.$invalid && editAppForm.name.$dirty}">
-            <label for="inAppName">Name</label>
-            <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name" ng-pattern="/^\S+$/" required/>
-            <span class="bg-danger" ng-show="editAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
-          </div>
-
-          <div class="form-group" ng-class="{'has-error': editAppForm.publicUrl.$invalid && editAppForm.publicUrl.$dirty}">
-            <label for="inAppPublicUrl">Public Path</label>
-            <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl" name="publicUrl"
-                   ng-pattern="/^/[a-zA-Z]+\S*$/"
-                   required
-                   placeholder="Enter public path">
-            <span class="bg-danger" ng-show="editAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-          </div>
-
-          <div class="form-group" ng-class="{'has-error': editAppForm.emails.$invalid && editAppForm.emails.$dirty}">
-            <label for="inAppEmails">Emails (for notification). Separate by ,</label>
-            <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
-                   required
-                   placeholder="Enter email(s)">
-          </div>
-
-          <div class="form-group" ng-class="{'has-error': editAppForm.checkPath.$invalid && editAppForm.checkPath.$dirty}">
-            <label for="inAppCheckPath">Check path</label>
-            <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath" name="checkPath"
-                   ng-pattern="/^/[a-zA-Z]+\S*$/"
-                   required
-                   placeholder="Enter check path">
-            <span class="bg-danger" ng-show="editAppForm.checkPath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-          </div>
-
-          <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 <hr>
 
+
+
+
 <h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out :
-  {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
+    {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
 
 
 <h3>Instances / Servers: </h3>
 <div class="row">
-  <div class="col-sm-8" ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
-    <div class="panel panel-info">
-      <div class="panel-heading col-sm-12">
-        <h3 class="panel-title col-md-8">App instance : <b>{{appInstValue.name}}</b> ({{appInstId}}) </h3>
-        <a class="btn btn-default btn-sm pull-right col-md-3" href="#/appInst/{{appInstId}}">Full Haproxy Details</a>
+    <div class="col-sm-8" ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
+        <div class="panel panel-info">
+            <div class="panel-heading col-sm-12">
+                <h3 class="panel-title col-md-8">App instance : <b>{{appInstValue.name}}</b> ({{appInstId}}) </h3>
+                <a class="btn btn-default btn-sm pull-right col-md-3" href="#/appInst/{{appInstId}}">Full Haproxy
+                    Details</a>
 
-        <div ng-repeat="a in app.applicationInstances | filter:appInstId">
-          <a class="btn btn-default btn-sm pull-right col-md-1"
-             href="http://{{a.host}}:{{a.port}}{{app.checkPath}}">Visit</a>
-        </div>
-      </div>
-      <hr>
-      <hr>
-      <div class="panel-body">
-        <div ng-repeat="(lbId, status) in appInstValue.statuses">
+                <div ng-repeat="a in app.applicationInstances | filter:appInstId">
+                    <a class="btn btn-default btn-sm pull-right col-md-1"
+                       href="http://{{a.host}}:{{a.port}}{{app.checkPath}}">Visit</a>
+                </div>
+            </div>
+            <hr>
+            <hr>
+            <div class="panel-body">
+                <div ng-repeat="(lbId, status) in appInstValue.statuses">
 
-          <div class="alert" role="alert"
-               ng-class="{OPEN:'alert-info', UP:'alert-success', MAINT:'alert-warning', DOWN:'alert-danger','':'active'}[status.status]">
-            {{status.lbname}} | status={{status.status}} , in/out :
-            {{status.bin |bytes}}/{{status.bout| bytes}}
-            <button type="button" class="btn btn-info pull-right" ng-click="showModalDetail(status)">
-              Details
-            </button>
-          </div>
+                    <div class="alert" role="alert"
+                         ng-class="{OPEN:'alert-info', UP:'alert-success', MAINT:'alert-warning', DOWN:'alert-danger',offline:'alert-danger','':'active'}[status.status]">
+                        {{status.lbname}} | status={{status.status}} , in/out :
+                        {{status.bin |bytes}}/{{status.bout| bytes}}
+                        <button type="button" class="btn btn-info pull-right" ng-click="showModalDetail(status)">
+                            Details
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <hr>
 <div class="row">
+        <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
+            (show/hide)</strong> json data</a>
 
-  <div class="col-sm-6">
-
-    <a href="" ng-model="collapsedAppInst" ng-click="collapsedAppInst=!collapsedAppInst"><strong>Toggle
-      (show/hide)</strong> json data</a>
-
-    <div ng-show="collapsedAppInst">
-      <pre>{{app.applications|json}}</pre>
-    </div>
-
-  </div>
-
+        <div ng-show="collapsedAppInst">
+            <pre>{{app.applications|json}}</pre>
+        </div>
 </div>
+
+<table class="table">
+
+    <thead>
+    <th>Instance name</th>
+    <th ng-repeat="loadBalancer in app.loadBalancers" id="">{{loadBalancer.name}}</th>
+    </thead>
+
+    <tbody ng-repeat="(appInstId,appInstValue) in statusAppServers.applicationInstances">
+    <tr>
+        <td>{{appInstValue.name}}</td>
+        <td ng-repeat="lbStatus in appInstValue.statuses">{{lbStatus.status}}</td>
+
+    </tr>
+    </tbody>
+
+</table>
 
 </hr>
 <!-- Not used
@@ -198,99 +104,226 @@
 
 <hr>
 
-</div>
-
 
 <!-- Modal Server /App instance details-->
 <div class="modal fade bs-example-modal-lg" id="modalAppInstDetails" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-            class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="modalAppInstDetailsLabel"> {{currModalStatus.pxname}}: {{currModalStatus.svname}}</h4>
-      </div>
-      <div class="modal-body">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="modalAppInstDetailsLabel"> {{currModalStatus.pxname}}:
+                    {{currModalStatus.svname}}</h4>
+            </div>
+            <div class="modal-body">
 
-        <h3>Sessions</h3>
+                <h3>Sessions</h3>
 
-        <table class="table table-bordered">
-          <thead>
-          <tr>
-            <th>Current sessions</th>
-            <th>Total sessions</th>
-            <th>Max sessions</th>
-            <th>Limit sessions</th>
-          </tr>
-          </thead>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Current sessions</th>
+                        <th>Total sessions</th>
+                        <th>Max sessions</th>
+                        <th>Limit sessions</th>
+                    </tr>
+                    </thead>
 
-          <tbody>
-          <tr>
-            <td>{{currModalStatus.scur}}</td>
-            <td>{{currModalStatus.stot}}</td>
-            <td>{{currModalStatus.smax}}</td>
-            <td>{{currModalStatus.slim}}</td>
-          </tr>
-          </tbody>
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.scur}}</td>
+                        <td>{{currModalStatus.stot}}</td>
+                        <td>{{currModalStatus.smax}}</td>
+                        <td>{{currModalStatus.slim}}</td>
+                    </tr>
+                    </tbody>
 
-        </table>
-
-
-        <h3>Server</h3>
-
-        <table class="table table-bordered">
-          <thead>
-          <tr>
-            <th>Status</th>
-            <th>Last change</th>
-            <th>Total downtime</th>
-            <th>Check status (layer)</th>
-
-          </tr>
-          </thead>
-
-          <tbody>
-          <tr>
-            <td>{{currModalStatus.status}}</td>
-            <td>{{currModalStatus.lastchg | secondstime}}</td>
-            <td>{{currModalStatus.downtime | secondstime}}</td>
-            <td>{{currModalStatus.check_status}}</td>
-
-          </tr>
-          </tbody>
-
-        </table>
+                </table>
 
 
-        <h3>Traffic</h3>
+                <h3>Server</h3>
 
-        <table class="table table-bordered">
-          <thead>
-          <tr>
-            <th>Bytes in</th>
-            <th>Bytes out</th>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Last change</th>
+                        <th>Total downtime</th>
+                        <th>Check status (layer)</th>
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.status}}</td>
+                        <td>{{currModalStatus.lastchg | secondstime}}</td>
+                        <td>{{currModalStatus.downtime | secondstime}}</td>
+                        <td>{{currModalStatus.check_status}}</td>
+
+                    </tr>
+                    </tbody>
+
+                </table>
 
 
-          </tr>
-          </thead>
+                <h3>Traffic</h3>
 
-          <tbody>
-          <tr>
-            <td>{{currModalStatus.bin | bytes}}</td>
-            <td>{{currModalStatus.bout | bytes}} s</td>
-
-
-          </tr>
-          </tbody>
-
-        </table>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Bytes in</th>
+                        <th>Bytes out</th>
 
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.bin | bytes}}</td>
+                        <td>{{currModalStatus.bout | bytes}} s</td>
+
+
+                    </tr>
+                    </tbody>
+
+                </table>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
+
+
+<div class="modal fade" id="myInstModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myInstModalLabel">New Instance</h4>
+            </div>
+            <div class="modal-body">
+                <h3 class="modal-title">New Application Instance</h3>
+
+                <form role="form" ng-submit="saveAppInst()" name="newInstanceForm">
+
+                    <div class="form-group"
+                         ng-class="{'has-error': newInstanceForm.name.$invalid && newInstanceForm.name.$dirty}">
+                        <label for="inAppInstName">Name</label>
+                        <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName" name="name"
+                               ng-pattern="/^\S+$/"
+                               required
+                               placeholder="Enter name">
+                        <span class="bg-danger" ng-show="newInstanceForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{'has-error': newInstanceForm.host.$invalid && newInstanceForm.host.$dirty}">
+                        <label for="inAppInstHost">Host</label>
+                        <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
+                               required
+                               placeholder="Enter host">
+                    </div>
+                    <div class="form-group">
+                        <label for="inAppInstPort">Port</label>
+                        <input type="number" ng-model="appInst.port" min="1" max="65535" class="form-control"
+                               id="inAppInstPort"
+                               name="port"
+                               required
+                               integer
+                               placeholder="Enter port">
+                        <span class="bg-danger"
+                              ng-show="newInstanceForm.port.$error.integer">This is not valid integer!</span>
+                        <span class="bg-danger"
+                              ng-show="newInstanceForm.port.$error.min || newInstanceForm.port.$error.max">The value must be in range 1 to 65535!</span>
+
+                    </div>
+                    <div class="form-group"
+                         ng-class="{'has-error': newInstanceForm.path.$invalid && newInstanceForm.path.$dirty}">
+                        <label for="inAppInstPath">Path</label>
+                        <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
+                               ng-pattern="/^/[a-zA-Z]+\S*$/" name="path" required
+                               placeholder="Enter path / url">
+                        <span class="bg-danger" ng-show="newInstanceForm.path.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" ng-disabled="newInstanceForm.$invalid ">Submit
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Update</h4>
+            </div>
+            <div class="modal-body">
+                <h3 class="modal-title">Update application</h3>
+
+                <form role="form" ng-submit="updateApplication()" name="editAppForm">
+
+                    <div class="form-group"
+                         ng-class="{'has-error': editAppForm.name.$invalid && editAppForm.name.$dirty}">
+                        <label for="inAppName">Name</label>
+                        <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
+                               ng-pattern="/^\S+$/" required/>
+                        <span class="bg-danger" ng-show="editAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
+                    </div>
+
+                    <div class="form-group"
+                         ng-class="{'has-error': editAppForm.publicUrl.$invalid && editAppForm.publicUrl.$dirty}">
+                        <label for="inAppPublicUrl">Public Path</label>
+                        <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl"
+                               name="publicUrl"
+                               ng-pattern="/^/[a-zA-Z]+\S*$/"
+                               required
+                               placeholder="Enter public path">
+                        <span class="bg-danger" ng-show="editAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                    </div>
+
+                    <div class="form-group"
+                         ng-class="{'has-error': editAppForm.emails.$invalid && editAppForm.emails.$dirty}">
+                        <label for="inAppEmails">Emails (for notification). Separate by ,</label>
+                        <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
+                               required
+                               placeholder="Enter email(s)">
+                    </div>
+
+                    <div class="form-group"
+                         ng-class="{'has-error': editAppForm.checkPath.$invalid && editAppForm.checkPath.$dirty}">
+                        <label for="inAppCheckPath">Check path</label>
+                        <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath"
+                               name="checkPath"
+                               ng-pattern="/^/[a-zA-Z]+\S*$/"
+                               required
+                               placeholder="Enter check path">
+                        <span class="bg-danger" ng-show="editAppForm.checkPath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>

@@ -46,6 +46,28 @@ public class StatusController {
     EmailService emailService;
 
 
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/statusIsOnline", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean isLoadBalancerOnline(@PathVariable Long id) {
+        log.info("StatusController.isLoadBalancerOnline, id={}", id);
+
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        if (loadBalancer == null) {
+            throw new EntityNotFoundException("LoadBalancer", id);
+        }
+        //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
+        List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
+
+        if(list==null) return false;
+        if(list.isEmpty()) return false;
+        if(list.size()<1) return false;
+        String status = list.get(0).data.get("status");
+
+        if(status==null || status.equals("offline")) return false;
+
+        return true;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/server-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public ApplicationStatusModel getServerStatusForApplication(@PathVariable Long id) {
@@ -65,7 +87,7 @@ public class StatusController {
 
 
             List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(loadBalancer.getId());
-            if (statusModelsFromCSV.isEmpty()) {
+            if (statusModelsFromCSV== null || statusModelsFromCSV.isEmpty()) {
                 //HAproxy Not running
                 /*
                 For all loadbalancer that this application has.
@@ -77,7 +99,6 @@ public class StatusController {
                     applicationStatusModel.applicationInstances.put(loadBalancer.getId(),null);
                 }
                 //applicationStatusModel.data.put(loadBalancer.getId(),null);
-
             }
             for (StatusModel statusModel : statusModelsFromCSV) {
                 if (!statusModel.data.get("pxname").equals(application.getName())) {

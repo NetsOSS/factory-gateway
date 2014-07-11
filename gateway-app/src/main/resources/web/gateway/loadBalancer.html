@@ -52,9 +52,9 @@
 <hr>
 <div class="row">
     <div class="col-sm-8">
-        <h3>Status: <span class="text-success" ng-show="rawStatus">HAproxy is running
+        <h3>Status: <span class="text-success" ng-show="isLBonline">HAproxy is running
             <span class="glyphicon glyphicon-thumbs-up"></span></span>
-            <span class="text-danger" ng-show="!rawStatus">HAproxy is not running
+            <span class="text-danger" ng-hide="isLBonline">HAproxy is not running
             <span class="glyphicon glyphicon-thumbs-down"></span></span>
         </h3>
 
@@ -70,7 +70,7 @@
 </div>
 
 
-<table class="table" ng-show="rawStatus">
+<table class="table" ng-show="isLBonline">
     <thead>
     <tr>
         <th>Proxy Name</th>
@@ -153,7 +153,9 @@
     <!--<p style="white-space: pre;">{{ configFile}}</p>-->
 
     <div ng-show="collapseConfig">
-
+<h4>2</h4>
+        <pre>{{configFile2}}</pre>
+        <h4>1</h4>
         <pre>{{configFile}}</pre>
     </div>
 

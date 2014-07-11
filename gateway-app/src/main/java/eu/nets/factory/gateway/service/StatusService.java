@@ -43,7 +43,6 @@ public class StatusService {
     EmailService emailService;
 
 
-
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private HashMap<Long, List<StatusModel>> loadBalancerStatuses = new HashMap<>();
@@ -51,35 +50,55 @@ public class StatusService {
 
     @Scheduled(fixedRate = 5000)
     public void autoPoll() {
-        //log.info("StatusService.autoPoll {} , #loadBalancers {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
+        log.info("StatusService.autoPoll {} , #loadBalancers {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
         List<LoadBalancer> lbList = loadBalancerRepository.findAll();
 
         for (LoadBalancer lb : lbList) {
             List<StatusModel> oldListStatusList = loadBalancerStatuses.get(lb.getId());
             try {
-                List<StatusModel> listStatus = parseCSV(readCSV(lb),lb); //throws exception if failed
+                List<StatusModel> listStatus = parseCSV(readCSV(lb), lb); //throws exception if failed
                 if (oldListStatusList != null && !oldListStatusList.isEmpty())
-                    checkForChangesInStatus(oldListStatusList, listStatus,lb);
+                    checkForChangesInStatus(oldListStatusList, listStatus, lb);
 
                 loadBalancerStatuses.put(lb.getId(), listStatus);
 
             } catch (GatewayException ge) {
                 //happens when a haproxy is offline
                 //if (oldListStatusList.isEmpty()) {
-                    //Was offline last time also. No need to send emails.
+                //Was offline last time also. No need to send emails.
 
                 //} else {
-                    loadBalancerStatuses.put(lb.getId(), Collections.<StatusModel>emptyList());
-                    //log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'", lb.getName(), lb.getHost(), lb.getPublicPort(), ge.getMessage());
+                List<StatusModel> offlineList = new ArrayList<>();
+                for (Application application : lb.getApplications()) {
 
-              //  }
+
+                    StatusModel statusModel = new StatusModel();
+                    statusModel.data.put("pxname", application.getName());
+                    statusModel.data.put("lbname", lb.getName());
+                    statusModel.data.put("svname", "BACKEND");
+                    statusModel.data.put("status", "offline");
+                    offlineList.add(statusModel);
+                    for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
+                        statusModel = new StatusModel();
+                        statusModel.data.put("pxname", application.getName());
+                        statusModel.data.put("lbname", lb.getName());
+                        statusModel.data.put("svname", applicationInstance.getName());
+                        statusModel.data.put("status", "offline");
+                        offlineList.add(statusModel);
+                    }
+
+                }
+                loadBalancerStatuses.put(lb.getId(), offlineList);
+                //log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'", lb.getName(), lb.getHost(), lb.getPublicPort(), ge.getMessage());
+
+                //  }
             }
         }
 
     }
 
     //Checks if the state has changes for a status model. Not a fast implementation O(n^2). Could be better.
-    private void checkForChangesInStatus(List<StatusModel> oldlistStatus, List<StatusModel> newlistStatus,LoadBalancer lb) {
+    private void checkForChangesInStatus(List<StatusModel> oldlistStatus, List<StatusModel> newlistStatus, LoadBalancer lb) {
         for (StatusModel oldStatusModel : oldlistStatus) {
             int index = newlistStatus.indexOf(oldStatusModel);
             if (index == -1) {
@@ -93,32 +112,28 @@ public class StatusService {
                 log.info("StatusService.checkForChangesInStatus() : {} went from status {} -> {}", oldStatusModel, oldStatus, newStatus);
 
                 String appName = newStatusModel.data.get("pxname");
-
-
                 Application application = applicationController.getApplicationByExactName(appName);
                 if (application == null) {
                     log.info("Error getting the application, Should never happen?");
                     continue;
                 }
-
                 log.info("StatusService.checkForChangesInStatus() : Sending email to :  {}", application.getEmails());
-
-                ApplicationInstance instance =null;
-                for(ApplicationInstance applicationInstance : application.getApplicationInstances()){
-                    if(newStatusModel.data.get("svname").equals(applicationInstance.getName()))
-                        instance=applicationInstance;
+                ApplicationInstance instance = null;
+                for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
+                    if (newStatusModel.data.get("svname").equals(applicationInstance.getName()))
+                        instance = applicationInstance;
                 }
-                if(instance==null)
+                if (instance == null)
                     continue;
 
 
                 StringBuilder message = new StringBuilder();
                 message.append("Application : " + application.getName() + " in group: " + application.getApplicationGroup().getName() + ".\n");
-                message.append("\nApplication instance : " + instance.getName() + " " + instance.getHost() + ":" + instance.getPort() + "" + instance.getPath() + ".\n");
+                message.append("Application instance : " + instance.getName() + " " + instance.getHost() + ":" + instance.getPort() + "" + instance.getPath() + ".\n");
                 message.append("\t went from status " + oldStatus + " to " + newStatus + ". \n");
 
-                message.append("In loadbalancer "+lb.getName()+"  "+lb.getHost()+":"+lb.getPublicPort()+". \n");
-                log.info("Email msg: {}",message.toString());
+                message.append("In loadbalancer " + lb.getName() + "  " + lb.getHost() + ":" + lb.getPublicPort() + ". \n");
+                log.info("Email msg: {}", message.toString());
                 emailService.sendEmail(application.getEmails(), "HaProxy change in status", message.toString());
 
 
@@ -173,13 +188,11 @@ public class StatusService {
 
     //Should be private. but used in test. fix later
     public List<StatusModel> parseCSV(List<String> csvStrings) {
-
-
-        return parseCSV(csvStrings,null);
+        return parseCSV(csvStrings, null);
     }
 
     //Should be private. but used in test. fix later
-    public List<StatusModel> parseCSV(List<String> csvStrings,LoadBalancer lb) {
+    public List<StatusModel> parseCSV(List<String> csvStrings, LoadBalancer lb) {
         //log.info("StatusService.parseCSV");
 
         if (csvStrings == null) {
@@ -206,8 +219,8 @@ public class StatusService {
                 if (j < names.length) // should not be necessary
                     statusModel.data.put(names[j], splitCsvString[j]);
             }
-            if(lb!=null)
-             statusModel.data.put("lbname",lb.getName());
+            if (lb != null)
+                statusModel.data.put("lbname", lb.getName());
             list.add(statusModel);
         }
 
