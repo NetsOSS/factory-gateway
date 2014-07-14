@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Entity
@@ -12,7 +13,8 @@ import javax.validation.constraints.Pattern;
         @UniqueConstraint(columnNames = {"name"})})
 public class ApplicationInstance extends AbstractEntity {
 
-    @NotBlank
+    //@NotBlank
+    @Pattern(regexp = "^\\S+$")
     private String name;
 
     @NotBlank
@@ -22,9 +24,10 @@ public class ApplicationInstance extends AbstractEntity {
     @Max(65535)
     private int port;
 
-    @Pattern(regexp = "^/[a-zA-Z].*")
+    @Pattern(regexp = "^/[a-zA-Z]\\S*$")
     private String path;
 
+    @NotNull
     @ManyToOne
     private Application application;
 

@@ -50,13 +50,13 @@ public class InitTestClass {
         groupModelThree = applicationGroupController.create(groupModelThree);
 
         //Applications
-        Application applicationOne = new Application("Kamino", "/kamino", groupOne,"", "/kamino/v1/ping");
-        Application applicationTwo = new Application("Grandiosa", "/grandiosa", groupTwo,"", "/grandiosa/ping");
-        Application applicationThree = new Application("Alpha", "/alpha", groupTwo,"", "/alpha/ping");
+        Application applicationOne = new Application("Kamino", "/kamino", applicationGroupController.findEntityById(groupModelOne.getId()), "mailTwo", "/kamino/v1/ping");
+        Application applicationTwo = new Application("Grandiosa", "/grandiosa", applicationGroupController.findEntityById(groupModelTwo.getId()), "mailTwo", "/grandiosa/ping");
+        Application applicationThree = new Application("Alpha", "/alpha", applicationGroupController.findEntityById(groupModelTwo.getId()),"mailOne", "/alpha/ping");
         AppModel appModelOne = new AppModel(applicationOne);
         AppModel appModelTwo = new AppModel(applicationTwo);
         AppModel appModelThree = new AppModel(applicationThree);
-        appModelOne.applicationGroupId = groupModelOne.getId();
+        appModelOne.applicationGroupId = groupModelOne.getId(); //
         appModelTwo.applicationGroupId = groupModelTwo.getId();
         appModelThree.applicationGroupId = groupModelTwo.getId();
 
@@ -65,9 +65,9 @@ public class InitTestClass {
         appModelThree = applicationController.create(appModelThree);
 
         //ApplicationInstances
-        ApplicationInstance appInstOne = new ApplicationInstance("Kamino 1.0", "hostOne", 8080, "/kamino/1.0", applicationOne);
-        ApplicationInstance appInstTwo = new ApplicationInstance("Grandiosa 1.0", "hostTwo", 8080, "/grandiosa/1.0", applicationTwo);
-        ApplicationInstance appInstThree = new ApplicationInstance("Alpha 1.0", "hostThree", 8080, "/alpha/1.0", applicationTwo);
+        ApplicationInstance appInstOne = new ApplicationInstance("Kamino1.0", "hostOne", 8080, "/kamino/1.0", applicationController.findEntityById(appModelOne.getId()));
+        ApplicationInstance appInstTwo = new ApplicationInstance("Grandiosa1.0", "hostTwo", 8080, "/grandiosa/1.0", applicationController.findEntityById(appModelTwo.getId()));
+        ApplicationInstance appInstThree = new ApplicationInstance("Alpha1.0", "hostThree", 8080, "/alpha/1.0", applicationController.findEntityById(appModelTwo.getId()));
         AppInstModel instModelOne = new AppInstModel(appInstOne);
         AppInstModel instModelTwo = new AppInstModel(appInstTwo);
         AppInstModel instModelThree = new AppInstModel(appInstThree);
@@ -80,5 +80,6 @@ public class InitTestClass {
         loadBalancerController.addApplication(loadModelOne.id, appModelOne.getId());
         loadBalancerController.addApplication(loadModelTwo.id, appModelTwo.getId());
         loadBalancerController.addApplication(loadModelTwo.id, appModelThree.getId());
+        loadBalancerController.addApplication(loadModelThree.id, appModelTwo.getId());
     }
 }

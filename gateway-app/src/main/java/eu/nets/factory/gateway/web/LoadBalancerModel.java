@@ -42,4 +42,16 @@ public class LoadBalancerModel {
     public static LoadBalancerModel summary(LoadBalancer loadBalancer) {
         return new LoadBalancerModel(loadBalancer, true);
     }
+
+    public Long getId() { return id; }
+
+    public String getName() { return name; }
+
+    public String getInstallationPath() { return installationPath; }
+
+    public String getHost() { return host; }
+
+    public String getSshKey() { return sshKey; }
+
+    public List<AppModel> getApplications() { return applications; }
 }

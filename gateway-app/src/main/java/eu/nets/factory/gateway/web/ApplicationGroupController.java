@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -52,6 +53,8 @@ public class ApplicationGroupController {
     public ApplicationGroup findEntityById(@PathVariable Long id) {
         log.info("ApplicationGroupController.findEntityById, id={}", id);
 
+        if(id == null) { throw new EntityNotFoundException("Application", id); }
+
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
         if(applicationGroup == null) { throw new EntityNotFoundException("ApplicationGroup", id); }
 
@@ -66,23 +69,26 @@ public class ApplicationGroupController {
         return new AppGroupModel(findEntityById(id));
     }
 
+    private void assertNameUnique(String name) {
+        if(applicationGroupRepository.countByName(name) > 0L) {
+            throw new GatewayException("Could not create Application Group. Name '" + name + "' already exists.");
+        }
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel create(@RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.create");
 
+        if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
+        if(appGroupModel.getName() == null) throw new GatewayException("Could not create ApplicationGroup. Received one or more null values.");
+        if(! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
         assertNameUnique(appGroupModel.name);
 
         ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
         applicationGroup = applicationGroupRepository.save(applicationGroup);
 
         return new AppGroupModel(applicationGroup);
-    }
-
-    private void assertNameUnique(String name) {
-        if(applicationGroupRepository.countByName(name) > 0L) {
-            throw new GatewayException("Could not create Application Group. Name '" + name + "' already exists.");
-        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/application-groups/{id}")
@@ -106,8 +112,11 @@ public class ApplicationGroupController {
     public AppGroupModel update(@PathVariable Long id, @RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.update, id={}", id);
 
-        ApplicationGroup applicationGroup = findEntityById(id);
+        if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
+        if(appGroupModel.getName() == null) throw new GatewayException("Could not create ApplicationGroup. Received one or more null values.");
+        if(! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
 
+        ApplicationGroup applicationGroup = findEntityById(id);
         if(!(applicationGroup.getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }
 
         applicationGroup.setName(appGroupModel.name);

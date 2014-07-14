@@ -1,7 +1,5 @@
 package eu.nets.factory.gateway.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -15,14 +13,14 @@ import java.util.List;
         @UniqueConstraint(columnNames = {"name"})})
 public class Application extends AbstractEntity {
 
-    @NotBlank
+    @Pattern(regexp = "^\\S+$")
     private String name;
 
-    @Pattern(regexp = "^/[a-zA-Z].*")
+    @Pattern(regexp = "^/[a-zA-Z]\\S*$")
     @Column(nullable = false, name = "publicurl")
     private String publicUrl;
 
-    @Pattern(regexp = "^/[a-zA-Z].*")
+    @Pattern(regexp = "^/[a-zA-Z]\\S*$")
     @Column(nullable = false, name = "checkpath")
     private String checkPath;
 

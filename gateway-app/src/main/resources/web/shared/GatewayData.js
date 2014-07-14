@@ -8,11 +8,11 @@ define([], function () {
       return res.data;
     };
     this.ApplicationController = {};
-    this.ApplicationController.create = function (applicationModel) {
+    this.ApplicationController.create = function (appModel) {
       var req = {};
       req.method = 'POST';
       req.url = prefix + '/data/applications';
-      req.data = applicationModel;
+      req.data = appModel;
       req.params = {};
       return $http(req).then(getData);
     };
@@ -192,12 +192,12 @@ define([], function () {
       return ApplicationGroupController.search($route.current.params.name);
     };
     this.ApplicationInstanceController = {};
-    this.ApplicationInstanceController.create = function (applicationId, applicationInstanceModel) {
+    this.ApplicationInstanceController.create = function (applicationId, appInstModel) {
       var req = {};
       req.method = 'POST';
       req.url = prefix + '/data/applications/{applicationId}/instances';
       req.url = req.url.replace(/{applicationId}/, applicationId);
-      req.data = applicationInstanceModel;
+      req.data = appInstModel;
       req.params = {};
       return $http(req).then(getData);
     };

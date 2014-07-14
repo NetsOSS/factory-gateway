@@ -13,9 +13,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.*;
 
@@ -42,29 +39,46 @@ public class LoadBalancerControllerTest {
 
     @Test
     public void testListAllLoadBalancers() throws Exception {
-        List<LoadBalancerModel> loadBalancerModels = loadBalancerController.listAllLoadBalancers();
-        assertThat(loadBalancerModels).isNotNull().hasSize(3);
-        Collections.sort(loadBalancerModels, (o1, o2) -> o1.id.compareTo(o2.id));
-        assertThat(loadBalancerModels.get(1)).isNotNull();
-        assertThat(loadBalancerModels.get(1).name).isNotNull().isEqualTo("Knut");
+        assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(3).onProperty("name").contains("Per", "Knut", "Hans");
     }
 
     @Test
     public void testSearch() throws Exception {
-        assertThat(loadBalancerController.search("Knut")).isNotNull().hasSize(1);
-        assertThat(loadBalancerController.search(null)).isNotNull().hasSize(3);
+        assertThat(loadBalancerController.search("Knut")).isNotNull().hasSize(1).onProperty("name").contains("Knut");
+        assertThat(loadBalancerController.search("")).isNotNull().hasSize(3).onProperty("name").contains("Per", "Knut", "Hans");
+        assertThat(loadBalancerController.search(null)).isNotNull().hasSize(3).onProperty("name").contains("Per", "Knut", "Hans");
+    }
+
+    @Test
+public void testFindEntityById() throws Exception {
+        assertThat(loadBalancerController.findEntityById(loadBalancerController.search("Knut").get(0).getId())).isNotNull();
+        assertThat(loadBalancerController.findEntityById(loadBalancerController.search("Knut").get(0).getId()).getName()).isNotNull().isEqualTo("Knut");
+
+        try {
+            loadBalancerController.findEntityById(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try {
+            loadBalancerController.findEntityById(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testFindById() throws Exception {
-        assertThat(loadBalancerController.findById(loadBalancerController.listAllLoadBalancers().get(2).id)).isNotNull();
-        assertThat(loadBalancerController.findById(loadBalancerController.listAllLoadBalancers().get(2).id).name).isNotNull().isEqualTo("Hans");
+        assertThat(loadBalancerController.findById(loadBalancerController.search("Hans").get(0).getId())).isNotNull();
+        assertThat(loadBalancerController.findById(loadBalancerController.search("Hans").get(0).getId()).getName()).isNotNull().isEqualTo("Hans");
 
         try {
             loadBalancerController.findById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            loadBalancerController.findById(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
@@ -80,14 +94,35 @@ public class LoadBalancerControllerTest {
     }
 
     @Test
+    public void testAssertNameUnique() throws Exception {
+        //assertThat(true).isEqualTo(false); // this method is private
+    }
+
+    @Test
+    public void testAssertHostInstallationPathUnique() throws Exception {
+        //assertThat(true).isEqualTo(false); // this method is private
+    }
+
+    @Test
+    public void testAssertHostPublicPortUnique() throws Exception {
+        //assertThat(true).isEqualTo(false); // this method is private
+    }
+
+    @Test
     public void testCreate() throws Exception {
         LoadBalancer loadBalancer = new LoadBalancer("Batman", "hostX", "instPathX", "sshX", 456);
+
         LoadBalancerModel loadBalancerModel = loadBalancerController.create(new LoadBalancerModel(loadBalancer));
-        assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(4);
-        assertThat(loadBalancerController.search("Batman")).isNotNull().hasSize(1);
+        assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(4).onProperty("name").contains("Batman");
 
         assertThat(loadBalancerModel).isNotNull();
         assertThat(loadBalancerModel.name).isNotNull().isEqualTo("Batman");
+
+        try { //model is null
+            loadBalancerController.create(null);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -127,14 +162,14 @@ public class LoadBalancerControllerTest {
     public void testRemove() throws Exception {
         assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(3);
         assertThat(applicationController.listAllApps().size()).isNotNull().isEqualTo(3);
-        assertThat(applicationController.search("Grandiosa").get(0).loadBalancers).isNotNull().hasSize(1);
+        assertThat(applicationController.search("Grandiosa").get(0).loadBalancers).isNotNull().hasSize(2);
         assertThat(applicationController.search("Alpha").get(0).loadBalancers).isNotNull().hasSize(1);
 
         loadBalancerController.remove(loadBalancerController.search("Knut").get(0).id);
         assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(2);
         assertThat(applicationController.listAllApps().size()).isNotNull().isEqualTo(3);
 
-        assertThat(applicationController.search("Grandiosa").get(0).loadBalancers).isNotNull().hasSize(0);
+        assertThat(applicationController.search("Grandiosa").get(0).loadBalancers).isNotNull().hasSize(1);
         assertThat(applicationController.search("Alpha").get(0).loadBalancers).isNotNull().hasSize(0);
 
         try {
@@ -224,8 +259,8 @@ public class LoadBalancerControllerTest {
     @Test
     public void testAddApplication() throws Exception {
         loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, applicationController.search("Kamino").get(0).id);
-        assertThat(loadBalancerController.search("Hans").get(0).applications).isNotNull().hasSize(1);
-        assertThat(loadBalancerController.search("Hans").get(0).applications.get(0).name).isNotNull().isEqualTo("Kamino");
+        assertThat(loadBalancerController.search("Hans").get(0).applications).isNotNull().hasSize(2);
+        assertThat(loadBalancerController.search("Hans").get(0).applications).isNotNull().onProperty("name").contains("Grandiosa", "Kamino");
         assertThat(applicationController.search("Kamino").get(0).loadBalancers).isNotNull().hasSize(2);
 
         try {
@@ -273,8 +308,14 @@ public class LoadBalancerControllerTest {
         }
     }
 
+    /*
     @Test
     public void testPushConfiguration() throws Exception {
-        /* TODO */
+        assertThat(true).isEqualTo(false);
     }
+
+    @Test
+    public void testStartLoadBalancer() throws Exception {
+        assertThat(true).isEqualTo(false);
+    }*/
 }

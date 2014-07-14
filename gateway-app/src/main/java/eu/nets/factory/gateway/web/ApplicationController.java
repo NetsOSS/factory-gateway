@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -53,7 +54,6 @@ public class ApplicationController {
 
 
     public Application getApplicationByExactName(String name){
-        //Method for getting exactly one or none. Must be the exact application defined by its name.
         List<Application> applications;
 
         if (name == null) {
@@ -61,23 +61,27 @@ public class ApplicationController {
         } else {
             applications = applicationRepository.findByNameLike(name);
         }
-        if(applications.size()==0)
+
+        if(applications.size() == 0)
             return null;
-        if(applications.size()==1)
+
+        if(applications.size() == 1)
             return applications.get(0);
 
         for (Application app : applications){
-            if(name.equals(app.getName()))
+            if(app.getName().equals(name)) //name.equals(app.getName())) // nullPointerException if name == null
                 return app;
         }
-        return null;
 
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Application findEntityById(@PathVariable Long id) {
         log.info("ApplicationController.findEntityById, id={}", id);
+
+        if(id == null) { throw new EntityNotFoundException("Application", id); }
 
         Application application = applicationRepository.findOne(id);
         if(application == null) { throw new EntityNotFoundException("Application", id); }
@@ -93,26 +97,32 @@ public class ApplicationController {
         return new AppModel(findEntityById(id));
     }
 
+    private void assertNameUnique(String name) {
+        if(applicationRepository.countByName(name) > 0L) {
+            throw new GatewayException("Could not create Application. Name '" + name + "' already exists.");
+        }
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppModel create(@RequestBody AppModel applicationModel) {
+    public AppModel create(@RequestBody AppModel appModel) {
         log.info("ApplicationController.create");
 
-        assertNameUnique(applicationModel.name);
+        if(appModel == null) throw new GatewayException("Could not create Application. Invalid ApplicationModel.");
+        if(appModel.getApplicationGroupId() == null || applicationGroupRepository.findOne(appModel.getApplicationGroupId()) == null) throw new GatewayException("Could not create Application. Invalid ApplicationGroupID.");
+        if(appModel.getName() == null || appModel.getPublicUrl() == null || appModel.getCheckPath() == null) throw new GatewayException("Could not create Application. Received one or more null values.");
+        if(! Pattern.matches("^\\S+$", appModel.getName())) throw new GatewayException("Could not create Application. Name must match pattern '^\\S+$'.");
+        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl())) throw new GatewayException("Could not create Application. PublicUrl must match pattern '^/[a-zA-Z]\\S*$'.");
+        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath())) throw new GatewayException("Could not create Application. CheckPath must match pattern '^/[a-zA-Z]\\S*$'.");
+        assertNameUnique(appModel.name);
 
-        ApplicationGroup applicationGroup = applicationGroupRepository.findOne(applicationModel.getApplicationGroupId());
-        Application application = new Application(applicationModel.getName(), applicationModel.getPublicUrl(), applicationGroup,applicationModel.getEmails(), applicationModel.getCheckPath());
+        ApplicationGroup applicationGroup = applicationGroupRepository.findOne(appModel.getApplicationGroupId());
+        Application application = new Application(appModel.getName(), appModel.getPublicUrl(), applicationGroup, appModel.getEmails(), appModel.getCheckPath());
         application = applicationRepository.save(application);
 
         applicationGroup.addApplication(application);
 
         return new AppModel(application);
-    }
-
-    private void assertNameUnique(String name) {
-        if(applicationRepository.countByName(name) > 0L) {
-            throw new GatewayException("Could not create Application. Name '" + name + "' already exists.");
-        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
@@ -135,6 +145,12 @@ public class ApplicationController {
     public AppModel update(@PathVariable Long id, @RequestBody AppModel appModel) {
         log.info("ApplicationController.update, id={}", id);
 
+        if(id != appModel.getId()) throw new GatewayException("Could not create Application. ID mismatch:\t'" + id + "'\t'" + appModel.getId() + "'");
+        if(appModel.getName().equals("")) throw new GatewayException("Could not create Application. Name must contain at least one symbol.");
+        if(appModel.getName() == null || appModel.getPublicUrl() == null || appModel.getCheckPath() == null)throw new GatewayException("Could not create Application. Received one or more null values.");
+        if(! Pattern.matches("^\\S+$", appModel.getName())) throw new GatewayException("Could not create Application. Name must follow pattern '^\\S+$'.");
+        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl())) throw new GatewayException("Could not create Application. PublicUrl must follow pattern '^/[a-zA-Z]\\\\S*$'.");
+        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath())) throw new GatewayException("Could not create Application. CheckPath must follow pattern '^/[a-zA-Z]\\\\S*$'.");
         Application application = findEntityById(id);
 
         if(!(application.getName().equals(appModel.name))) { assertNameUnique(appModel.name); }

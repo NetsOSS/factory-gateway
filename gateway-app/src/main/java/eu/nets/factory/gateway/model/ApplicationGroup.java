@@ -1,8 +1,7 @@
 package eu.nets.factory.gateway.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
         @UniqueConstraint(columnNames = "name")})
 public class ApplicationGroup extends AbstractEntity {
 
-    @NotBlank
+    @Pattern(regexp = "^\\S+$")
     private String name;
 
     @OneToMany(mappedBy = "applicationGroup", orphanRemoval = true, cascade = CascadeType.PERSIST)

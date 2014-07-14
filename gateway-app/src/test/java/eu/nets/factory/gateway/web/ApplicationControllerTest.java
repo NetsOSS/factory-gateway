@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.CustomAssertions;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import org.junit.Before;
@@ -13,7 +14,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -60,342 +60,389 @@ public class ApplicationControllerTest {
 
     @Test
     public void testListAllApps() throws Exception {
-        String methodId = classId + " - testListAllApps";
-        String partId;
-        String groupName;
-        AppModel appModel;
-        AppInstModel appInstModel;
-        LoadBalancerModel loadBalancerModel;
         List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> o1.getId().compareTo(o2.getId()));
+        assertThat(appModels).isNotNull().hasSize(3).onProperty("name").contains("Kamino", "Grandiosa", "Alpha").excludes("Beta");
 
-        assertNotNull(methodId + ": received null-pointer: 'appModels'", appModels);
-        assertEquals(methodId + ": expected list 'applications' to be of size 3, got " + appModels.size(), 3, appModels.size());
-
-        partId = methodId + " - 1: "; //check 'completeness' of first object
-        appModel = appModels.get(0);
-        assertEquals(partId + "expected 'Kamino', got '" + appModel.name + "'", "Kamino", appModel.name);
-        assertEquals(partId + "expected '/kamino', got '" + appModel.publicUrl + "'", "/kamino", appModel.publicUrl);
-
-        assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
-        groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
-        assertEquals(partId + "expected 'GroupOne', got '" + groupName + "'", "GroupOne", groupName);
-
-        assertNotNull(partId + "received null-pointer: 'applicationInstances'", appModel.applicationInstances);
-        assertEquals(partId + "expected list 'applicationInstances' to be of size 1, found size " + appModel.applicationInstances.size(), 1, appModel.applicationInstances.size());
-        appInstModel = appModel.applicationInstances.get(0);
-        assertEquals(partId + "expected 'Kamino 1.0', got '" + appInstModel.name + "'", "Kamino 1.0", appInstModel.name);
-
-        assertNotNull(partId + "received null-pointer: 'loadBalancers'", appModel.loadBalancers);
-        assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + appModel.loadBalancers.size(), 1, appModel.loadBalancers.size());
-        loadBalancerModel = appModel.loadBalancers.get(0);
-        assertEquals(partId + "expected 'Per', got '" + loadBalancerModel.name + "'", "Per", loadBalancerModel.name);
-
-        partId = methodId + " - 2: "; // check 'completeness' of middle object
-        appModel = appModels.get(1);
-        assertEquals(partId + "expected 'Grandiosa', got '" + appModel.name + "'", "Grandiosa", appModel.name);
-        assertEquals(partId + "expected '/grandiosa', got '" + appModel.publicUrl + "'", "/grandiosa", appModel.publicUrl);
-
-        assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
-        groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
-        assertEquals(partId + "expected 'GroupTwo', got '" + groupName + "'", "GroupTwo", groupName);
-
-        assertNotNull(partId + "received null-pointer: 'applicationInstances'", appModel.applicationInstances);
-        assertEquals(partId + "expected list 'applicationInstances' to be of size 2, found size " + appModel.applicationInstances.size(), 2, appModel.applicationInstances.size());
-        List<AppInstModel> appInstModels = appModel.applicationInstances;
-        Collections.sort(appInstModels, (o1, o2) -> o1.id.compareTo(o2.id));
-        appInstModel = appInstModels.get(0);
-        assertEquals(partId + "expected 'Grandiosa 1.0', got '" + appInstModel.name + "'", "Grandiosa 1.0", appInstModel.name);
-        appInstModel = appInstModels.get(1);
-        assertEquals(partId + "expected 'Alpha 1.0', got '" + appInstModel.name + "'", "Alpha 1.0", appInstModel.name);
-
-        assertNotNull(partId + "received null-pointer: 'loadBalancers'", appModel.loadBalancers);
-        assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + appModel.loadBalancers.size() + "", 1, appModel.loadBalancers.size());
-        loadBalancerModel = appModel.loadBalancers.get(0);
-        assertEquals(partId + "expected 'Knut', got '" + loadBalancerModel.name + "'", "Knut", loadBalancerModel.name);
-
-        partId = methodId + " - 3: "; // check 'completeness' of last object
-        appModel = appModels.get(2);
-        assertEquals(partId + "expected 'Alpha', got '" + appModel.name + "'", "Alpha", appModel.name);
-        assertEquals(partId + "expected '/alpha', got '" + appModel.publicUrl + "'", "/alpha", appModel.publicUrl);
-
-        assertNotNull(partId + "applicationGroupID " + appModel.applicationGroupId + " did not match the ID of any ApplicationGroup", applicationGroupRepository.findOne(appModel.applicationGroupId));
-        groupName = applicationGroupRepository.findOne(appModel.applicationGroupId).getName();
-        assertEquals(partId + "expected 'GroupTwo', got '" + groupName + "'", "GroupTwo", groupName);
-
-        assertNotNull(partId + "received null-pointer: 'applicationInstances'", appModel.applicationInstances);
-        assertEquals(partId + "expected list 'applicationInstances' to be of size 0, found size " + appModel.applicationInstances.size(), 0, appModel.applicationInstances.size());
-
-        assertNotNull(partId + "received null-pointer: 'loadBalancers'", appModel.loadBalancers);
-        assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + appModel.loadBalancers.size(), 1, appModel.loadBalancers.size());
-        loadBalancerModel = appModel.loadBalancers.get(0);
-        assertEquals(partId + "expected 'Knut', got '" + loadBalancerModel.name + "'", "Knut", loadBalancerModel.name);
+        CustomAssertions.assertThat(appModels.get(0)).hasName("Kamino").hasPublicUrl("/kamino").hasEmails("mailTwo").hasCheckPath("/kamino/v1/ping");
+        CustomAssertions.assertThat(appModels.get(1)).hasName("Grandiosa").hasPublicUrl("/grandiosa").hasEmails("mailTwo").hasCheckPath("/grandiosa/ping");
+        CustomAssertions.assertThat(appModels.get(2)).hasName("Alpha").hasPublicUrl("/alpha").hasEmails("mailOne").hasCheckPath("/alpha/ping");
     }
 
     @Test
     public void testSearch() throws Exception {
-        String methodId = classId + " - testSearch";
-        String partId;
-        AppModel appModel;
-        List<AppModel> appModels;
+        assertThat(applicationController.search("Alpha")).isNotNull().hasSize(1).onProperty("name").containsExactly("Alpha");
+        assertThat(applicationController.search("Grandiosa")).isNotNull().hasSize(1).onProperty("name").containsExactly("Grandiosa");
+        assertThat(applicationController.search("Kamino")).isNotNull().hasSize(1).onProperty("name").containsExactly("Kamino");
 
-        partId = methodId + " - 1: "; // search for last object
-        appModels = applicationController.search("Alpha");
-        assertNotNull(partId + "received null-pointer: 'appModels'", appModels);
-        assertEquals(partId + "expected list 'appModels' to be of size 1, found size " + appModels.size(), 1, appModels.size());
-        appModel = appModels.get(0);
-        assertEquals(partId + "expected 'Alpha', got '" + appModel.name + "'", "Alpha", appModel.name);
+        assertThat(applicationController.search("Beta")).isNotNull().hasSize(0);
+        assertThat(applicationController.search("")).isNotNull().hasSize(3).onProperty("name").contains("Alpha", "Grandiosa", "Kamino");
+        assertThat(applicationController.search(null)).isNotNull().hasSize(3);
+    }
 
-        partId = methodId + " - 2: "; // search for middle object
-        appModels = applicationController.search("Grandiosa");
-        assertNotNull(partId + "received null-pointer: 'appModels'", appModels);
-        assertEquals(partId + "expected list 'appModels' to be of size 1, found size " + appModels.size(), 1, appModels.size());
-        appModel = appModels.get(0);
-        assertEquals(partId + "expected 'Grandiosa', got '" + appModel.name + "'", "Grandiosa", appModel.name);
+    @Test
+    public void testGetApplicationByExactName() throws Exception {
+        CustomAssertions.assertThat(applicationController.getApplicationByExactName("Alpha")).isNotNull().hasName("Alpha");
 
-        partId = methodId + " - 3: "; // search for first object
-        appModels = applicationController.search("Kamino");
-        assertNotNull(partId + "received null-pointer: 'appModels'", appModels);
-        assertEquals(partId + "expected list 'appModels' to be of size 1, found size " + appModels.size(), 1, appModels.size());
-        appModel = appModels.get(0);
-        assertEquals(partId + "expected 'Kamino', got '" + appModel.name + "'", "Kamino", appModel.name);
+        assertThat(applicationController.getApplicationByExactName("Beta")).isNull();
+        assertThat(applicationController.getApplicationByExactName("")).isNull();
+        assertThat(applicationController.getApplicationByExactName(null)).isNull();
+    }
 
-        partId = methodId + " - 4: "; // search for nonexistent object
-        appModels = applicationController.search("Batman");
-        assertNotNull(partId + "received null-pointer: 'appModels'", appModels);
-        assertEquals(partId + "expected list 'appModels' to be of size 0, found size " + appModels.size(), 0, appModels.size());
+    @Test
+    public void testFindEntityById() throws Exception {
+        assertThat(applicationController.findEntityById(applicationController.getApplicationByExactName("Grandiosa").getId())).isNotNull();
+        assertThat(applicationController.findEntityById(applicationController.getApplicationByExactName("Grandiosa").getId()).getName()).isNotNull().isEqualTo("Grandiosa");
+
+        try {
+            applicationController.findEntityById(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationController.findEntityById(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testFindById() throws Exception {
-        String methodId = classId + " - testFindById";
-        String partId;
-        AppModel appModel;
-
-        List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-
-        partId = methodId + " - 1: "; // find last object
-        appModel = appModels.get(2);
-        assertEquals(partId + "expected '" + appModel.name + "', got '" + applicationController.findById(appModel.getId()).name + "'", appModel.name, applicationController.findById(appModel.getId()).name);
-
-        partId = methodId + " - 2: ";
-        appModel = appModels.get(0); // find first object
-        assertEquals(partId + "expected '" + appModel.name + "', got '" + applicationController.findById(appModel.getId()).name + "'", appModel.name, applicationController.findById(appModel.getId()).name);
-
-        partId = methodId + " - 3: ";
-        appModel = appModels.get(1); // find middle object
-        assertEquals(partId + "expected '" + appModel.name + "', got '" + applicationController.findById(appModel.getId()).name + "'", appModel.name, applicationController.findById(appModel.getId()).name);
+        assertThat(applicationController.findById(applicationController.getApplicationByExactName("Grandiosa").getId())).isNotNull();
+        assertThat(applicationController.findById(applicationController.getApplicationByExactName("Grandiosa").getId()).getName()).isNotNull().isEqualTo("Grandiosa");
 
         try {
             applicationController.findById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationController.findById(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test
+    public void testAssertNameUnique() throws Exception {
+        //assertThat(true).isEqualTo(false); // this method is private
     }
 
     @Test
     public void testCreate() throws Exception {
-        String methodId = classId + " - testCreate";
-        String partId;
-
-        partId = methodId + " - 1: "; // create application
-        List<ApplicationGroup> applicationGroups = applicationGroupRepository.findAll();
-        assertNotNull(partId + "received null-pointer: 'applicationGroups'", applicationGroups);
-        Collections.sort(applicationGroups, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        AppGroupModel appGroupModel = new AppGroupModel(applicationGroups.get(0));
-        assertNotNull(partId + "received null-pointer: 'appGroupModel'", appGroupModel);
-        Application application = new Application("Beta", "/beta", applicationGroupRepository.findOne(appGroupModel.getId()),"", "/beta/ping");
-        assertNotNull(partId + "received null-pointer: 'application'", application);
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping");
         AppModel appModel = new AppModel(application);
-        assertNotNull(partId + "received null-pointer: 'appModel'", application);
         appModel = applicationController.create(appModel);
-        assertNotNull(partId + "received null-pointer from create", appModel);
-        assertEquals(partId + "expected 'Beta', got '" + appModel.name + "'", "Beta", appModel.name);
-        applicationGroups = applicationGroupRepository.findAll();
-        Collections.sort(applicationGroups, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        appGroupModel = new AppGroupModel(applicationGroups.get(0));
-        assertNotNull(partId + "received null-pointer: 'applications'", appGroupModel.applications);
-        assertEquals(partId + "expected list 'appModels' to be of size 2, found size " + appGroupModel.applications.size() + "", 2, appGroupModel.applications.size());
-        List<AppModel> appModels =  appGroupModel.applications;
-        Collections.sort(appModels, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        assertEquals(partId + "expected 'Beta', got '" + appModels.get(1).getName() + "'", "Beta", appModels.get(1).getName());
 
-        partId = methodId + " - 2: "; // add ApplicationInstance - testRemove
-        application = applicationRepository.findOne(appModel.getId());
-        ApplicationInstance applicationInstance = new ApplicationInstance("Beta 1.0", "hostX", 8080, "/beta/1.0", application);
-        AppInstModel appInstModel = new AppInstModel(applicationInstance);
-        assertNotNull(partId + "received null-pointer: 'appInstModel'", appInstModel);
-        applicationInstanceController.create(application.getId(), appInstModel);
-        ApplicationInstance applicationInstance2 = new ApplicationInstance("Beta 1.1", "hostX", 8080, "/beta/1.1", application);
-        AppInstModel appInstModel2 = new AppInstModel(applicationInstance2);
-        applicationInstanceController.create(application.getId(), appInstModel2);
-        application = applicationRepository.findOne(appModel.getId());
-        List<ApplicationInstance> applicationInstances = application.getApplicationInstances();
-        assertNotNull(partId + "received null-pointer: 'applicationInstances'", applicationInstances);
-        Collections.sort(applicationInstances, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        assertEquals(partId + "expected list 'applicationInstances' to be of size 2, found size " + applicationInstances.size(), 2, applicationInstances.size());
-        assertEquals(partId + "expected 'Beta 1.0', got '" + applicationInstances.get(0).getName() + "'", "Beta 1.0", applicationInstances.get(0).getName());
-        assertNotNull(partId + "received null-pointer: 'application'", applicationInstance.getApplication());
-        assertEquals(partId + "expected 'Beta', got '" + applicationInstance.getApplication().getName() + "'", "Beta", applicationInstance.getApplication().getName());
+        assertThat(appModel).isNotNull();
+        CustomAssertions.assertThat(appModel).hasName("Beta").hasPublicUrl("/beta").hasEmails("betaMail").hasCheckPath("/beta/ping");
+        CustomAssertions.assertThat(appModel).hasAppGroup(applicationGroupRepository.findByNameLike("GroupTwo").get(0).getId()).hasExactAppInsts(new AppInstModel[] {}).hasExactLoadBalancers(new LoadBalancerModel[] {});
 
-        partId = methodId + " - 3: "; // add LoadBalancer - testRemove
-        List<LoadBalancer> loadBalancers = loadBalancerRepository.findAll();
-        Collections.sort(loadBalancers, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancers.get(0));
-        assertNotNull(partId + "received null-pointer: 'loadBalancerModel'", loadBalancerModel);
-        loadBalancerController.addApplication(loadBalancerModel.id, application.getId());
-        LoadBalancerModel loadBalancerModel2 = new LoadBalancerModel(loadBalancers.get(1));
-        assertNotNull(partId + "received null-pointer: 'loadBalancerModel'", loadBalancerModel);
-        loadBalancerController.addApplication(loadBalancerModel2.id, application.getId());
-        application = applicationRepository.findOne(appModel.getId());
-        List<LoadBalancer> appLoadBalancers = application.getLoadBalancers();
-        assertNotNull(partId + "received null-pointer: 'loadBalancers'", appLoadBalancers);
-        Collections.sort(appLoadBalancers, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        //assertEquals(partId + "expected list 'loadBalancers' to be of size 2, found size " + appLoadBalancers.size(), 2, appLoadBalancers.size());
-        //assertEquals(partId + "expected 'Per', got '" + appLoadBalancers.get(0).getName() + "'", "Per", appLoadBalancers.get(0).getName());
-        loadBalancers = loadBalancerRepository.findAll();
-        Collections.sort(loadBalancers, (o1, o2) -> o1.getId().compareTo(o2.getId()));
-        loadBalancerModel = new LoadBalancerModel(loadBalancers.get(0));
-        appModels = loadBalancerModel.applications;
-        assertNotNull(partId + "received null-pointer: 'applications'", appModels);
-        assertEquals(partId + "expected list 'applications' to be of size 2, found size " + appModels.size(), 2, appModels.size());
-        assertEquals(partId + "expected 'Beta', got '" + appModels.get(1).getName() + "'", "Beta", appModels.get(1).getName());
+        assertThat(applicationController.listAllApps()).isNotNull().hasSize(4);
+        appModel = applicationController.listAllApps().get(3);
+        CustomAssertions.assertThat(appModel).hasName("Beta").hasPublicUrl("/beta").hasEmails("betaMail").hasCheckPath("/beta/ping");
+        CustomAssertions.assertThat(appModel).hasAppGroup(applicationGroupRepository.findByNameLike("GroupTwo").get(0).getId()).hasExactAppInsts(new AppInstModel[] {}).hasExactLoadBalancers(new LoadBalancerModel[] {});
+
+        try { // appModel == null
+            applicationController.create(null);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
     }
 
     @Test()
-    public void testCreateUniqueName() throws Exception {
-        //same name, same ApplicationGroup
-        ApplicationGroup applicationGroup = applicationGroupRepository.findByNameLike("GroupTwo").get(0);
-        Application application = new Application("Alpha", "X", applicationGroup,"", "/alpha/ping");
+    public void testCreateValidName() throws Exception {
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping");
         AppModel appModel = new AppModel(application);
-        try {
-            applicationController.create(appModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
 
-        //same name, different ApplicationGroup
-        applicationGroup = applicationGroupRepository.findByNameLike("GroupOne").get(0);
-        application = new Application("Alpha", "X", applicationGroup,"", "/alpha/ping");
-        appModel = new AppModel(application);
-        try {
+        try { //name already exists - not unique
+            appModel.name = "Alpha";
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
+        } catch (GatewayException ignore) { }
+
+        try { //name is null
+            appModel.name = null;
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name is blank
+            appModel.name = "";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name contains a whitespace
+            appModel.name = "as d";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidPublicUrl() throws Exception {
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping");
+        AppModel appModel = new AppModel(application);
+
+        try { //publicUrl is null
+            appModel.publicUrl = null;
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl is blank
+            appModel.publicUrl = "";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl does not start with '/'
+            appModel.publicUrl = "asd";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl does not start with '/[a-zA-Z]'
+            appModel.publicUrl = "/3";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl contains whitespace
+            appModel.publicUrl = "/as d";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidCheckPath() throws Exception {
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping");
+        AppModel appModel = new AppModel(application);
+
+        try { //checkPath is null
+            appModel.checkPath = null;
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //checkPath is blank
+            appModel.checkPath = "";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //checkPath does not start with '/'
+            appModel.checkPath = "asd";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //checkPath does not start with '/[a-zA-Z]'
+            appModel.checkPath = "/3";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //checkPath contains whitespace
+            appModel.checkPath = "/as d";
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidApplicationGroup() throws Exception {
+        Application application = new Application("Alpha", "X", applicationGroupRepository.findByNameLike("GroupTwo").get(0),"", "/alpha/ping");
+        AppModel appModel = new AppModel(application);
+
+        try { //applicationGroup has invalid id
+            appModel.applicationGroupId = -1L;
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //applicationGroup id is null
+            appModel.applicationGroupId = null;
+            applicationController.create(appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testRemove() throws Exception {
-
-        //AppModel appModel = applicationController.search("Grandiosa").get(0);
-        //assertThat(appModel).isNotNull().isNotEqualTo(applicationController.search("Grandiosa").get(0)); // ?
-
         applicationController.remove(applicationController.search("Grandiosa").get(0).getId());
         assertThat(applicationController.listAllApps().size()).isNotNull().isEqualTo(2);
 
-        assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(1);
-        assertThat(applicationInstanceController.listAllAppInsts().get(0).name).isNotNull().isNotEqualTo("Grandiosa 1.0").isNotEqualTo("Alpha 1.0");
+        assertThat(applicationInstanceController.listAllAppInsts()).isNotNull().hasSize(1).onProperty("name").excludes("Gransiosa1.0", "Alpha1.0");
 
         assertThat(applicationGroupController.listAllAppGroups()).isNotNull().hasSize(3);
-        //assertThat(applicationGroupController.search("GroupTwo").get(0).applications.contains(appModel)).isNotNull().isEqualTo(false); //is 'contains' safe?
-        assertThat(applicationGroupController.search("GroupTwo").get(0).applications.size()).isNotNull().isEqualTo(1);
-        assertThat(applicationGroupController.search("GroupTwo").get(0).applications.get(0).name).isNotNull().isNotEqualTo("Grandiosa");
+        assertThat(applicationGroupController.search("GroupTwo").get(0).applications).isNotNull().hasSize(1).onProperty("name").excludes("Grandiosa");
 
         assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(3);
-        //assertThat(loadBalancerController.search("Knut").get(0).applications.contains(appModel)).isNotNull().isEqualTo(false); //is 'contains' safe?
-        assertThat(loadBalancerController.search("Knut").get(0).applications.size()).isNotNull().isEqualTo(1);
-        assertThat(loadBalancerController.search("Knut").get(0).applications.get(0).name).isNotNull().isNotEqualTo("Grandiosa");
+        assertThat(loadBalancerController.search("Knut").get(0).applications).isNotNull().hasSize(1).onProperty("name").excludes("Grandiosa");
 
         try {
             applicationController.remove(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationController.remove(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testUpdate() throws Exception {
-        String methodId = classId + " - testUpdate";
-        String partId;
+        AppModel appModel = applicationController.search("Grandiosa").get(0);
 
-        partId = methodId + " - 1: ";
-        List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
-        AppModel appModel = appModels.get(0);
-        appModel.name = "Delta";
-        appModel.publicUrl = "/delta";
+        appModel.name = "Beta";
+        appModel.publicUrl = "/beta";
+        appModel.emails = "BetaMail";
+        appModel.checkPath = "/beta/ping";
+        appModel.applicationInstances = null;
+        appModel.applicationGroupId = -6L;
+        appModel.loadBalancers = null;
+
         applicationController.update(appModel.getId(), appModel);
-        appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
-        appModel = appModels.get(0);
-        assertEquals(partId + "expected 'Delta', got '" + appModel.name + "'", "Delta", appModel.name);
-        assertEquals(partId + "expected '/delta', got '" + appModel.publicUrl + "'", "/delta", appModel.publicUrl);
 
-        try {
+        assertThat(applicationController.listAllApps()).isNotNull().hasSize(3).onProperty("name").excludes("Grandiosa").contains("Beta");
+        CustomAssertions.assertThat(applicationController.search("Beta").get(0)).hasName("Beta").hasPublicUrl("/beta").hasEmails("BetaMail").hasCheckPath("/beta/ping");
+        CustomAssertions.assertThat(applicationController.search("Beta").get(0)).doesNotHaveAppGroupId(-6L).hasAppInsts(new AppInstModel[] {}).hasLoadBalancers(new LoadBalancerModel[] {});
+
+        try { //id mismatch
             applicationController.update(-1L, appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
 
+        try { //invalid id
+            appModel.id = -1L;
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //invalid id
+            appModel.id = null;
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testUpdateUniqueName() throws Exception {
         AppModel appModel = applicationController.search("Kamino").get(0);
 
+        // may reuse name for same id
         assertThat(applicationController.update(appModel.id, appModel)).isNotNull();
 
-        appModel.name = "Alpha";
-        try {
+        try { //name allready 'in use'
+            appModel.name = "Grandiosa";
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test
+    public void testUpdateValidName() throws Exception {
+        AppModel appModel = applicationController.search("Grandiosa").get(0);
+
+        try { //name is blank
+            appModel.name = "";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name contains a whitespace
+            appModel.name = "as d";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test
+    public void testUpdateValidPublicUrl() throws Exception {
+        AppModel appModel = applicationController.search("Grandiosa").get(0);
+
+        try { //publicUrl is blank
+            appModel.publicUrl = "";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl does not start with '/'
+            appModel.publicUrl = "asd";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl does not start with '/[a-zA-Z]'
+            appModel.publicUrl = "/3";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl contains whitespace
+            appModel.publicUrl = "/as d";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test
+    public void testUpdateValidCheckPath() throws Exception {
+        AppModel appModel = applicationController.search("Grandiosa").get(0);
+
+        try { //checkPath is blank
+            appModel.checkPath = "";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //checkPath does not start with '/'
+            appModel.checkPath = "asd";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //checkPath does not start with '/[a-zA-Z]'
+            appModel.checkPath = "/3";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //checkPath contains whitespace
+            appModel.checkPath = "/as d";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testGetApplicationGroup() throws Exception {
-        String methodId = classId + " - getApplicationGroup";
-        String partId;
 
-        List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
-        assertEquals(classId + "expected list 'appModels' to be of size 3, found size " + appModels.size(), 3, appModels.size());
-
-        partId = methodId + " - 1: ";
-        assertNotNull(partId + "received null-pointer: 'applicationGroup'", applicationController.getApplicationGroup(appModels.get(0).getId()));
-        assertEquals(partId + "expected applicationGroupID " + appModels.get(0).applicationGroupId + ", got '" + applicationController.getApplicationGroup(appModels.get(0).getId()).getId() + "'", appModels.get(0).applicationGroupId, applicationController.getApplicationGroup(appModels.get(0).getId()).getId());
-        assertNotNull(partId + "received null-pointer: 'applicationGroup'", applicationController.getApplicationGroup(appModels.get(1).getId()));
-        assertEquals(partId + "expected applicationGroupID " + appModels.get(1).applicationGroupId + ", got '" + applicationController.getApplicationGroup(appModels.get(1).getId()).getId() + "'", appModels.get(1).applicationGroupId, applicationController.getApplicationGroup(appModels.get(1).getId()).getId());
-        assertNotNull(partId + "received null-pointer: 'applicationGroup'", applicationController.getApplicationGroup(appModels.get(2).getId()));
-        assertEquals(partId + "expected applicationGroupID " + appModels.get(2).applicationGroupId + ", got '" + applicationController.getApplicationGroup(appModels.get(2).getId()).getId() + "'", appModels.get(2).applicationGroupId, applicationController.getApplicationGroup(appModels.get(2).getId()).getId());
+        assertThat(applicationController.getApplicationGroup(applicationController.search("Grandiosa").get(0).getId()).getId()).isNotNull().isEqualTo(applicationController.search("Grandiosa").get(0).applicationGroupId);
 
         try {
             applicationController.getApplicationGroup(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationController.getApplicationGroup(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testGetLoadBalancers() throws Exception {
-        String methodId = classId + " - testGetLoadBalancers";
-        String partId;
-
-        List<AppModel> appModels = applicationController.listAllApps();
-        Collections.sort(appModels, (o1, o2) -> o1.id.compareTo(o2.id));
-
-        partId = methodId + " - 1: ";
-        assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(0).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(0).getId()).size());
-        assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(1).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(1).getId()).size());
-        assertEquals(partId + "expected list 'loadBalancers' to be of size 1, found size " + applicationController.getLoadBalancers(appModels.get(2).getId()).size(), 1, applicationController.getLoadBalancers(appModels.get(2).getId()).size());
+        assertThat(applicationController.getLoadBalancers(applicationController.search("Grandiosa").get(0).getId())).isNotNull().hasSize(2).onProperty("name").contains("Knut", "Hans");
 
         try {
             applicationController.getLoadBalancers(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationController.getLoadBalancers(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 }

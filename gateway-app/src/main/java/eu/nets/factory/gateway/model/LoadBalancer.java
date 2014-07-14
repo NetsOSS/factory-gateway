@@ -3,6 +3,7 @@ package eu.nets.factory.gateway.model;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class LoadBalancer extends AbstractEntity{
     @NotBlank
     private String host;
 
+    //@Pattern(regexp = "^/[a-zA-Z]\\S*$")
     @NotBlank
     private String installationPath;
 

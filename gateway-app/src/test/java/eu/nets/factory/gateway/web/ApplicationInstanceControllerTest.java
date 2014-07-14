@@ -15,9 +15,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.*;
 
@@ -48,113 +45,385 @@ public class ApplicationInstanceControllerTest {
 
     @Test
     public void testListAllAppInsts() throws Exception {
-        List<AppInstModel> appInstModels = applicationInstanceController.listAllAppInsts();
-        assertThat(appInstModels).isNotNull().hasSize(3);
-        Collections.sort(appInstModels, (o1, o2) -> o1.id.compareTo(o2.id));
-        assertThat(appInstModels.get(1)).isNotNull();
-        assertThat(appInstModels.get(1).name).isNotNull().isEqualTo("Grandiosa 1.0");
+        assertThat(applicationInstanceController.listAllAppInsts()).isNotNull().hasSize(3).onProperty("name").contains("Kamino1.0", "Grandiosa1.0", "Alpha1.0").excludes("Beta1.0");
     }
 
     @Test
     public void testSearch() throws Exception {
-        assertThat(applicationInstanceController.search("Kamino 1.0")).isNotNull().hasSize(1);
+        assertThat(applicationInstanceController.search("Kamino1.0")).isNotNull().hasSize(1).onProperty("name").contains("Kamino1.0");
+        assertThat(applicationInstanceController.search("")).isNotNull().hasSize(3);
         assertThat(applicationInstanceController.search(null)).isNotNull().hasSize(3);
     }
 
     @Test
-    public void testFindById() throws Exception {
-        assertThat(applicationInstanceController.findById(applicationInstanceController.listAllAppInsts().get(2).id)).isNotNull();
-        assertThat(applicationInstanceController.findById(applicationInstanceController.listAllAppInsts().get(2).id).name).isNotNull().isEqualTo("Alpha 1.0");
+    public void testFindEntityById() throws Exception {
+        assertThat(applicationInstanceController.findEntityById(applicationInstanceController.search("Grandiosa1.0").get(0).getId())).isNotNull();
+        assertThat(applicationInstanceController.findEntityById(applicationInstanceController.search("Grandiosa1.0").get(0).getId()).getName()).isNotNull().isEqualTo("Grandiosa1.0");
+
         try {
-            applicationController.findById(-1L);
+            applicationInstanceController.findEntityById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationInstanceController.findEntityById(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test
+    public void testFindById() throws Exception {
+        assertThat(applicationInstanceController.findById(applicationInstanceController.search("Alpha1.0").get(0).id)).isNotNull();
+        assertThat(applicationInstanceController.findById(applicationInstanceController.search("Alpha1.0").get(0).id).name).isNotNull().isEqualTo("Alpha1.0");
+
+        try {
+            applicationInstanceController.findById(-1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationInstanceController.findById(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test
+    public void testAssertNameUnique() throws Exception {
+        //assertThat(true).isEqualTo(false); // this method is private
     }
 
     @Test
     public void testCreate() throws Exception {
-        Application application =  applicationRepository.findOne(applicationController.search("Kamino").get(0).getId());
-        ApplicationInstance applicationInstance = new ApplicationInstance("Beta 1.0", "host", 8080, "/beta/1.0", application);
-        AppInstModel appInstModel = applicationInstanceController.create(application.getId(), new AppInstModel(applicationInstance));
-        assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(4);
-        assertThat(applicationInstanceController.search("Beta 1.0")).isNotNull().hasSize(1);
+        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
 
+        applicationInstanceController.create(application.getId(), new AppInstModel(applicationInstance));
+        assertThat(applicationInstanceController.listAllAppInsts()).isNotNull().hasSize(4).onProperty("name").contains("Beta1.0");
+
+        AppInstModel appInstModel = applicationInstanceController.search("Beta1.0").get(0);
         assertThat(appInstModel).isNotNull();
-        assertThat(appInstModel.name).isNotNull().isEqualTo("Beta 1.0");
+        assertThat(appInstModel.name).isNotNull().isEqualTo("Beta1.0");
         assertThat(appInstModel.host).isNotNull().isEqualTo("host");
         assertThat(appInstModel.path).isNotNull().isEqualTo("/beta/1.0");
         assertThat(appInstModel.port).isNotNull().isEqualTo(8080);
         assertThat(appInstModel.applicationId).isNotNull().isEqualTo(application.getId());
+
+        try { //model is null
+            applicationInstanceController.create(applicationInstance.getApplication().getId(), null);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
     }
 
     @Test()
-    public void testCreateUniqueName() throws Exception {
-        Application application = applicationRepository.findByNameLike("Kamino").get(0);
-        ApplicationInstance applicationInstance = new ApplicationInstance("Alpha 1.0", "X", 123, "X", application);
+    public void testCreateValidName() throws Exception {
+        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
-        try {
-            applicationInstanceController.create(application.getId(), appInstModel);
+
+        try { //name already exists - not unique
+            appInstModel.name = "Alpha1.0";
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
+        } catch (GatewayException ignore) { }
+
+        try { //name is null
+            appInstModel.name = null;
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name is blank
+            appInstModel.name = "";
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name contains a whitespace
+            appInstModel.name = "as d";
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidHost() throws Exception {
+        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
+        AppInstModel appInstModel = new AppInstModel(applicationInstance);
+
+        try { //host is null
+            appInstModel.host = null;
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //host is blank
+            appInstModel.host = "";
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidPort() throws Exception {
+        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
+        AppInstModel appInstModel = new AppInstModel(applicationInstance);
+
+        try { //port is null
+            appInstModel.port = null;
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //port is less than 1
+            appInstModel.port = 0;
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //port is greater than 65535
+            appInstModel.port = 65536;
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidPath() throws Exception {
+        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
+        AppInstModel appInstModel = new AppInstModel(applicationInstance);
+
+        try { //publicUrl is null
+            appInstModel.path = null;
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl is blank
+            appInstModel.path = "";
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl does not start with '/'
+            appInstModel.path = "asd";
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl does not start with '/[a-zA-Z]'
+            appInstModel.path = "/3";
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl contains whitespace
+            appInstModel.path = "/as d";
+            applicationInstanceController.create(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidApplication() throws Exception {
+        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
+        AppInstModel appInstModel = new AppInstModel(applicationInstance);
+
+        try { //application id mismatch
+            applicationInstanceController.create(-1L, appInstModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //application has invalid id
+            appInstModel.applicationId = -1L;
+            applicationInstanceController.create(appInstModel.getApplicationId(), appInstModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+         try { //application id is null
+            appInstModel.applicationId = null;
+            applicationInstanceController.create(appInstModel.getApplicationId(), appInstModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
     }
 
     @Test
     public void testRemove() throws Exception {
         assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(3);
-        assertThat(applicationController.search("Kamino").get(0).applicationInstances.size()).isNotNull().isEqualTo(1);
         assertThat(applicationController.search("Grandiosa").get(0).applicationInstances.size()).isNotNull().isEqualTo(2);
 
-        applicationInstanceController.remove(applicationInstanceController.search("Alpha 1.0").get(0).id);
+        applicationInstanceController.remove(applicationInstanceController.search("Alpha1.0").get(0).id);
         assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(2);
 
-        assertThat(applicationController.search("Grandiosa").get(0).applicationInstances.size()).isNotNull().isEqualTo(1);
-        assertThat(applicationController.search("Grandiosa").get(0).applicationInstances.get(0).name).isNotNull().isEqualTo("Grandiosa 1.0");
+        assertThat(applicationController.search("Grandiosa").get(0).applicationInstances).isNotNull().hasSize(1).onProperty("name").contains("Grandiosa1.0").excludes("Alpha1.0");
 
         try {
             applicationInstanceController.remove(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationInstanceController.remove(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testUpdate() throws Exception {
-        assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(3);
+        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
 
-        AppInstModel appInstModel = applicationInstanceController.search("Kamino 1.0").get(0);
-        appInstModel.name = "Kamino 1.1";
+        appInstModel.name = "Kamino1.1";
         appInstModel.path = "/kamino/1.1";
         appInstModel.host = "new host";
         appInstModel.port = 8090;
         appInstModel = applicationInstanceController.update(appInstModel.id, appInstModel);
 
         assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(3);
-        assertThat(applicationInstanceController.search("Kamino 1.1").get(0).name).isNotNull().isEqualTo("Kamino 1.1");
-        assertThat(appInstModel.name).isNotNull().isEqualTo("Kamino 1.1");
+        assertThat(applicationInstanceController.search("Kamino1.1").get(0).name).isNotNull().isEqualTo("Kamino1.1");
+        assertThat(appInstModel.name).isNotNull().isEqualTo("Kamino1.1");
         assertThat(appInstModel.host).isNotNull().isEqualTo("new host");
         assertThat(appInstModel.path).isNotNull().isEqualTo("/kamino/1.1");
         assertThat(appInstModel.port).isNotNull().isEqualTo(8090);
 
-        try {
+        try { //model is null
+            applicationInstanceController.update(appInstModel.getId(), null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) {
+        }
+
+        try { //id mismatch
             applicationInstanceController.update(-1L, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch (GatewayException ignore) { }
+
+        try { //id is null
+            applicationInstanceController.update(null, appInstModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
     }
 
-    @Test
-    public void testUpdateUniqueName() throws Exception {
-        AppInstModel appInstModel = applicationInstanceController.search("Kamino 1.0").get(0);
+    @Test()
+    public void testUpdateValidName() throws Exception {
+        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
 
-        assertThat(applicationInstanceController.update(appInstModel.id, appInstModel)).isNotNull();
-
-        appInstModel.name = "Alpha 1.0";
-        try {
+        try {//name already exists - not unique
+            appInstModel.name = "Alpha1.0";
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try { //name is blank
+            appInstModel.name = "";
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name is null
+            appInstModel.name = null;
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name contains a whitespace
+            appInstModel.name = "as d";
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
+
+    @Test()
+    public void testUpdateValidHost() throws Exception {
+        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
+
+        try { //host is null
+            appInstModel.host = null;
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //host is blank
+            appInstModel.host = "";
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testUpdateValidPort() throws Exception {
+        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
+
+        try { //port is null
+            appInstModel.port = null;
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //port is less than 1
+            appInstModel.port = 0;
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //port is greater than 65535
+            appInstModel.port = 65536;
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testUpdateValidPath() throws Exception {
+        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
+
+        try { //publicUrl is null
+            appInstModel.path = null;
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl is blank
+            appInstModel.path = "";
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl does not start with '/'
+            appInstModel.path = "asd";
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl does not start with '/[a-zA-Z]'
+            appInstModel.path = "/3";
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //publicUrl contains whitespace
+            appInstModel.path = "/as d";
+            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
+
+    /* //you cannot update the application
+    @Test()
+    public void testUpdateValidApplication() throws Exception {
+        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
+
+        try { //application has invalid id
+            appInstModel.applicationId = -1L;
+            applicationInstanceController.update(appInstModel.getApplicationId(), appInstModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //application id is null
+            appInstModel.applicationId = null;
+            applicationInstanceController.update(appInstModel.getApplicationId(), appInstModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }*/
 }

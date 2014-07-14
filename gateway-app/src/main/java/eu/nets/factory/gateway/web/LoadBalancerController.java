@@ -73,6 +73,8 @@ public class LoadBalancerController {
     public LoadBalancer findEntityById(@PathVariable Long id) {
         log.info("LoadBalancerController.findEntityById, id={}", id);
 
+        if(id == null) { throw new EntityNotFoundException("LoadBalancer", id); }
+
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         if(loadBalancer == null) { throw new EntityNotFoundException("LoadBalancer", id); }
 
@@ -101,21 +103,6 @@ public class LoadBalancerController {
         throw new EntityNotFoundException("LoadBalancer", sshKey);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public LoadBalancerModel create(@RequestBody LoadBalancerModel loadBalancerModel) {
-        log.info("LoadBalancerController.create");
-
-        assertNameUnique(loadBalancerModel.name);
-        assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
-        assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
-
-        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort);
-        loadBalancer = loadBalancerRepository.save(loadBalancer);
-
-        return new LoadBalancerModel(loadBalancer);
-    }
-
     private void assertNameUnique(String name) {
         log.info("LoadBalancerController.assertNameUnique, name={}", name);
 
@@ -138,6 +125,22 @@ public class LoadBalancerController {
         if(loadBalancerRepository.countByHostPublicPort(host, publicPort) > 0L) {
             throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - public port '" + publicPort + "' already exists.");
         }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LoadBalancerModel create(@RequestBody LoadBalancerModel loadBalancerModel) {
+        log.info("LoadBalancerController.create");
+
+        if(loadBalancerModel == null) { throw new GatewayException("Could not create LoadBalancer. Invalid LoadBalancerModel."); }
+        assertNameUnique(loadBalancerModel.name);
+        assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
+        assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
+
+        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort);
+        loadBalancer = loadBalancerRepository.save(loadBalancer);
+
+        return new LoadBalancerModel(loadBalancer);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/load-balancers/{id}")

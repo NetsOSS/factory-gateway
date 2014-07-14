@@ -38,4 +38,16 @@ public  class AppInstModel {
     public static AppInstModel summary(ApplicationInstance applicationInstance) {
         return new AppInstModel(applicationInstance, false);
     }
+
+    public Long getId() { return id; }
+
+    public String getName() { return name; }
+
+    public String getPath() { return path; }
+
+    public String getHost() { return host; }
+
+    public Integer getPort() {return port; }
+
+    public Long getApplicationId() { return applicationId; }
 }

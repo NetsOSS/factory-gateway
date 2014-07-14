@@ -48,13 +48,14 @@ public  class AppModel {
     }
 
      public Long getId() { return id; }
-    //public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
-    //public void setName(String name) { this.name = name; }
 
     public String getPublicUrl() { return publicUrl; }
-    //public void setPublicUrl(String url) { this.publicUrl = url; }
+
+    public List<AppInstModel> getApplicationInstances() { return applicationInstances; }
+
+    public List<LoadBalancerModel> getLoadBalancers() { return loadBalancers; }
 
     public Long getApplicationGroupId() { return applicationGroupId; }
 
