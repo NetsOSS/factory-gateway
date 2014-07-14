@@ -41,10 +41,8 @@ public class HaProxyService {
 
         // Read pid-file if exists, and add pid as argument to do a "graceful" restart
         if (Files.exists(Paths.get(installationPath + "/" + PID_FILE))) {
-            try {
-                BufferedReader reader = Files.newBufferedReader(Paths.get(installationPath + "/" + PID_FILE));
+            try (BufferedReader reader = Files.newBufferedReader(Paths.get(installationPath + "/" + PID_FILE))) {
                 String pid = reader.readLine();
-                reader.close();
                 commands.add("-sf");
                 commands.add(pid);
             } catch (IOException e) {
