@@ -103,17 +103,21 @@ public class ApplicationController {
         }
     }
 
+    private void assertValidModel(AppModel appModel) {
+        if(appModel == null) throw new GatewayException("Could not create Application. Invalid ApplicationModel.");
+        if(appModel.getApplicationGroupId() == null) throw new GatewayException("Could not create Application. Invalid ApplicationGroupID: " + appModel.getApplicationGroupId());
+        if(applicationGroupRepository.findOne(appModel.getApplicationGroupId()) == null) throw new GatewayException("Could not create Application. ApplicationGroupID did not match the ID of any known application group.");
+        if(appModel.getName() == null  || ! Pattern.matches("^\\S+$", appModel.getName())) throw new GatewayException("Could not create Application. Name must match pattern '^\\S+$'.");
+        if(appModel.getPublicUrl() == null || ! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl())) throw new GatewayException("Could not create Application. PublicUrl must match pattern '^/[a-zA-Z]\\S*$'.");
+        if(appModel.getCheckPath() == null || ! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath())) throw new GatewayException("Could not create Application. CheckPath must match pattern '^/[a-zA-Z]\\S*$'.");
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppModel create(@RequestBody AppModel appModel) {
         log.info("ApplicationController.create");
 
-        if(appModel == null) throw new GatewayException("Could not create Application. Invalid ApplicationModel.");
-        if(appModel.getApplicationGroupId() == null || applicationGroupRepository.findOne(appModel.getApplicationGroupId()) == null) throw new GatewayException("Could not create Application. Invalid ApplicationGroupID.");
-        if(appModel.getName() == null || appModel.getPublicUrl() == null || appModel.getCheckPath() == null) throw new GatewayException("Could not create Application. Received one or more null values.");
-        if(! Pattern.matches("^\\S+$", appModel.getName())) throw new GatewayException("Could not create Application. Name must match pattern '^\\S+$'.");
-        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl())) throw new GatewayException("Could not create Application. PublicUrl must match pattern '^/[a-zA-Z]\\S*$'.");
-        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath())) throw new GatewayException("Could not create Application. CheckPath must match pattern '^/[a-zA-Z]\\S*$'.");
+        assertValidModel(appModel);
         assertNameUnique(appModel.name);
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(appModel.getApplicationGroupId());
@@ -145,15 +149,12 @@ public class ApplicationController {
     public AppModel update(@PathVariable Long id, @RequestBody AppModel appModel) {
         log.info("ApplicationController.update, id={}", id);
 
-        if(id != appModel.getId()) throw new GatewayException("Could not create Application. ID mismatch:\t'" + id + "'\t'" + appModel.getId() + "'");
-        if(appModel.getName().equals("")) throw new GatewayException("Could not create Application. Name must contain at least one symbol.");
-        if(appModel.getName() == null || appModel.getPublicUrl() == null || appModel.getCheckPath() == null)throw new GatewayException("Could not create Application. Received one or more null values.");
-        if(! Pattern.matches("^\\S+$", appModel.getName())) throw new GatewayException("Could not create Application. Name must follow pattern '^\\S+$'.");
-        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl())) throw new GatewayException("Could not create Application. PublicUrl must follow pattern '^/[a-zA-Z]\\\\S*$'.");
-        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath())) throw new GatewayException("Could not create Application. CheckPath must follow pattern '^/[a-zA-Z]\\\\S*$'.");
-        Application application = findEntityById(id);
+        assertValidModel(appModel);
+        if(id == null) throw new GatewayException("Could not create Application. Invalid ID: " + id);
+        if(! id.equals(appModel.getId())) throw new GatewayException("Could not create Application. IDs did not match: " + id + " - " + appModel.getId());
 
-        if(!(application.getName().equals(appModel.name))) { assertNameUnique(appModel.name); }
+        Application application = findEntityById(id);
+        if(! application.getName().equals(appModel.name)) { assertNameUnique(appModel.name); }
 
         application.setName(appModel.getName());
         application.setPublicUrl(appModel.getPublicUrl());

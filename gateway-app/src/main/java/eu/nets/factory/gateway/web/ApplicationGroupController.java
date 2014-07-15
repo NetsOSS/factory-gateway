@@ -81,8 +81,7 @@ public class ApplicationGroupController {
         log.info("ApplicationGroupController.create");
 
         if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
-        if(appGroupModel.getName() == null) throw new GatewayException("Could not create ApplicationGroup. Received one or more null values.");
-        if(! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
+        if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
         assertNameUnique(appGroupModel.name);
 
         ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
@@ -113,8 +112,7 @@ public class ApplicationGroupController {
         log.info("ApplicationGroupController.update, id={}", id);
 
         if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
-        if(appGroupModel.getName() == null) throw new GatewayException("Could not create ApplicationGroup. Received one or more null values.");
-        if(! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
+        if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
 
         ApplicationGroup applicationGroup = findEntityById(id);
         if(!(applicationGroup.getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }

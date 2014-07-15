@@ -81,18 +81,23 @@ public class ApplicationInstanceController {
         if(applicationInstanceRepository.countByName(name) > 0L) throw new GatewayException("Could not create Application Instance. Name '" + name + "' already exists.");
     }
 
+    private void assertValidModel(AppInstModel appInstModel) {
+        if(appInstModel == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationInstanceModel: " + appInstModel);
+        if(appInstModel.getName() == null || ! Pattern.matches("^\\S+$", appInstModel.getName())) throw new GatewayException("Could not create ApplicationInstance. Name must match pattern '^\\S+$'.  Received: " + appInstModel.name);
+        if(appInstModel.getHost() == null || ! Pattern.matches(".++", appInstModel.getHost())) throw new GatewayException("Could not create ApplicationInstance. Host must match pattern '.*+'. Received: " + appInstModel.host);
+        if(appInstModel.getPath() == null || ! Pattern.matches("^/[a-zA-Z]\\S*$", appInstModel.getPath())) throw new GatewayException("Could not create ApplicationInstance. Path must match pattern '^/[a-zA-Z]\\S*$'. Received: " + appInstModel.path);
+        if(appInstModel.port == null || appInstModel.port < 1 || appInstModel.port > 65535) throw new GatewayException("Could not create ApplicationInstance. Port must be a number between 1 and 65535. Received: " + appInstModel.port);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel create(@PathVariable Long applicationId, @RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.create AppId={}",applicationId);
 
-        if(appInstModel == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationInstanceModel.");
-        if(appInstModel.getApplicationId() == null || appInstModel.getApplicationId() != applicationId || applicationRepository.findOne(applicationId) == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationID.");
-        if(appInstModel.getName() == null || appInstModel.getHost() == null || appInstModel.getPath() == null) throw new GatewayException("Could not create ApplicationInstance. Received one or more null values.");
-        if(! Pattern.matches("^\\S+$", appInstModel.getName())) throw new GatewayException("Could not create ApplicationInstance. Name must match pattern '^\\S+$'.");
-        if(! Pattern.matches(".++", appInstModel.getHost())) throw new GatewayException("Could not create ApplicationInstance. Host must match pattern '.*+'.");
-        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appInstModel.getPath())) throw new GatewayException("Could not create ApplicationInstance. Path must match pattern '^/[a-zA-Z]\\S*$'.");
-        if(appInstModel.port == null || appInstModel.port < 1 || appInstModel.port > 65535) throw new GatewayException("Could not create ApplicationInstance. Port must be a number between 1 and 65535.");
+        assertValidModel(appInstModel);
+        if(appInstModel.getApplicationId() == null)  throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationID: " + applicationId);
+        if(!appInstModel.getApplicationId().equals(applicationId))  throw new GatewayException("Could not create ApplicationInstance. ApplicationIDs did not match: " + applicationId + " - " + appInstModel.applicationId);
+        if(applicationRepository.findOne(applicationId) == null) throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
         assertNameUnique(appInstModel.name);
 
         Application application = applicationRepository.findOne(applicationId);
@@ -101,7 +106,7 @@ public class ApplicationInstanceController {
 
         application.addApplicationInstance(applicationInstance);
 
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());
+        return new AppInstModel(applicationInstance);
      }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
@@ -121,24 +126,23 @@ public class ApplicationInstanceController {
     public AppInstModel update(@PathVariable Long id, @RequestBody AppInstModel appInstModel) {
         log.info("ApplicationInstanceController.update, id={}", id);
 
-        if(appInstModel == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationInstanceModel.");
-        if(appInstModel.getId() == null || appInstModel.getId() != id || applicationInstanceRepository.findOne(id) == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ID.");
-        if(appInstModel.getApplicationId() == null || applicationRepository.findOne(appInstModel.getApplicationId()) == null) throw new GatewayException("Could not create ApplicationInstance. Invalid Application ID.");
-        if(appInstModel.getName() == null || appInstModel.getHost() == null || appInstModel.getPath() == null) throw new GatewayException("Could not create ApplicationInstance. Received one or more null values.");
-        if(! Pattern.matches("^\\S+$", appInstModel.getName())) throw new GatewayException("Could not create ApplicationInstance. Name must match pattern '^\\S+$'.");
-        if(! Pattern.matches(".++", appInstModel.getHost())) throw new GatewayException("Could not create ApplicationInstance. Host must match pattern '.*+'.");
-        if(! Pattern.matches("^/[a-zA-Z]\\S*$", appInstModel.getPath())) throw new GatewayException("Could not create ApplicationInstance. Path must match pattern '^/[a-zA-Z]\\S*$'.");
-        if(appInstModel.port == null || appInstModel.port < 1 || appInstModel.port > 65535) throw new GatewayException("Could not create ApplicationInstance. Port must be a number between 1 and 65535.");
+        assertValidModel(appInstModel);
+        if(id == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ID: " + id);
+        if(! id.equals(appInstModel.getId())) throw new GatewayException("Could not create ApplicationInstance. IDs did not match:\t" + id + " - " + appInstModel.id);
+        if(applicationInstanceRepository.findOne(id) == null) throw new GatewayException("Could not create ApplicationInstance. ID sis not match the ID of any known ApplicationInstance.");
+        if(appInstModel.getApplicationId() == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationID: " + appInstModel.getApplicationId());
+        if(applicationRepository.findOne(appInstModel.getApplicationId()) == null) throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
+        if(appInstModel.haProxyState == null) throw new GatewayException("Could not create ApplicationInstance. Sticky Session must be a StickySession element. Received: " + appInstModel.haProxyState);
 
         ApplicationInstance applicationInstance = findEntityById(id);
-        if(!(applicationInstance.getName().equals(appInstModel.name))) { assertNameUnique(appInstModel.name); }
+        if(! applicationInstance.getName().equals(appInstModel.name)) { assertNameUnique(appInstModel.name); }
 
         applicationInstance.setName(appInstModel.name);
         applicationInstance.setPath(appInstModel.path);
         applicationInstance.setHost(appInstModel.host);
         applicationInstance.setPort(appInstModel.port);
 
-        return new AppInstModel(applicationInstance.getId(), applicationInstance.getName(),applicationInstance.getPath(),applicationInstance.getHost(),applicationInstance.getPort(), applicationInstance.getApplication().getId());
+        return new AppInstModel(applicationInstance);
 
     }
 }
