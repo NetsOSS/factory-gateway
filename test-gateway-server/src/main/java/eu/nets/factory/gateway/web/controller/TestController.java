@@ -22,7 +22,7 @@ public class TestController {
 
     private final Logger log = getLogger(getClass());
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/test/", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Map<String, String>> dumpRequest(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
@@ -54,14 +54,14 @@ public class TestController {
         return returnMap;
     }
 
-    @RequestMapping(value = "/session", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/test/session", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public String createSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return session.getId();
     }
 
-    @RequestMapping(value = "/session", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/test/session", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
