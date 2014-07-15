@@ -192,6 +192,8 @@ define([
     $scope.saveAppInst = function () {
       $scope.newAppInstAlertSuccess = true;
 
+      $scope.appInst.applicationId = $scope.app.id;
+
       GatewayData.ApplicationInstanceController.create($scope.app.id, $scope.appInst).then(function (data) {
         $scope.app.applicationInstances.push(data);
       });
