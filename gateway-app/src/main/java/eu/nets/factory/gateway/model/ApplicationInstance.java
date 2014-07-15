@@ -24,8 +24,11 @@ public class ApplicationInstance extends AbstractEntity {
     @Max(65535)
     private int port;
 
-    @Pattern(regexp = "^/[a-zA-Z]\\S*$")
+    @Pattern(regexp = "^$|^/[a-zA-Z]\\S*$")
     private String path;
+
+    @Column(nullable = false, name = "ha_proxy_state")
+    private int haProxyStateValue;
 
     @NotNull
     @ManyToOne
@@ -37,6 +40,7 @@ public class ApplicationInstance extends AbstractEntity {
         this.port = port;
         this.path = path;
         this.application = application;
+        this.haProxyStateValue = HaProxyState.READY.ordinal();
     }
 
     public ApplicationInstance() { }
@@ -66,4 +70,7 @@ public class ApplicationInstance extends AbstractEntity {
     public Application getApplication() {
         return application;
     }
+
+    public HaProxyState getHaProxyState() { return HaProxyState.values()[haProxyStateValue]; }
+    public void setHaProxyStateValue(HaProxyState haProxyState) { this.haProxyStateValue = haProxyState.ordinal(); }
 }

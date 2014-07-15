@@ -2,6 +2,8 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationGroup;
+import eu.nets.factory.gateway.model.FailoverLoadBalancerSetup;
+import eu.nets.factory.gateway.model.StickySession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ public  class AppModel {
     public Long applicationGroupId;
     public String emails;
     public String checkPath;
+    public StickySession stickySession;
+    public FailoverLoadBalancerSetup failoverLoadBalancerSetup;
 
     public AppModel() { }
 
@@ -28,6 +32,9 @@ public  class AppModel {
 
     private AppModel(Application application, Boolean summary) {
         this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup(),application.getEmails(), application.getCheckPath());
+
+        this.stickySession = application.getStickySession();
+        this.failoverLoadBalancerSetup = application.getFailoverLoadBalancerSetup();
         if(!summary) {
             this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
             this.loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
@@ -47,7 +54,8 @@ public  class AppModel {
         return new AppModel(application, true);
     }
 
-     public Long getId() { return id; }
+
+    public Long getId() { return id; }
 
     public String getName() { return name; }
 
@@ -66,4 +74,10 @@ public  class AppModel {
     public String getCheckPath() {
         return checkPath;
     }
+
+    public String getStickySession() { return stickySession.name(); }
+    public void setStickySession(String state) { this.stickySession = StickySession.valueOf(state); }
+
+    public String getFailoverLoadBalancerSetup() { return failoverLoadBalancerSetup.name(); }
+    public void setFailoverLoadBalancerSetup(String setup) { this.failoverLoadBalancerSetup = FailoverLoadBalancerSetup.valueOf(setup); }
 }

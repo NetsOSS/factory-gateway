@@ -85,7 +85,7 @@ public class ApplicationInstanceController {
         if(appInstModel == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationInstanceModel: " + appInstModel);
         if(appInstModel.getName() == null || ! Pattern.matches("^\\S+$", appInstModel.getName())) throw new GatewayException("Could not create ApplicationInstance. Name must match pattern '^\\S+$'.  Received: " + appInstModel.name);
         if(appInstModel.getHost() == null || ! Pattern.matches(".++", appInstModel.getHost())) throw new GatewayException("Could not create ApplicationInstance. Host must match pattern '.*+'. Received: " + appInstModel.host);
-        if(appInstModel.getPath() == null || ! Pattern.matches("^/[a-zA-Z]\\S*$", appInstModel.getPath())) throw new GatewayException("Could not create ApplicationInstance. Path must match pattern '^/[a-zA-Z]\\S*$'. Received: " + appInstModel.path);
+        if(appInstModel.getPath() == null || (! Pattern.matches("^$|^/[a-zA-Z]\\S*$", appInstModel.getPath()))) throw new GatewayException("Could not create ApplicationInstance. Path must match pattern '^/[a-zA-Z]\\S*$'. Received: " + appInstModel.path);
         if(appInstModel.port == null || appInstModel.port < 1 || appInstModel.port > 65535) throw new GatewayException("Could not create ApplicationInstance. Port must be a number between 1 and 65535. Received: " + appInstModel.port);
     }
 
@@ -141,6 +141,7 @@ public class ApplicationInstanceController {
         applicationInstance.setPath(appInstModel.path);
         applicationInstance.setHost(appInstModel.host);
         applicationInstance.setPort(appInstModel.port);
+        applicationInstance.setHaProxyStateValue(appInstModel.haProxyState);
 
         return new AppInstModel(applicationInstance);
 

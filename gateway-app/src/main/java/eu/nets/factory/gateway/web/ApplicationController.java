@@ -160,6 +160,9 @@ public class ApplicationController {
         application.setPublicUrl(appModel.getPublicUrl());
         application.setEmails(appModel.getEmails());
         application.setCheckPath(appModel.getCheckPath());
+        application.setStickySession(appModel.stickySession);
+        application.setFailoverLoadBalancerSetup(appModel.failoverLoadBalancerSetup);
+
 
         return new AppModel(application);
     }

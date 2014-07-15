@@ -40,12 +40,22 @@ public class Application extends AbstractEntity {
 
     private String emails;
 
+    @Column(nullable = false, name = "sticky_session")
+    private int stickySessionValue;
+
+    @Column(nullable = false, name = "failover_load_balancer_setup")
+    private int failoverLoadBalancerSetupValue;
+
+
     public Application(String name, String url, ApplicationGroup applicationGroup, String emails, String checkPath) {
         this.name = name;
         this.publicUrl = url;
         this.applicationGroup = applicationGroup;
         this.emails=emails;
         this.checkPath = checkPath;
+
+        this.stickySessionValue = StickySession.NOT_STICKY.ordinal();
+        this.failoverLoadBalancerSetupValue = FailoverLoadBalancerSetup.HOT_HOT.ordinal();
     }
 
     public Application(){}
@@ -66,10 +76,15 @@ public class Application extends AbstractEntity {
     public String getCheckPath() {
         return checkPath;
     }
-
     public void setCheckPath(String checkPath) {
         this.checkPath = checkPath;
     }
+
+    public StickySession getStickySession() { return StickySession.values()[stickySessionValue]; }
+    public void setStickySession(StickySession stickySession) { this.stickySessionValue = stickySession.ordinal(); }
+
+    public FailoverLoadBalancerSetup getFailoverLoadBalancerSetup() { return FailoverLoadBalancerSetup.values()[failoverLoadBalancerSetupValue]; }
+    public void setFailoverLoadBalancerSetup(FailoverLoadBalancerSetup failoverLoadBalancerSetup) { this.failoverLoadBalancerSetupValue = failoverLoadBalancerSetup.ordinal(); }
 
     public ApplicationGroup getApplicationGroup() {
         return applicationGroup;

@@ -51,6 +51,7 @@ public class ApplicationControllerTest {
 
     @Autowired
     private InitTestClass initTestClass;
+
     @Before
     public void Before() {
         initTestClass.init();
@@ -139,6 +140,10 @@ public class ApplicationControllerTest {
         appModel = applicationController.listAllApps().get(3);
         CustomAssertions.assertThat(appModel).hasName("Beta").hasPublicUrl("/beta").hasEmails("betaMail").hasCheckPath("/beta/ping");
         CustomAssertions.assertThat(appModel).hasAppGroup(applicationGroupRepository.findByNameLike("GroupTwo").get(0).getId()).hasExactAppInsts(new AppInstModel[] {}).hasExactLoadBalancers(new LoadBalancerModel[] {});
+
+        assertThat(applicationController.findEntityById(appModel.getId()).getStickySession()).isNotNull().isEqualTo(StickySession.NOT_STICKY);
+        assertThat(applicationController.findEntityById(appModel.getId()).getFailoverLoadBalancerSetup()).isNotNull().isEqualTo(FailoverLoadBalancerSetup.HOT_HOT);
+
 
         try { // appModel == null
             applicationController.create(null);
@@ -299,14 +304,17 @@ public class ApplicationControllerTest {
         appModel.emails = "BetaMail";
         appModel.checkPath = "/beta/ping";
         appModel.applicationInstances = null;
-        appModel.applicationGroupId = -6L;
         appModel.loadBalancers = null;
+        appModel.setStickySession("STICKY");
+        appModel.setFailoverLoadBalancerSetup("HOT_STANDBY");
 
         applicationController.update(appModel.getId(), appModel);
 
         assertThat(applicationController.listAllApps()).isNotNull().hasSize(3).onProperty("name").excludes("Grandiosa").contains("Beta");
         CustomAssertions.assertThat(applicationController.search("Beta").get(0)).hasName("Beta").hasPublicUrl("/beta").hasEmails("BetaMail").hasCheckPath("/beta/ping");
         CustomAssertions.assertThat(applicationController.search("Beta").get(0)).doesNotHaveAppGroupId(-6L).hasAppInsts(new AppInstModel[] {}).hasLoadBalancers(new LoadBalancerModel[] {});
+        assertThat(applicationController.search("Beta").get(0).getStickySession()).isNotNull().isEqualTo("STICKY");
+        assertThat(applicationController.search("Beta").get(0).getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_STANDBY");
 
         try { //id mismatch
             applicationController.update(-1L, appModel);
@@ -333,7 +341,7 @@ public class ApplicationControllerTest {
         // may reuse name for same id
         assertThat(applicationController.update(appModel.id, appModel)).isNotNull();
 
-        try { //name allready 'in use'
+        try { //name already 'in use'
             appModel.name = "Grandiosa";
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");

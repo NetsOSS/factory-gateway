@@ -1,6 +1,7 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.model.ApplicationInstance;
+import eu.nets.factory.gateway.model.HaProxyState;
 
 public  class AppInstModel {
 
@@ -11,7 +12,7 @@ public  class AppInstModel {
     public String host;
     public Integer port;
     public Long applicationId;
-
+    public HaProxyState haProxyState;
 
     public AppInstModel() { }
 
@@ -21,6 +22,8 @@ public  class AppInstModel {
 
     private AppInstModel(ApplicationInstance applicationInstance, Boolean summary) {
         this(applicationInstance.getId(), applicationInstance.getName(), applicationInstance.getPath(), applicationInstance.getHost(), applicationInstance.getPort(), applicationInstance.getApplication().getId());
+
+        haProxyState = applicationInstance.getHaProxyState();
         if(!summary) {
             //this.application = new AppModel(applicationInstance.getApplication());
         }
@@ -47,7 +50,11 @@ public  class AppInstModel {
 
     public String getHost() { return host; }
 
-    public Integer getPort() {return port; }
+    public Integer getPort() { return port; }
 
     public Long getApplicationId() { return applicationId; }
+
+    public String getHaProxyState() { return haProxyState.name(); }
+    public void setHaProxyState(String state) { this.haProxyState = HaProxyState.valueOf(state); }
+
 }

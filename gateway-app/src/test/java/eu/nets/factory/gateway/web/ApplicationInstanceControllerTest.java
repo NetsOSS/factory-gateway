@@ -4,6 +4,7 @@ import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.ApplicationRepository;
+import eu.nets.factory.gateway.model.HaProxyState;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,6 +108,8 @@ public class ApplicationInstanceControllerTest {
         assertThat(appInstModel.path).isNotNull().isEqualTo("/beta/1.0");
         assertThat(appInstModel.port).isNotNull().isEqualTo(8080);
         assertThat(appInstModel.applicationId).isNotNull().isEqualTo(application.getId());
+        assertThat(appInstModel.haProxyState).isNotNull().isEqualTo(HaProxyState.READY);
+        assertThat(appInstModel.getHaProxyState()).isNotNull().isEqualTo("READY");
 
         try { //model is null
             applicationInstanceController.create(applicationInstance.getApplication().getId(), null);
@@ -195,31 +198,31 @@ public class ApplicationInstanceControllerTest {
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
 
-        try { //publicUrl is null
+        try { //path is null
             appInstModel.path = null;
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-
-        try { //publicUrl is blank
+        /* // path may be blank
+        try { //path is blank
             appInstModel.path = "";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-
-        try { //publicUrl does not start with '/'
+        */
+        try { //path does not start with '/'
             appInstModel.path = "asd";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //publicUrl does not start with '/[a-zA-Z]'
+        try { //path does not start with '/[a-zA-Z]'
             appInstModel.path = "/3";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //publicUrl contains whitespace
+        try { //path contains whitespace
             appInstModel.path = "/as d";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
@@ -279,6 +282,7 @@ public class ApplicationInstanceControllerTest {
         appInstModel.path = "/kamino/1.1";
         appInstModel.host = "new host";
         appInstModel.port = 8090;
+        appInstModel.setHaProxyState("MAINT");
         appInstModel = applicationInstanceController.update(appInstModel.id, appInstModel);
 
         assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(3);
@@ -287,6 +291,7 @@ public class ApplicationInstanceControllerTest {
         assertThat(appInstModel.host).isNotNull().isEqualTo("new host");
         assertThat(appInstModel.path).isNotNull().isEqualTo("/kamino/1.1");
         assertThat(appInstModel.port).isNotNull().isEqualTo(8090);
+        assertThat(appInstModel.getHaProxyState()).isNotNull().isEqualTo("MAINT");
 
         try { //model is null
             applicationInstanceController.update(appInstModel.getId(), null);
@@ -317,19 +322,19 @@ public class ApplicationInstanceControllerTest {
 
         try { //name is blank
             appInstModel.name = "";
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
         try { //name is null
             appInstModel.name = null;
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
         try { //name contains a whitespace
             appInstModel.name = "as d";
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
     }
@@ -340,13 +345,13 @@ public class ApplicationInstanceControllerTest {
 
         try { //host is null
             appInstModel.host = null;
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
         try { //host is blank
             appInstModel.host = "";
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
     }
@@ -357,19 +362,19 @@ public class ApplicationInstanceControllerTest {
 
         try { //port is null
             appInstModel.port = null;
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
         try { //port is less than 1
             appInstModel.port = 0;
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
         try { //port is greater than 65535
             appInstModel.port = 65536;
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
     }
@@ -378,52 +383,34 @@ public class ApplicationInstanceControllerTest {
     public void testUpdateValidPath() throws Exception {
         AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
 
-        try { //publicUrl is null
+        try { //path is null
             appInstModel.path = null;
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-
-        try { //publicUrl is blank
+        /* // path may be blank
+        try { //path is blank
             appInstModel.path = "";
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-
-        try { //publicUrl does not start with '/'
+        */
+        try { //path does not start with '/'
             appInstModel.path = "asd";
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //publicUrl does not start with '/[a-zA-Z]'
+        try { //path does not start with '/[a-zA-Z]'
             appInstModel.path = "/3";
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //publicUrl contains whitespace
+        try { //path contains whitespace
             appInstModel.path = "/as d";
-            applicationInstanceController.update(appInstModel.applicationId, appInstModel);
+            applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
     }
-
-    /* //you cannot update the application
-    @Test()
-    public void testUpdateValidApplication() throws Exception {
-        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
-
-        try { //application has invalid id
-            appInstModel.applicationId = -1L;
-            applicationInstanceController.update(appInstModel.getApplicationId(), appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-
-        try { //application id is null
-            appInstModel.applicationId = null;
-            applicationInstanceController.update(appInstModel.getApplicationId(), appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-    }*/
 }
