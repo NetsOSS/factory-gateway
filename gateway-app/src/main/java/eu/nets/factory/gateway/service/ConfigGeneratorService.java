@@ -49,11 +49,16 @@ public class ConfigGeneratorService {
             printWriter.println();
             printWriter.println(TAB + "backend " + application.getName());
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
+            //if app.stickySession
+            printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
+
+            // Check if app wants sticky cookies . cookie SERVERID insert indirect nocache
+            printWriter.println(TAB2 + "cookie JSESSIONID prefix");
 //            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
             // server
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " maxconn 32 check");
+                printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie "+ applicationInstance.getName());
             }
             backends.add(stringWriter.toString());
             //stringWriter.flush();
