@@ -49,8 +49,6 @@ public class ConfigGeneratorService {
             printWriter.println();
             printWriter.println(TAB + "backend " + application.getName());
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
-            //if app.stickySession
-            printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 
             // Check if app wants sticky cookies . cookie SERVERID insert indirect nocache
             printWriter.println(TAB2 + "cookie JSESSIONID prefix");
