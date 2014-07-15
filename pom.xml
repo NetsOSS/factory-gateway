@@ -43,6 +43,7 @@
   <modules>
     <module>gateway-app</module>
     <module>gateway-requirements-test</module>
+    <module>test-gateway-server</module>
   </modules>
 
   <dependencyManagement>
