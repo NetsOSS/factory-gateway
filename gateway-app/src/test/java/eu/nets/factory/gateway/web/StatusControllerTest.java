@@ -69,8 +69,8 @@ public class StatusControllerTest {
         appModel.applicationGroupId = groupModel.getId();
         appModel = applicationController.create(appModel);
 
-        ApplicationInstance appInstOne = new ApplicationInstance("Finch1", "127.0.0.1", 7272, "/finch", application);
-        ApplicationInstance appInstTwo = new ApplicationInstance("Finch2", "127.0.0.1", 7272, "/finch", application);
+        ApplicationInstance appInstOne = new ApplicationInstance("Finch1", "127.0.0.1", 7272, "/finch", applicationController.findEntityById(appModel.getId()));
+        ApplicationInstance appInstTwo = new ApplicationInstance("Finch2", "127.0.0.1", 7272, "/finch", applicationController.findEntityById(appModel.getId()));
         AppInstModel instModelOne = new AppInstModel(appInstOne);
         AppInstModel instModelTwo = new AppInstModel(appInstTwo);
 
