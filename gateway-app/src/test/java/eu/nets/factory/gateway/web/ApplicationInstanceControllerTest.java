@@ -20,7 +20,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={WebConfig.class})
+@ContextConfiguration(classes = {WebConfig.class})
 @TransactionConfiguration(defaultRollback = true)
 @WebAppConfiguration
 @ActiveProfiles("unitTest")
@@ -38,6 +38,7 @@ public class ApplicationInstanceControllerTest {
 
     @Autowired
     private InitTestClass initTestClass;
+
     @Before
     public void Before() {
         initTestClass.init();
@@ -64,12 +65,14 @@ public class ApplicationInstanceControllerTest {
         try {
             applicationInstanceController.findEntityById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationInstanceController.findEntityById(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -80,12 +83,14 @@ public class ApplicationInstanceControllerTest {
         try {
             applicationInstanceController.findById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationInstanceController.findById(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -95,7 +100,7 @@ public class ApplicationInstanceControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        Application application = applicationRepository.findByNameLike("Kamino").get(0);
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
 
         applicationInstanceController.create(application.getId(), new AppInstModel(applicationInstance));
@@ -114,12 +119,13 @@ public class ApplicationInstanceControllerTest {
         try { //model is null
             applicationInstanceController.create(applicationInstance.getApplication().getId(), null);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
     public void testCreateValidName() throws Exception {
-        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        Application application = applicationRepository.findByNameLike("Kamino").get(0);
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
 
@@ -127,30 +133,34 @@ public class ApplicationInstanceControllerTest {
             appInstModel.name = "Alpha1.0";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is null
             appInstModel.name = null;
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is blank
             appInstModel.name = "";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name contains a whitespace
             appInstModel.name = "as d";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
     public void testCreateValidHost() throws Exception {
-        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        Application application = applicationRepository.findByNameLike("Kamino").get(0);
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
 
@@ -158,18 +168,20 @@ public class ApplicationInstanceControllerTest {
             appInstModel.host = null;
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //host is blank
             appInstModel.host = "";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
     public void testCreateValidPort() throws Exception {
-        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        Application application = applicationRepository.findByNameLike("Kamino").get(0);
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
 
@@ -177,24 +189,27 @@ public class ApplicationInstanceControllerTest {
             appInstModel.port = null;
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //port is less than 1
             appInstModel.port = 0;
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //port is greater than 65535
             appInstModel.port = 65536;
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
     public void testCreateValidPath() throws Exception {
-        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        Application application = applicationRepository.findByNameLike("Kamino").get(0);
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
 
@@ -202,7 +217,8 @@ public class ApplicationInstanceControllerTest {
             appInstModel.path = null;
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
         /* // path may be blank
         try { //path is blank
             appInstModel.path = "";
@@ -214,43 +230,49 @@ public class ApplicationInstanceControllerTest {
             appInstModel.path = "asd";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //path does not start with '/[a-zA-Z]'
             appInstModel.path = "/3";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //path contains whitespace
             appInstModel.path = "/as d";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
     public void testCreateValidApplication() throws Exception {
-        Application application =  applicationRepository.findByNameLike("Kamino").get(0);
+        Application application = applicationRepository.findByNameLike("Kamino").get(0);
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
 
         try { //application id mismatch
             applicationInstanceController.create(-1L, appInstModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //application has invalid id
             appInstModel.applicationId = -1L;
             applicationInstanceController.create(appInstModel.getApplicationId(), appInstModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
-         try { //application id is null
+        try { //application id is null
             appInstModel.applicationId = null;
             applicationInstanceController.create(appInstModel.getApplicationId(), appInstModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -266,12 +288,14 @@ public class ApplicationInstanceControllerTest {
         try {
             applicationInstanceController.remove(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationInstanceController.remove(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -296,18 +320,20 @@ public class ApplicationInstanceControllerTest {
         try { //model is null
             applicationInstanceController.update(appInstModel.getId(), null);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
+        } catch (GatewayException ignore) {
         }
 
         try { //id mismatch
             applicationInstanceController.update(-1L, appInstModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //id is null
             applicationInstanceController.update(null, appInstModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -318,25 +344,29 @@ public class ApplicationInstanceControllerTest {
             appInstModel.name = "Alpha1.0";
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is blank
             appInstModel.name = "";
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is null
             appInstModel.name = null;
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name contains a whitespace
             appInstModel.name = "as d";
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -347,13 +377,15 @@ public class ApplicationInstanceControllerTest {
             appInstModel.host = null;
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //host is blank
             appInstModel.host = "";
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -364,19 +396,22 @@ public class ApplicationInstanceControllerTest {
             appInstModel.port = null;
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //port is less than 1
             appInstModel.port = 0;
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //port is greater than 65535
             appInstModel.port = 65536;
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -387,7 +422,8 @@ public class ApplicationInstanceControllerTest {
             appInstModel.path = null;
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
         /* // path may be blank
         try { //path is blank
             appInstModel.path = "";
@@ -399,18 +435,63 @@ public class ApplicationInstanceControllerTest {
             appInstModel.path = "asd";
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //path does not start with '/[a-zA-Z]'
             appInstModel.path = "/3";
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //path contains whitespace
             appInstModel.path = "/as d";
             applicationInstanceController.update(appInstModel.id, appInstModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
+    }
+
+    @Test()
+    public void testSetProxyStateByInstanceName() throws Exception {
+
+        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
+
+        AppInstModel testModel = applicationInstanceController.setProxyStateByInstanceName(appInstModel.getName(), "MAINT");
+
+        assertThat(testModel.applicationId).isNotNull().isEqualTo(appInstModel.applicationId);
+        assertThat(testModel.id).isNotNull().isEqualTo(appInstModel.id);
+        assertThat(testModel.name).isNotNull().isEqualTo("Kamino1.0");
+        assertThat(testModel.host).isNotNull().isEqualTo("hostOne");
+        assertThat(testModel.path).isNotNull().isEqualTo("/kamino/1.0");
+        assertThat(testModel.getHaProxyState()).isNotNull().isEqualTo("MAINT");
+
+        try {
+            applicationInstanceController.setProxyStateByInstanceName(appInstModel.getName(), null);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+
+        }
+
+        try {
+            applicationInstanceController.setProxyStateByInstanceName(null, "MAINT");
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+
+        }
+        try {
+            applicationInstanceController.setProxyStateByInstanceName(appInstModel.getName(), "NOTVALIDSTATE");
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+
+        }
+
+        try {
+            applicationInstanceController.setProxyStateByInstanceName("Namethatdoesnotexist", "MAINT");
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+
+        }
     }
 }

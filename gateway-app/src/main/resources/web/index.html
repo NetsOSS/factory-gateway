@@ -1,157 +1,205 @@
 <!DOCTYPE html>
 <head>
-    <script type="text/javascript">
-        var require = {
-            paths: {
-                'domReady': 'bower/requirejs-domready/domReady',
-                'angular': 'bower/angular/angular',
-                'bootstrap': 'bower/bootstrap/dist/js/bootstrap.min',
-                'angular-route': 'bower/angular-route/angular-route',
-                'angular-ui-date': 'bower/angular-ui-date/src/date',
-                'jquery': 'bower/jquery/dist/jquery',
-                'lodash': 'bower/lodash/dist/lodash'
-            },
+  <script type="text/javascript">
+    var require = {
+      paths: {
+        'domReady': 'bower/requirejs-domready/domReady',
+        'angular': 'bower/angular/angular',
+        'bootstrap': 'bower/bootstrap/dist/js/bootstrap.min',
+        'angular-route': 'bower/angular-route/angular-route',
+        'angular-ui-date': 'bower/angular-ui-date/src/date',
+        'jquery': 'bower/jquery/dist/jquery',
+        'lodash': 'bower/lodash/dist/lodash'
+      },
 
-            shim: {
-                'angular': {
-                    exports: 'angular',
-                    deps: ['jquery']
-                },
-                'angular-route': {
-                    deps: ['angular']
-                },
-                'angular-ui-date': {
-                    deps: ['angular']
-                },
-                'bootstrap': {
-                    deps: ['jquery']
-                },
-                'jquery': {
-                }
-            }
-        };
-    </script>
-    <script src="web/bower/requirejs/require.js" data-main="web/gateway-main.js"></script>
-    <link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap.css"/>
-
-    <!--<link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap-theme.min.css"/>-->
-    <!-- -->
-    <style>
-        .alert-messages {
-            position: fixed;
-            width: 100%;
-            z-index: 10000;
-
+      shim: {
+        'angular': {
+          exports: 'angular',
+          deps: ['jquery']
+        },
+        'angular-route': {
+          deps: ['angular']
+        },
+        'angular-ui-date': {
+          deps: ['angular']
+        },
+        'bootstrap': {
+          deps: ['jquery']
+        },
+        'jquery': {
         }
+      }
+    };
 
-        .white {
-            color: white;
-        }
-        a.whitelink:link { color: white; }
-        a.whitelink:visited { color: white; }
-        a.whitelink:hover { color: white; }
+    function search() {
+      var search = document.getElementById("searchInput");
+      var host = "http://" + window.location.host;
+      var dropdown = document.getElementById("dropdownlist");
 
+      jQuery.ajax({
+        url: host + "/data/applications",
+        type: "GET",
 
-        .table tbody tr > td.success {
-            background-color: #dff0d8 !important;
-        }
+        contentType: 'application/json; charset=utf-8',
+        success: function (resultData) {
 
-        .table tbody tr > td.error {
-            background-color: #f2dede !important;
-        }
+          for (var i = 0; i < resultData.length; i++) {
+            //$("#dropdowndiv ul").appendChild("<li role = 'presentation'><a role = 'menuitem' tabindex = '-1' href = '#'>" + resultData[i].name + "</a></li>");
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
 
-        .table tbody tr > td.warning {
-            background-color: #fcf8e3 !important;
-        }
+        },
 
-        .table tbody tr > td.info {
-            background-color: #d9edf7 !important;
-        }
+        timeout: 120000
+      });
 
-        .table-hover tbody tr:hover > td.success {
-            background-color: #d0e9c6 !important;
-        }
+    }
+  </script>
+  <script src="web/bower/requirejs/require.js" data-main="web/gateway-main.js"></script>
+  <link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap.css"/>
 
-        .table-hover tbody tr:hover > td.error {
-            background-color: #ebcccc !important;
-        }
+  <!--<link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap-theme.min.css"/>-->
+  <!-- -->
+  <style>
+    .alert-messages {
+      position: fixed;
+      width: 100%;
+      z-index: 10000;
 
-        .table-hover tbody tr:hover > td.warning {
-            background-color: #faf2cc !important;
-        }
+    }
 
-        .table-hover tbody tr:hover > td.info {
-            background-color: #c4e3f3 !important;
-        }
+    .white {
+      color: white;
+    }
 
-    </style>
+    a.whitelink:link {
+      color: white;
+    }
 
-    <title>Gateway</title>
+    a.whitelink:visited {
+      color: white;
+    }
+
+    a.whitelink:hover {
+      color: white;
+    }
+
+    .table tbody tr > td.success {
+      background-color: #dff0d8 !important;
+    }
+
+    .table tbody tr > td.error {
+      background-color: #f2dede !important;
+    }
+
+    .table tbody tr > td.warning {
+      background-color: #fcf8e3 !important;
+    }
+
+    .table tbody tr > td.info {
+      background-color: #d9edf7 !important;
+    }
+
+    .table-hover tbody tr:hover > td.success {
+      background-color: #d0e9c6 !important;
+    }
+
+    .table-hover tbody tr:hover > td.error {
+      background-color: #ebcccc !important;
+    }
+
+    .table-hover tbody tr:hover > td.warning {
+      background-color: #faf2cc !important;
+    }
+
+    .table-hover tbody tr:hover > td.info {
+      background-color: #c4e3f3 !important;
+    }
+
+  </style>
+
+  <title>Gateway</title>
 </head>
 <body>
 <nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Nets Gateway</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-            <!-- <ul class="nav navbar-nav">
-
-                <li><a href="#">Link </a></li>
-
-              </ul>
-      -->
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"> v1.2 ALPHA</a></li>
-
-            </ul>
-
-        </div>
-        <!-- /.navbar-collapse -->
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Nets Gateway</a>
     </div>
-    <!-- /.container-fluid -->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav">
+      </ul>
+      <!--<form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+
+          <div class="dropdown" id = "dropdowndiv">
+            <input class="btn btn-default dropdown-toggle" type="text" id="searchInput" data-toggle="dropdown"
+                   placeholder="Search"
+                   onkeypress="search()">
+            <span class="caret"></span>
+            </input>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="dropdownlist">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+              <li role="presentation" class="divider"></li>
+            </ul>
+          </div>
+        </div>
+
+      </form>-->
+
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"> v1.2 ALPHA</a></li>
+
+      </ul>
+
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container-fluid -->
 </nav>
 
 <div class="alert-messages">
-    <div class="container">
-        <div class="row">
+  <div class="container">
+    <div class="row">
 
-            <div class="col-md-6 col-md-offset-6">
+      <div class="col-md-6 col-md-offset-6">
 
-                <div class="alert alert-danger alert-dismissible" id="messageDisplay" style="display:none">
+        <div class="alert alert-danger alert-dismissible" id="messageDisplay" style="display:none">
 
-                    <button type="button" class="close" onclick="$('#messageDisplay').hide()"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <span id="MessageDisplayText">asdasda sada sda sdassssssssssssssssssssssss aaa  </span>
-                </div>
-
-                <div class="alert alert-success alert-dismissible" id="messageDisplaySuccess" style="display:none">
-
-                    <button type="button" class="close" onclick="$('#messageDisplaySuccess').hide()"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <span id="MessageDisplaySuccessText">aa</span>
-                </div>
-
-
-            </div>
+          <button type="button" class="close" onclick="$('#messageDisplay').hide()"><span
+              aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <span id="MessageDisplayText">asdasda sada sda sdassssssssssssssssssssssss aaa  </span>
         </div>
+
+        <div class="alert alert-success alert-dismissible" id="messageDisplaySuccess" style="display:none">
+
+          <button type="button" class="close" onclick="$('#messageDisplaySuccess').hide()"><span
+              aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <span id="MessageDisplaySuccessText">aa</span>
+        </div>
+
+
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="container">
 
-    <div ng-view></div>
+  <div ng-view></div>
 </div>
 </body>
 </html>
