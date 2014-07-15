@@ -22,7 +22,7 @@ public class TestController {
 
     private final Logger log = getLogger(getClass());
 
-    @RequestMapping(value = "/test/", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/test", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Map<String, String>> dumpRequest(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
