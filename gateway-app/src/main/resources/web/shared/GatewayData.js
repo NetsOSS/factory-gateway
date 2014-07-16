@@ -260,7 +260,7 @@ define([], function () {
       req.params.name = name;
       return $http(req).then(getData);
     };
-    this.ApplicationInstanceController.setProxyStateByInstanceNameAndStartLoadbalancer = function (name, proxyState, payload) {
+    this.ApplicationInstanceController.setProxyStateForInstanceAndStartLoadbalancer = function (name, proxyState, payload) {
       var req = {};
       req.method = 'PUT';
       req.url = prefix + '/data/instancesByName/{name}/state/{proxyState}';

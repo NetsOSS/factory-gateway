@@ -224,15 +224,7 @@ define([
 
     $scope.changeSetup = function(id, setup) {
 
-      GatewayData.ApplicationController.configureHaproxySetup(id, setup).then(function(data) {
-
-      });
-    };
-
-    $scope.changeSetup = function (id, setup) {
-      alert(id + " " + setup);
-
-      GatewayData.ApplicationController.configureHaproxySetup(id, setup).then(function (data) {
+      GatewayData.ApplicationController.configureHaproxySetupAndStartLoadbalancer(id, setup).then(function(data) {
 
       });
     };
@@ -353,7 +345,7 @@ define([
       var sel = document.getElementById(appInstName + "-state");
       var state = sel.options[sel.selectedIndex].value;
 
-      GatewayData.ApplicationInstanceController.setProxyStateByInstanceName(appInstName, state).then(function (data) {
+      GatewayData.ApplicationInstanceController.setProxyStateForInstanceAndStartLoadbalancer(appInstName, state).then(function (data) {
 
       });
 

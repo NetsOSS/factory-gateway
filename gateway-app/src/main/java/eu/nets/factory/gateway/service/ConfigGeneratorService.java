@@ -56,7 +56,10 @@ public class ConfigGeneratorService {
 
             // server
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie "+ applicationInstance.getName());
+                String state = "";
+                if (applicationInstance.getHaProxyState().equals("MAINT"))
+                    state = " disabled";
+                printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie "+ applicationInstance.getName() + state);
             }
             backends.add(stringWriter.toString());
             //stringWriter.flush();
