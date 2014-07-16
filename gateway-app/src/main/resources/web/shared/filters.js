@@ -39,5 +39,28 @@ define([ 'angular' ], function (angular) {
       var i = Math.floor(Math.log(bytes) / Math.log(k));
       return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
     }
-  })
+  });
+
+  filters.filter('getById', function() {
+    return function(input, id) {
+      var i=0, len=input.length;
+      for (; i<len; i++) {
+        if (+input[i].id == +id) {
+          return input[i];
+        }
+      }
+      return null;
+    }
+  });
+  filters.filter('getIndexById', function() {
+    return function(input, id) {
+      var i=0, len=input.length;
+      for (; i<len; i++) {
+        if (+input[i].id == +id) {
+          return i;
+        }
+      }
+      return null;
+    }
+  });
 });
