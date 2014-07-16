@@ -167,8 +167,19 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/instancesByName/{name}/state/{proxyState}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppInstModel setProxyStateByInstanceName(@PathVariable String name, @PathVariable String proxyState) {
+    public AppInstModel setProxyStateForInstanceAndStartLoadbalancer(@PathVariable String name, @PathVariable String proxyState) {
 
+        ApplicationInstance applicationInstance = findEntityById(setProxyStateForInstance(name, proxyState).getId());
+
+        for (LoadBalancer loadBalancer : applicationInstance.getApplication().getLoadBalancers()) {
+            haProxyService.pushConfigFile(loadBalancer);
+            haProxyService.start(loadBalancer);
+        }
+
+        return new AppInstModel(applicationInstance);
+    }
+
+    protected AppInstModel setProxyStateForInstance(String name, String proxyState) {
         if (name == null) {
             throw new GatewayException("ApplicationInstance name can not be null: " + name);
         }
@@ -201,13 +212,6 @@ public class ApplicationInstanceController {
         }
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
         appInstModel.setHaProxyState(proxyState);
-        appInstModel = update(appInstModel.getId(), appInstModel);
-
-        for (LoadBalancer loadBalancer : applicationInstance.getApplication().getLoadBalancers()) {
-            haProxyService.pushConfigFile(loadBalancer);
-            haProxyService.start(loadBalancer);
-        }
-
-        return appInstModel;
+        return update(appInstModel.getId(), appInstModel);
     }
 }
