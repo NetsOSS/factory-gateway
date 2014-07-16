@@ -27,6 +27,12 @@ public class HaProxyService {
     @Autowired
     private GatewaySettings settings;
 
+    @Autowired
+    ConfigGeneratorService configGeneratorService;
+
+    @Autowired
+    FileWriterService fileWriterService;
+
     public void start(LoadBalancer loadBalancer) {
 
         String installationPath = new File(loadBalancer.getInstallationPath()).getAbsolutePath();
@@ -85,5 +91,12 @@ public class HaProxyService {
             throw new GatewayException(errorMessage);
         }
         log.info("Started LoadBalancer");
+    }
+
+    public void pushConfigFile(LoadBalancer loadBalancer) {
+        String installationPath = loadBalancer.getInstallationPath();
+
+        String strConfig = configGeneratorService.generateConfig(loadBalancer);
+        fileWriterService.writeConfigFile(installationPath, CFG_FILE, strConfig);
     }
 }

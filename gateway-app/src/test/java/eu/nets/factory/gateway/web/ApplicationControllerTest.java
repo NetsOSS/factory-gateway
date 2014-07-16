@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={WebConfig.class})
+@ContextConfiguration(classes = {WebConfig.class})
 @TransactionConfiguration(defaultRollback = true)
 @WebAppConfiguration
 @Transactional
@@ -40,13 +40,7 @@ public class ApplicationControllerTest {
     LoadBalancerController loadBalancerController;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private ApplicationGroupRepository applicationGroupRepository;
-
-    @Autowired
-    private LoadBalancerRepository loadBalancerRepository;
 
 
     @Autowired
@@ -134,14 +128,14 @@ public class ApplicationControllerTest {
 
         assertThat(appModel).isNotNull();
         CustomAssertions.assertThat(appModel).hasName("Beta").hasPublicUrl("/beta").hasEmails("betaMail").hasCheckPath("/beta/ping");
-        CustomAssertions.assertThat(appModel).hasAppGroup(applicationGroupRepository.findByNameLike("GroupTwo").get(0).getId()).hasExactAppInsts(new AppInstModel[] {}).hasExactLoadBalancers(new LoadBalancerModel[] {});
+        CustomAssertions.assertThat(appModel).hasAppGroup(applicationGroupRepository.findByNameLike("GroupTwo").get(0).getId()).hasExactAppInsts(new AppInstModel[]{}).hasExactLoadBalancers(new LoadBalancerModel[]{});
 
         assertThat(applicationController.listAllApps()).isNotNull().hasSize(4);
         appModel = applicationController.listAllApps().get(3);
         CustomAssertions.assertThat(appModel).hasName("Beta").hasPublicUrl("/beta").hasEmails("betaMail").hasCheckPath("/beta/ping");
-        CustomAssertions.assertThat(appModel).hasAppGroup(applicationGroupRepository.findByNameLike("GroupTwo").get(0).getId()).hasExactAppInsts(new AppInstModel[] {}).hasExactLoadBalancers(new LoadBalancerModel[] {});
+        CustomAssertions.assertThat(appModel).hasAppGroup(applicationGroupRepository.findByNameLike("GroupTwo").get(0).getId()).hasExactAppInsts(new AppInstModel[]{}).hasExactLoadBalancers(new LoadBalancerModel[]{});
 
-        assertThat(applicationController.findEntityById(appModel.getId()).getStickySession()).isNotNull().isEqualTo(StickySession.NOT_STICKY);
+        assertThat(applicationController.findEntityById(appModel.getId()).getStickySession()).isNotNull().isEqualTo(StickySession.STICKY);
         assertThat(applicationController.findEntityById(appModel.getId()).getFailoverLoadBalancerSetup()).isNotNull().isEqualTo(FailoverLoadBalancerSetup.HOT_HOT);
 
 
@@ -255,7 +249,7 @@ public class ApplicationControllerTest {
 
     @Test()
     public void testCreateValidApplicationGroup() throws Exception {
-        Application application = new Application("Alpha", "X", applicationGroupRepository.findByNameLike("GroupTwo").get(0),"", "/alpha/ping");
+        Application application = new Application("Alpha", "X", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "", "/alpha/ping");
         AppModel appModel = new AppModel(application);
 
         try { //applicationGroup has invalid id
@@ -305,7 +299,7 @@ public class ApplicationControllerTest {
         appModel.checkPath = "/beta/ping";
         appModel.applicationInstances = null;
         appModel.loadBalancers = null;
-        appModel.setStickySession("STICKY");
+        appModel.setStickySession("NOT_STICKY");
         appModel.setFailoverLoadBalancerSetup("HOT_STANDBY");
 
         applicationController.update(appModel.getId(), appModel);
@@ -313,7 +307,7 @@ public class ApplicationControllerTest {
         assertThat(applicationController.listAllApps()).isNotNull().hasSize(3).onProperty("name").excludes("Grandiosa").contains("Beta");
         CustomAssertions.assertThat(applicationController.search("Beta").get(0)).hasName("Beta").hasPublicUrl("/beta").hasEmails("BetaMail").hasCheckPath("/beta/ping");
         CustomAssertions.assertThat(applicationController.search("Beta").get(0)).doesNotHaveAppGroupId(-6L).hasAppInsts(new AppInstModel[]{}).hasLoadBalancers(new LoadBalancerModel[]{});
-        assertThat(applicationController.search("Beta").get(0).getStickySession()).isNotNull().isEqualTo("STICKY");
+        assertThat(applicationController.search("Beta").get(0).getStickySession()).isNotNull().isEqualTo("NOT_STICKY");
         assertThat(applicationController.search("Beta").get(0).getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_STANDBY");
 
         try { //id mismatch
@@ -491,6 +485,48 @@ public class ApplicationControllerTest {
             applicationController.configureHaproxySetup(modelOne.getId(), "NON_VALID_SETUP");
             fail("Expected exception");
         } catch(GatewayException ignore) { }
+    }
 
+    @Test
+    public void testSetSticky() {
+
+        AppModel modelOne = applicationController.findById(applicationController.search("Kamino").get(0).getId());
+        AppModel modelTwo = applicationController.findById(applicationController.search("Grandiosa").get(0).getId());
+
+        assertThat(modelOne).isNotNull();
+        assertThat(modelTwo).isNotNull();
+
+        assertThat(modelOne.getStickySession()).isNotNull().isEqualTo("STICKY");
+        assertThat(modelTwo.getStickySession()).isNotNull().isEqualTo("STICKY");
+
+        modelOne = applicationController.setSticky(modelOne.getId(), "NOT_STICKY");
+        modelTwo = applicationController.setSticky(modelTwo.getId(), "NOT_STICKY");
+
+        assertThat(modelOne.getStickySession()).isNotNull().isEqualTo("NOT_STICKY");
+        assertThat(modelTwo.getStickySession()).isNotNull().isEqualTo("NOT_STICKY");
+
+        try { //id null
+            applicationController.setSticky(null, "STICKY");
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
+
+        try { //setup null
+            applicationController.setSticky(modelOne.getId(), null);
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
+
+        try { // non excisting id
+            applicationController.setSticky(-1L, "STICKY");
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
+
+        try { // non valid setup-value
+            applicationController.setSticky(modelOne.getId(), "NON_VALID_SETUP");
+            fail("Expected exception");
+        } catch (GatewayException ignore) {
+        }
     }
 }

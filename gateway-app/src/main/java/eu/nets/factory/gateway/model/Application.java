@@ -54,7 +54,7 @@ public class Application extends AbstractEntity {
         this.emails=emails;
         this.checkPath = checkPath;
 
-        this.stickySessionValue = StickySession.NOT_STICKY.ordinal();
+        this.stickySessionValue = StickySession.STICKY.ordinal();
         this.failoverLoadBalancerSetupValue = FailoverLoadBalancerSetup.HOT_HOT.ordinal();
     }
 

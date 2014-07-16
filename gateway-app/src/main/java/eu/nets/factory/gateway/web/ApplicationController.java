@@ -3,6 +3,7 @@ package eu.nets.factory.gateway.web;
 import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.service.HaProxyService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,9 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationGroupRepository applicationGroupRepository;
+
+    @Autowired
+    HaProxyService haProxyService;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications", produces = APPLICATION_JSON_VALUE)
@@ -197,16 +201,59 @@ public class ApplicationController {
         return application.getLoadBalancers().stream().map(LoadBalancerModel::new).collect(toList());
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}/changeSetup/{setup}", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}/configureHaproxySetupAndStartLoadbalancer/{setup}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppModel configureHaproxySetup(@PathVariable Long id, @PathVariable String setup) {
+    public AppModel configureHaproxySetupAndStartLoadbalancer(@PathVariable Long id, @PathVariable String setup) {
 
-        if (id == null) throw new GatewayException("Id cannot be null: " + id);
+        AppModel appModel = configureHaproxySetup(id, setup);
 
+        Application application = findEntityById(id);
+
+
+        for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
+            haProxyService.pushConfigFile(loadBalancer);
+            haProxyService.start(loadBalancer);
+        }
+
+        return appModel;
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}/setSticky/{sticky}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppModel setStickyAndStartLoadBalancer(@PathVariable Long id, @PathVariable String sticky) {
+
+        AppModel appModel = setSticky(id, sticky);
+
+        Application application = findEntityById(id);
+
+        for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
+            haProxyService.pushConfigFile(loadBalancer);
+            haProxyService.start(loadBalancer);
+        }
+
+        return appModel;
+    }
+
+    protected AppModel setSticky(Long id, String sticky) {
+
+        if (sticky == null) throw new GatewayException("Sticky cannot be null: " + sticky);
+
+        boolean found = false;
+        for (int i = 0; i < StickySession.values().length; i++) {
+            if (sticky.equals(StickySession.values()[i].name())) {
+                found = true;
+            }
+        }
+        if (!found) {
+            throw new GatewayException("Detected non-valid enum-value for StickySession: " + sticky);
+        }
+        AppModel appModel = findById(id);
+        appModel.setStickySession(sticky);
+        return update(id, appModel);
+    }
+
+    protected AppModel configureHaproxySetup(Long id, String setup) {
         if (setup == null) throw new GatewayException("Setup cannot be null: " + setup);
-
-        Application application = applicationRepository.findOne(id);
-        if (application == null) throw new GatewayException("Could not find application with id: " + id);
 
         boolean found = false;
         for (int i = 0; i < FailoverLoadBalancerSetup.values().length; i++) {
@@ -218,32 +265,8 @@ public class ApplicationController {
             throw new GatewayException("Detected non-valid enum-value for FailoverLoadBalancerSetup: " + setup);
         }
 
-        AppModel appModel = new AppModel(application);
+        AppModel appModel = findById(id);
         appModel.setFailoverLoadBalancerSetup(setup);
-        appModel = update(id, appModel);
-
-        return appModel;
-    }
-
-    public List<AppInstModel> changeStateInInstancesBasedOnHotStandbyInApplication(AppModel appModel) {
-
-        Application application = applicationRepository.findOne(appModel.getId());
-        List<ApplicationInstance> applicationInstances = application.getApplicationInstances();
-
-        if(application.getFailoverLoadBalancerSetup().equals("HOT_STANDBY")) {
-            boolean primarySet = false;
-            for(ApplicationInstance applicationInstance: applicationInstances) {
-                if(!primarySet) {
-                    if(applicationInstance.getHaProxyState().equals("READY")) {
-                        //set to primary
-                        primarySet = true;
-                    }
-                } else {
-                    //set to backup
-                }
-            }
-        }
-
-        return null;
+        return update(id, appModel);
     }
 }

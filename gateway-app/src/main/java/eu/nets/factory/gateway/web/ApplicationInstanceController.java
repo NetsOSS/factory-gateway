@@ -3,6 +3,7 @@ package eu.nets.factory.gateway.web;
 import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.service.HaProxyService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,9 @@ public class ApplicationInstanceController {
 
     @Autowired
     private ApplicationInstanceRepository applicationInstanceRepository;
+
+    @Autowired
+    HaProxyService haProxyService;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances", produces = APPLICATION_JSON_VALUE)
@@ -198,6 +202,12 @@ public class ApplicationInstanceController {
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
         appInstModel.setHaProxyState(proxyState);
         appInstModel = update(appInstModel.getId(), appInstModel);
+
+        for (LoadBalancer loadBalancer : applicationInstance.getApplication().getLoadBalancers()) {
+            haProxyService.pushConfigFile(loadBalancer);
+            haProxyService.start(loadBalancer);
+        }
+
         return appInstModel;
     }
 }

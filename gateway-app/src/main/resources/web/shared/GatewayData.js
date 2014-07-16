@@ -8,10 +8,10 @@ define([], function () {
       return res.data;
     };
     this.ApplicationController = {};
-    this.ApplicationController.configureHaproxySetup = function (id, setup, payload) {
+    this.ApplicationController.configureHaproxySetupAndStartLoadbalancer = function (id, setup, payload) {
       var req = {};
       req.method = 'PUT';
-      req.url = prefix + '/data/applications/{id}/changeSetup/{setup}';
+      req.url = prefix + '/data/applications/{id}/configureHaproxySetupAndStartLoadbalancer/{setup}';
       req.url = req.url.replace(/{id}/, id);
       req.url = req.url.replace(/{setup}/, setup);
       req.data = payload;
@@ -78,6 +78,16 @@ define([], function () {
       req.method = 'GET';
       req.url = prefix + '/data/applications/find/{name}';
       req.url = req.url.replace(/{name}/, name);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.setStickyAndStartLoadBalancer = function (id, sticky, payload) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/applications/{id}/setSticky/{sticky}';
+      req.url = req.url.replace(/{id}/, id);
+      req.url = req.url.replace(/{sticky}/, sticky);
+      req.data = payload;
       req.params = {};
       return $http(req).then(getData);
     };
