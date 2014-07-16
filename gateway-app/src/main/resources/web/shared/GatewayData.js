@@ -8,6 +8,16 @@ define([], function () {
       return res.data;
     };
     this.ApplicationController = {};
+    this.ApplicationController.configureHaproxySetup = function (id, setup, payload) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/applications/{id}/changeSetup/{setup}';
+      req.url = req.url.replace(/{id}/, id);
+      req.url = req.url.replace(/{setup}/, setup);
+      req.data = payload;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationController.create = function (appModel) {
       var req = {};
       req.method = 'POST';

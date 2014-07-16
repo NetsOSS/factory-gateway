@@ -172,7 +172,6 @@ define([
         };
 
         $scope.changeSetup = function(id, setup) {
-            alert(id + " " + setup);
 
             GatewayData.ApplicationController.configureHaproxySetup(id, setup).then(function(data) {
 
@@ -247,7 +246,7 @@ define([
         GatewayData.StatusController.getStatusForOneServer($routeParams.id).then(function (data) {
             $scope.rawStatusForOneInst = data;
         });
-        
+
     });
 
 

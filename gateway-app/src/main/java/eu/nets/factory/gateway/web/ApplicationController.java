@@ -33,7 +33,7 @@ public class ApplicationController {
     @ResponseBody
     public List<AppModel> listAllApps() {
         log.info("ApplicationController.listAllApps");
-        return  applicationRepository.findAll().stream().map(AppModel::new).collect(toList());
+        return applicationRepository.findAll().stream().map(AppModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/find/{name}", produces = APPLICATION_JSON_VALUE)
@@ -53,7 +53,7 @@ public class ApplicationController {
     }
 
 
-    public Application getApplicationByExactName(String name){
+    public Application getApplicationByExactName(String name) {
         List<Application> applications;
 
         if (name == null) {
@@ -62,14 +62,14 @@ public class ApplicationController {
             applications = applicationRepository.findByNameLike(name);
         }
 
-        if(applications.size() == 0)
+        if (applications.size() == 0)
             return null;
 
-        if(applications.size() == 1)
+        if (applications.size() == 1)
             return applications.get(0);
 
-        for (Application app : applications){
-            if(app.getName().equals(name)) //name.equals(app.getName())) // nullPointerException if name == null
+        for (Application app : applications) {
+            if (app.getName().equals(name)) //name.equals(app.getName())) // nullPointerException if name == null
                 return app;
         }
 
@@ -81,10 +81,14 @@ public class ApplicationController {
     public Application findEntityById(@PathVariable Long id) {
         log.info("ApplicationController.findEntityById, id={}", id);
 
-        if(id == null) { throw new EntityNotFoundException("Application", id); }
+        if (id == null) {
+            throw new EntityNotFoundException("Application", id);
+        }
 
         Application application = applicationRepository.findOne(id);
-        if(application == null) { throw new EntityNotFoundException("Application", id); }
+        if (application == null) {
+            throw new EntityNotFoundException("Application", id);
+        }
 
         return application;
     }
@@ -98,18 +102,23 @@ public class ApplicationController {
     }
 
     private void assertNameUnique(String name) {
-        if(applicationRepository.countByName(name) > 0L) {
+        if (applicationRepository.countByName(name) > 0L) {
             throw new GatewayException("Could not create Application. Name '" + name + "' already exists.");
         }
     }
 
     private void assertValidModel(AppModel appModel) {
-        if(appModel == null) throw new GatewayException("Could not create Application. Invalid ApplicationModel.");
-        if(appModel.getApplicationGroupId() == null) throw new GatewayException("Could not create Application. Invalid ApplicationGroupID: " + appModel.getApplicationGroupId());
-        if(applicationGroupRepository.findOne(appModel.getApplicationGroupId()) == null) throw new GatewayException("Could not create Application. ApplicationGroupID did not match the ID of any known application group.");
-        if(appModel.getName() == null  || ! Pattern.matches("^\\S+$", appModel.getName())) throw new GatewayException("Could not create Application. Name must match pattern '^\\S+$'.");
-        if(appModel.getPublicUrl() == null || ! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl())) throw new GatewayException("Could not create Application. PublicUrl must match pattern '^/[a-zA-Z]\\S*$'.");
-        if(appModel.getCheckPath() == null || ! Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath())) throw new GatewayException("Could not create Application. CheckPath must match pattern '^/[a-zA-Z]\\S*$'.");
+        if (appModel == null) throw new GatewayException("Could not create Application. Invalid ApplicationModel.");
+        if (appModel.getApplicationGroupId() == null)
+            throw new GatewayException("Could not create Application. Invalid ApplicationGroupID: " + appModel.getApplicationGroupId());
+        if (applicationGroupRepository.findOne(appModel.getApplicationGroupId()) == null)
+            throw new GatewayException("Could not create Application. ApplicationGroupID did not match the ID of any known application group.");
+        if (appModel.getName() == null || !Pattern.matches("^\\S+$", appModel.getName()))
+            throw new GatewayException("Could not create Application. Name must match pattern '^\\S+$'.");
+        if (appModel.getPublicUrl() == null || !Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl()))
+            throw new GatewayException("Could not create Application. PublicUrl must match pattern '^/[a-zA-Z]\\S*$'.");
+        if (appModel.getCheckPath() == null || !Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath()))
+            throw new GatewayException("Could not create Application. CheckPath must match pattern '^/[a-zA-Z]\\S*$'.");
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -136,7 +145,7 @@ public class ApplicationController {
 
         Application application = findEntityById(id);
 
-        for(LoadBalancer loadBalancer : application.getLoadBalancers()) {
+        for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
             loadBalancer.removeApplication(application);
         }
 
@@ -150,11 +159,14 @@ public class ApplicationController {
         log.info("ApplicationController.update, id={}", id);
 
         assertValidModel(appModel);
-        if(id == null) throw new GatewayException("Could not create Application. Invalid ID: " + id);
-        if(! id.equals(appModel.getId())) throw new GatewayException("Could not create Application. IDs did not match: " + id + " - " + appModel.getId());
+        if (id == null) throw new GatewayException("Could not create Application. Invalid ID: " + id);
+        if (!id.equals(appModel.getId()))
+            throw new GatewayException("Could not create Application. IDs did not match: " + id + " - " + appModel.getId());
 
         Application application = findEntityById(id);
-        if(! application.getName().equals(appModel.name)) { assertNameUnique(appModel.name); }
+        if (!application.getName().equals(appModel.name)) {
+            assertNameUnique(appModel.name);
+        }
 
         application.setName(appModel.getName());
         application.setPublicUrl(appModel.getPublicUrl());
@@ -183,5 +195,55 @@ public class ApplicationController {
 
         Application application = findEntityById(id);
         return application.getLoadBalancers().stream().map(LoadBalancerModel::new).collect(toList());
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}/changeSetup/{setup}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppModel configureHaproxySetup(@PathVariable Long id, @PathVariable String setup) {
+
+        if (id == null) throw new GatewayException("Id cannot be null: " + id);
+
+        if (setup == null) throw new GatewayException("Setup cannot be null: " + setup);
+
+        Application application = applicationRepository.findOne(id);
+        if (application == null) throw new GatewayException("Could not find application with id: " + id);
+
+        boolean found = false;
+        for (int i = 0; i < FailoverLoadBalancerSetup.values().length; i++) {
+            if (setup.equals(FailoverLoadBalancerSetup.values()[i].name())) {
+                found = true;
+            }
+        }
+        if (!found) {
+            throw new GatewayException("Detected non-valid enum-value for FailoverLoadBalancerSetup: " + setup);
+        }
+
+        AppModel appModel = new AppModel(application);
+        appModel.setFailoverLoadBalancerSetup(setup);
+        appModel = update(id, appModel);
+
+        return appModel;
+    }
+
+    public List<AppInstModel> changeStateInInstancesBasedOnHotStandbyInApplication(AppModel appModel) {
+
+        Application application = applicationRepository.findOne(appModel.getId());
+        List<ApplicationInstance> applicationInstances = application.getApplicationInstances();
+
+        if(application.getFailoverLoadBalancerSetup().equals("HOT_STANDBY")) {
+            boolean primarySet = false;
+            for(ApplicationInstance applicationInstance: applicationInstances) {
+                if(!primarySet) {
+                    if(applicationInstance.getHaProxyState().equals("READY")) {
+                        //set to primary
+                        primarySet = true;
+                    }
+                } else {
+                    //set to backup
+                }
+            }
+        }
+
+        return null;
     }
 }
