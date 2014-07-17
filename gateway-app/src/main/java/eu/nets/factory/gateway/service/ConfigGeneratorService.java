@@ -70,7 +70,7 @@ public class ConfigGeneratorService {
                     }
                 String s = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " " + state + setup;
                 if(application.getStickySession().name().equals("STICKY"))
-                 s+=" check cookie \" + applicationInstance.getName()";
+                 s+=" check cookie " + applicationInstance.getName();
                 printWriter.println(s);
 
                // printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
