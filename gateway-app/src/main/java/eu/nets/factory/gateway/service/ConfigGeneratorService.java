@@ -68,9 +68,9 @@ public class ConfigGeneratorService {
                     if(i > 0) {
                         setup = " backup";
                     }
-                String s = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " " + state + setup;
+                String s = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " " + state + setup +" check";
                 if(application.getStickySession().name().equals("STICKY"))
-                 s+=" check cookie " + applicationInstance.getName();
+                 s+=" cookie " + applicationInstance.getName();
                 printWriter.println(s);
 
                // printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
