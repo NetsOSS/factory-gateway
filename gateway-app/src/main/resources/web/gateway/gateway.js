@@ -105,7 +105,8 @@ define([
     };
 
     $scope.updateAppInst = function(appInst){
-      console.log("Update App Inst");
+      console.log("Update App Inst : ",appInst);
+      GatewayData.ApplicationInstanceController.update(appInst.id,appInst);
     };
 
     // ----------------------- Load balancer functions ------------------------------------

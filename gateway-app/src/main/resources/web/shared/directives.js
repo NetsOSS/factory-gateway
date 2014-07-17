@@ -140,10 +140,11 @@ define([ 'angular' ], function (angular) {
       replace: true,
       template: editorTemplate,
       scope: {
-        value: "=clickToEdit"
+        value: "=clickToEdit",
+        saveCallback : "&saveFunction"
         //callback:
       },
-      controller: function($scope) {
+      controller: function($scope,$timeout) {
         $scope.view = {
           editableValue: $scope.value,
           editorEnabled: false
@@ -160,8 +161,10 @@ define([ 'angular' ], function (angular) {
 
         $scope.save = function() {
           $scope.value = $scope.view.editableValue;
-
           $scope.disableEditor();
+          $timeout(function() {
+            $scope.saveCallback();
+          });
         };
       }
     };
