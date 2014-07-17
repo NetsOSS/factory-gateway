@@ -52,7 +52,7 @@ public class ConfigGeneratorService {
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 
             // Check if app wants sticky cookies . cookie SERVERID insert indirect nocache
-            if(application.getStickySession().name().equals(StickySession.STICKY))
+            if(application.getStickySession().name().equals("STICKY"))
                 printWriter.println(TAB2 + "cookie JSESSIONID prefix");
 //            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
@@ -69,8 +69,8 @@ public class ConfigGeneratorService {
                         setup = " backup";
                     }
                 String s = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " " + state + setup;
-                if(application.getStickySession().name().equals(StickySession.STICKY))
-                 s+="check cookie \" + applicationInstance.getName()";
+                if(application.getStickySession().name().equals("STICKY"))
+                 s+=" check cookie \" + applicationInstance.getName()";
                 printWriter.println(s);
 
                // printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
