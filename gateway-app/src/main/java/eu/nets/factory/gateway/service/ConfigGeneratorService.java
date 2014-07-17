@@ -55,11 +55,19 @@ public class ConfigGeneratorService {
 //            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
             // server
-            for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
+
+            for(int i = 0; i < application.getApplicationInstances().size(); i++) {
+                ApplicationInstance applicationInstance = application.getApplicationInstances().get(i);
                 String state = "";
+                String setup = "";
                 if (applicationInstance.getHaProxyState().name().equals("MAINT"))
                     state = " disabled";
-                printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie "+ applicationInstance.getName() + state);
+                if(application.getFailoverLoadBalancerSetup().name().equals("HOT_STANDBY"))
+                    if(i > 0) {
+                        setup = " BACKUP";
+                    }
+
+                printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
             }
             backends.add(stringWriter.toString());
             //stringWriter.flush();
