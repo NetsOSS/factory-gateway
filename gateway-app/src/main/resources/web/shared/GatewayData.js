@@ -457,6 +457,15 @@ define([], function () {
       return PersonController.search($route.current.params.name);
     };
     this.StatusController = {};
+    this.StatusController.changeStatusAPI = function (lbId, statusChange) {
+      var req = {};
+      req.method = 'POST';
+      req.url = prefix + '/data/status/checkStatusAPI/{lbId}';
+      req.url = req.url.replace(/{lbId}/, lbId);
+      req.data = statusChange;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.StatusController.getBackendStatusForApplication = function (id) {
       var req = {};
       req.method = 'GET';

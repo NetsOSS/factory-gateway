@@ -338,7 +338,7 @@ define([
 
 
   //    ----------------------- Load balancer Controller ------------------------------------
-  gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, $timeout, GatewayData,$http) {
+  gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, $timeout, GatewayData) {
     $scope.inLBList = [];
     $scope.allLBList = [];
 
@@ -369,30 +369,24 @@ define([
 
     };
 
-    $scope.setProxyStateWithAPI= function(statusObj){
+    $scope.setProxyStateWithAPI= function(statusObj) {
       console.log(statusObj);
       //iid = b
 
       var sel = document.getElementById(statusObj.svname + "-state2");
       var state = sel.options[sel.selectedIndex].value;
 
-      var dataMsg = "s="+statusObj.svname+"&action="+state+"&b=#"+statusObj.iid;
-      console.log(dataMsg);
-      var statsPage = 'http://'+$scope.lb.host+':'+($scope.lb.publicPort+1)+'/proxy-stats';
-    // statsPage = 'http://localhost:9002/data/applications';
-      $http({
-        //
-        url: statsPage,
-        method: "POST",
-        data: dataMsg
-      })
-          .then(function(response) {
-            // success
-          },
-          function(response) { // optional
-            // failed
-          }
-      );
+      // var dataMsg = "s="+statusObj.svname+"&action="+state+"&b=#"+statusObj.iid;
+      var statusChangeObj = {
+        "s": statusObj.svname,
+        "action": state,
+        "b": statusObj.iid
+      };
+
+      console.log(statusChangeObj);
+      // var statsPage = 'http://'+$scope.lb.host+':'+($scope.lb.publicPort+1)+'/proxy-stats';
+      // statsPage = 'http://localhost:9002/data/applications';
+      GatewayData.StatusController.changeStatusAPI($scope.lb.id, statusChangeObj);
     };
 
 

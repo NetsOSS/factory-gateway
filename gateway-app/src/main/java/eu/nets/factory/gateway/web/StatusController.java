@@ -1,20 +1,25 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.EntityNotFoundException;
-import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.service.EmailService;
 import eu.nets.factory.gateway.service.StatusService;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,12 +63,12 @@ public class StatusController {
         //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
         List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
 
-        if(list==null) return false;
-        if(list.isEmpty()) return false;
-        if(list.size()<1) return false;
+        if (list == null) return false;
+        if (list.isEmpty()) return false;
+        if (list.size() < 1) return false;
         String status = list.get(0).data.get("status");
 
-        if(status==null || status.equals("offline")) return false;
+        if (status == null || status.equals("offline")) return false;
 
         return true;
     }
@@ -87,7 +92,7 @@ public class StatusController {
 
 
             List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(loadBalancer.getId());
-            if (statusModelsFromCSV== null || statusModelsFromCSV.isEmpty()) {
+            if (statusModelsFromCSV == null || statusModelsFromCSV.isEmpty()) {
                 //HAproxy Not running
                 /*
                 For all loadbalancer that this application has.
@@ -95,8 +100,8 @@ public class StatusController {
                 Add all applicationinstances as not running.
                  */
                 log.info("");
-                for(ApplicationInstance applicationInstance : application.getApplicationInstances()){
-                    applicationStatusModel.applicationInstances.put(loadBalancer.getId(),null);
+                for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
+                    applicationStatusModel.applicationInstances.put(loadBalancer.getId(), null);
                 }
                 //applicationStatusModel.data.put(loadBalancer.getId(),null);
             }
@@ -212,7 +217,7 @@ public class StatusController {
         }
         //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
         List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
-        if(list==null) return null;
+        if (list == null) return null;
         return list.isEmpty() ? null : list;
     }
 
@@ -221,8 +226,6 @@ public class StatusController {
     @ResponseBody
     public String sendEmail(@PathVariable Long id) {
         log.info("StatusController.sendEmail, id={}", id);
-
-
 
 
         return "Sent email, maybe?? ";
@@ -234,11 +237,11 @@ public class StatusController {
 
         HashMap<String, List<StatusModel>> map = new HashMap<>();
         List<LoadBalancer> loadBalancers = loadBalancerRepository.findAll();
-        if(loadBalancers.size() == 0) {
+        if (loadBalancers.size() == 0) {
             return null;
         }
-        for(LoadBalancer loadBalancer: loadBalancers) {
-            if(isLoadBalancerOnline(loadBalancer.getId())) {
+        for (LoadBalancer loadBalancer : loadBalancers) {
+            if (isLoadBalancerOnline(loadBalancer.getId())) {
                 List<StatusModel> list = statusService.getStatusForLoadBalancer(loadBalancer.getId());
                 map.put(loadBalancer.getName(), list);
 
@@ -249,4 +252,45 @@ public class StatusController {
         }
         return map;
     }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = "/data/status/checkStatusAPI/{lbId}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public StatusChange changeStatusAPI(@PathVariable Long lbId, @RequestBody StatusChange statusChange) {
+        log.info("StatusController.checkStatusAPI, lbid={}, status= {}", lbId, statusChange);
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(lbId);
+
+        String statsPage = "http://"+loadBalancer.getHost()+":"+(loadBalancer.getPublicPort()+1)+"/proxy-stats";
+        try {
+            HttpClient httpclient = HttpClients.createDefault();
+            HttpPost httppost = new HttpPost(statsPage);
+
+
+            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            params.add(new BasicNameValuePair("s", statusChange.s));
+            params.add(new BasicNameValuePair("action",statusChange.action));
+            params.add(new BasicNameValuePair("b","#"+statusChange.b));
+            httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+
+    //Execute and get the response.
+            HttpResponse response = httpclient.execute(httppost);
+            log.debug("HTTP statysCode :{} ",response.getStatusLine().getStatusCode());
+            HttpEntity entity = response.getEntity();
+            //entity.
+
+            /*if (entity != null) {
+                InputStream instream = entity.getContent();
+                try {
+                    // do something useful
+                } finally {
+                    instream.close();
+                }
+            }*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return statusChange;
+    }
+
+
 }
