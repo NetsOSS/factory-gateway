@@ -80,7 +80,8 @@
     <th>Last change in status</th>
     <th>Downtime</th>
     <th>Status</th>
-    <th></th>
+      <th>Actions</th>
+    <th>Actions2</th>
   </tr>
   </thead>
 
@@ -106,6 +107,15 @@
         </select>
       </div>
     </td>
+      <td>
+          <div style="margin:0" ng-hide="s.data.svname  == 'FRONTEND' || s.data.svname  == 'BACKEND'">
+              <select id = "{{s.data.svname}}-state2" ng-model="selectedState" ng-change = "setProxyStateWithAPI(s.data)" >
+                  <option>ready</option>
+                  <option>maint</option>
+                  <option>drain</option>
+              </select>
+          </div>
+      </td>
   </tr>
   </tbody>
 </table>
