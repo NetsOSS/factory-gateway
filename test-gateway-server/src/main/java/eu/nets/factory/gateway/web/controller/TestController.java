@@ -40,7 +40,8 @@ public class TestController {
         // Get other info
         Map<String, String> contextMap = new HashMap<>();
         contextMap.put("Server-IP", request.getLocalAddr());
-        contextMap.put("Server-Name", request.getServerName());
+        contextMap.put("Server-Name", java.net.InetAddress.getLocalHost().getHostName());
+
 
         int requestCount = 0;
         if (request.getSession().getAttribute("Request-Count") != null) {
