@@ -64,7 +64,7 @@ public class ConfigGeneratorService {
                     state = " disabled";
                 if(application.getFailoverLoadBalancerSetup().name().equals("HOT_STANDBY"))
                     if(i > 0) {
-                        setup = " BACKUP";
+                        setup = " backup";
                     }
 
                 printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
