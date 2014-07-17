@@ -30,17 +30,16 @@ public  class AppModel {
 
     }
 
-
-
     private AppModel(Application application, Boolean summary) {
         this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup(),application.getEmails(), application.getCheckPath());
 
         this.stickySession = application.getStickySession();
         this.failoverLoadBalancerSetup = application.getFailoverLoadBalancerSetup();
-
+        this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::summary).collect(toList());
+        
         if(!summary) {
-            this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
-            //this.loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
+            //this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
+            this.loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
         }
     }
 
@@ -54,7 +53,7 @@ public  class AppModel {
     }
 
     public static AppModel summary(Application application) {
-        return new AppModel(application, false);
+        return new AppModel(application, true);
     }
 
 

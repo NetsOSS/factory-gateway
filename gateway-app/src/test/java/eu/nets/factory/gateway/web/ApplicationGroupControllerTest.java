@@ -227,6 +227,6 @@ public class ApplicationGroupControllerTest {
 
     @Test
     public void testRemoveApplication() throws Exception {
-        // tis function does not do anything...
+        // this function does not do anything...
     }
 }

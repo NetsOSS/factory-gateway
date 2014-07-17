@@ -3,6 +3,9 @@ package eu.nets.factory.gateway.model;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +18,21 @@ import java.util.List;
 public class LoadBalancer extends AbstractEntity{
 
     @NotBlank
+    @Pattern(regexp = "^\\S+$")
     private String name;
 
     @NotBlank
     private String host;
 
-    //@Pattern(regexp = "^/[a-zA-Z]\\S*$")
-    @NotBlank
+    @Pattern(regexp = "^/[a-zA-Z]\\S*$")
     private String installationPath;
 
     @NotBlank
     private String sshKey;
 
+    @NotNull
+    @Min(1)
+    @Max(65535)
     private int publicPort;
 
     @ManyToMany(targetEntity = Application.class, mappedBy = "loadBalancers")
@@ -84,9 +90,7 @@ public class LoadBalancer extends AbstractEntity{
     public List<Application> getApplications() {
         return applications;
     }
-    public void addApplication(Application application) {
-        this.applications.add(application);
-    }
+    public void addApplication(Application application) { this.applications.add(application); }
     public void removeApplication(Application application) {
         this.applications.remove(application);
     }

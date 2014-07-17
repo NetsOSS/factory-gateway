@@ -75,13 +75,17 @@ public class ApplicationGroupController {
         }
     }
 
+    private void assertValidModel(AppGroupModel appGroupModel) {
+        if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
+        if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppGroupModel create(@RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.create");
 
-        if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
-        if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
+        assertValidModel(appGroupModel);
         assertNameUnique(appGroupModel.name);
 
         ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
@@ -111,9 +115,7 @@ public class ApplicationGroupController {
     public AppGroupModel update(@PathVariable Long id, @RequestBody AppGroupModel appGroupModel) {
         log.info("ApplicationGroupController.update, id={}", id);
 
-        if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
-        if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
-
+        assertValidModel(appGroupModel);
         ApplicationGroup applicationGroup = findEntityById(id);
         if(!(applicationGroup.getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }
 

@@ -20,6 +20,7 @@ public class ApplicationInstance extends AbstractEntity {
     @NotBlank
     private String host;
 
+    @NotNull
     @Min(1)
     @Max(65535)
     private int port;

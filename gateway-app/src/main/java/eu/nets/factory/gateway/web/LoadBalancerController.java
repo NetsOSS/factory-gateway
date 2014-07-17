@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -127,12 +128,27 @@ public class LoadBalancerController {
         }
     }
 
+    private void assertValidModel(LoadBalancerModel loadBalancerModel) {
+        if(loadBalancerModel == null) { throw new GatewayException("Could not create LoadBalancer. Invalid LoadBalancerModel."); }
+        /*
+        if(loadBalancerModel.getName() == null) throw new GatewayException("Could not create Load Balancer. Invalid name: " + loadBalancerModel.getName());
+        if(loadBalancerModel.getHost() == null) throw new GatewayException("Could not create Load Balancer. Invalid host: " + loadBalancerModel.getHost());
+        if(loadBalancerModel.getInstallationPath() == null) throw new GatewayException("Could not create Load Balancer. Invalid installation path: " + loadBalancerModel.getInstallationPath());
+        if(loadBalancerModel.getSshKey() == null) throw new GatewayException("Could not create Load Balancer. invalid ssh key: " + loadBalancerModel.getSshKey());
+        */
+        if(loadBalancerModel.getName() == null  || ! Pattern.matches("^\\S+$", loadBalancerModel.getName())) throw new GatewayException("Could not create Load Balancer. Name must match pattern '^\\S+$'.");
+        if(loadBalancerModel.getHost() == null || ! Pattern.matches(".+", loadBalancerModel.getHost())) throw new GatewayException("Could not create Load Balancer. Host must match pattern '.+'.");
+        if(loadBalancerModel.getInstallationPath() == null  || ! Pattern.matches("^/[a-zA-Z]\\S*$", loadBalancerModel.getInstallationPath())) throw new GatewayException("Could not create Load Balancer. Installation Path must match pattern '^/[a-zA-Z]\\S*$'.");
+        if(loadBalancerModel.getSshKey() == null || ! Pattern.matches(".+", loadBalancerModel.getSshKey())) throw new GatewayException("Could not create Load Balancer. Ssh Key must match pattern '.+'.");
+        if(loadBalancerModel.publicPort < 1 || loadBalancerModel.publicPort > 65535) throw new GatewayException("Could not create ApplicationInstance. Public Port must be a number between 1 and 65535. Received: " + loadBalancerModel.publicPort);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public LoadBalancerModel create(@RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.create");
 
-        if(loadBalancerModel == null) { throw new GatewayException("Could not create LoadBalancer. Invalid LoadBalancerModel."); }
+        assertValidModel(loadBalancerModel);
         assertNameUnique(loadBalancerModel.name);
         assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
         assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
@@ -162,8 +178,11 @@ public class LoadBalancerController {
     public LoadBalancerModel update(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.update, id={}", id);
 
-        LoadBalancer loadBalancer = findEntityById(id);
+        assertValidModel(loadBalancerModel);
+        if(id == null) throw new GatewayException("Could not create Load Balancer. Invalid ID: " + id);
+        if(! id.equals(loadBalancerModel.getId())) throw new GatewayException("Could not create Load Balancer. IDs did not match: " + id + " - " + loadBalancerModel.getId());
 
+        LoadBalancer loadBalancer = findEntityById(id);
         if(!(loadBalancer.getName().equals(loadBalancerModel.name))) { assertNameUnique(loadBalancerModel.name); }
         if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getInstallationPath().equals(loadBalancerModel.installationPath))) { assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath); }
         if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getPublicPort() == loadBalancerModel.publicPort)) { assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort); }
@@ -184,6 +203,8 @@ public class LoadBalancerController {
 
         LoadBalancer loadBalancer = findEntityById(id);
         Application application = applicationController.findEntityById(applicationId);
+
+        if(loadBalancer.getApplications().contains(application)) throw new GatewayException("The given Application is already linked to the Load Balancer.");
 
         loadBalancer.addApplication(application);
         application.addLoadBalancer(loadBalancer);

@@ -110,7 +110,7 @@ public void testFindEntityById() throws Exception {
 
     @Test
     public void testCreate() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "hostX", "instPathX", "sshX", 456);
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "hostX", "/instPathX", "sshX", 456);
 
         LoadBalancerModel loadBalancerModel = loadBalancerController.create(new LoadBalancerModel(loadBalancer));
         assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(4).onProperty("name").contains("Batman");
@@ -126,14 +126,125 @@ public void testFindEntityById() throws Exception {
     }
 
     @Test()
-    public void testCreateUniqueName() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Knut", "X", "X", "X", 567);
+    public void testCreateValidName() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
-        try {
+
+        try { //name already exists - not unique
+            loadBalancerModel.name = "Knut";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
+        } catch (GatewayException ignore) { }
+
+        try { //name is null
+            loadBalancerModel.name = null;
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //name is blank
+            loadBalancerModel.name = "";
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //name contains a whitespace
+            loadBalancerModel.name = "as d";
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidHost() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
+
+        try { //host is null
+            loadBalancerModel.host = null;
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //host is blank
+            loadBalancerModel.host = "";
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidInstallationPath() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
+
+        try { //installationPath is null
+            loadBalancerModel.installationPath = null;
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //installationPath is blank
+            loadBalancerModel.installationPath = "";
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //installationPath does not start with '/'
+            loadBalancerModel.installationPath = "asd";
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //installationPath does not start with '/[a-zA-Z]'
+            loadBalancerModel.installationPath = "/3";
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //installationPath contains whitespace
+            loadBalancerModel.installationPath = "/as d";
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+
+    }
+
+    @Test()
+    public void testCreateValidSshKey() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
+
+        try { //sshKey is null
+            loadBalancerModel.sshKey = null;
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //sshKey is blank
+            loadBalancerModel.sshKey = "";
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testCreateValidPublicPort() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
+
+        try { //publicPort is less than 1
+            loadBalancerModel.publicPort = 0;
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //publicPort is greater than 65535
+            loadBalancerModel.publicPort = 65536;
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
     }
 
     @Test()
@@ -143,8 +254,7 @@ public void testFindEntityById() throws Exception {
         try {
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
+        } catch (GatewayException ignore) { }
     }
 
     @Test()
@@ -154,83 +264,198 @@ public void testFindEntityById() throws Exception {
         try {
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
+        } catch (GatewayException ignore) { }
     }
 
     @Test
     public void testRemove() throws Exception {
-        assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(3);
-        assertThat(applicationController.listAllApps().size()).isNotNull().isEqualTo(3);
         assertThat(applicationController.search("Grandiosa").get(0).loadBalancers).isNotNull().hasSize(2);
         assertThat(applicationController.search("Alpha").get(0).loadBalancers).isNotNull().hasSize(1);
 
         loadBalancerController.remove(loadBalancerController.search("Knut").get(0).id);
-        assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(2);
-        assertThat(applicationController.listAllApps().size()).isNotNull().isEqualTo(3);
+        assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(2).onProperty("name").excludes("Knut");
+        assertThat(applicationController.listAllApps()).isNotNull().hasSize(3);
 
-        assertThat(applicationController.search("Grandiosa").get(0).loadBalancers).isNotNull().hasSize(1);
+        assertThat(applicationController.search("Grandiosa").get(0).loadBalancers).isNotNull().hasSize(1).onProperty("name").excludes("Knut");
         assertThat(applicationController.search("Alpha").get(0).loadBalancers).isNotNull().hasSize(0);
 
         try {
             loadBalancerController.remove(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            loadBalancerController.remove(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testUpdate() throws Exception {
-        assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(3);
-
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Knut").get(0);
+
         loadBalancerModel.name = "Batman";
         loadBalancerModel.host = "Alfred";
+        loadBalancerModel.installationPath = "/batcave";
+        loadBalancerModel.sshKey = "nananananananana";
+        loadBalancerModel.publicPort = 1;
         loadBalancerModel = loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
 
-        assertThat(loadBalancerController.listAllLoadBalancers().size()).isNotNull().isEqualTo(3);
-        assertThat(loadBalancerController.search("Batman").get(0).name).isNotNull().isEqualTo("Batman");
-        assertThat(loadBalancerModel.name).isNotNull().isEqualTo("Batman");
+        assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(3).onProperty("name").contains("Batman").excludes("Knut");
 
         try {
-            loadBalancerController.update(-1L, loadBalancerModel);
+            loadBalancerController.update(loadBalancerModel.getId(), null);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try { //id is null
+            loadBalancerModel.id = null;
+            loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //invalid id
+            loadBalancerModel.id = -1L;
+            loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //id mismatch
+            loadBalancerController.update(loadBalancerController.search("Per").get(0).getId(), loadBalancerModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
-    @Test
-    public void testUpdateUniqueName() throws Exception {
+    @Test()
+    public void testUpdateValidName() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
 
-        loadBalancerModel.host = "X";
-        loadBalancerModel.installationPath = "X";
-        loadBalancerModel.sshKey = "X";
-        loadBalancerModel.publicPort = 987;
+        //name remains the same
+        assertThat(loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel)).isInstanceOf(LoadBalancerModel.class);
 
-        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isNotNull();
+        try { //name already exists - not unique
+            loadBalancerModel.name = "Knut";
+            loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
 
-        loadBalancerModel.name = "Hans";
-        try {
+        try { //name is null
+            loadBalancerModel.name = null;
+            loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //name is blank
+            loadBalancerModel.name = "";
+            loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //name contains a whitespace
+            loadBalancerModel.name = "as d";
+            loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testUpdateValidHost() throws Exception {
+        LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+
+        try { //host is null
+            loadBalancerModel.host = null;
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch (GatewayException ignore) { }
+
+        try { //host is blank
+            loadBalancerModel.host = "";
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testUpdateValidInstallationPath() throws Exception {
+        LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+
+        try { //installationPath is null
+            loadBalancerModel.installationPath = null;
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //installationPath is blank
+            loadBalancerModel.installationPath = "";
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //installationPath does not start with '/'
+            loadBalancerModel.installationPath = "asd";
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //installationPath does not start with '/[a-zA-Z]'
+            loadBalancerModel.installationPath = "/3";
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //installationPath contains whitespace
+            loadBalancerModel.installationPath = "/as d";
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testUpdateValidSshKey() throws Exception {
+        LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+
+        try { //sshKey is null
+            loadBalancerModel.sshKey = null;
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //sshKey is blank
+            loadBalancerModel.sshKey = "";
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }
+
+    @Test()
+    public void testUpdateValidPublicPort() throws Exception {
+        LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
+
+        try { //publicPort is less than 1
+            loadBalancerModel.publicPort = 0;
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+
+        try { //publicPort is greater than 65535
+            loadBalancerModel.publicPort = 65536;
+            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
     }
 
     @Test
     public void testUpdateUniqueHostInstallationPath() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
 
+        //host & installationPath remains the same
         loadBalancerModel.name = "X";
-        loadBalancerModel.sshKey = "X";
         loadBalancerModel.publicPort = 987;
+        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isInstanceOf(LoadBalancerModel.class);
 
-        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isNotNull();
-
-        loadBalancerModel.host = "hostTwo";
-        loadBalancerModel.installationPath = "instPathTwo";
-        try {
+        try { //host & installationPath already exists - not unique
+            loadBalancerModel.host = "hostTwo";
+            loadBalancerModel.installationPath = "instPathTwo";
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
         } catch(GatewayException ignore) {
@@ -241,15 +466,14 @@ public void testFindEntityById() throws Exception {
     public void testUpdateUniqueHostPublicPort() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
 
+        //host & publicPort remains the same
         loadBalancerModel.name = "X";
-        loadBalancerModel.installationPath = "X";
-        loadBalancerModel.sshKey = "X";
+        loadBalancerModel.installationPath = "/X";
+        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isInstanceOf(LoadBalancerModel.class);
 
-        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isNotNull();
-
-        loadBalancerModel.host = "hostTwo";
-        loadBalancerModel.publicPort = 234;
-        try {
+        try {//host & publicPort already exists - not unique
+            loadBalancerModel.host = "hostTwo";
+            loadBalancerModel.publicPort = 234;
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
         } catch(GatewayException ignore) {
@@ -259,21 +483,34 @@ public void testFindEntityById() throws Exception {
     @Test
     public void testAddApplication() throws Exception {
         loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, applicationController.search("Kamino").get(0).id);
-        assertThat(loadBalancerController.search("Hans").get(0).applications).isNotNull().hasSize(2);
-        assertThat(loadBalancerController.search("Hans").get(0).applications).isNotNull().onProperty("name").contains("Grandiosa", "Kamino");
-        assertThat(applicationController.search("Kamino").get(0).loadBalancers).isNotNull().hasSize(2);
 
-        try {
+        assertThat(loadBalancerController.search("Hans").get(0).applications).isNotNull().hasSize(2).onProperty("name").contains("Kamino");
+        assertThat(applicationController.search("Kamino").get(0).loadBalancers).isNotNull().hasSize(2).onProperty("name").contains("Hans");
+
+        try { //application is already linked to loadBalancer
+            loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, applicationController.search("Kamino").get(0).id);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //loadBalancer id is null
+            loadBalancerController.addApplication(null, applicationController.search("Kamino").get(0).id);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //loadBalancer id is invalid
             loadBalancerController.addApplication(-1L, applicationController.search("Kamino").get(0).id);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
 
-        try {
+        try { //application id is null
+            loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //application id is invalid
             loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, -1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
     }
 
     @Test
@@ -281,41 +518,55 @@ public void testFindEntityById() throws Exception {
         assertThat(loadBalancerController.getApplications(loadBalancerController.search("Knut").get(0).id)).isNotNull().hasSize(2);
         assertThat(loadBalancerController.getApplications(loadBalancerController.search("Per").get(0).id).get(0).name).isNotNull().isEqualTo("Kamino");
 
-        try {
+        try { //id is null
+            loadBalancerController.getApplications(null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //invalid id
             loadBalancerController.getApplications(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
     }
 
     @Test
-    public void testRemoveApplicationFromLoadbalancer() throws Exception {
+    public void testRemoveApplicationFromLoadBalancer() throws Exception {
         loadBalancerController.removeApplicationFromLoadbalancer(loadBalancerController.search("Knut").get(0).id, applicationController.search("Alpha").get(0).id);
-        assertThat(loadBalancerController.search("Knut").get(0).applications).isNotNull().hasSize(1);
-        assertThat(loadBalancerController.search("Knut").get(0).applications.get(0).name).isNotNull().isEqualTo("Grandiosa");
+        assertThat(loadBalancerController.search("Knut").get(0).applications).isNotNull().hasSize(1).onProperty("name").contains("Grandiosa");
         assertThat(applicationController.search("Alpha").get(0).loadBalancers).isNotNull().hasSize(0);
 
-        try {
-            loadBalancerController.addApplication(-1L, applicationController.search("Alpha").get(0).id);
-            fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        //attempt to remove an application from a loadBalancer to which it is not connected - this does not cast an exception
+        assertThat(loadBalancerController.removeApplicationFromLoadbalancer(loadBalancerController.search("Knut").get(0).id, applicationController.search("Alpha").get(0).id)).isInstanceOf(LoadBalancerModel.class);
 
-        try {
-            loadBalancerController.addApplication(loadBalancerController.search("Knut").get(0).id, -1L);
+        try { //loadBalancer id is null
+            loadBalancerController.removeApplicationFromLoadbalancer(null, applicationController.search("Grandiosa").get(0).id);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try { //invalid loadBalancer id
+            loadBalancerController.removeApplicationFromLoadbalancer(-1L, applicationController.search("Grandiosa").get(0).id);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //application id is null
+            loadBalancerController.removeApplicationFromLoadbalancer(loadBalancerController.search("Knut").get(0).id, null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //invalid application id
+            loadBalancerController.removeApplicationFromLoadbalancer(loadBalancerController.search("Knut").get(0).id, -1L);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
-    /*
+
     @Test
     public void testPushConfiguration() throws Exception {
-        assertThat(true).isEqualTo(false);
+        //assertThat(true).isEqualTo(false);
     }
 
     @Test
     public void testStartLoadBalancer() throws Exception {
-        assertThat(true).isEqualTo(false);
-    }*/
+        //assertThat(true).isEqualTo(false);
+    }
 }

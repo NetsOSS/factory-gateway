@@ -302,7 +302,7 @@ public class ApplicationControllerTest {
         appModel.setStickySession("NOT_STICKY");
         appModel.setFailoverLoadBalancerSetup("HOT_STANDBY");
 
-        applicationController.update(appModel.getId(), appModel);
+        appModel = applicationController.update(appModel.getId(), appModel);
 
         assertThat(applicationController.listAllApps()).isNotNull().hasSize(3).onProperty("name").excludes("Grandiosa").contains("Beta");
         CustomAssertions.assertThat(applicationController.search("Beta").get(0)).hasName("Beta").hasPublicUrl("/beta").hasEmails("BetaMail").hasCheckPath("/beta/ping");
@@ -310,8 +310,15 @@ public class ApplicationControllerTest {
         assertThat(applicationController.search("Beta").get(0).getStickySession()).isNotNull().isEqualTo("NOT_STICKY");
         assertThat(applicationController.search("Beta").get(0).getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_STANDBY");
 
-        try { //id mismatch
-            applicationController.update(-1L, appModel);
+
+        try { //model is null
+            applicationController.update(appModel.getId(), null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //id is null
+            appModel.id = null;
+            applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
@@ -321,23 +328,8 @@ public class ApplicationControllerTest {
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //invalid id
-            appModel.id = null;
-            applicationController.update(appModel.getId(), appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
-    }
-
-    @Test
-    public void testUpdateUniqueName() throws Exception {
-        AppModel appModel = applicationController.search("Kamino").get(0);
-
-        // may reuse name for same id
-        assertThat(applicationController.update(appModel.id, appModel)).isNotNull();
-
-        try { //name already 'in use'
-            appModel.name = "Grandiosa";
-            applicationController.update(appModel.getId(), appModel);
+        try { //id mismatch
+            applicationController.update(applicationController.search("Kamino").get(0).getId(), appModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
     }
@@ -345,6 +337,21 @@ public class ApplicationControllerTest {
     @Test
     public void testUpdateValidName() throws Exception {
         AppModel appModel = applicationController.search("Grandiosa").get(0);
+
+        //name remains the same
+        assertThat(applicationController.update(appModel.getId(), appModel)).isInstanceOf(AppModel.class);
+
+        try { //name already exists - not unique
+            appModel.name = "Kamino";
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name is null
+            appModel.name = null;
+            applicationController.update(appModel.getId(), appModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
 
         try { //name is blank
             appModel.name = "";

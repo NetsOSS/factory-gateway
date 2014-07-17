@@ -33,12 +33,11 @@ public class ApplicationInstanceController {
     @Autowired
     HaProxyService haProxyService;
 
-
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AppInstModel> listAllAppInsts() {
         log.info("ApplicationInstanceController.listAllAppInsts");
-        return applicationInstanceRepository.findAll().stream().map(AppInstModel::new).collect(toList());
+        return  applicationInstanceRepository.findAll().stream().map(AppInstModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/instances/find", produces = APPLICATION_JSON_VALUE)
@@ -62,12 +61,10 @@ public class ApplicationInstanceController {
     public ApplicationInstance findEntityById(@PathVariable Long id) {
         log.info("ApplicationInstanceController.findEntityById, id={}", id);
 
-        if (id == null) {
-            throw new EntityNotFoundException("ApplicationInstance", id);
-        }
+        if(id == null) { throw new EntityNotFoundException("ApplicationInstance", id); }
 
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
-        if (applicationInstance == null) throw new EntityNotFoundException("ApplicationInstance", id);
+        if(applicationInstance == null) throw new EntityNotFoundException("ApplicationInstance", id);
 
         return applicationInstance;
     }
@@ -83,33 +80,30 @@ public class ApplicationInstanceController {
     private void assertNameUnique(String name) {
         log.info("ApplicationInstanceController.assertNameUnique, name={}", name);
 
-        if (applicationInstanceRepository.countByName(name) > 0L)
-            throw new GatewayException("Could not create Application Instance. Name '" + name + "' already exists.");
+        if(applicationInstanceRepository.countByName(name) > 0L) throw new GatewayException("Could not create Application Instance. Name '" + name + "' already exists.");
     }
 
     private void assertValidModel(AppInstModel appInstModel) {
-        if (appInstModel == null)
-            throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationInstanceModel: " + appInstModel);
-        if (appInstModel.getName() == null || !Pattern.matches("^\\S+$", appInstModel.getName()))
-            throw new GatewayException("Could not create ApplicationInstance. Name must match pattern '^\\S+$'.  Received: " + appInstModel.name);
-
+        if(appInstModel == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationInstanceModel: " + appInstModel);
+        if(appInstModel.getName() == null || ! Pattern.matches("^\\S+$", appInstModel.getName())) throw new GatewayException("Could not create ApplicationInstance. Name must match pattern '^\\S+$'.  Received: " + appInstModel.name);
+        /*
+        if(appInstModel.getHost() == null || ! Pattern.matches(".++", appInstModel.getHost())) throw new GatewayException("Could not create ApplicationInstance. Host must match pattern '.*+'. Received: " + appInstModel.host);
+        if(appInstModel.getPath() == null || (! Pattern.matches("^$|^/[a-zA-Z]\\S*$", appInstModel.getPath()))) throw new GatewayException("Could not create ApplicationInstance. Path must match pattern '^/[a-zA-Z]\\S*$'. Received: " + appInstModel.path);
+        if(appInstModel.port == null || appInstModel.port < 1 || appInstModel.port > 65535) throw new GatewayException("Could not create ApplicationInstance. Port must be a number between 1 and 65535. Received: " + appInstModel.port);
+        */
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel create(@PathVariable Long applicationId, @RequestBody AppInstModel appInstModel) {
-        log.info("ApplicationInstanceController.create AppId={}", applicationId);
+        log.info("ApplicationInstanceController.create AppId={}",applicationId);
 
         assertValidModel(appInstModel);
-        if (appInstModel.getApplicationId() == null)
-            throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationID: " + applicationId);
-        if (!appInstModel.getApplicationId().equals(applicationId))
-            throw new GatewayException("Could not create ApplicationInstance. ApplicationIDs did not match: " + applicationId + " - " + appInstModel.applicationId);
-        if (applicationRepository.findOne(applicationId) == null)
-            throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
+        if(appInstModel.getApplicationId() == null)  throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationID: " + applicationId);
+        if(!appInstModel.getApplicationId().equals(applicationId))  throw new GatewayException("Could not create ApplicationInstance. ApplicationIDs did not match: " + applicationId + " - " + appInstModel.applicationId);
+        if(applicationRepository.findOne(applicationId) == null) throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
         assertNameUnique(appInstModel.name);
 
-        Application application = applicationRepository.findOne(applicationId);
 
         URL url=null;
         try {
@@ -118,21 +112,22 @@ public class ApplicationInstanceController {
             e.printStackTrace();
             throw new GatewayException("Could not create ApplicationInstance. Invalid server url: " +appInstModel.getServer()+" Exception: "+e);
         }
-
+        
+        Application application = applicationRepository.findOne(applicationId);
         ApplicationInstance applicationInstance = new ApplicationInstance(appInstModel.name, url.getHost(), url.getPort(), url.getPath(), application);
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
 
         application.addApplicationInstance(applicationInstance);
 
         return new AppInstModel(applicationInstance);
-    }
+     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/instances/{id}")
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
         log.info("ApplicationInstanceController.remove, id={}", id);
 
-        if (id == null) throw new GatewayException("Could not remove ApplicationInstance. Invalid id.");
+        if(id == null) throw new GatewayException("Could not remove ApplicationInstance. Invalid id.");
         ApplicationInstance applicationInstance = findEntityById(id);
 
         Application application = applicationInstance.getApplication();
@@ -145,21 +140,16 @@ public class ApplicationInstanceController {
         log.info("ApplicationInstanceController.update, id={}", id);
 
         assertValidModel(appInstModel);
-        if (id == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ID: " + id);
-        if (!id.equals(appInstModel.getId()))
-            throw new GatewayException("Could not create ApplicationInstance. IDs did not match:\t" + id + " - " + appInstModel.id);
-        if (applicationInstanceRepository.findOne(id) == null)
-            throw new GatewayException("Could not create ApplicationInstance. ID sis not match the ID of any known ApplicationInstance.");
-        if (appInstModel.getApplicationId() == null)
-            throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationID: " + appInstModel.getApplicationId());
-        if (applicationRepository.findOne(appInstModel.getApplicationId()) == null)
-            throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
+        if(id == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ID: " + id);
+        if(! id.equals(appInstModel.getId())) throw new GatewayException("Could not create ApplicationInstance. IDs did not match:\t" + id + " - " + appInstModel.id);
+        if(applicationInstanceRepository.findOne(id) == null) throw new GatewayException("Could not create ApplicationInstance. ID sis not match the ID of any known ApplicationInstance.");
+        if(appInstModel.getApplicationId() == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationID: " + appInstModel.getApplicationId());
+        if(applicationRepository.findOne(appInstModel.getApplicationId()) == null) throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
         //if(appInstModel.haProxyState == null) throw new GatewayException("Could not create ApplicationInstance. Sticky Session must be a StickySession element. Received: " + appInstModel.haProxyState);
 
         ApplicationInstance applicationInstance = findEntityById(id);
-        if (!applicationInstance.getName().equals(appInstModel.name)) {
-            assertNameUnique(appInstModel.name);
-        }
+        if (!applicationInstance.getName().equals(appInstModel.name)) { assertNameUnique(appInstModel.name); }
+        
         URL url=null;
         try {
              url = new URL("http://"+appInstModel.getServer());
@@ -167,6 +157,7 @@ public class ApplicationInstanceController {
             e.printStackTrace();
             throw new GatewayException("Could not create ApplicationInstance. Invalid server url: " +appInstModel.getServer()+" Exception: "+e);
         }
+        
         applicationInstance.setName(appInstModel.name);
         applicationInstance.setPath(url.getPath());
         applicationInstance.setHost(url.getHost());
