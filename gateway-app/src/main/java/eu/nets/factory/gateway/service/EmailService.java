@@ -54,7 +54,11 @@ public class EmailService {
         } catch (MessagingException e) {
             e.printStackTrace();
             return false;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
+
         return true;
     }
 
