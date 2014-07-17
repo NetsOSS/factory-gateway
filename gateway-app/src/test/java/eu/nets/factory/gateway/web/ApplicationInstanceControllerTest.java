@@ -109,9 +109,10 @@ public class ApplicationInstanceControllerTest {
         AppInstModel appInstModel = applicationInstanceController.search("Beta1.0").get(0);
         assertThat(appInstModel).isNotNull();
         assertThat(appInstModel.name).isNotNull().isEqualTo("Beta1.0");
-        assertThat(appInstModel.host).isNotNull().isEqualTo("host");
-        assertThat(appInstModel.path).isNotNull().isEqualTo("/beta/1.0");
-        assertThat(appInstModel.port).isNotNull().isEqualTo(8080);
+        assertThat(appInstModel.server).isNotNull().isEqualTo("host:8080/beta/1.0");
+        //assertThat(appInstModel.host).isNotNull().isEqualTo("host");
+       // assertThat(appInstModel.path).isNotNull().isEqualTo("/beta/1.0");
+        //assertThat(appInstModel.port).isNotNull().isEqualTo(8080);
         assertThat(appInstModel.applicationId).isNotNull().isEqualTo(application.getId());
         assertThat(appInstModel.haProxyState).isNotNull().isEqualTo(HaProxyState.READY);
         assertThat(appInstModel.getHaProxyState()).isNotNull().isEqualTo("READY");
@@ -158,7 +159,7 @@ public class ApplicationInstanceControllerTest {
         }
     }
 
-    @Test()
+    /*@Test()
     public void testCreateValidHost() throws Exception {
         Application application = applicationRepository.findByNameLike("Kamino").get(0);
         ApplicationInstance applicationInstance = new ApplicationInstance("Beta1.0", "host", 8080, "/beta/1.0", application);
@@ -219,13 +220,13 @@ public class ApplicationInstanceControllerTest {
             fail("Expected exception");
         } catch (GatewayException ignore) {
         }
-        /* // path may be blank
+
         try { //path is blank
             appInstModel.path = "";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-        */
+
         try { //path does not start with '/'
             appInstModel.path = "asd";
             applicationInstanceController.create(appInstModel.applicationId, appInstModel);
@@ -246,7 +247,7 @@ public class ApplicationInstanceControllerTest {
             fail("Expected exception");
         } catch (GatewayException ignore) {
         }
-    }
+    }*/
 
     @Test()
     public void testCreateValidApplication() throws Exception {
@@ -303,18 +304,18 @@ public class ApplicationInstanceControllerTest {
         AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
 
         appInstModel.name = "Kamino1.1";
-        appInstModel.path = "/kamino/1.1";
-        appInstModel.host = "new host";
-        appInstModel.port = 8090;
+        //appInstModel.server = "newhost/kamino/1.1";
+        //appInstModel.host = "new host";
+        //appInstModel.port = 8090;
         appInstModel.setHaProxyState("MAINT");
         appInstModel = applicationInstanceController.update(appInstModel.id, appInstModel);
 
         assertThat(applicationInstanceController.listAllAppInsts().size()).isNotNull().isEqualTo(3);
         assertThat(applicationInstanceController.search("Kamino1.1").get(0).name).isNotNull().isEqualTo("Kamino1.1");
         assertThat(appInstModel.name).isNotNull().isEqualTo("Kamino1.1");
-        assertThat(appInstModel.host).isNotNull().isEqualTo("new host");
-        assertThat(appInstModel.path).isNotNull().isEqualTo("/kamino/1.1");
-        assertThat(appInstModel.port).isNotNull().isEqualTo(8090);
+//        assertThat(appInstModel.host).isNotNull().isEqualTo("new host");
+//        assertThat(appInstModel.path).isNotNull().isEqualTo("/kamino/1.1");
+//        assertThat(appInstModel.port).isNotNull().isEqualTo(8090);
         assertThat(appInstModel.getHaProxyState()).isNotNull().isEqualTo("MAINT");
 
         try { //model is null
@@ -370,88 +371,80 @@ public class ApplicationInstanceControllerTest {
     }
 
     @Test()
-    public void testUpdateValidHost() throws Exception {
+    public void testURLTransform() throws Exception {
         AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
 
-        try { //host is null
-            appInstModel.host = null;
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
 
-        try { //host is blank
-            appInstModel.host = "";
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
+
+        assertThat(appInstModel.getServer()).isNotNull().isEqualTo("hostOne:8080/kamino/1.0");
+
+
     }
 
-    @Test()
-    public void testUpdateValidPort() throws Exception {
-        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
-
-        try { //port is null
-            appInstModel.port = null;
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
-
-        try { //port is less than 1
-            appInstModel.port = 0;
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
-
-        try { //port is greater than 65535
-            appInstModel.port = 65536;
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
-    }
-
-    @Test()
-    public void testUpdateValidPath() throws Exception {
-        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
-
-        try { //path is null
-            appInstModel.path = null;
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
-        /* // path may be blank
-        try { //path is blank
-            appInstModel.path = "";
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
-        */
-        try { //path does not start with '/'
-            appInstModel.path = "asd";
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
-
-        try { //path does not start with '/[a-zA-Z]'
-            appInstModel.path = "/3";
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
-
-        try { //path contains whitespace
-            appInstModel.path = "/as d";
-            applicationInstanceController.update(appInstModel.id, appInstModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) {
-        }
-    }
+//    @Test()
+//    public void testUpdateValidPort() throws Exception {
+//        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
+//
+//        try { //port is null
+//            appInstModel.port = null;
+//            applicationInstanceController.update(appInstModel.id, appInstModel);
+//            fail("Expected exception");
+//        } catch (GatewayException ignore) {
+//        }
+//
+//        try { //port is less than 1
+//            appInstModel.port = 0;
+//            applicationInstanceController.update(appInstModel.id, appInstModel);
+//            fail("Expected exception");
+//        } catch (GatewayException ignore) {
+//        }
+//
+//        try { //port is greater than 65535
+//            appInstModel.port = 65536;
+//            applicationInstanceController.update(appInstModel.id, appInstModel);
+//            fail("Expected exception");
+//        } catch (GatewayException ignore) {
+//        }
+//    }
+//
+//    @Test()
+//    public void testUpdateValidPath() throws Exception {
+//        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
+//
+//        try { //path is null
+//            appInstModel.path = null;
+//            applicationInstanceController.update(appInstModel.id, appInstModel);
+//            fail("Expected exception");
+//        } catch (GatewayException ignore) {
+//        }
+//        /* // path may be blank
+//        try { //path is blank
+//            appInstModel.path = "";
+//            applicationInstanceController.update(appInstModel.id, appInstModel);
+//            fail("Expected exception");
+//        } catch(GatewayException ignore) { }
+//        */
+//        try { //path does not start with '/'
+//            appInstModel.path = "asd";
+//            applicationInstanceController.update(appInstModel.id, appInstModel);
+//            fail("Expected exception");
+//        } catch (GatewayException ignore) {
+//        }
+//
+//        try { //path does not start with '/[a-zA-Z]'
+//            appInstModel.path = "/3";
+//            applicationInstanceController.update(appInstModel.id, appInstModel);
+//            fail("Expected exception");
+//        } catch (GatewayException ignore) {
+//        }
+//
+//        try { //path contains whitespace
+//            appInstModel.path = "/as d";
+//            applicationInstanceController.update(appInstModel.id, appInstModel);
+//            fail("Expected exception");
+//        } catch (GatewayException ignore) {
+//        }
+//    }
 
     @Test()
     public void testSetProxyStateByInstanceName() throws Exception {
@@ -463,8 +456,8 @@ public class ApplicationInstanceControllerTest {
         assertThat(testModel.applicationId).isNotNull().isEqualTo(appInstModel.applicationId);
         assertThat(testModel.id).isNotNull().isEqualTo(appInstModel.id);
         assertThat(testModel.name).isNotNull().isEqualTo("Kamino1.0");
-        assertThat(testModel.host).isNotNull().isEqualTo("hostOne");
-        assertThat(testModel.path).isNotNull().isEqualTo("/kamino/1.0");
+//        assertThat(testModel.host).isNotNull().isEqualTo("hostOne");
+//        assertThat(testModel.path).isNotNull().isEqualTo("/kamino/1.0");
         assertThat(testModel.getHaProxyState()).isNotNull().isEqualTo("MAINT");
 
         try {

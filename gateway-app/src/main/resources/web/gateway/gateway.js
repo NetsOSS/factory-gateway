@@ -87,34 +87,25 @@ define([
 
   });
 
-  gateway.controller('FrontPageCtrl', function ($location, $scope,$filter, GatewayData) {
+  gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, GatewayData) {
     $scope.newApp = {}; //Model for new ApplicationForm
     $scope.newAppInstForm = {};
 
-    function parseServerInputToAppInstObj(serverUrl){
-      serverUrl="http://"+serverUrl;
-      var parser = document.createElement('a');
-      parser.href = inServer;
-      return parser;
-    }
 
     $scope.addAppInst = function (app) {
       console.log("New app inst : ", $scope.newAppInstForm, " to ", app.id);
-
-      var parser = document.createElement('a');
-      parser.href = "http://"+$scope.newAppInstForm.host;
-
       var testObj = {};
-      testObj.name=$scope.newAppInstForm.name;
-      testObj.host = parser.hostname;
-      testObj.port = parser.port;
-      testObj.path = parser.pathname;
+      testObj.name = $scope.newAppInstForm.name;
+      testObj.server = $scope.newAppInstForm.host;
       testObj.applicationId = app.id;
-      console.log(testObj);
 
-      GatewayData.ApplicationInstanceController.create(app.id,testObj).then(function(data){
-          app.applicationInstances.push(data);
+      GatewayData.ApplicationInstanceController.create(app.id, testObj).then(function (data) {
+        app.applicationInstances.push(data);
       });
+    };
+
+    $scope.updateAppInst = function(appInst){
+      console.log("Update App Inst");
     };
 
     // ----------------------- Load balancer functions ------------------------------------
@@ -138,6 +129,17 @@ define([
 
     GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
       $scope.allAppGroups = data;
+
+      /*angular.forEach($scope.allAppGroups,function(appGroup,index){
+       angular.forEach(appGroup.applications,function(app,index){
+       angular.forEach(app.applicationInstances,function(appInst,index){
+       console.log("appInst : ",appInst);
+       //appInst.server = appInst.host+":"+appInst.port+""+appInst.path;
+       });
+       });
+       });*/
+
+
     });
 
     $scope.removeGroup = function (appGroup) {
@@ -147,32 +149,36 @@ define([
     };
 
     $scope.removeApp = function (appGroup, app) {
-      console.log("Remove ",app," from appgroup  ",appGroup," index: ",appGroup.applications.indexOf(app));
-      GatewayData.ApplicationController.remove(app.id).then(function(data){
-        appGroup.applications.splice(appGroup.applications.indexOf(app),1);
+      console.log("Remove ", app, " from appgroup  ", appGroup, " index: ", appGroup.applications.indexOf(app));
+      GatewayData.ApplicationController.remove(app.id).then(function (data) {
+        appGroup.applications.splice(appGroup.applications.indexOf(app), 1);
       });
- };
+    };
 
-    $scope.removeAppInst = function (app,appInst) {
-      console.log("Remove ",appInst," from appg  ",app," index: ",app.applicationInstances.indexOf(appInst));
+    $scope.removeAppInst = function (app, appInst) {
+      console.log("Remove ", appInst, " from appg  ", app, " index: ", app.applicationInstances.indexOf(appInst));
       GatewayData.ApplicationInstanceController.remove(appInst.id).then(function (data) {
-        app.applicationInstances.splice(app.applicationInstances.indexOf(appInst),1);
+        app.applicationInstances.splice(app.applicationInstances.indexOf(appInst), 1);
       });
 
 
     };
 
     $scope.showUpdateApplication = function (app) {
+      $scope.updateApp = {};
+
       $scope.updateApp = angular.copy(app);
+      $scope.updateApp.applicationInstances = [];
+      $scope.updateApp.loadBalancers = [];
       $('#modalUpdateApp').modal('show');
     };
 
     $scope.updateApplication = function () {
-      var foundGroup = $filter('getById')( $scope.allAppGroups,$scope.updateApp.applicationGroupId);
-      var foundAppIndex = $filter('getIndexById')( foundGroup.applications,$scope.updateApp.id);
+      var foundGroup = $filter('getById')($scope.allAppGroups, $scope.updateApp.applicationGroupId);
+      var foundAppIndex = $filter('getIndexById')(foundGroup.applications, $scope.updateApp.id);
 
       GatewayData.ApplicationController.update($scope.updateApp.id, $scope.updateApp).then(function (data) {
-        foundGroup.applications[foundAppIndex]=data;
+        foundGroup.applications[foundAppIndex] = data;
         $scope.updateApp = {};
         $('#modalUpdateApp').modal('hide');
       });
@@ -187,7 +193,7 @@ define([
     };
 
     $scope.createApplication = function (appGroup) {
-      var copyNewApp =  angular.copy($scope.newApp);
+      var copyNewApp = angular.copy($scope.newApp);
       copyNewApp.applicationGroupId = appGroup.id;
       //console.log("CreateApp to appGrpId ",appGroup.id, " app : ", copyNewApp);
       GatewayData.ApplicationController.create(copyNewApp).then(function (data) {
@@ -196,7 +202,6 @@ define([
 
       });
     };
-
 
 
   });
@@ -222,7 +227,7 @@ define([
       });
     };
 
-    $scope.changeSetup = function(id, setup) {
+    $scope.changeSetup = function (id, setup) {
 
       GatewayData.ApplicationController.configureHaproxySetupAndStartLoadbalancer(id, setup).then(function(data) {
 
@@ -300,7 +305,7 @@ define([
       GatewayData.ApplicationInstanceController.update($scope.appInst.id, $scope.appInst).then(function (data) {
       });
     };
-   
+
     GatewayData.StatusController.getStatusForOneServer($routeParams.id).then(function (data) {
       $scope.rawStatusForOneInst = data;
     });

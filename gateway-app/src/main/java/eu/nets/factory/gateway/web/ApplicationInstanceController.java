@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -90,12 +92,7 @@ public class ApplicationInstanceController {
             throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationInstanceModel: " + appInstModel);
         if (appInstModel.getName() == null || !Pattern.matches("^\\S+$", appInstModel.getName()))
             throw new GatewayException("Could not create ApplicationInstance. Name must match pattern '^\\S+$'.  Received: " + appInstModel.name);
-        if (appInstModel.getHost() == null || !Pattern.matches(".++", appInstModel.getHost()))
-            throw new GatewayException("Could not create ApplicationInstance. Host must match pattern '.*+'. Received: " + appInstModel.host);
-        if (appInstModel.getPath() == null || (!Pattern.matches("^$|^/[a-zA-Z]\\S*$", appInstModel.getPath())))
-            throw new GatewayException("Could not create ApplicationInstance. Path must match pattern '^/[a-zA-Z]\\S*$'. Received: " + appInstModel.path);
-        if (appInstModel.port == null || appInstModel.port < 1 || appInstModel.port > 65535)
-            throw new GatewayException("Could not create ApplicationInstance. Port must be a number between 1 and 65535. Received: " + appInstModel.port);
+
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -113,7 +110,16 @@ public class ApplicationInstanceController {
         assertNameUnique(appInstModel.name);
 
         Application application = applicationRepository.findOne(applicationId);
-        ApplicationInstance applicationInstance = new ApplicationInstance(appInstModel.name, appInstModel.host, appInstModel.port, appInstModel.path, application);
+
+        URL url=null;
+        try {
+            url = new URL("http://"+appInstModel.getServer());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new GatewayException("Could not create ApplicationInstance. Invalid server url: " +appInstModel.getServer()+" Exception: "+e);
+        }
+
+        ApplicationInstance applicationInstance = new ApplicationInstance(appInstModel.name, url.getHost(), url.getPort(), url.getPath(), application);
         applicationInstance = applicationInstanceRepository.save(applicationInstance);
 
         application.addApplicationInstance(applicationInstance);
@@ -154,11 +160,17 @@ public class ApplicationInstanceController {
         if (!applicationInstance.getName().equals(appInstModel.name)) {
             assertNameUnique(appInstModel.name);
         }
-
+        URL url=null;
+        try {
+             url = new URL("http://"+appInstModel.getServer());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new GatewayException("Could not create ApplicationInstance. Invalid server url: " +appInstModel.getServer()+" Exception: "+e);
+        }
         applicationInstance.setName(appInstModel.name);
-        applicationInstance.setPath(appInstModel.path);
-        applicationInstance.setHost(appInstModel.host);
-        applicationInstance.setPort(appInstModel.port);
+        applicationInstance.setPath(url.getPath());
+        applicationInstance.setHost(url.getHost());
+        applicationInstance.setPort(url.getPort());
         applicationInstance.setHaProxyStateValue(appInstModel.haProxyState);
 
         return new AppInstModel(applicationInstance);

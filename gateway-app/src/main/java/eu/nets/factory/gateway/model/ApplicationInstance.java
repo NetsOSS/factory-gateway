@@ -43,6 +43,10 @@ public class ApplicationInstance extends AbstractEntity {
         this.haProxyStateValue = HaProxyState.READY.ordinal();
     }
 
+
+
+
+
     public ApplicationInstance() { }
 
 

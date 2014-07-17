@@ -141,6 +141,7 @@ define([ 'angular' ], function (angular) {
       template: editorTemplate,
       scope: {
         value: "=clickToEdit"
+        //callback:
       },
       controller: function($scope) {
         $scope.view = {
@@ -159,6 +160,7 @@ define([ 'angular' ], function (angular) {
 
         $scope.save = function() {
           $scope.value = $scope.view.editableValue;
+
           $scope.disableEditor();
         };
       }
