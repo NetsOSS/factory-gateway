@@ -38,6 +38,16 @@
   </ul>
 </div>
 
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    Set sticky<span class="caret "></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a ng-click = "setSticky(app.id, 'STICKY')">STICKY</a></li>
+    <li><a ng-click = "setSticky(app.id, 'NOT_STICKY')">NOT_STICKY</a></li>
+  </ul>
+</div>
+
 <hr>
 
 <h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out :

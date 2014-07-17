@@ -235,6 +235,13 @@ define([
       });
     };
 
+      $scope.setSticky = function(id, sticky) {
+
+          GatewayData.ApplicationController.setStickyAndStartLoadBalancer(id, sticky).then(function(data) {
+
+          });
+      };
+
     $scope.onUpdatedApp();
 
     $scope.removeApp = function () {

@@ -108,6 +108,7 @@ public class StatusService {
             StatusModel newStatusModel = newlistStatus.get(index);
             String oldStatus = oldStatusModel.data.get("status");
             String newStatus = newStatusModel.data.get("status");
+
             if (!oldStatus.equals(newStatus)) {
                 log.info("StatusService.checkForChangesInStatus() : {} went from status {} -> {}", oldStatusModel, oldStatus, newStatus);
 

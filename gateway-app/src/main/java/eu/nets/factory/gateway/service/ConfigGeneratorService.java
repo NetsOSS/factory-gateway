@@ -3,6 +3,7 @@ package eu.nets.factory.gateway.service;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
+import eu.nets.factory.gateway.model.StickySession;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -51,7 +52,8 @@ public class ConfigGeneratorService {
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 
             // Check if app wants sticky cookies . cookie SERVERID insert indirect nocache
-            printWriter.println(TAB2 + "cookie JSESSIONID prefix");
+            if(application.getStickySession().name().equals(StickySession.STICKY))
+                printWriter.println(TAB2 + "cookie JSESSIONID prefix");
 //            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
             // server
@@ -66,8 +68,13 @@ public class ConfigGeneratorService {
                     if(i > 0) {
                         setup = " backup";
                     }
+                String s = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " " + state + setup;
+                if(application.getStickySession().name().equals(StickySession.STICKY))
+                 s+="check cookie \" + applicationInstance.getName()";
+                printWriter.println(s);
 
-                printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
+               // printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
+
             }
             backends.add(stringWriter.toString());
             //stringWriter.flush();
