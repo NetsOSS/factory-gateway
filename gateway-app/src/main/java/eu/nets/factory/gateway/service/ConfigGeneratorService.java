@@ -58,7 +58,6 @@ public class ConfigGeneratorService {
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
                 String state = "";
                 if (applicationInstance.getHaProxyState().name().equals("MAINT"))
-                    System.out.println("MAINT==MAINT");
                     state = " disabled";
                 printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie "+ applicationInstance.getName() + state);
             }
