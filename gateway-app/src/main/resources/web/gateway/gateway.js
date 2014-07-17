@@ -204,6 +204,22 @@ define([
       });
     };
 
+    $scope.setSticky = function(app, sticky) {
+      console.log("SetSticky : id=",app.id," sticky=",sticky);
+
+      GatewayData.ApplicationController.setStickyAndStartLoadBalancer(app.id, sticky).then(function (data) {
+        app.stickySession=sticky;
+        //Should check if it was a succkess
+      });
+    };
+
+    $scope.changeHotMode = function (app, mode) {
+      console.log("SetHotMode : id=",app.id," mode=",mode);
+      GatewayData.ApplicationController.configureHaproxySetupAndStartLoadbalancer(app.id, mode).then(function(data) {
+        app.failoverLoadBalancerSetup=mode;
+      });
+    };
+
 
   });
 
