@@ -22,7 +22,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class TestController {
 
     private final Logger log = getLogger(getClass());
-    private int statusCode =200;
+    private int statusCode = 200;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -68,9 +68,9 @@ public class TestController {
 
     @RequestMapping(value = "/test/setCode/{code}", method = RequestMethod.GET)
     @ResponseBody
-    public String setStatusCode(HttpServletRequest request, @PathVariable int code) {
-        this.statusCode=code;
-        return "code:"+statusCode;
+    public String setStatusCode(@PathVariable int code) {
+        this.statusCode = code;
+        return "HTTP status code for /test set to " + statusCode;
     }
 
     @RequestMapping(value = "/test/session", method = RequestMethod.DELETE)
