@@ -51,36 +51,32 @@ public class ConfigGeneratorService {
             printWriter.println(TAB + "backend " + application.getName());
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 
-            // Check if app wants sticky cookies . cookie SERVERID insert indirect nocache
-            if(application.getStickySession().name().equals("STICKY"))
+            // Check if app wants sticky cookies.
+            if (application.getStickySession().name().equals("STICKY"))
                 printWriter.println(TAB2 + "cookie JSESSIONID prefix");
-//            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
-
-            if(application.getStickySession().name().equals("STICKY_NEW_COOKIE"))
+            if (application.getStickySession().name().equals("STICKY_NEW_COOKIE"))
                 printWriter.println(TAB2 + "cookie SERVERID_"+application.getName()+" insert indirect nocache");
 
-            // server
+//            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
+            // server
             for(int i = 0; i < application.getApplicationInstances().size(); i++) {
                 ApplicationInstance applicationInstance = application.getApplicationInstances().get(i);
-                String state = "";
-                String setup = "";
+
+                String serverConfigLine = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath();
+
                 if (applicationInstance.getHaProxyState().name().equals("MAINT"))
-                    state = " disabled";
-                if(application.getFailoverLoadBalancerSetup().name().equals("HOT_STANDBY"))
-                    if(i > 0) {
-                        setup = " backup";
-                    }
-                String s = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " " + state + setup +" check";
-                if(application.getStickySession().name().equals("STICKY"))
-                 s+=" cookie " + applicationInstance.getName();
-                if(application.getStickySession().name().equals("STICKY_NEW_COOKIE"))
-                    s+=" cookie " + applicationInstance.getName();
-                printWriter.println(s);
+                    serverConfigLine += " disabled";
 
-               // printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
+                if (application.getFailoverLoadBalancerSetup().name().equals("HOT_STANDBY") && i > 0)
+                    serverConfigLine += " backup";
 
+                if (application.getStickySession().name().equals("STICKY") || application.getStickySession().name().equals("STICKY_NEW_COOKIE"))
+                    serverConfigLine += " cookie " + applicationInstance.getName();
+
+                printWriter.println(serverConfigLine);
             }
+
             backends.add(stringWriter.toString());
             //stringWriter.flush();
             //printWriter.flush();
