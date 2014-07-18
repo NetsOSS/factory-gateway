@@ -2,6 +2,7 @@ package eu.nets.factory.gateway.web.controller;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,10 +22,13 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class TestController {
 
     private final Logger log = getLogger(getClass());
+    private int statusCode =200;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Map<String, String>> dumpRequest(HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+        response.setStatus(statusCode);
 
         Map<String, Map<String, String>> returnMap = new HashMap<>();
         Map<String, String> headerMap = new HashMap<>();
@@ -60,6 +64,13 @@ public class TestController {
     public String createSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return session.getId();
+    }
+
+    @RequestMapping(value = "/test/setCode/{code}", method = RequestMethod.GET)
+    @ResponseBody
+    public String setStatusCode(HttpServletRequest request, @PathVariable int code) {
+        this.statusCode=code;
+        return "code:"+statusCode;
     }
 
     @RequestMapping(value = "/test/session", method = RequestMethod.DELETE)

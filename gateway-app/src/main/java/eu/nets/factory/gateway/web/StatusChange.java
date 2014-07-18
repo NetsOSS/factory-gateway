@@ -1,8 +1,5 @@
 package eu.nets.factory.gateway.web;
 
-/**
-* Created by ofbje on 17.07.2014.
-*/
 public class StatusChange {
     public String s,action,b;
     public StatusChange(){
