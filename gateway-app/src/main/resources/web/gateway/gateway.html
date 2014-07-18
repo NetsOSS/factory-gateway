@@ -158,11 +158,16 @@
 
                 <div class="btn-group btn-toggle">
                     <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'STICKY')"
-                            ng-class="{STICKY:'active', NOT_STICKY:'', '':'hidden'}[app.stickySession]">Sticky
+                            ng-class="{STICKY:'active', NOT_STICKY:'', STICKY_NEW_COOKIE:'', '':'hidden'}[app.stickySession]">Sticky
+                    </button>
+                    <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'STICKY_NEW_COOKIE')"
+                            ng-class="{STICKY:'', NOT_STICKY:'',  STICKY_NEW_COOKIE:'active','':'hidden'}[app.stickySession]">Sticky New Cookie
                     </button>
                     <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'NOT_STICKY')"
-                            ng-class="{STICKY:'', NOT_STICKY:'active', '':'hidden'}[app.stickySession]">NOT Sticky
+                            ng-class="{STICKY:'', NOT_STICKY:'active',  STICKY_NEW_COOKIE:'','':'hidden'}[app.stickySession]">NOT Sticky
                     </button>
+                    {{app.stickySession}}
+
                 </div>
                 <strong>Mode:</strong>
 

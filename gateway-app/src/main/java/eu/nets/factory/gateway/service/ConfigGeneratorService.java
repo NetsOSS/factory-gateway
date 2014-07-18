@@ -56,6 +56,9 @@ public class ConfigGeneratorService {
                 printWriter.println(TAB2 + "cookie JSESSIONID prefix");
 //            printWriter.println(TAB2 + "reqrep ^([^\\ :]*)\\ " + application.getPublicUrl() + "/(.*)     \\1\\ /\\2");
 
+            if(application.getStickySession().name().equals("STICKY_NEW_COOKIE"))
+                printWriter.println(TAB2 + "cookie SERVERID_"+application.getName()+" insert indirect nocache");
+
             // server
 
             for(int i = 0; i < application.getApplicationInstances().size(); i++) {
@@ -71,6 +74,8 @@ public class ConfigGeneratorService {
                 String s = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " " + state + setup +" check";
                 if(application.getStickySession().name().equals("STICKY"))
                  s+=" cookie " + applicationInstance.getName();
+                if(application.getStickySession().name().equals("STICKY_NEW_COOKIE"))
+                    s+=" cookie " + applicationInstance.getName();
                 printWriter.println(s);
 
                // printWriter.println(TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check cookie " + applicationInstance.getName() + state + setup);
