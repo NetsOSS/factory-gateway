@@ -107,7 +107,7 @@ public class ApplicationController {
 
     private void assertNameUnique(String name) {
         if (applicationRepository.countByName(name) > 0L) {
-            throw new GatewayException("Could not create Application. Name '" + name + "' already exists.");
+            throw new GatewayException("Could not create Application. Name '" + name + "' is already in use.");
         }
     }
 

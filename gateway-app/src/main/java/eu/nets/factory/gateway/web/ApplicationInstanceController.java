@@ -80,7 +80,7 @@ public class ApplicationInstanceController {
     private void assertNameUnique(String name) {
         log.info("ApplicationInstanceController.assertNameUnique, name={}", name);
 
-        if(applicationInstanceRepository.countByName(name) > 0L) throw new GatewayException("Could not create Application Instance. Name '" + name + "' already exists.");
+        if(applicationInstanceRepository.countByName(name) > 0L) throw new GatewayException("Could not create Application Instance. Name '" + name + "' is already in use.");
     }
 
     private void assertValidModel(AppInstModel appInstModel) {

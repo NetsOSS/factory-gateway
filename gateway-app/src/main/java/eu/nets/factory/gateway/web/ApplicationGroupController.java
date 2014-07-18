@@ -71,7 +71,7 @@ public class ApplicationGroupController {
 
     private void assertNameUnique(String name) {
         if(applicationGroupRepository.countByName(name) > 0L) {
-            throw new GatewayException("Could not create Application Group. Name '" + name + "' already exists.");
+            throw new GatewayException("Could not create Application Group. Name '" + name + "' is already in use.");
         }
     }
 

@@ -108,7 +108,7 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.assertNameUnique, name={}", name);
 
         if(loadBalancerRepository.countByName(name) > 0L) {
-            throw new GatewayException("Could not create Load Balancer. Name '" + name + "' already exists.");
+            throw new GatewayException("Could not create Load Balancer. Name '" + name + "' is already in use.");
         }
     }
 
@@ -116,7 +116,7 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.assertHostInstallationPathUnique, host={}, installationPath={}", host, installationPath);
 
         if(loadBalancerRepository.countByHostInstallationPath(host, installationPath) > 0L) {
-            throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - installation path '" + installationPath + "' already exists.");
+            throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - installation path '" + installationPath + "' is already in use.");
         }
     }
 
@@ -124,7 +124,7 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.assertHostPublicPortUnique, host={}, publicPort={}", host, publicPort);
 
         if(loadBalancerRepository.countByHostPublicPort(host, publicPort) > 0L) {
-            throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - public port '" + publicPort + "' already exists.");
+            throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - public port '" + publicPort + "' is already in use.");
         }
     }
 
