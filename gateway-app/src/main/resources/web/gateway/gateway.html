@@ -58,7 +58,7 @@
                 <div class="btn-group pull-right ">
                     <span class="badge">{{app.applicationInstances.length}}</span>
                     <button go-click="/app/{{app.id}}">
-                        <span class="glyphicon glyphicon-new-window"></span> Visit
+                        <span class="glyphicon glyphicon-new-window"></span> Details
                     </button>
                     <button ng-click="showUpdateApplication(app)"> <span
                             class="glyphicon glyphicon-wrench"></span> Edit
@@ -166,7 +166,7 @@
                     <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'NOT_STICKY')"
                             ng-class="{STICKY:'', NOT_STICKY:'active',  STICKY_NEW_COOKIE:'','':'hidden'}[app.stickySession]">NOT Sticky
                     </button>
-                    {{app.stickySession}}
+
 
                 </div>
                 <strong>Mode:</strong>
