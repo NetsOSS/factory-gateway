@@ -45,6 +45,9 @@ public class StatusController {
     private ApplicationInstanceRepository applicationInstanceRepository;
 
     @Autowired
+    private ApplicationInstanceController applicationInstanceController;
+
+    @Autowired
     StatusService statusService;
 
     @Autowired
@@ -265,7 +268,6 @@ public class StatusController {
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost(statsPage);
 
-
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
             params.add(new BasicNameValuePair("s", statusChange.s));
             params.add(new BasicNameValuePair("action",statusChange.action));
@@ -289,6 +291,9 @@ public class StatusController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        applicationInstanceController.setProxyStateForInstance(statusChange.s,statusChange.action.toUpperCase());
+
         return statusChange;
     }
 
