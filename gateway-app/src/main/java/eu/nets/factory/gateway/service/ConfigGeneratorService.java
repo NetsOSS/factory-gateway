@@ -3,14 +3,10 @@ package eu.nets.factory.gateway.service;
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
-import eu.nets.factory.gateway.model.StickySession;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +24,6 @@ public class ConfigGeneratorService {
     }
 
     public String generateConfig(LoadBalancer loadBalancer) {
-
-        String haproxyInstallationPath = loadBalancer.getInstallationPath();
 
         List<String> rules = new ArrayList<>();
         List<String> backends = new ArrayList<>();
@@ -63,7 +57,7 @@ public class ConfigGeneratorService {
             for(int i = 0; i < application.getApplicationInstances().size(); i++) {
                 ApplicationInstance applicationInstance = application.getApplicationInstances().get(i);
 
-                String serverConfigLine = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath();
+                String serverConfigLine = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check";
 
                 if (applicationInstance.getHaProxyState().name().equals("MAINT"))
                     serverConfigLine += " disabled";
@@ -109,10 +103,9 @@ public class ConfigGeneratorService {
 
         writeDefaultsEnd(printWriter);
 
-        String strConfig = stringWriter.toString();
         //stringWriter.flush();
         //printWriter.flush();
-        return strConfig;
+        return stringWriter.toString();
     }
 
     private void writeDefaultsStart(PrintWriter pw) {
@@ -135,9 +128,5 @@ public class ConfigGeneratorService {
         pw.println(TAB2 + "stats enable");
         pw.println(TAB2 + "stats uri /proxy-stats");
         pw.println(TAB2 + "stats admin if TRUE");
-    }
-
-    private void writeFile(String fileName, String fileContents) throws IOException {
-        Files.write(Paths.get(fileName), fileContents.getBytes());
     }
 }
