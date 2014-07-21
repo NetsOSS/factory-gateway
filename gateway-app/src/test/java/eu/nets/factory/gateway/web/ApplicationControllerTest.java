@@ -301,6 +301,9 @@ public class ApplicationControllerTest {
         appModel.loadBalancers = null;
         appModel.setStickySession("NOT_STICKY");
         appModel.setFailoverLoadBalancerSetup("HOT_STANDBY");
+        appModel.connectTimeout = 7000;
+        appModel.readTimeout = 100;
+        appModel.retryTimeout = 10000;
 
         appModel = applicationController.update(appModel.getId(), appModel);
 
@@ -309,6 +312,9 @@ public class ApplicationControllerTest {
         CustomAssertions.assertThat(applicationController.search("Beta").get(0)).doesNotHaveAppGroupId(-6L).hasAppInsts(new AppInstModel[]{}).hasLoadBalancers(new LoadBalancerModel[]{});
         assertThat(applicationController.search("Beta").get(0).getStickySession()).isNotNull().isEqualTo("NOT_STICKY");
         assertThat(applicationController.search("Beta").get(0).getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_STANDBY");
+        assertThat(applicationController.search("Beta").get(0).connectTimeout).isNotNull().isEqualTo(7000);
+        assertThat(applicationController.search("Beta").get(0).readTimeout).isNotNull().isEqualTo(100);
+        assertThat(applicationController.search("Beta").get(0).retryTimeout).isNotNull().isEqualTo(10000);
 
 
         try { //model is null

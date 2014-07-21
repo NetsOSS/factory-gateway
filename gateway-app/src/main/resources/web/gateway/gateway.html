@@ -447,6 +447,44 @@
                         <span class="bg-danger" ng-show="editAppForm.checkPath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
                     </div>
 
+                  <div class="row">
+                    <div class="col-xs-4 form-group"
+                         ng-class="{'has-error': editAppForm.connectTimeout.$invalid && editAppForm.connectTimeout.$dirty}">
+                      <label for="inAppConnectUpdate">Connect timeout</label>
+                      <input type="number" class="form-control" ng-model="updateApp.connectTimeout" class="form-control "
+                          id="inAppConnectUpdate"
+                          name = "connectTimeout"
+                          ng-pattern="/^\d+$/"
+                          required integer>
+                      <span class="bg-danger" ng-show="editAppForm.connectTimeout.$error.pattern">Invalid connect timeout: Must be higher than -1</span>
+                      <span class="bg-danger" ng-show="editAppForm.connectTimeout.$error.integer">This is not valid integer!</span>
+                    </div>
+
+                    <div class="col-xs-4"
+                         ng-class="{'has-error': editAppForm.readTimeout.$invalid && editAppForm.readTimeout.$dirty}">
+                      <label for="inAppReadUpdate">Read timeout</label>
+                      <input type="number" class="form-control"ng-model="updateApp.readTimeout" class="form-control "
+                             id="inAppReadUpdate"
+                             name = "readTimeout"
+                             ng-pattern="/^\d+$/"
+                             required integer>
+                      <span class="bg-danger" ng-show="editAppForm.readTimeout.$error.pattern">Invalid read timeout: Must be integer</span>
+                      <span class="bg-danger" ng-show="editAppForm.readTimeout.$error.integer">This is not valid integer!</span>
+                    </div>
+
+                    <div class="col-xs-4"
+                         ng-class="{'has-error': editAppForm.retryTimeout.$invalid && editAppForm.retryTimeout.$dirty}">
+                      <label for="inAppRetryUpdate">Retry timeout</label>
+                      <input type="number" class="form-control"ng-model="updateApp.retryTimeout" class="form-control "
+                             id="inAppRetryUpdate"
+                             name = "retryTimeout"
+                             ng-pattern="/^\d+$/"
+                             required integer>
+                      <span class="bg-danger" ng-show="editAppForm.retryTimeout.$error.pattern">Invalid retry timeout: Must be integer</span>
+                      <span class="bg-danger" ng-show="editAppForm.retryTimeout.$error.integer">This is not valid integer!</span>
+                    </div>
+                  </div>
+
                     <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
                 </form>
             </div>

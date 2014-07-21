@@ -178,7 +178,9 @@ public class ApplicationController {
         application.setCheckPath(appModel.getCheckPath());
         application.setStickySession(appModel.stickySession);
         application.setFailoverLoadBalancerSetup(appModel.failoverLoadBalancerSetup);
-
+        application.setConnectTimeout(appModel.connectTimeout);
+        application.setReadTimeout(appModel.readTimeout);
+        application.setRetryTimeout(appModel.retryTimeout);
 
         return new AppModel(application);
     }
@@ -208,7 +210,6 @@ public class ApplicationController {
         AppModel appModel = configureHaproxySetup(id, setup);
 
         Application application = findEntityById(id);
-
 
         for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
             haProxyService.pushConfigFile(loadBalancer);
