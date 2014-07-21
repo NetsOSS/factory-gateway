@@ -99,13 +99,13 @@ define([
                     if (data.length > 0) {
                         $("#dropdowndiv").append(
                             $("#dropdownlist").append(
-                                "<li role = 'presentation'><a role = 'menuitem' tabindex = '-1' ><b>Applications</b></a></li>"
+                                "<li role = 'presentation'><a role = 'menuitem' ><b>Applications</b></a></li>"
                             )
                         )
                         for (var i = 0; i < data.length; i++) {
                             $("#dropdowndiv").append(
                                 $("#dropdownlist").append(
-                                    "<li role = 'presentation'><a role = 'menuitem' tabindex = '-1' href =  /#/app/" + data[i].id + ">" + data[i].name + "</a></li>"
+                                    "<li role = 'presentation'><a role = 'menuitem'href =  /#/app/" + data[i].id + ">" + data[i].name + "</a></li>"
                                 )
                             )
                         }
@@ -122,13 +122,13 @@ define([
                     if (data.length > 0) {
                         $("#dropdowndiv").append(
                             $("#dropdownlist").append(
-                                "<li role = 'presentation'><a role = 'menuitem' tabindex = '-1' ><b>Application Instances</b></a></li>"
+                                "<li role = 'presentation'><a role = 'menuitem' ><b>Application Instances</b></a></li>"
                             )
                         )
                         for (var i = 0; i < data.length; i++) {
                             $("#dropdowndiv").append(
                                 $("#dropdownlist").append(
-                                    "<li role = 'presentation'><a role = 'menuitem' tabindex = '-1' href =  /#/appInst/" + data[i].id + ">" + data[i].name + "</a></li>"
+                                    "<li role = 'presentation'><a role = 'menuitem'href =  /#/appInst/" + data[i].id + ">" + data[i].name + "</a></li>"
                                 )
                             )
                         }
@@ -144,13 +144,13 @@ define([
                     if (data.length) {
                         $("#dropdowndiv").append(
                             $("#dropdownlist").append(
-                                "<li role = 'presentation'><a role = 'menuitem' tabindex = '-1' ><b>Load Balancers</b></a></li>"
+                                "<li role = 'presentation'><a role = 'menuitem' ><b>Load Balancers</b></a></li>"
                             )
                         )
                         for (var i = 0; i < data.length; i++) {
                             $("#dropdowndiv").append(
                                 $("#dropdownlist").append(
-                                    "<li role = 'presentation'><a role = 'menuitem' tabindex = '-1' href =  /#/lb/" + data[i].id + ">" + data[i].name + "</a></li>"
+                                    "<li role = 'presentation'><a role = 'menuitem'href =  /#/lb/" + data[i].id + ">" + data[i].name + "</a></li>"
                                 )
                             )
                         }
