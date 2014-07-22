@@ -23,11 +23,14 @@ public class TestController {
 
     private final Logger log = getLogger(getClass());
     private int statusCode = 200;
-    private int sleepTime = 5000;
+    private int sleepTime = 0;
+    private int retries = 0;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Map<String, String>> dumpRequest(HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+        retries++;
 
         try {
             Thread.sleep(sleepTime);
@@ -85,5 +88,12 @@ public class TestController {
         HttpSession session = request.getSession(false);
         if (session != null)
             session.invalidate();
+    }
+
+    @RequestMapping(value = "/test/setSleepTime/{sleep}", method = RequestMethod.GET)
+    @ResponseBody
+    public String setSleepTime(@PathVariable int sleep) {
+        this.sleepTime = sleep;
+        return "HTTP sleeptime: " + sleepTime;
     }
 }
