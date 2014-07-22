@@ -124,15 +124,18 @@ define([ 'angular' ], function (angular) {
     var editorTemplate = '<div class="click-to-edit">' +
         '<div ng-hide="view.editorEnabled">' +
         '{{value}} ' +
-        ' <a><span ng-click="enableEditor()" class="glyphicon glyphicon-wrench pull-right"></span></a>'+
+        '<a><span ng-click="enableEditor()" class="glyphicon glyphicon-pencil pull-right"></span></a>'+
         '' +
         '</div>' +
         '<div ng-show="view.editorEnabled">' +
+        '<form>' +
         '<input class="form-control" ng-model="view.editableValue">' +
-            '<span class="pull-right">'+
-        '<a ng-click="save()">Save</a>' +
-        ' or ' +
-        '<a ng-click="disableEditor()">cancel</a>.</span>' +
+        '<div class="btn-group pull-right ">' +
+        '<a ng-click="save()"><button type="submit" style="visibility: hidden"></button><span class="glyphicon glyphicon-floppy-disk"></span></a>' +
+        ' ' +
+        '<a ng-click="disableEditor()"><span class="glyphicon glyphicon-floppy-remove"></span></a>' +
+        '</div>' +
+        '</form>' +
         '</div>' +
         '</div>';
 

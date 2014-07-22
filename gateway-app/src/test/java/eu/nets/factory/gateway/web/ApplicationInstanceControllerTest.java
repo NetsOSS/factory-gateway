@@ -455,28 +455,43 @@ public class ApplicationInstanceControllerTest {
         try {
             applicationInstanceController.setProxyStateForInstance(appInstModel.getName(), null);
             fail("Expected exception");
-        } catch (GatewayException ignore) {
-
-        }
+        } catch (GatewayException ignore) { }
 
         try {
             applicationInstanceController.setProxyStateForInstance(null, "MAINT");
             fail("Expected exception");
-        } catch (GatewayException ignore) {
-
-        }
+        } catch (GatewayException ignore) { }
         try {
             applicationInstanceController.setProxyStateForInstance(appInstModel.getName(), "NOTVALIDSTATE");
             fail("Expected exception");
-        } catch (GatewayException ignore) {
-
-        }
+        } catch (GatewayException ignore) { }
 
         try {
             applicationInstanceController.setProxyStateForInstance("Namethatdoesnotexist", "MAINT");
             fail("Expected exception");
-        } catch (GatewayException ignore) {
+        } catch (GatewayException ignore) { }
+    }
 
-        }
+    @Test
+    public void testSetWeight() {
+        AppInstModel appInstModel = applicationInstanceController.search("Alpha1.0").get(0);
+
+        assertThat(appInstModel.getWeight()).isEqualTo(100);
+
+        applicationInstanceController.setWeight(appInstModel.getId(), 0);
+        assertThat(applicationInstanceController.search("Alpha1.0").get(0).getWeight()).isEqualTo(0);
+
+        applicationInstanceController.setWeight(appInstModel.getId(), 256);
+        assertThat(applicationInstanceController.search("Alpha1.0").get(0).getWeight()).isEqualTo(256);
+
+        try { //weight is less than 0
+            applicationInstanceController.setWeight(appInstModel.getId(), -1);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //weight is greater than 256
+            applicationInstanceController.setWeight(appInstModel.getId(), 257);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 }

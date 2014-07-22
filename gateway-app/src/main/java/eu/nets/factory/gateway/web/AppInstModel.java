@@ -3,8 +3,6 @@ package eu.nets.factory.gateway.web;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.HaProxyState;
 
-import java.net.URL;
-
 public class AppInstModel {
 
     public Long id;
@@ -13,20 +11,22 @@ public class AppInstModel {
     public String server;
 
     public Long applicationId;
+
     public HaProxyState haProxyState;
+    public int weight;
+
 
     public AppInstModel() {
     }
 
-    public AppInstModel(ApplicationInstance applicationInstance) {
-        this(applicationInstance, true);
-    }
+    public AppInstModel(ApplicationInstance applicationInstance) { this(applicationInstance, true); }
 
     private AppInstModel(ApplicationInstance applicationInstance, Boolean summary) {
 
         this(applicationInstance.getId(), applicationInstance.getName(), applicationInstance.getHost() + ":" + applicationInstance.getPort() + "" + applicationInstance.getPath(), applicationInstance.getApplication().getId());
 
         haProxyState = applicationInstance.getHaProxyState();
+        weight = applicationInstance.getWeight();
         if (!summary) {
             //this.application = new AppModel(applicationInstance.getApplication());
         }
@@ -51,12 +51,9 @@ public class AppInstModel {
         return name;
     }
 
-
     public String getServer() {
         return server;
     }
-
-
 
     public Long getApplicationId() {
         return applicationId;
@@ -65,9 +62,10 @@ public class AppInstModel {
     public String getHaProxyState() {
         return haProxyState.name();
     }
-
     public void setHaProxyState(String state) {
         this.haProxyState = HaProxyState.valueOf(state);
     }
 
+    public int getWeight() { return weight; }
+    public void setWeight(int weight) { this.weight = weight; }
 }

@@ -146,6 +146,8 @@ public class ApplicationInstanceController {
         if(appInstModel.getApplicationId() == null) throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationID: " + appInstModel.getApplicationId());
         if(applicationRepository.findOne(appInstModel.getApplicationId()) == null) throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
         //if(appInstModel.haProxyState == null) throw new GatewayException("Could not create ApplicationInstance. Sticky Session must be a StickySession element. Received: " + appInstModel.haProxyState);
+        if(appInstModel.getWeight() < 0 || appInstModel.getWeight() > 256) { throw new GatewayException("Could not set weight. Weight must be a number between 0 and 256. Received: " + appInstModel.getWeight()); }
+
 
         ApplicationInstance applicationInstance = findEntityById(id);
         if (!applicationInstance.getName().equals(appInstModel.name)) { assertNameUnique(appInstModel.name); }
@@ -163,6 +165,7 @@ public class ApplicationInstanceController {
         applicationInstance.setHost(url.getHost());
         applicationInstance.setPort(url.getPort());
         applicationInstance.setHaProxyStateValue(appInstModel.haProxyState);
+        applicationInstance.setWeight(appInstModel.getWeight());
 
         return new AppInstModel(applicationInstance);
 
@@ -183,12 +186,8 @@ public class ApplicationInstanceController {
     }
 
     protected AppInstModel setProxyStateForInstance(String name, String proxyState) {
-        if (name == null) {
-            throw new GatewayException("ApplicationInstance name can not be null: " + name);
-        }
-        if (proxyState == null) {
-            throw new GatewayException("ProxyState can not be null: " + proxyState);
-        }
+        if (name == null) { throw new GatewayException("ApplicationInstance name can not be null: " + name); }
+        if (proxyState == null) { throw new GatewayException("ProxyState can not be null: " + proxyState); }
 
         boolean found = false;
         for (int i = 0; i < HaProxyState.values().length; i++) {
@@ -196,9 +195,7 @@ public class ApplicationInstanceController {
                 found = true;
             }
         }
-        if (!found) {
-            throw new GatewayException("Detected non-valid enum-value for Haproxystate: " + proxyState);
-        }
+        if (!found) { throw new GatewayException("Detected non-valid enum-value for Haproxystate: " + proxyState); }
 
         List<ApplicationInstance> applicationInstances = applicationInstanceRepository.findAll();
         ApplicationInstance applicationInstance = null;
@@ -209,12 +206,33 @@ public class ApplicationInstanceController {
                 break;
             }
         }
+        if(applicationInstance == null) { throw new GatewayException("ApplicationInstance with this name not found: " + name); }
 
-        if(applicationInstance == null) {
-            throw new GatewayException("ApplicationInstance with this name not found: " + name);
-        }
         AppInstModel appInstModel = new AppInstModel(applicationInstance);
         appInstModel.setHaProxyState(proxyState);
         return update(appInstModel.getId(), appInstModel);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}/weight", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppInstModel setWeightAndStartLoadBalancer(@PathVariable Long id, int weight) {
+        log.info("ApplicationInstanceController.setWeightAndStartLoadBalancer, id={}", id);
+
+        setWeight(id, weight);
+
+        ApplicationInstance applicationInstance = findEntityById(id);
+
+        for (LoadBalancer loadBalancer : applicationInstance.getApplication().getLoadBalancers()) {
+            haProxyService.pushConfigFile(loadBalancer);
+            haProxyService.start(loadBalancer);
+        }
+
+        return new AppInstModel(applicationInstance);
+    }
+
+    protected AppInstModel setWeight(Long id, int weight) {
+        AppInstModel appInstModel = findById(id);
+        appInstModel.setWeight(weight);
+        return update(id, appInstModel);
     }
 }

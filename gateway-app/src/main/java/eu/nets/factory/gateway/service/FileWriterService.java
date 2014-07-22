@@ -32,16 +32,14 @@ public class FileWriterService {
             throw new GatewayException("The path " + installationPath + " doesn't exist. No config-file will be generated.");
         }
         try {
-
             // Write local file - TODO: Could eventually be removed when SFTP is tested to work
-//            Files.write(Paths.get(installationPath + "/" + fileName), fileContents.getBytes());
-
+            // Files.write(Paths.get(installationPath + "/" + fileName), fileContents.getBytes());
             // Write remote file
             try (SshConnection c = new SshConnection(host, username, sshKey)) {
                 c.writeRemoteFile(fileContents, installationPath + "/" + fileName);
             }
-
-
+            
+            
         } catch (IOException e) {
             String errorMessage = "Could not write file: " + e.getLocalizedMessage();
             log.warn(errorMessage, e);

@@ -32,8 +32,14 @@ public class ApplicationInstance extends AbstractEntity {
     private int haProxyStateValue;
 
     @NotNull
+    @Min(0) //A value of 0 means the server will not participate in load-balancing but will still accept persistent connections.
+    @Max(256)
+    private int weight;
+
+    @NotNull
     @ManyToOne
     private Application application;
+
 
     public ApplicationInstance(String name, String host, int port, String path, Application application) {
         this.name = name;
@@ -42,11 +48,8 @@ public class ApplicationInstance extends AbstractEntity {
         this.path = path;
         this.application = application;
         this.haProxyStateValue = HaProxyState.READY.ordinal();
+        this.weight = 100;
     }
-
-
-
-
 
     public ApplicationInstance() { }
 
@@ -78,4 +81,7 @@ public class ApplicationInstance extends AbstractEntity {
 
     public HaProxyState getHaProxyState() { return HaProxyState.values()[haProxyStateValue]; }
     public void setHaProxyStateValue(HaProxyState haProxyState) { this.haProxyStateValue = haProxyState.ordinal(); }
+
+    public int getWeight() { return weight; }
+    public void setWeight(int weight) { this.weight = weight; }
 }
