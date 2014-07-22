@@ -1,42 +1,60 @@
-
 <div class="row">
 
     <div class="panel-group" id="accordion">
         <div class="panel panel-success">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                        Load Balancer : {{lb.name}}
-                        <a data-target="#myModal" data-toggle="modal">
-                            <span class="glyphicon glyphicon-cog white pull-right"></span>
-                        </a>
-                    </a>
-                </h4>
+
+            <div class="panel-heading clearfix">
+                <h4 class="panel-title pull-left" style="padding-top: 7.5px;">   <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    Load Balancer : {{lb.name}}
+                </a></h4>
+                <div class="pull-right">
+
+                    <span class="btn-group">
+                        <a data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-cog"></span> Edit</a>
+
+                        <a ng-click="startLoadBalancer()" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-play"></span> Start</a>
+                        <a ng-click="removeLoadBalancer()" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span> Remove</a>
+                    </span>
+                    <span>
+                         <span class="badge">{{lb.applications.length}}</span>
+                    </span>
+
+
+
+                </div>
             </div>
+
+
             <div id="collapseOne" class="panel-collapse collapse in">
                 <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled">
+                                <li>InstallationPath : {{lb.installationPath}}</li>
+                                <li>Host : {{lb.host}}</li>
+                                <li>Port : {{lb.publicPort}}</li>
+                                <li>Stats page : <a href="http://{{lb.host}}:{{lb.publicPort+1}}/proxy-stats">{{lb.host}}:{{lb.publicPort+1}}/proxy-stats</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
 
-                    <ul class="list-unstyled">
-                        <li>InstallationPath : {{lb.installationPath}}</li>
-                        <li>Host : {{lb.host}}</li>
-                        <li>Port : {{lb.publicPort}}</li>
-                        <li>
-                            <a href="" ng-model="collapsedSSHkey" ng-click="collapsedSSHkey=!collapsedSSHkey"><strong>SSH
-                                key
-                            </strong> (show/hide)</a>
+                            <ul class="list-unstyled">
+                                <li>Username : {{lb.userName}}</li>
+                                <li>
+                                    <a href="" ng-model="collapsedSSHkey" ng-click="collapsedSSHkey=!collapsedSSHkey"><strong>SSH
+                                        key
+                                    </strong> (show/hide)</a>
+                                </li>
+                            </ul>
+
 
                             <div ng-show="collapsedSSHkey">
                                 <pre>{{lb.sshKey}}</pre>
                             </div>
+                        </div>
+                    </div>
 
-                        </li>
-                        <li>Number of applications : {{lb.applications.length}}
-
-
-                        </li>
-                        <li>Stats page : <a href="http://{{lb.host}}:{{lb.publicPort+1}}/proxy-stats">{{lb.host}}:{{lb.publicPort+1}}/proxy-stats</a>
-                        </li>
-                    </ul>
 
 
                 </div>
@@ -50,7 +68,6 @@
 </div>
 
 
-<hr>
 <div class="row">
     <div class="col-sm-8">
         <h3>Status: <span class="text-success" ng-show="isLBonline">HAproxy is running
