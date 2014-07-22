@@ -47,140 +47,149 @@
     </div>
 </div>
 <div class="panel-group" id="tab-{{appGroup.id}}-panel">
-    <div class="panel panel-success" ng-repeat="app in appGroup.applications">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#tab-{{app.id}}-panel">
-                    {{app.name}}
-                    <small>{{app.publicUrl}}</small>
+<div class="panel panel-success" ng-repeat="app in appGroup.applications | orderBy:'name'">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#tab-{{app.id}}-panel">
+                {{app.name}}
+                <small>{{app.publicUrl}}</small>
+            </a>
+
+                <span class=" pull-right ">
+                  <span class="badge">{{app.applicationInstances.length}}</span>
+
+                <a> <span ng-click="showUpdateApplication(app)"
+                          class="glyphicon glyphicon-wrench"></span></a>
+                <a> <span ng-click="removeApp(appGroup,app)"
+                          class="glyphicon glyphicon-trash"></span></a>
+                <a ng-href="#/app/{{app.id}}"><span class="glyphicon glyphicon-chevron-right"></span>
                 </a>
 
-                <div class="btn-group pull-right ">
-                    <span class="badge">{{app.applicationInstances.length}}</span>
-                    <button go-click="/app/{{app.id}}">
-                        <span class="glyphicon glyphicon-new-window"></span> Details
-                    </button>
-                    <button ng-click="showUpdateApplication(app)"> <span
-                            class="glyphicon glyphicon-wrench"></span> Edit
-                    </button>
-                    <button ng-click="removeApp(appGroup,app)"> <span
-                            class="glyphicon glyphicon-trash"></span> Remove
-                    </button>
+                <!--
+                 <span class="badge">{{app.applicationInstances.length}}</span>
+                               <button ng-click="showUpdateApplication(app)"> <span
+                                       class="glyphicon glyphicon-wrench"></span> Edit
+                               </button>
+                               <button ng-click="removeApp(appGroup,app)"> <span
+                                       class="glyphicon glyphicon-trash"></span> Remove
+                               </button>
+                               <button go-click="/app/{{app.id}}" class="btn">
+                                   <span class="glyphicon glyphicon-chevron-right"></span> Details
+                               </button>
+                 -->
 
-                    <!--
-                     <span class="badge">{{app.applicationInstances.length}}</span>
 
-                            <a> <span ng-click="showUpdateApplication(app)"
-                                      class="glyphicon glyphicon-wrench"></span></a>
-                            <a> <span ng-click="removeApp(appGroup,app)"
-                                      class="glyphicon glyphicon-trash"></span></a>
-                                      -->
-                </div>
-            </h4>
-        </div>
-        <div id="tab-{{app.id}}-panel" class="panel-collapse collapse ">
-            <div class="panel-body">
-                <div class="row">
+            </span>
+        </h4>
 
-                    <!--<div class="col-md-4" ng-repeat="appInst in app.applicationInstances">
-                        <div class="alert alert-warning" role="alert">
-                            {{appInst.host}}:{{appInst.port}}{{appInst.path}}
+
+    </div>
+    <div id="tab-{{app.id}}-panel" class="panel-collapse collapse ">
+        <div class="panel-body">
+            <div class="row">
+
+                <!--<div class="col-md-4" ng-repeat="appInst in app.applicationInstances">
+                    <div class="alert alert-warning" role="alert">
+                        {{appInst.host}}:{{appInst.port}}{{appInst.path}}
+                    </div>
+                </div>-->
+
+                <div class="col-md-4" ng-repeat="appInst in app.applicationInstances">
+
+
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            {{appInst.name}}
+                            <div class="btn-group pull-right ">
+                                <a ng-href="#/appInst/{{appInst.id}}">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+
+
+                                <a> <span ng-click="removeAppInst(app,appInst)"
+                                          class="glyphicon glyphicon-trash"></span></a>
+                            </div>
                         </div>
-                    </div>-->
+                        <div class="panel-body">
 
-                    <div class="col-md-4" ng-repeat="appInst in app.applicationInstances">
+                            <div click-to-edit="appInst.server"
+                                 save-function="updateAppInst(appInst)"></div>
+                        </div>
 
+                    </div>
 
-                        <div class="panel panel-warning">
-                            <div class="panel-heading">
-                                {{appInst.name}}
-                                <div class="btn-group pull-right ">
-                                    <a ng-href="#/appInst/{{appInst.id}}">
-                                        <span class="glyphicon glyphicon-new-window"></span>
-                                    </a>
+                </div>
 
+                <div class="col-md-4">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">New application instance</div>
+                        <div class="panel-body">
+                            <form class="form" role="form" ng-submit="addAppInst(app)">
+                                <div class="form-group">
 
-                                    <a> <span ng-click="removeAppInst(app,appInst)"
-                                              class="glyphicon glyphicon-trash"></span></a>
+                                    <input type="text" ng-model="newAppInstForm.name"
+                                           class="form-control "
+                                           id="inAppInstName" name="name"
+                                           required
+                                           placeholder="Enter name">
                                 </div>
-                            </div>
-                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="inAppInstHost">Server </label>
+                                    <input type="text" ng-model="newAppInstForm.host"
+                                           class="form-control "
+                                           id="inAppInstHost" name="host"
+                                           required
+                                           placeholder="Enter server: i.e 'vm-stapp-145:1234/finch'">
+                                </div>
 
-                                <div click-to-edit="appInst.server"
-                                     save-function="updateAppInst(appInst)"></div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="panel panel-warning">
-                            <div class="panel-heading">New application instance</div>
-                            <div class="panel-body">
-                                <form class="form" role="form" ng-submit="addAppInst(app)">
-                                    <div class="form-group">
-
-                                        <input type="text" ng-model="newAppInstForm.name"
-                                               class="form-control "
-                                               id="inAppInstName" name="name"
-                                               required
-                                               placeholder="Enter name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inAppInstHost">Server </label>
-                                        <input type="text" ng-model="newAppInstForm.host"
-                                               class="form-control "
-                                               id="inAppInstHost" name="host"
-                                               required
-                                               placeholder="Enter server: i.e 'vm-stapp-145:1234/finch'">
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary"
-                                            ng-disabled="newInstanceForm.$invalid ">Submit
-                                    </button>
-                                </form>
-
-                            </div>
+                                <button type="submit" class="btn btn-primary"
+                                        ng-disabled="newInstanceForm.$invalid ">Submit
+                                </button>
+                            </form>
 
                         </div>
 
                     </div>
 
                 </div>
+
+            </div>
+
+
+        </div>
+        <div class="panel-footer ">
+
+
+            <strong>Sticky sessions:</strong>
+
+            <div class="btn-group btn-toggle">
+                <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'STICKY')"
+                        ng-class="{STICKY:'active', NOT_STICKY:'', STICKY_NEW_COOKIE:'', '':'hidden'}[app.stickySession]">
+                    Sticky
+                </button>
+                <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'STICKY_NEW_COOKIE')"
+                        ng-class="{STICKY:'', NOT_STICKY:'',  STICKY_NEW_COOKIE:'active','':'hidden'}[app.stickySession]">
+                    Sticky New Cookie
+                </button>
+                <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'NOT_STICKY')"
+                        ng-class="{STICKY:'', NOT_STICKY:'active',  STICKY_NEW_COOKIE:'','':'hidden'}[app.stickySession]">
+                    NOT Sticky
+                </button>
 
 
             </div>
-            <div class="panel-footer ">
+            <strong>Mode:</strong>
 
-
-                <strong>Sticky sessions:</strong>
-
-                <div class="btn-group btn-toggle">
-                    <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'STICKY')"
-                            ng-class="{STICKY:'active', NOT_STICKY:'', STICKY_NEW_COOKIE:'', '':'hidden'}[app.stickySession]">Sticky
-                    </button>
-                    <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'STICKY_NEW_COOKIE')"
-                            ng-class="{STICKY:'', NOT_STICKY:'',  STICKY_NEW_COOKIE:'active','':'hidden'}[app.stickySession]">Sticky New Cookie
-                    </button>
-                    <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'NOT_STICKY')"
-                            ng-class="{STICKY:'', NOT_STICKY:'active',  STICKY_NEW_COOKIE:'','':'hidden'}[app.stickySession]">NOT Sticky
-                    </button>
-
-
-                </div>
-                <strong>Mode:</strong>
-
-                <div class="btn-group btn-toggle">
-                    <button class="btn btn-default btn-sm" ng-click="changeHotMode(app, 'HOT_HOT')"
-                            ng-class="{HOT_HOT:'active', HOT_STANDBY:'', '':'hidden'}[app.failoverLoadBalancerSetup]">
-                        HOT_HOT
-                    </button>
-                    <button class="btn btn-default btn-sm" ng-click="changeHotMode(app, 'HOT_STANDBY')"
-                            ng-class="{HOT_HOT:'', HOT_STANDBY:'active', '':'hidden'}[app.failoverLoadBalancerSetup]">
-                        HOT_STANDBY
-                    </button>
-                </div>
+            <div class="btn-group btn-toggle">
+                <button class="btn btn-default btn-sm" ng-click="changeHotMode(app, 'HOT_HOT')"
+                        ng-class="{HOT_HOT:'active', HOT_STANDBY:'', '':'hidden'}[app.failoverLoadBalancerSetup]">
+                    HOT_HOT
+                </button>
+                <button class="btn btn-default btn-sm" ng-click="changeHotMode(app, 'HOT_STANDBY')"
+                        ng-class="{HOT_HOT:'', HOT_STANDBY:'active', '':'hidden'}[app.failoverLoadBalancerSetup]">
+                    HOT_STANDBY
+                </button>
+            </div>
 
                     <span class="pull-right">
                           <strong>Emails:</strong> {{app.emails}} , <strong>Check path:</strong>
@@ -188,68 +197,68 @@
                     </span>
 
 
-            </div>
         </div>
     </div>
+</div>
 
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#tab-{{appGroup.id}}"
-                   href="#tab-{{appGroup.id}}-newApp">
-                    <span class="glyphicon glyphicon-plus"></span> New application to {{appGroup.name}}
-                </a>
-            </h4>
-        </div>
-        <div id="tab-{{appGroup.id}}-newApp" class="panel-collapse collapse ">
-            <div class="panel-body">
-                <form role="form" ng-submit="createApplication(appGroup)" name="createAppForm" novalidate>
-
-                    <div class="form-group">
-                        <label for="inAppName2">Name</label>
-                        <input type="text" ng-model="newApp.name" class="form-control" id="inAppName2"
-                               name="name"
-                               ng-pattern="/^\S+$/"
-                               required
-                               placeholder="Enter application name">
-                        <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="inAppPublicUrl2">Public Path</label>
-                        <input type="text" ng-model="newApp.publicUrl" class="form-control "
-                               id="inAppPublicUrl2"
-                               name="publicUrl"
-                               ng-pattern="/^/[a-zA-Z]+\S*$/"
-                               required
-                               placeholder="Enter public url">
-                        <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="inAppEmails2">Emails (for notification). Separate by ,</label>
-                        <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails2"
-                               name="emails"
-                               required
-                               placeholder="Enter email(s)">
-                    </div>
-                    <div class="form-group">
-                        <label for="inAppCheckPath2">Check path</label>
-                        <input type="text" ng-model="newApp.checkPath" class="form-control "
-                               id="inAppCheckPath2"
-                               name="checkpath"
-                               ng-pattern="/^/[a-zA-Z]+\S*$/"
-                               required
-                               placeholder="Enter check path">
-                        <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">
-                        Create
-                    </button>
-                </form>
-            </div>
-
-        </div>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#tab-{{appGroup.id}}"
+               href="#tab-{{appGroup.id}}-newApp">
+                <span class="glyphicon glyphicon-plus"></span> New application to {{appGroup.name}}
+            </a>
+        </h4>
     </div>
+    <div id="tab-{{appGroup.id}}-newApp" class="panel-collapse collapse ">
+        <div class="panel-body">
+            <form role="form" ng-submit="createApplication(appGroup)" name="createAppForm" novalidate>
+
+                <div class="form-group">
+                    <label for="inAppName2">Name</label>
+                    <input type="text" ng-model="newApp.name" class="form-control" id="inAppName2"
+                           name="name"
+                           ng-pattern="/^\S+$/"
+                           required
+                           placeholder="Enter application name">
+                    <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
+                </div>
+                <div class="form-group">
+                    <label for="inAppPublicUrl2">Public Path</label>
+                    <input type="text" ng-model="newApp.publicUrl" class="form-control "
+                           id="inAppPublicUrl2"
+                           name="publicUrl"
+                           ng-pattern="/^/[a-zA-Z]+\S*$/"
+                           required
+                           placeholder="Enter public url">
+                    <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                </div>
+                <div class="form-group">
+                    <label for="inAppEmails2">Emails (for notification). Separate by ,</label>
+                    <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails2"
+                           name="emails"
+                           required
+                           placeholder="Enter email(s)">
+                </div>
+                <div class="form-group">
+                    <label for="inAppCheckPath2">Check path</label>
+                    <input type="text" ng-model="newApp.checkPath" class="form-control "
+                           id="inAppCheckPath2"
+                           name="checkpath"
+                           ng-pattern="/^/[a-zA-Z]+\S*$/"
+                           required
+                           placeholder="Enter check path">
+                    <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">
+                    Create
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
 
 </div>
 

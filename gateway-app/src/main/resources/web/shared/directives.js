@@ -128,7 +128,7 @@ define([ 'angular' ], function (angular) {
         '' +
         '</div>' +
         '<div ng-show="view.editorEnabled">' +
-        '<input ng-model="view.editableValue">' +
+        '<input class="form-control" ng-model="view.editableValue">' +
             '<span class="pull-right">'+
         '<a ng-click="save()">Save</a>' +
         ' or ' +
