@@ -23,11 +23,17 @@ public class TestController {
 
     private final Logger log = getLogger(getClass());
     private int statusCode = 200;
+    private int sleepTime = 10000;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Map<String, String>> dumpRequest(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
+        try {
+            Thread.sleep(sleepTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         response.setStatus(statusCode);
 
         Map<String, Map<String, String>> returnMap = new HashMap<>();
