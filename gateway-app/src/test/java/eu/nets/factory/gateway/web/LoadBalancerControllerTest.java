@@ -110,7 +110,7 @@ public void testFindEntityById() throws Exception {
 
     @Test
     public void testCreate() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "hostX", "/instPathX", "sshX", 456);
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "hostX", "/instPathX", "sshX", 456, "factory");
 
         LoadBalancerModel loadBalancerModel = loadBalancerController.create(new LoadBalancerModel(loadBalancer));
         assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(4).onProperty("name").contains("Batman");
@@ -127,7 +127,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidName() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //name already exists - not unique
@@ -157,7 +157,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidHost() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //host is null
@@ -175,7 +175,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidInstallationPath() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //installationPath is null
@@ -213,7 +213,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidSshKey() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //sshKey is null
@@ -231,7 +231,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidPublicPort() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567);
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //publicPort is less than 1
@@ -249,7 +249,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateUniqueHostInstallationPath() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "instPathTwo", "X", 567);
+        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "instPathTwo", "X", 567, "factory");
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
         try {
             loadBalancerController.create(loadBalancerModel);
@@ -259,7 +259,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateUniqueHostPublicPort() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "X", "X", 234);
+        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "X", "X", 234, "factory");
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
         try {
             loadBalancerController.create(loadBalancerModel);
@@ -298,6 +298,7 @@ public void testFindEntityById() throws Exception {
         loadBalancerModel.host = "Alfred";
         loadBalancerModel.installationPath = "/batcave";
         loadBalancerModel.sshKey = "nananananananana";
+        loadBalancerModel.userName = "factory";
         loadBalancerModel.publicPort = 1;
         loadBalancerModel = loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
 

@@ -97,6 +97,6 @@ public class HaProxyService {
         String installationPath = loadBalancer.getInstallationPath();
 
         String strConfig = configGeneratorService.generateConfig(loadBalancer);
-        fileWriterService.writeConfigFile(installationPath, CFG_FILE, strConfig);
+        fileWriterService.writeConfigFile(loadBalancer, CFG_FILE, strConfig);
     }
 }

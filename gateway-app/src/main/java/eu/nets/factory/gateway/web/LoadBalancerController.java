@@ -139,7 +139,7 @@ public class LoadBalancerController {
         if(loadBalancerModel.getName() == null  || ! Pattern.matches("^\\S+$", loadBalancerModel.getName())) throw new GatewayException("Could not create Load Balancer. Name must match pattern '^\\S+$'.");
         if(loadBalancerModel.getHost() == null || ! Pattern.matches(".+", loadBalancerModel.getHost())) throw new GatewayException("Could not create Load Balancer. Host must match pattern '.+'.");
         if(loadBalancerModel.getInstallationPath() == null  || ! Pattern.matches("^/[a-zA-Z]\\S*$", loadBalancerModel.getInstallationPath())) throw new GatewayException("Could not create Load Balancer. Installation Path must match pattern '^/[a-zA-Z]\\S*$'.");
-        if(loadBalancerModel.getSshKey() == null || ! Pattern.matches(".+", loadBalancerModel.getSshKey())) throw new GatewayException("Could not create Load Balancer. Ssh Key must match pattern '.+'.");
+        if(loadBalancerModel.getSshKey() == null || ! Pattern.matches("[\\s\\S]+", loadBalancerModel.getSshKey())) throw new GatewayException("Could not create Load Balancer. Ssh Key must match pattern '.+'.");
         if(loadBalancerModel.publicPort < 1 || loadBalancerModel.publicPort > 65535) throw new GatewayException("Could not create ApplicationInstance. Public Port must be a number between 1 and 65535. Received: " + loadBalancerModel.publicPort);
     }
 
@@ -153,7 +153,7 @@ public class LoadBalancerController {
         assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
         assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
 
-        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort);
+        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort, loadBalancerModel.userName);
         loadBalancer = loadBalancerRepository.save(loadBalancer);
 
         return new LoadBalancerModel(loadBalancer);
@@ -191,6 +191,7 @@ public class LoadBalancerController {
         loadBalancer.setHost(loadBalancerModel.host);
         loadBalancer.setInstallationPath(loadBalancerModel.installationPath);
         loadBalancer.setSshKey(loadBalancerModel.sshKey);
+        loadBalancer.setUserName(loadBalancerModel.userName);
         loadBalancer.setPublicPort(loadBalancerModel.publicPort);
 
         return new LoadBalancerModel(loadBalancer);
@@ -244,7 +245,7 @@ public class LoadBalancerController {
         String installationPath = loadBalancer.getInstallationPath();
 
         String strConfig = configGeneratorService.generateConfig(loadBalancer);
-        fileWriterService.writeConfigFile(installationPath, CFG_FILE, strConfig);
+        fileWriterService.writeConfigFile(loadBalancer, CFG_FILE, strConfig);
 
         return strConfig;
     }

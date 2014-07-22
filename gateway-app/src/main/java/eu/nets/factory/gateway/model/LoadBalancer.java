@@ -30,6 +30,9 @@ public class LoadBalancer extends AbstractEntity{
     @NotBlank
     private String sshKey;
 
+    @NotBlank
+    private String userName;
+
     @NotNull
     @Min(1)
     @Max(65535)
@@ -39,11 +42,12 @@ public class LoadBalancer extends AbstractEntity{
     private List<Application> applications;
 
 
-    public LoadBalancer(String name, String host, String installationPath, String sshKey, int publicPort) {
+    public LoadBalancer(String name, String host, String installationPath, String sshKey, int publicPort, String userName) {
         this.name = name;
         this.host = host;
         this.installationPath = installationPath;
         this.sshKey = sshKey;
+        this.userName = userName;
         this.publicPort = publicPort;
         this.applications = new ArrayList<>();
     }
@@ -78,6 +82,9 @@ public class LoadBalancer extends AbstractEntity{
     public void setSshKey(String sshKey) {
         this.sshKey = sshKey;
     }
+
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 
     public int getPublicPort() {
         return publicPort;

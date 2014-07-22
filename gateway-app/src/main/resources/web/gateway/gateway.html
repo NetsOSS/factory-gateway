@@ -355,12 +355,12 @@
 
 
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-7">
         <lb-form></lb-form>
     </div>
 
 
-    <div class="col-sm-6">
+    <div class="col-sm-5">
 
         <h3>Load Balancers</h3>
 
@@ -370,7 +370,7 @@
                 <b>All Load Balancers </b>
             </a>
             <a href="#/lb/{{lb.id}}" class="list-group-item" ng-repeat="lb in allLBs">
-                <b> {{lb.name}}</b> {{lb.installationPath}} {{lb.sshKey}} ({{lb.id}})
+                <b> {{lb.name}}</b> {{lb.installationPath}} ({{lb.id}})
             </a>
 
 
