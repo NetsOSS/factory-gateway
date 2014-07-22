@@ -23,7 +23,7 @@ public class TestController {
 
     private final Logger log = getLogger(getClass());
     private int statusCode = 200;
-    private int sleepTime = 10000;
+    private int sleepTime = 5000;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
