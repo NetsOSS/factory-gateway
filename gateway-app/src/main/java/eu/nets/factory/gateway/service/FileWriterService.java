@@ -1,8 +1,10 @@
 package eu.nets.factory.gateway.service;
 
 import eu.nets.factory.gateway.GatewayException;
+import eu.nets.factory.gateway.model.GatewaySettings;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,6 +16,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Service
 public class FileWriterService {
 
+    @Autowired
+    private GatewaySettings settings;
+
     private final Logger log = getLogger(getClass());
 
     public void writeConfigFile(LoadBalancer loadBalancer, String fileName, String fileContents) throws GatewayException {
@@ -23,7 +28,7 @@ public class FileWriterService {
         String username = loadBalancer.getUserName();   // TODO: Test with username (which username should we use? factory?)
         String sshKey = loadBalancer.getSshKey();       // TODO: Put valid private key in DB from GUI, and add public key to authorized_keys on server to make this work - TEST
 
-        if (!Files.exists(Paths.get(installationPath)) || !Files.isDirectory(Paths.get(installationPath))) {
+        if (!settings.isLocal() && ( !Files.exists(Paths.get(installationPath)) || !Files.isDirectory(Paths.get(installationPath)) )) {
             throw new GatewayException("The path " + installationPath + " doesn't exist. No config-file will be generated.");
         }
         try {
