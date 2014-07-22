@@ -29,7 +29,7 @@ public class FileWriterService {
         try {
 
             // Write local file - TODO: Could eventually be removed when SFTP is tested to work
-            Files.write(Paths.get(installationPath + "/" + fileName), fileContents.getBytes());
+//            Files.write(Paths.get(installationPath + "/" + fileName), fileContents.getBytes());
 
             // Write remote file
             try (SshConnection c = new SshConnection(host, username, sshKey)) {
