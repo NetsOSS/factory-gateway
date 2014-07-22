@@ -62,6 +62,7 @@ public class TestController {
         }
         request.getSession().setAttribute("Request-Count", ++requestCount);
         contextMap.put("Request-Count", String.valueOf(requestCount));
+        contextMap.put("Retry-Count", ""+retries);
 
         returnMap.put("Headers", headerMap);
         returnMap.put("Context", contextMap);
