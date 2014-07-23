@@ -280,15 +280,15 @@ public class ApplicationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/application/{applicationId}/newRule", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppModel addHeaderRule(@PathVariable Long applicationId, @RequestBody HeaderRuleModel headerRuleModel) {
+    public HeaderRuleModel addHeaderRule(@PathVariable Long applicationId, @RequestBody HeaderRuleModel headerRuleModel) {
         log.info("ApplicationController.addHeaderRule");
         if(applicationRepository.findOne(applicationId) == null) throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
 
         Application application = applicationRepository.findOne(applicationId);
         HeaderRule headerRule = new HeaderRule(headerRuleModel.getName(),headerRuleModel.getPrefixMatch(),application);
+        headerRule = headerRuleRepository.save(headerRule);
         application.addHeaderRule(headerRule);
-        application = applicationRepository.save(application);
-        return new AppModel(application);
+        return new HeaderRuleModel(headerRule);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/application/{applicationId}/removeRule/{headerId}",produces = APPLICATION_JSON_VALUE)
