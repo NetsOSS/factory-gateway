@@ -48,18 +48,18 @@
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#tab-{{app.id}}-panel">
           {{app.name}}
-          <small>{{app.publicUrl}} | <span ng-repeat="headerRule in app.headerRules"> Header: '{{headerRule.name}}' = {{headerRule.prefixMatch}}</span></small>
+          <small>{{app.publicUrl}}  <span ng-repeat="headerRule in app.headerRules"> | Header: '{{headerRule.name}}' = {{headerRule.prefixMatch}}</span></small>
         </a>
 
       <span class=" pull-right ">
-        <span class="badge">{{app.applicationInstances.length}}</span>
+        <span class="badge" title="Number of instances in this application">{{app.applicationInstances.length}}</span>
 
 
-          <a> <span ng-click="showUpdateApplicationRules(app)" class="glyphicon glyphicon-edit"></span></a>
+          <a> <span ng-click="showUpdateApplicationRules(app)" class="glyphicon glyphicon-edit" title="Edit header rules"></span></a>
 
-        <a> <span ng-click="showUpdateApplication(app)" class="glyphicon glyphicon-pencil"> </span></a>
-        <a> <span ng-click="removeApp(appGroup,app)" class="glyphicon glyphicon-trash"> </span></a>
-        <a ng-href="#/app/{{app.id}}"> <span class="glyphicon glyphicon-chevron-right"> </span></a>
+        <a> <span ng-click="showUpdateApplication(app)" class="glyphicon glyphicon-pencil" title="Edit application"> </span></a>
+        <a> <span ng-click="removeApp(appGroup,app)" class="glyphicon glyphicon-trash" title="Remove application"> </span></a>
+        <a ng-href="#/app/{{app.id}}"> <span class="glyphicon glyphicon-chevron-right" title="Go to detail page"> </span></a>
 
         <!--
         <div class="btn-group pull-right ">

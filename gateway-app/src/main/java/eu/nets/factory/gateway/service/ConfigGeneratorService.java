@@ -2,12 +2,14 @@ package eu.nets.factory.gateway.service;
 
 import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationInstance;
+import eu.nets.factory.gateway.model.HeaderRule;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -23,6 +25,25 @@ public class ConfigGeneratorService {
         return null;
     }
 
+
+    /**
+     * Sorts the applications. First on name.
+     * If 2 applications has the same name, sort on the number of header rules.
+     * Such that the app with more headers, will be used before the others which accept all headers.
+     *
+     * Another way of sorting this, would be to search for all with the same acl path, and negate all other rules.
+     * Then the sorting would not be necessary
+     */
+    class NameAndRuleComparator implements Comparator<Application>{
+        @Override
+        public int compare(Application app1, Application app2) {
+            int aclUrl = app1.getPublicUrl().compareTo(app2.getPublicUrl());
+            if(aclUrl==0)
+                return app2.getHeaderRules().size() - app1.getHeaderRules().size();
+            return aclUrl;
+        }
+    }
+
     public String generateConfig(LoadBalancer loadBalancer) {
 
         List<String> rules = new ArrayList<>();
@@ -30,27 +51,42 @@ public class ConfigGeneratorService {
         List<String> use_backends = new ArrayList<>();
         int loadBalancerPort = loadBalancer.getPublicPort();
 
+        List<Application> lbApplications = loadBalancer.getApplications();
+        lbApplications.sort(new NameAndRuleComparator());
+
         // Populate variables
-        for (Application application : loadBalancer.getApplications()) {
+        for (Application application :lbApplications) {
 
             StringWriter stringWriter = new StringWriter();
             PrintWriter printWriter = new PrintWriter(stringWriter);
 
             // acl + use_backend
-            rules.add("acl " + application.getName() + "rule path -m beg " + application.getPublicUrl());
-            use_backends.add("use_backend " + application.getName() + " if " + application.getName() + "rule");
+            //String aclRule = "acl p_" + application.getName() + "_rule path -m beg " + application.getPublicUrl()+" ";
+            StringBuilder aclRules = new StringBuilder();
+            aclRules.append("{ path_beg "+application.getPublicUrl()+" } ");
+            for(HeaderRule headerRule : application.getHeaderRules()){
+
+                aclRules.append("{ hdr_reg("+headerRule.getName()+") "+headerRule.getPrefixMatch()+" } ");
+            }
+
+
+            use_backends.add("use_backend " + application.getName() + " if " + aclRules.toString());
 
             // backend
             printWriter.println();
             printWriter.println(TAB + "backend " + application.getName());
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 
+            //debug, adding headers to see which was chosen.
+            /// reqadd X-CustomHeader:\ debugMode
+            printWriter.println(TAB2 + "reqadd X-ForwardToApp:\\ " + application.getName());
             //connect timeout
            /* printWriter.println(TAB2 + "timeout connect " + application.getConnectTimeout() + "ms");
             //read timeout
             printWriter.println(TAB2 + "timeout server " + application.getReadTimeout() + "ms");
             //retry timeout
             printWriter.println(TAB2 + "retries " + application.getRetryTimeout());*/
+
 
             // Check if app wants sticky cookies.
             if (application.getStickySession().name().equals("STICKY"))
@@ -86,16 +122,16 @@ public class ConfigGeneratorService {
             //printWriter.flush();
         }
 
-        return buildString(rules, backends, use_backends, loadBalancerPort);
+        return buildString(rules, backends, use_backends, loadBalancer);
     }
 
-    private String buildString(List<String> rules, List<String> backends, List<String> use_backends, int loadBalancerPort) {
+    private String buildString(List<String> rules, List<String> backends, List<String> use_backends, LoadBalancer loadBalancer) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
 
         writeDefaultsStart(printWriter);
 
-        printWriter.println(TAB2 + "bind *:" + loadBalancerPort);
+        printWriter.println(TAB2 + "bind *:" + loadBalancer.getPublicPort());
 
         // Write content
         for (String rule : rules) {
@@ -109,9 +145,10 @@ public class ConfigGeneratorService {
         }
 
         printWriter.println();
-        printWriter.println(TAB + "listen stats *:" + ++loadBalancerPort);
+        int statsPort = loadBalancer.getPublicPort();
+        printWriter.println(TAB + "listen stats *:" + statsPort);
 
-        writeDefaultsEnd(printWriter);
+        writeDefaultsEnd(printWriter,loadBalancer.getName());
 
         //stringWriter.flush();
         //printWriter.flush();
@@ -133,10 +170,11 @@ public class ConfigGeneratorService {
         pw.println(TAB + "frontend http-in");
     }
 
-    private void writeDefaultsEnd(PrintWriter pw) {
+    private void writeDefaultsEnd(PrintWriter pw,String nodeName) {
         pw.println(TAB2 + "mode http");
         pw.println(TAB2 + "stats enable");
         pw.println(TAB2 + "stats uri /proxy-stats");
         pw.println(TAB2 + "stats admin if TRUE");
+        pw.println(TAB2 + "stats show-node "+nodeName);
     }
 }
