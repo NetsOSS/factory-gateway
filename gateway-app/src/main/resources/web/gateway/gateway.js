@@ -525,6 +525,7 @@ define([
                 $scope.configFile = fixed;
             });
 
+
             //Reload config file.. should maybe be saved as a string in LB model.
 
 
