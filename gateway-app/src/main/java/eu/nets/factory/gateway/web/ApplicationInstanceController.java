@@ -151,6 +151,9 @@ public class ApplicationInstanceController {
 
         ApplicationInstance applicationInstance = findEntityById(id);
         if (!applicationInstance.getName().equals(appInstModel.name)) { assertNameUnique(appInstModel.name); }
+
+        boolean startLoadBalancer = false;
+        if(appInstModel.weight != applicationInstance.getWeight()) { startLoadBalancer = true; }
         
         URL url=null;
         try {
@@ -167,6 +170,8 @@ public class ApplicationInstanceController {
         applicationInstance.setHaProxyStateValue(appInstModel.haProxyState);
         applicationInstance.setWeight(appInstModel.getWeight());
 
+        if(startLoadBalancer) { startLoadBalancer(id); }
+
         return new AppInstModel(applicationInstance);
 
     }
@@ -175,6 +180,12 @@ public class ApplicationInstanceController {
     @ResponseBody
     public AppInstModel setProxyStateForInstanceAndStartLoadbalancer(@PathVariable String name, @PathVariable String proxyState) {
 
+        Long id = setProxyStateForInstance(name, proxyState).getId();
+        startLoadBalancer(id);
+
+        return findById(id);
+
+        /*
         ApplicationInstance applicationInstance = findEntityById(setProxyStateForInstance(name, proxyState).getId());
 
         for (LoadBalancer loadBalancer : applicationInstance.getApplication().getLoadBalancers()) {
@@ -183,6 +194,7 @@ public class ApplicationInstanceController {
         }
 
         return new AppInstModel(applicationInstance);
+        */
     }
 
     protected AppInstModel setProxyStateForInstance(String name, String proxyState) {
@@ -213,21 +225,24 @@ public class ApplicationInstanceController {
         return update(appInstModel.getId(), appInstModel);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}/weight", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public AppInstModel setWeightAndStartLoadBalancer(@PathVariable Long id, int weight) {
-        log.info("ApplicationInstanceController.setWeightAndStartLoadBalancer, id={}", id);
-
-        setWeight(id, weight);
-
+    private void startLoadBalancer(Long id) {
         ApplicationInstance applicationInstance = findEntityById(id);
 
         for (LoadBalancer loadBalancer : applicationInstance.getApplication().getLoadBalancers()) {
             haProxyService.pushConfigFile(loadBalancer);
             haProxyService.start(loadBalancer);
         }
+    }
 
-        return new AppInstModel(applicationInstance);
+    /*
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}/weight", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppInstModel setWeightAndStartLoadBalancer(@PathVariable Long id, int weight) {
+        log.info("ApplicationInstanceController.setWeightAndStartLoadBalancer, id={}", id);
+
+        startLoadBalancer(setWeight(id, weight).getId());
+
+        return findById(id);
     }
 
     protected AppInstModel setWeight(Long id, int weight) {
@@ -235,4 +250,5 @@ public class ApplicationInstanceController {
         appInstModel.setWeight(weight);
         return update(id, appInstModel);
     }
+    */
 }

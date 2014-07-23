@@ -472,6 +472,7 @@ public class ApplicationInstanceControllerTest {
         } catch (GatewayException ignore) { }
     }
 
+    /*
     @Test
     public void testSetWeight() {
         AppInstModel appInstModel = applicationInstanceController.search("Alpha1.0").get(0);
@@ -494,4 +495,5 @@ public class ApplicationInstanceControllerTest {
             fail("Expected exception");
         } catch(GatewayException ignore) { }
     }
+    */
 }
