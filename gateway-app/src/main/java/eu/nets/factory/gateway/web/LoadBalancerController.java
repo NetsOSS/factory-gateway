@@ -235,8 +235,15 @@ public class LoadBalancerController {
 
         return new LoadBalancerModel(loadBalancer);
     }
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/getConfigString")
+    @ResponseBody
+    public String generateConfiguration(@PathVariable Long id) {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/config")
+        LoadBalancer loadBalancer = findEntityById(id);
+        return configGeneratorService.generateConfig(loadBalancer);
+    }
+
+    /*@RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/pushConfig")
     @ResponseBody
     public String pushConfiguration(@PathVariable Long id) {
         log.info("LoadBalancerController.pushConfiguration() id={}", id);
@@ -248,7 +255,7 @@ public class LoadBalancerController {
         fileWriterService.writeConfigFile(loadBalancer, CFG_FILE, strConfig);
 
         return strConfig;
-    }
+    }*/
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/start", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -256,6 +263,7 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.startLoadBalancer() id={}", id);
 
         LoadBalancer loadBalancer = findEntityById(id);
+        haProxyService.pushConfigFile(loadBalancer);
         haProxyService.start(loadBalancer);
         return new LoadBalancerModel(loadBalancer);
     }

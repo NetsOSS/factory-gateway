@@ -27,7 +27,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
 
         return this;
     }
-
     /*
      *
      */

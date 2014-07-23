@@ -516,8 +516,7 @@ define([
 
             });
 
-            //Reload config file.. should maybe be saved as a string in LB model.
-            GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function (data) {
+            GatewayData.LoadBalancerController.generateConfiguration($routeParams.id).then(function(data) {
                 var fixed = data;
                 fixed = fixed.replace(/\\r\\n/g, "\n");
                 fixed = fixed.replace(/\\n/g, "\n");
@@ -526,12 +525,22 @@ define([
                 $scope.configFile = fixed;
             });
 
+            //Reload config file.. should maybe be saved as a string in LB model.
+
+
             //var s = '"    global\n        daemon\n        maxconn 256\n\n    defaults\n        mode http\n        timeout connect 5000ms\n        timeout client 50000ms\n        timeout server 50000ms\n\n    frontend http-in\n        bind *:5000\n        acl Kaminorule path -m beg /kamino\n        acl Sekotrule path -m beg /sekot\n        acl Finchrule path -m beg /finch\n        use_backend Kamino if Kaminorule\n        use_backend Sekot if Sekotrule\n        use_backend Finch if Finchrule\n        \n    backend Kamino\n        option httpchk GET /kamino/v1/ping\n        server kamino1 vm-stapp-145:8100/kamino maxconn 32 check\n        server kamino2 vm-stapp-146:8100/kamino maxconn 32 check\n\n        \n    backend Sekot\n        option httpchk GET /sekot/mcp.html\n        server sekot2 vm-stapp-146:9494/sekot maxconn 32 check\n        server sekot3 vm-stapp-145:9595/sekot maxconn 32 check\n        server sekot1 vm-stapp-145:9494/sekot maxconn 32 check\n\n        \n    backend Finch\n        option httpchk GET /finch/index.html\n        server finch2 vm-stapp-146:7272/finch maxconn 32 check\n        server finch1 vm-stapp-145:7272/finch maxconn 32 check\n        server awd asd:654/sad maxconn 32 check\n\n\n    listen stats *:5001\n        mode http\n        stats enable\n        stats uri /proxy-stats\n        stats admin if TRUE\n"';
 
 
             // $scope.configFile2=s;
         };
 
+
+
+       /*$scope.pushConfig = function() {
+            GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function (data) {
+
+            });
+       };*/
 
         //----- Status proxy -----------------------
         var poller = null;

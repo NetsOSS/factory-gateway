@@ -344,6 +344,14 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.LoadBalancerController.generateConfiguration = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/load-balancers/{id}/getConfigString';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.LoadBalancerController.getApplications = function (id) {
       var req = {};
       req.method = 'GET';
@@ -356,14 +364,6 @@ define([], function () {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/load-balancers';
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.LoadBalancerController.pushConfiguration = function (id) {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/load-balancers/{id}/config';
-      req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
     };
@@ -421,14 +421,14 @@ define([], function () {
     this.resolve.LoadBalancerController.findEntityById = function (GatewayData, $route) {
       return LoadBalancerController.findEntityById($route.current.params.id);
     };
+    this.resolve.LoadBalancerController.generateConfiguration = function (GatewayData, $route) {
+      return LoadBalancerController.generateConfiguration($route.current.params.id);
+    };
     this.resolve.LoadBalancerController.getApplications = function (GatewayData, $route) {
       return LoadBalancerController.getApplications($route.current.params.id);
     };
     this.resolve.LoadBalancerController.listAllLoadBalancers = function (GatewayData, $route) {
       return LoadBalancerController.listAllLoadBalancers();
-    };
-    this.resolve.LoadBalancerController.pushConfiguration = function (GatewayData, $route) {
-      return LoadBalancerController.pushConfiguration($route.current.params.id);
     };
     this.resolve.LoadBalancerController.search = function (GatewayData, $route) {
       return LoadBalancerController.search($route.current.params.name);

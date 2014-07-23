@@ -187,18 +187,12 @@
 <div class="row">
 
   <button type="button" class="btn btn-primary" ng-model="collapseConfig" ng-click="collapseConfig=!collapseConfig">
-    Show/Hide HA Proxy config file
+    Show new configfile for Haproxy
   </button>
-
-  <!--<p style="white-space: pre;">{{ configFile}}</p>-->
 
   <div ng-show="collapseConfig">
     <pre>{{configFile}}</pre>
   </div>
-
-</div>
-
-
 <hr>
 
 
