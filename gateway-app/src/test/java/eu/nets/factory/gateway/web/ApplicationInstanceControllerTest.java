@@ -476,7 +476,7 @@ public class ApplicationInstanceControllerTest {
     public void testSetWeight() {
         AppInstModel appInstModel = applicationInstanceController.search("Alpha1.0").get(0);
 
-        assertThat(appInstModel.getWeight()).isEqualTo(100);
+        assertThat(appInstModel.getWeight()).isEqualTo(10);
 
         applicationInstanceController.setWeight(appInstModel.getId(), 0);
         assertThat(applicationInstanceController.search("Alpha1.0").get(0).getWeight()).isEqualTo(0);
