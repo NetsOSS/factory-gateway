@@ -8,6 +8,15 @@ define([], function () {
       return res.data;
     };
     this.ApplicationController = {};
+    this.ApplicationController.addHeaderRule = function (applicationId, headerRuleModel) {
+      var req = {};
+      req.method = 'POST';
+      req.url = prefix + '/data/application/{applicationId}/newRule';
+      req.url = req.url.replace(/{applicationId}/, applicationId);
+      req.data = headerRuleModel;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationController.configureHaproxySetupAndStartLoadbalancer = function (id, setup, payload) {
       var req = {};
       req.method = 'PUT';
@@ -70,6 +79,15 @@ define([], function () {
       req.method = 'DELETE';
       req.url = prefix + '/data/applications/{id}';
       req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
+    this.ApplicationController.removeHeaderRule = function (applicationId, headerId) {
+      var req = {};
+      req.method = 'DELETE';
+      req.url = prefix + '/data/application/{applicationId}/removeRule/{headerId}';
+      req.url = req.url.replace(/{applicationId}/, applicationId);
+      req.url = req.url.replace(/{headerId}/, headerId);
       req.params = {};
       return $http(req).then(getData);
     };

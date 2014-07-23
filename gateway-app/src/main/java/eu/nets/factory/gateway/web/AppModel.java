@@ -1,9 +1,6 @@
 package eu.nets.factory.gateway.web;
 
-import eu.nets.factory.gateway.model.Application;
-import eu.nets.factory.gateway.model.ApplicationGroup;
-import eu.nets.factory.gateway.model.FailoverLoadBalancerSetup;
-import eu.nets.factory.gateway.model.StickySession;
+import eu.nets.factory.gateway.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +14,7 @@ public  class AppModel {
     public String publicUrl;
     public List<AppInstModel> applicationInstances = new ArrayList<>();
     public List<LoadBalancerModel> loadBalancers = new ArrayList<>();
+    public List<HeaderRuleModel> headerRules = new ArrayList<>();
     public Long applicationGroupId;
     public String emails;
     public String checkPath;
@@ -42,6 +40,7 @@ public  class AppModel {
         this.readTimeout = application.getReadTimeout();
         this.retryTimeout = application.getRetryTimeout();
         this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::summary).collect(toList());
+        this.headerRules=application.getHeaderRules(). stream().map(HeaderRuleModel::summary).collect(toList());
         
         if(!summary) {
             //this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
@@ -88,4 +87,9 @@ public  class AppModel {
 
     public String getFailoverLoadBalancerSetup() { return failoverLoadBalancerSetup.name(); }
     public void setFailoverLoadBalancerSetup(String setup) { this.failoverLoadBalancerSetup = FailoverLoadBalancerSetup.valueOf(setup); }
+
+    public List<HeaderRuleModel> getHeaderRules() {
+        return headerRules;
+    }
+
 }

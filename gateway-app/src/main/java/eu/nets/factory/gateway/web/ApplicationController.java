@@ -30,6 +30,9 @@ public class ApplicationController {
     private ApplicationGroupRepository applicationGroupRepository;
 
     @Autowired
+    private HeaderRuleRepository headerRuleRepository;
+
+    @Autowired
     HaProxyService haProxyService;
 
 
@@ -141,6 +144,9 @@ public class ApplicationController {
 
         return new AppModel(application);
     }
+
+
+
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
     @ResponseBody //has to be here
@@ -270,4 +276,35 @@ public class ApplicationController {
         appModel.setFailoverLoadBalancerSetup(setup);
         return update(id, appModel);
     }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = "/data/application/{applicationId}/newRule", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppModel addHeaderRule(@PathVariable Long applicationId, @RequestBody HeaderRuleModel headerRuleModel) {
+        log.info("ApplicationController.addHeaderRule");
+        if(applicationRepository.findOne(applicationId) == null) throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
+
+        Application application = applicationRepository.findOne(applicationId);
+        HeaderRule headerRule = new HeaderRule(headerRuleModel.getName(),headerRuleModel.getPrefixMatch(),application);
+        application.addHeaderRule(headerRule);
+        application = applicationRepository.save(application);
+        return new AppModel(application);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/data/application/{applicationId}/removeRule/{headerId}",produces = APPLICATION_JSON_VALUE)
+    @ResponseBody //has to be here
+    public AppModel removeHeaderRule(@PathVariable Long applicationId, @PathVariable Long headerId) {
+        log.info("ApplicationController.removeHeaderRule");
+        if(applicationRepository.findOne(applicationId) == null) throw new GatewayException("ApplicationID did not match the ID of any known application.");
+        if(headerRuleRepository.findOne(headerId) == null) throw new GatewayException("HeaderRuleID did not match the ID of any known headerRule.");
+        Application application = applicationRepository.findOne(applicationId);
+
+        HeaderRule headerRule = headerRuleRepository.findOne(headerId);
+        application.removeHeaderRule(headerRule);
+
+        return new AppModel(application);
+    }
+
+
+
 }

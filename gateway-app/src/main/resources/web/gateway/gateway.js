@@ -212,10 +212,10 @@ define([
 
             /*angular.forEach($scope.allAppGroups,function(appGroup,index){
              angular.forEach(appGroup.applications,function(app,index){
-             angular.forEach(app.applicationInstances,function(appInst,index){
-             console.log("appInst : ",appInst);
-             //appInst.server = appInst.host+":"+appInst.port+""+appInst.path;
-             });
+               app.rules = [
+                 {headerName: 'iv-user',regexMatch: '^050378.*', applicationInstances:[]}
+               ];
+
              });
              });*/
 
@@ -252,6 +252,33 @@ define([
             $scope.updateApp.loadBalancers = [];
             $('#modalUpdateApp').modal('show');
         };
+      $scope.showUpdateApplicationRules = function (app) {
+        $scope.updateApp = {};
+
+        $scope.updateApp = angular.copy(app);
+        $scope.updateApp.applicationInstances = [];
+        $scope.updateApp.loadBalancers = [];
+        $('#modalAppRules').modal('show');
+      };
+
+      $scope.removeRuleFromApp = function(app, headerRule) {
+          console.log("remove header id ",headerRule," from app ",app);
+        GatewayData.ApplicationController.removeHeaderRule(app.id,headerRule.id).then(function (data) {
+          // app.applicationInstances.splice(app.applicationInstances.indexOf(appInst), 1);
+          app.headerRules.splice( app.headerRules.indexOf(headerRule), 1);
+        });
+      };
+
+      $scope.updateApplicationRules = function (app) {
+        var foundGroup = $filter('getById')($scope.allAppGroups, $scope.updateApp.applicationGroupId);
+        var foundAppIndex = $filter('getIndexById')(foundGroup.applications, $scope.updateApp.id);
+
+        console.log( $scope.updateApp.name);
+        console.log($scope.inRule);
+        GatewayData.ApplicationController.addHeaderRule($scope.updateApp.id, $scope.inRule).then(function (data) {
+
+        });
+      };
 
         $scope.updateApplication = function () {
             var foundGroup = $filter('getById')($scope.allAppGroups, $scope.updateApp.applicationGroupId);

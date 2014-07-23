@@ -48,11 +48,14 @@
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#tab-{{app.id}}-panel">
           {{app.name}}
-          <small>{{app.publicUrl}}</small>
+          <small>{{app.publicUrl}} | <span ng-repeat="headerRule in app.headerRules"> Header: '{{headerRule.name}}' = {{headerRule.prefixMatch}}</span></small>
         </a>
 
       <span class=" pull-right ">
         <span class="badge">{{app.applicationInstances.length}}</span>
+
+
+          <a> <span ng-click="showUpdateApplicationRules(app)" class="glyphicon glyphicon-edit"></span></a>
 
         <a> <span ng-click="showUpdateApplication(app)" class="glyphicon glyphicon-pencil"> </span></a>
         <a> <span ng-click="removeApp(appGroup,app)" class="glyphicon glyphicon-trash"> </span></a>
@@ -452,6 +455,59 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Modal update Application Rules) -->
+<div class="modal fade" id="modalAppRules" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add rules for rounting to {{updateApp.name}}</h4>
+            </div>
+            <div class="modal-body">
+
+                <h3>Current rules</h3>
+
+                <div class="list-group">
+
+                    <div  class="list-group-item" ng-repeat="rule in updateApp.headerRules">
+                        {{rule.name}} = {{rule.prefixMatch}}
+                        <button type="button" ng-click="removeRuleFromApp(updateApp, rule)" class="btn btn-danger btn-sm pull-right">Remove
+                        </button>
+                    </div>
+
+
+                </div>
+
+                <h3>New rule</h3>
+                <form role="form" ng-submit="updateApplicationRules()" >
+
+                    <div class="form-group" >
+                        <label for="inRuleName">Headername</label>
+                        <input type="text" ng-model="inRule.name" class="form-control" id="inRuleName"
+                               name="name"
+                               required placeholder="Enter name"/>
+                    </div>
+                    <div class="form-group" >
+                        <label for="inRuleName">Prefix match</label>
+                        <input type="text" ng-model="inRule.prefixMatch" class="form-control" id="inRuleMatch"
+                               name="name"
+                               required placeholder="Enter match"/>
+                    </div>
+
+
+
+                    <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 

@@ -55,6 +55,9 @@ public class Application extends AbstractEntity {
     @Column(nullable = false, name = "retry_timeout")
     private int retryTimeout;
 
+    @OneToMany(mappedBy = "application", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    private List<HeaderRule> headerRules = new ArrayList<>();
+
     public Application(String name, String url, ApplicationGroup applicationGroup, String emails, String checkPath) {
         this.name = name;
         this.publicUrl = url;
@@ -134,4 +137,12 @@ public class Application extends AbstractEntity {
     public void setRetryTimeout(int retryTimeout) {
         this.retryTimeout = retryTimeout;
     }
+
+    public List<HeaderRule> getHeaderRules() {
+        return headerRules;
+    }
+    public void addHeaderRule(HeaderRule headerRule) { this.headerRules.add(headerRule); }
+    public void removeHeaderRule(HeaderRule headerRule) {
+        this.headerRules.remove(headerRule); }
+
 }
