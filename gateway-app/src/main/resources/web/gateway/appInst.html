@@ -1,15 +1,15 @@
 <div class="row">
   <h1>Application Instance: {{appInst.name}}</h1>
   <ul class="list-unstyled">
-    <li>ID : {{appInst.id}}</li>
+    <li>ID: {{appInst.id}}</li>
     <!--
-    <li>Host : {{appInst.host}}</li>
-    <li>Port : {{appInst.port}}</li>
-    <li>Path : {{appInst.path}}</li>
+    <li>Host: {{appInst.host}}</li>
+    <li>Port: {{appInst.port}}</li>
+    <li>Path: {{appInst.path}}</li>
     -->
-    <li>Server : {{appInst.server}}</li>
-    <li>Haproxy State : {{appInst.haProxyState}}</li>
-    <li>Weight : {{appInst.weight}}</li>
+    <li>Server: {{appInst.server}}</li>
+    <li>Haproxy State: {{appInst.haProxyState}}</li>
+    <li>Weight: {{appInst.weight}}</li>
     <li>In load balancers:
       <ul ng-repeat="(lb, value) in rawStatusForOneInst">
         <li><a href="#/lb/{{lb}}">{{lb}}</a></li>

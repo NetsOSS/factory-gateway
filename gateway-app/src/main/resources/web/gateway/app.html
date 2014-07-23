@@ -1,19 +1,17 @@
-<h1>Application : {{app.name}} {{app.publicUrl}} </h1>
+<h1>Application: {{app.name}} {{app.publicUrl}} </h1>
 
 <ul class="list-unstyled">
-  <li>ID : {{app.id}}</li>
-  <li>Number of instances : {{app.applicationInstances.length}}</li>
-  <li>In group : {{appGroup.name}} ({{app.applicationGroupId}})</li>
-  <li>Check path : {{app.checkPath}}</li>
-  <li>Haproxy Setup : {{app.setup}}</li>
-
+  <li>ID: {{app.id}}</li>
+  <li>Number of instances: {{app.applicationInstances.length}}</li>
+  <li>In group: {{appGroup.name}} ({{app.applicationGroupId}})</li>
+  <li>Check path: {{app.checkPath}}</li>
+  <li>Failover setup: {{app.failoverLoadBalancerSetup}}</li>
+  <li>Sticky status: {{app.stickySession}}</li>
   <li>In load balancers:
     <ul ng-repeat="lbForApp in app.loadBalancers">
       <li><a href="#/lb/{{lbForApp.id}}"> {{lbForApp.name}} ({{lbForApp.id}})</a></li>
     </ul>
   </li>
-
-
 </ul>
 
 <button class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-tag"></span>

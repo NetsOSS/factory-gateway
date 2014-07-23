@@ -2,53 +2,49 @@
 
   <div class="panel-group" id="accordion">
     <div class="panel panel-success">
-
       <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left" style="padding-top: 7.5px;"><a data-toggle="collapse" data-parent="#accordion"
-                                                                         href="#collapseOne">
-          Load Balancer : {{lb.name}}
-        </a></h4>
+        <h4 class="panel-title pull-left" style="padding-top: 7.5px;">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+            Load Balancer: {{lb.name}}
+          </a>
+        </h4>
 
         <div class="pull-right">
+          <span>
+            <span class="badge">{{lb.applications.length}}</span>
+          </span>
 
-                    <span class="btn-group">
-                        <a data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm"><span
-                            class="glyphicon glyphicon-pencil"></span> Edit</a>
-
-                        <a ng-click="startLoadBalancer()" class="btn btn-warning btn-sm"><span
-                            class="glyphicon glyphicon-play"></span> Start</a>
-                        <a ng-click="removeLoadBalancer()" class="btn btn-danger btn-sm"><span
-                            class="glyphicon glyphicon-trash"></span> Remove</a>
-                    </span>
-                    <span>
-                         <span class="badge">{{lb.applications.length}}</span>
-                    </span>
-
-
+          <span class="btn-group">
+            <a data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm"><span
+                class="glyphicon glyphicon-pencil"></span> Edit</a>
+            <a ng-click="startLoadBalancer()" class="btn btn-warning btn-sm"><span
+                class="glyphicon glyphicon-play"></span> Start</a>
+            <a ng-click="removeLoadBalancer()" class="btn btn-danger btn-sm"><span
+                class="glyphicon glyphicon-trash"></span> Remove</a>
+          </span>
         </div>
       </div>
-
 
       <div id="collapseOne" class="panel-collapse collapse in">
         <div class="panel-body">
           <div class="row">
             <div class="col-sm-6">
               <ul class="list-unstyled">
-                <li>InstallationPath : {{lb.installationPath}}</li>
-                <li>Host : {{lb.host}}</li>
-                <li>Port : {{lb.publicPort}}</li>
-                <li>Stats page : <a href="http://{{lb.host}}:{{lb.publicPort+1}}/proxy-stats">{{lb.host}}:{{lb.publicPort+1}}/proxy-stats</a>
+                <li>InstallationPath: {{lb.installationPath}}</li>
+                <li>Host: {{lb.host}}</li>
+                <li>Port: {{lb.publicPort}}</li>
+                <li>Stats page: <a href="http://{{lb.host}}:{{lb.publicPort+1}}/proxy-stats">{{lb.host}}:{{lb.publicPort+1}}/proxy-stats</a>
                 </li>
               </ul>
             </div>
-            <div class="col-sm-6">
 
+            <div class="col-sm-6">
               <ul class="list-unstyled">
-                <li>Username : {{lb.userName}}</li>
+                <li>Username: {{lb.userName}}</li>
                 <li>
-                  <a href="" ng-model="collapsedSSHkey" ng-click="collapsedSSHkey=!collapsedSSHkey"><strong>SSH
-                    key
-                  </strong> (show/hide)</a>
+                  <a href="" ng-model="collapsedSSHkey" ng-click="collapsedSSHkey=!collapsedSSHkey">
+                    <strong>SSH key</strong> (show/hide)
+                  </a>
                 </li>
               </ul>
 
@@ -58,16 +54,10 @@
               </div>
             </div>
           </div>
-
-
         </div>
       </div>
     </div>
-
-
   </div>
-
-
 </div>
 
 
@@ -79,14 +69,11 @@
             <span class="text-danger" ng-hide="isLBonline">HAproxy is not running
             <span class="glyphicon glyphicon-thumbs-down"></span></span>
     </h3>
-
   </div>
 
   <div class="col-sm-4">
-
     <a class="btn pull-right" ng-class="{true: 'btn-primary', false: 'btn-success'}[!autoRefresh]"
        ng-click="startStopAutoRefresh()">Turn {{!autoRefresh&& 'on' || 'off'}} autorefresh</a>
-
   </div>
 </div>
 
@@ -193,7 +180,7 @@
   <div ng-show="collapseConfig">
     <pre>{{configFile}}</pre>
   </div>
-  </div>
+</div>
 <hr>
 
 
