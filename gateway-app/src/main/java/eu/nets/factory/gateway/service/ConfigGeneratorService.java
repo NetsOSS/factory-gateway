@@ -64,7 +64,10 @@ public class ConfigGeneratorService {
             for(int i = 0; i < application.getApplicationInstances().size(); i++) {
                 ApplicationInstance applicationInstance = application.getApplicationInstances().get(i);
 
-                String serverConfigLine = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check weight " + applicationInstance.getWeight();
+                String serverConfigLine = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check";
+
+                if(applicationInstance.getWeight() != 0)
+                    serverConfigLine += " weight " + applicationInstance.getWeight();
 
                 if (applicationInstance.getHaProxyState().name().equals("MAINT"))
                     serverConfigLine += " disabled";

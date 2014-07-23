@@ -32,7 +32,7 @@ public class ApplicationInstance extends AbstractEntity {
     private int haProxyStateValue;
 
     @NotNull
-    @Min(0) //A value of 0 means the server will not participate in load-balancing but will still accept persistent connections.
+    @Min(0) //A value of 0 means the server will not participate in load-balancing but will still accept persistent connections. -> the config file does not specify the weight if weight is 0 - haProxys default weight value (1) will be used.
     @Max(256)
     private int weight;
 
@@ -48,7 +48,7 @@ public class ApplicationInstance extends AbstractEntity {
         this.path = path;
         this.application = application;
         this.haProxyStateValue = HaProxyState.READY.ordinal();
-        this.weight = 100;
+        this.weight = 10;
     }
 
     public ApplicationInstance() { }
