@@ -46,15 +46,6 @@ public class Application extends AbstractEntity {
     @Column(nullable = false, name = "failover_load_balancer_setup")
     private int failoverLoadBalancerSetupValue;
 
-    @Column(nullable = false, name = "connect_timeout")
-    private int connectTimeout;
-
-    @Column(nullable = false, name = "read_timeout")
-    private int readTimeout;
-
-    @Column(nullable = false, name = "retry_timeout")
-    private int retryTimeout;
-
     @OneToMany(mappedBy = "application", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<HeaderRule> headerRules = new ArrayList<>();
 
@@ -67,9 +58,6 @@ public class Application extends AbstractEntity {
 
         this.stickySessionValue = StickySession.STICKY.ordinal();
         this.failoverLoadBalancerSetupValue = FailoverLoadBalancerSetup.HOT_HOT.ordinal();
-        this.connectTimeout = 5000;
-        this.readTimeout = 5000;
-        this.retryTimeout = 5;
     }
 
     public Application(){}
@@ -113,30 +101,6 @@ public class Application extends AbstractEntity {
     public List<ApplicationInstance> getApplicationInstances() { return applicationInstances; }
     public void addApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.add(applicationInstance); }
     public void removeApplicationInstance(ApplicationInstance applicationInstance) { this.applicationInstances.remove(applicationInstance); }
-
-    public int getConnectTimeout() {
-        return connectTimeout;
-    }
-
-    public void setConnectTimeout(int connectTimeout) {
-        this.connectTimeout = connectTimeout;
-    }
-
-    public int getReadTimeout() {
-        return readTimeout;
-    }
-
-    public void setReadTimeout(int readTimeout) {
-        this.readTimeout = readTimeout;
-    }
-
-    public int getRetryTimeout() {
-        return retryTimeout;
-    }
-
-    public void setRetryTimeout(int retryTimeout) {
-        this.retryTimeout = retryTimeout;
-    }
 
     public List<HeaderRule> getHeaderRules() {
         return headerRules;

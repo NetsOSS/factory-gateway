@@ -20,9 +20,6 @@ public  class AppModel {
     public String checkPath;
     public StickySession stickySession;
     public FailoverLoadBalancerSetup failoverLoadBalancerSetup;
-    public int connectTimeout;
-    public int readTimeout;
-    public int retryTimeout;
 
     public AppModel() { }
 
@@ -36,9 +33,6 @@ public  class AppModel {
 
         this.stickySession = application.getStickySession();
         this.failoverLoadBalancerSetup = application.getFailoverLoadBalancerSetup();
-        this.connectTimeout = application.getConnectTimeout();
-        this.readTimeout = application.getReadTimeout();
-        this.retryTimeout = application.getRetryTimeout();
         this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::summary).collect(toList());
         this.headerRules=application.getHeaderRules(). stream().map(HeaderRuleModel::summary).collect(toList());
         

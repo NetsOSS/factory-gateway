@@ -184,9 +184,6 @@ public class ApplicationController {
         application.setCheckPath(appModel.getCheckPath());
         application.setStickySession(appModel.stickySession);
         application.setFailoverLoadBalancerSetup(appModel.failoverLoadBalancerSetup);
-        application.setConnectTimeout(appModel.connectTimeout);
-        application.setReadTimeout(appModel.readTimeout);
-        application.setRetryTimeout(appModel.retryTimeout);
 
         return new AppModel(application);
     }

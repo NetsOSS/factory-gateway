@@ -16,7 +16,19 @@ public class LoadBalancerModel {
     public String userName;
     public int publicPort;
     public List<AppModel> applications = new ArrayList<>();
+    public int checkTimeout;
+    public int connectTimeout;
+    public int serverTimeout;
+    public int clientTimeout;
+    public int retries;
 
+    /*
+    check_timeout INTEGER DEFAULT 2000 NOT NULL,
+  connect_timeout INTEGER DEFAULT 1000 NOT NULL,
+  server_timeout INTEGER DEFAULT 60000 NOT NULL,
+  client_timeout INTEGER DEFAULT 60000 NOT NULL,
+  retries INTEGER DEFAULT 3 NOT NULL,
+     */
 
     public LoadBalancerModel() { }
 
@@ -25,13 +37,14 @@ public class LoadBalancerModel {
     }
 
     private LoadBalancerModel(LoadBalancer loadBalancer, Boolean summary) {
-        this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getPublicPort(), loadBalancer.getUserName());
+        this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getPublicPort(), loadBalancer.getUserName(),
+                loadBalancer.getCheckTimeout(), loadBalancer.getConnectTimeout(), loadBalancer.getServerTimeout(), loadBalancer.getClientTimeout(), loadBalancer.getRetries());
         if(!summary) {
             this.applications = loadBalancer.getApplications().stream().map(AppModel::summary).collect(toList());
         }
     }
 
-    public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey, int publicPort, String userName) {
+    public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey, int publicPort, String userName, int checkTimeout, int connectTimeout, int serverTimeout, int clientTimeout, int retries) {
         this.id = id;
         this.name = name;
         this.host = host;
@@ -39,6 +52,11 @@ public class LoadBalancerModel {
         this.sshKey = sshKey;
         this.userName = userName;
         this.publicPort = publicPort;
+        this.checkTimeout = checkTimeout;
+        this.connectTimeout = connectTimeout;
+        this.serverTimeout = serverTimeout;
+        this.clientTimeout = clientTimeout;
+        this.retries = retries;
     }
 
     public static LoadBalancerModel summary(LoadBalancer loadBalancer) {

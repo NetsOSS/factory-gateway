@@ -46,11 +46,11 @@ public class ConfigGeneratorService {
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 
             //connect timeout
-            printWriter.println(TAB2 + "timeout connect " + application.getConnectTimeout() + "ms");
+           /* printWriter.println(TAB2 + "timeout connect " + application.getConnectTimeout() + "ms");
             //read timeout
-            printWriter.println(TAB2 + "timeout check " + application.getReadTimeout() + "ms");
+            printWriter.println(TAB2 + "timeout server " + application.getReadTimeout() + "ms");
             //retry timeout
-            printWriter.println(TAB2 + "retries " + application.getRetryTimeout());
+            printWriter.println(TAB2 + "retries " + application.getRetryTimeout());*/
 
             // Check if app wants sticky cookies.
             if (application.getStickySession().name().equals("STICKY"))

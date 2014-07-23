@@ -443,7 +443,6 @@ define([
 
         $scope.autoRefresh = false;
         $scope.lbLoadingDone = false;
-
         var LBid = $routeParams.id;
 
 

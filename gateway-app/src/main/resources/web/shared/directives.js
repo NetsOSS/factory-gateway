@@ -38,12 +38,23 @@ define([ 'angular' ], function (angular) {
         if ($scope.lb != null) {
           $scope.isNewLb = $scope.lb.id == null;
           console.log('cecking id');
+        }else {
+            $scope.lb={
+                checkTimeout:2000,
+                connectTimeout:1000,
+                serverTimeout:60000,
+                clientTimeout:60000,
+                retries:3
+            }
         }
+          $scope.validateServerClient = function() {
+              return $scope.lb.serverTimeout==$scope.lb.clientTimeout;
+          }
 
         $scope.updateOrCreateLB = function () {
           console.log('LB in form: ', $scope.lb);
           if ($scope.lb.id != null) {
-            console.log('Updateing LB');
+            console.log('Updating LB');
             $scope.lb.applications = [];
             GatewayData.LoadBalancerController.update($scope.lb.id, $scope.lb);
           } else {

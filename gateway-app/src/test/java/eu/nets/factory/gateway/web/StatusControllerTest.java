@@ -53,8 +53,8 @@ public class StatusControllerTest {
     @Test
     public void testGetBackendStatus() {
 
-        LoadBalancer loadBalancerOne = new LoadBalancer("Grandiosa", "127.0.0.1", "/Grandiosa","ssh", 10003, "factory");
-        LoadBalancer loadBalancerTwo = new LoadBalancer("Grandiosa2", "127.0.0.1", "/Grandiosa2","ssh", 10004, "factory");
+        LoadBalancer loadBalancerOne = new LoadBalancer("Grandiosa", "127.0.0.1", "/Grandiosa","ssh", 10003, "factory", 2000, 1000, 60000, 60000, 3);
+        LoadBalancer loadBalancerTwo = new LoadBalancer("Grandiosa2", "127.0.0.1", "/Grandiosa2","ssh", 10004, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadModelOne = new LoadBalancerModel(loadBalancerOne);
         LoadBalancerModel loadModelTwo = new LoadBalancerModel(loadBalancerTwo);
         loadModelOne = loadBalancerController.create(loadModelOne);

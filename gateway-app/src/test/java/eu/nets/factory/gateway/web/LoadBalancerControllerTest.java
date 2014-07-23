@@ -110,13 +110,18 @@ public void testFindEntityById() throws Exception {
 
     @Test
     public void testCreate() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "hostX", "/instPathX", "sshX", 456, "factory");
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "hostX", "/instPathX", "sshX", 456, "factory", 2000, 1000, 60000, 60000, 3);
 
         LoadBalancerModel loadBalancerModel = loadBalancerController.create(new LoadBalancerModel(loadBalancer));
         assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(4).onProperty("name").contains("Batman");
 
         assertThat(loadBalancerModel).isNotNull();
         assertThat(loadBalancerModel.name).isNotNull().isEqualTo("Batman");
+        assertThat(loadBalancerModel.checkTimeout).isNotNull().isEqualTo(2000);
+        assertThat(loadBalancerModel.connectTimeout).isNotNull().isEqualTo(1000);
+        assertThat(loadBalancerModel.clientTimeout).isNotNull().isEqualTo(60000);
+        assertThat(loadBalancerModel.serverTimeout).isNotNull().isEqualTo(60000);
+        assertThat(loadBalancerModel.retries).isNotNull().isEqualTo(3);
 
         try { //model is null
             loadBalancerController.create(null);
@@ -127,7 +132,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidName() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //name already exists - not unique
@@ -157,7 +162,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidHost() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //host is null
@@ -175,7 +180,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidInstallationPath() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //installationPath is null
@@ -213,7 +218,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidSshKey() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //sshKey is null
@@ -231,7 +236,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateValidPublicPort() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory");
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
         try { //publicPort is less than 1
@@ -249,7 +254,7 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateUniqueHostInstallationPath() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "instPathTwo", "X", 567, "factory");
+        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "instPathTwo", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
         try {
             loadBalancerController.create(loadBalancerModel);
@@ -259,9 +264,19 @@ public void testFindEntityById() throws Exception {
 
     @Test()
     public void testCreateUniqueHostPublicPort() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "X", "X", 234, "factory");
+        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "X", "X", 234, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
         try {
+            loadBalancerController.create(loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
+    }
+    @Test()
+    public void testCreateValidClientTimeoutAndServerTimeout() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
+        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
+        try { //name contains a whitespace
+            loadBalancerModel.clientTimeout = 1;
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
         } catch (GatewayException ignore) { }
@@ -300,6 +315,11 @@ public void testFindEntityById() throws Exception {
         loadBalancerModel.sshKey = "nananananananana";
         loadBalancerModel.userName = "factory";
         loadBalancerModel.publicPort = 1;
+        loadBalancerModel.checkTimeout = 2000;
+        loadBalancerModel.connectTimeout = 1000;
+        loadBalancerModel.clientTimeout = 60000;
+        loadBalancerModel.serverTimeout = 60000;
+        loadBalancerModel.retries = 3;
         loadBalancerModel = loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
 
         assertThat(loadBalancerController.listAllLoadBalancers()).isNotNull().hasSize(3).onProperty("name").contains("Batman").excludes("Knut");
@@ -479,6 +499,16 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch(GatewayException ignore) {
         }
+    }
+    @Test()
+    public void testUpdateClientTimeoutEqualsServerTimeout() throws Exception {
+        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
+        LoadBalancerModel loadBalancerModel = loadBalancerController.create(new LoadBalancerModel(loadBalancer));
+        try { //name contains a whitespace
+            loadBalancerModel.clientTimeout = 1;
+            loadBalancerController.update(loadBalancer.getId(), loadBalancerModel);
+            fail("Expected exception");
+        } catch (GatewayException ignore) { }
     }
 
     @Test
