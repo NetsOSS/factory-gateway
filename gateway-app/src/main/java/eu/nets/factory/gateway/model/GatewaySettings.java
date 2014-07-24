@@ -87,4 +87,8 @@ public class GatewaySettings {
 
         return windows ? environment.getRequiredProperty("haproxy.bin.windows") : environment.getRequiredProperty("haproxy.bin.linux");
     }
+
+    public int getTimeoutInSeconds() {
+        return environment.getRequiredProperty("haproxy.timeout", Integer.class);
+    }
 }

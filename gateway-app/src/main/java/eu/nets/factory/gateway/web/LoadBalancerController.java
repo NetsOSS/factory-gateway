@@ -6,7 +6,6 @@ import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.model.LoadBalancerRepository;
 import eu.nets.factory.gateway.service.ConfigGeneratorService;
-import eu.nets.factory.gateway.service.FileWriterService;
 import eu.nets.factory.gateway.service.HaProxyService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ public class LoadBalancerController {
 
     private final Logger log = getLogger(getClass());
 
-    private static final String CFG_FILE = "haproxy.cfg";
-
     @Autowired
     private LoadBalancerRepository loadBalancerRepository;
 
@@ -37,9 +34,6 @@ public class LoadBalancerController {
 
     @Autowired
     private ConfigGeneratorService configGeneratorService;
-
-    @Autowired
-    private FileWriterService fileWriterService;
 
     @Autowired
     private HaProxyService haProxyService;
