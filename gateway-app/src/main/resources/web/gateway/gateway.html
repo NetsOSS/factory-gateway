@@ -43,7 +43,7 @@
 </div>
 
 <div class="panel-group" id="tab-{{appGroup.id}}-panel">
-  <div class="panel panel-success" ng-repeat="app in appGroup.applications | orderBy:'name'">
+  <div class="panel panel-success" ng-repeat="app in appGroup.applications">
     <div class="panel-heading">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#tab-{{app.id}}-panel">

@@ -4,7 +4,6 @@ import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationGroup;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -64,7 +63,7 @@ public class StatusControllerTest {
         AppGroupModel groupModel = new AppGroupModel(groupOne);
         groupModel = applicationGroupController.create(groupModel);
 
-        Application application = new Application("Finch", "/finch", groupOne, "email", "/finch/ping");
+        Application application = new Application("Finch", "/finch", groupOne, "email", "/finch/ping", 0);
         AppModel appModel = new AppModel(application);
         appModel.applicationGroupId = groupModel.getId();
         appModel = applicationController.create(appModel);

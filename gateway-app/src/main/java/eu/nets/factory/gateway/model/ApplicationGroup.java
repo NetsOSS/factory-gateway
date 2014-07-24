@@ -14,6 +14,7 @@ public class ApplicationGroup extends AbstractEntity {
     private String name;
 
     @OneToMany(mappedBy = "applicationGroup", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OrderBy("index_order")
     private List<Application> applications = new ArrayList<>();
 
 
@@ -28,6 +29,13 @@ public class ApplicationGroup extends AbstractEntity {
     public void setName(String name) { this.name = name; }
 
     public List<Application> getApplications() { return applications; }
-    public void addApplication(Application application) { this.applications.add(application); }
+    public void addApplication(Application application) {
+        applications.add(application);
+    }
+
     public void removeApplication(Application application) { this.applications.remove(application); }
+
+    public int applicationCount() {
+        return applications.size();
+    }
 }

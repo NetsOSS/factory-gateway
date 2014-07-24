@@ -50,9 +50,9 @@ public class InitTestClass {
         groupModelThree = applicationGroupController.create(groupModelThree);
 
         //Applications
-        Application applicationOne = new Application("Kamino", "/kamino", applicationGroupController.findEntityById(groupModelOne.getId()), "mailTwo", "/kamino/v1/ping");
-        Application applicationTwo = new Application("Grandiosa", "/grandiosa", applicationGroupController.findEntityById(groupModelTwo.getId()), "mailTwo", "/grandiosa/ping");
-        Application applicationThree = new Application("Alpha", "/alpha", applicationGroupController.findEntityById(groupModelTwo.getId()),"mailOne", "/alpha/ping");
+        Application applicationOne = new Application("Kamino", "/kamino", applicationGroupController.findEntityById(groupModelOne.getId()), "mailTwo", "/kamino/v1/ping", 0);
+        Application applicationTwo = new Application("Grandiosa", "/grandiosa", applicationGroupController.findEntityById(groupModelTwo.getId()), "mailTwo", "/grandiosa/ping", 1);
+        Application applicationThree = new Application("Alpha", "/alpha", applicationGroupController.findEntityById(groupModelTwo.getId()),"mailOne", "/alpha/ping", 2);
         AppModel appModelOne = new AppModel(applicationOne);
         AppModel appModelTwo = new AppModel(applicationTwo);
         AppModel appModelThree = new AppModel(applicationThree);

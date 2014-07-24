@@ -10,7 +10,9 @@ import java.util.List;
 
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name"})})
+        @UniqueConstraint(columnNames = {"name"}),
+        @UniqueConstraint(columnNames = {"application_group", "index_order"})
+})
 public class Application extends AbstractEntity {
 
     @Pattern(regexp = "^\\S+$")
@@ -46,15 +48,19 @@ public class Application extends AbstractEntity {
     @Column(nullable = false, name = "failover_load_balancer_setup")
     private int failoverLoadBalancerSetupValue;
 
+    @Column(name = "index_order")
+    private int indexOrder;
+
     @OneToMany(mappedBy = "application", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<HeaderRule> headerRules = new ArrayList<>();
 
-    public Application(String name, String url, ApplicationGroup applicationGroup, String emails, String checkPath) {
+    public Application(String name, String url, ApplicationGroup applicationGroup, String emails, String checkPath, int indexOrder) {
         this.name = name;
         this.publicUrl = url;
         this.applicationGroup = applicationGroup;
         this.emails=emails;
         this.checkPath = checkPath;
+        this.indexOrder = indexOrder;
 
         this.stickySessionValue = StickySession.STICKY.ordinal();
         this.failoverLoadBalancerSetupValue = FailoverLoadBalancerSetup.HOT_HOT.ordinal();
@@ -109,4 +115,11 @@ public class Application extends AbstractEntity {
     public void removeHeaderRule(HeaderRule headerRule) {
         this.headerRules.remove(headerRule); }
 
+    public int getIndexOrder() {
+        return indexOrder;
+    }
+
+    public void setIndexOrder(int indexOrder) {
+        this.indexOrder = indexOrder;
+    }
 }
