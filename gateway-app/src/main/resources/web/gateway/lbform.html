@@ -21,19 +21,18 @@
                required
                placeholder="Enter path">
         <span class="bg-danger" ng-show="lbform.lbPath.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
-
-
     </div>
+    <!--
     <div class="form-group">
-        <label for="inLbPublicPort">Public Port</label>
-        <input type="number" ng-model="lb.publicPort" class="form-control " id="inLbPublicPort" min="1" max="65535"
-               name="publicPort"
+        <label for="inLbStatsPort">Public Port</label>
+        <input type="number" ng-model="lb.statsPort" class="form-control " id="inLbPublicPort" min="1" max="65535"
+               name="statsPort"
                required integer
-               placeholder="Enter public port">
-        <span class="bg-danger" ng-show="lbform.publicPort.$error.integer">This is not valid integer!</span>
-        <span class="bg-danger" ng-show="lbform.publicPort.$error.min || lbform.publicPort.$error.max">  The value must be in range 1 to 65535!</span>
-
+               placeholder="Enter stats port">
+        <span class="bg-danger" ng-show="lbform.statsPort.$error.integer">This is not valid integer!</span>
+        <span class="bg-danger" ng-show="lbform.statsPort.$error.min || lbform.statsPort.$error.max">  The value must be in range 1 to 65535!</span>
     </div>
+  -->
 
  <H4>Timeouts</H4>
   <div class="row">

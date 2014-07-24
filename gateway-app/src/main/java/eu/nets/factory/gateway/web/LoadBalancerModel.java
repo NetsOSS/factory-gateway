@@ -14,7 +14,7 @@ public class LoadBalancerModel {
     public String host;
     public String sshKey;
     public String userName;
-    public int publicPort;
+    public int statsPort;
     public List<AppModel> applications = new ArrayList<>();
     public int checkTimeout;
     public int connectTimeout;
@@ -37,21 +37,21 @@ public class LoadBalancerModel {
     }
 
     private LoadBalancerModel(LoadBalancer loadBalancer, Boolean summary) {
-        this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getPublicPort(), loadBalancer.getUserName(),
+        this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getStatsPort(), loadBalancer.getUserName(),
                 loadBalancer.getCheckTimeout(), loadBalancer.getConnectTimeout(), loadBalancer.getServerTimeout(), loadBalancer.getClientTimeout(), loadBalancer.getRetries());
         if(!summary) {
             this.applications = loadBalancer.getApplications().stream().map(AppModel::summary).collect(toList());
         }
     }
 
-    public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey, int publicPort, String userName, int checkTimeout, int connectTimeout, int serverTimeout, int clientTimeout, int retries) {
+    public LoadBalancerModel(Long id, String name, String host, String installationPath, String sshKey, int statsPort, String userName, int checkTimeout, int connectTimeout, int serverTimeout, int clientTimeout, int retries) {
         this.id = id;
         this.name = name;
         this.host = host;
         this.installationPath = installationPath;
         this.sshKey = sshKey;
         this.userName = userName;
-        this.publicPort = publicPort;
+        this.statsPort = statsPort;
         this.checkTimeout = checkTimeout;
         this.connectTimeout = connectTimeout;
         this.serverTimeout = serverTimeout;
@@ -74,6 +74,8 @@ public class LoadBalancerModel {
     public String getSshKey() { return sshKey; }
 
     public String getUserName() { return userName; }
+
+    public int getStatsPort() {return statsPort; }
 
     public List<AppModel> getApplications() { return applications; }
 }

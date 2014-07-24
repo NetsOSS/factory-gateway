@@ -114,28 +114,32 @@ public class LoadBalancerController {
         }
     }
 
-    private void assertHostPublicPortUnique(String host, int publicPort) {
-        log.info("LoadBalancerController.assertHostPublicPortUnique, host={}, publicPort={}", host, publicPort);
+    private void assertHostStatsPortUnique(String host, int statsPort) {
+        log.info("LoadBalancerController.assertHostStatsPortUnique, host={}, statsPort={}", host, statsPort);
 
-        if(loadBalancerRepository.countByHostPublicPort(host, publicPort) > 0L) {
-            throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - public port '" + publicPort + "' is already in use.");
+        if(loadBalancerRepository.countByHostPublicPort(host, statsPort) > 0L) {
+            throw new GatewayException("Could not create Load Balancer. Combination host '" + host + "' - public port '" + statsPort + "' is already in use.");
         }
     }
 
-    private void assertValidModel(LoadBalancerModel loadBalancerModel) {
+    private void assertValidModel(LoadBalancerModel loadBalancerModel, boolean hasPort) {
         if(loadBalancerModel == null) { throw new GatewayException("Could not create LoadBalancer. Invalid LoadBalancerModel."); }
-        /*
-        if(loadBalancerModel.getName() == null) throw new GatewayException("Could not create Load Balancer. Invalid name: " + loadBalancerModel.getName());
-        if(loadBalancerModel.getHost() == null) throw new GatewayException("Could not create Load Balancer. Invalid host: " + loadBalancerModel.getHost());
-        if(loadBalancerModel.getInstallationPath() == null) throw new GatewayException("Could not create Load Balancer. Invalid installation path: " + loadBalancerModel.getInstallationPath());
-        if(loadBalancerModel.getSshKey() == null) throw new GatewayException("Could not create Load Balancer. invalid ssh key: " + loadBalancerModel.getSshKey());
-        */
         if(loadBalancerModel.getName() == null  || ! Pattern.matches("^\\S+$", loadBalancerModel.getName())) throw new GatewayException("Could not create Load Balancer. Name must match pattern '^\\S+$'.");
         if(loadBalancerModel.getHost() == null || ! Pattern.matches(".+", loadBalancerModel.getHost())) throw new GatewayException("Could not create Load Balancer. Host must match pattern '.+'.");
         if(loadBalancerModel.getInstallationPath() == null  || ! Pattern.matches("^/[a-zA-Z]\\S*$", loadBalancerModel.getInstallationPath())) throw new GatewayException("Could not create Load Balancer. Installation Path must match pattern '^/[a-zA-Z]\\S*$'.");
         if(loadBalancerModel.getSshKey() == null || ! Pattern.matches("[\\s\\S]+", loadBalancerModel.getSshKey())) throw new GatewayException("Could not create Load Balancer. Ssh Key must match pattern '.+'.");
-        if(loadBalancerModel.publicPort < 1 || loadBalancerModel.publicPort > 65535) throw new GatewayException("Could not create LoadBalancer. Public Port must be a number between 1 and 65535. Received: " + loadBalancerModel.publicPort);
         if(loadBalancerModel.clientTimeout != loadBalancerModel.serverTimeout) {throw new GatewayException("Could not create LoadBalancer. Servertimeout must be equal to clientTimeout: " + loadBalancerModel.clientTimeout + "!=" + loadBalancerModel.serverTimeout);}
+        if(hasPort)
+            if(loadBalancerModel.getStatsPort() < 20000 || loadBalancerModel.getStatsPort() > 65535) throw new GatewayException("Could not create LoadBalancer. StatsPort must be a number between 20 000 and 65 535. Received: " + loadBalancerModel.getStatsPort());
+    }
+
+    private int generatePortValue(String host) {
+
+        for(int port = 20000; port < 65536; port++) {
+            if (loadBalancerRepository.countByHostPublicPort(host, port) == 0L) return port;
+        }
+
+        throw new GatewayException("Could not create Load Balancer. All port allocated to Load Balancer stats are already in use for host '" + host + "'.");
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -143,13 +147,14 @@ public class LoadBalancerController {
     public LoadBalancerModel create(@RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.create");
 
-        assertValidModel(loadBalancerModel);
+
+        assertValidModel(loadBalancerModel, false);
         assertNameUnique(loadBalancerModel.name);
         assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath);
-        assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort);
+        loadBalancerModel.statsPort = generatePortValue(loadBalancerModel.host);
+        //assertHostStatsPortUnique(loadBalancerModel.host, loadBalancerModel.statsPort);
 
-
-        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.publicPort, loadBalancerModel.userName, loadBalancerModel.checkTimeout, loadBalancerModel.connectTimeout, loadBalancerModel.serverTimeout, loadBalancerModel.clientTimeout, loadBalancerModel.retries);
+        LoadBalancer loadBalancer = new LoadBalancer(loadBalancerModel.name, loadBalancerModel.host, loadBalancerModel.installationPath, loadBalancerModel.sshKey, loadBalancerModel.statsPort, loadBalancerModel.userName, loadBalancerModel.checkTimeout, loadBalancerModel.connectTimeout, loadBalancerModel.serverTimeout, loadBalancerModel.clientTimeout, loadBalancerModel.retries);
         loadBalancer = loadBalancerRepository.save(loadBalancer);
 
         return new LoadBalancerModel(loadBalancer);
@@ -174,22 +179,22 @@ public class LoadBalancerController {
     public LoadBalancerModel update(@PathVariable Long id, @RequestBody LoadBalancerModel loadBalancerModel) {
         log.info("LoadBalancerController.update, id={}", id);
 
-        assertValidModel(loadBalancerModel);
+        assertValidModel(loadBalancerModel, true);
         if(id == null) throw new GatewayException("Could not create Load Balancer. Invalid ID: " + id);
         if(! id.equals(loadBalancerModel.getId())) throw new GatewayException("Could not create Load Balancer. IDs did not match: " + id + " - " + loadBalancerModel.getId());
 
         LoadBalancer loadBalancer = findEntityById(id);
         if(!(loadBalancer.getName().equals(loadBalancerModel.name))) { assertNameUnique(loadBalancerModel.name); }
         if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getInstallationPath().equals(loadBalancerModel.installationPath))) { assertHostInstallationPathUnique(loadBalancerModel.host, loadBalancerModel.installationPath); }
-        if(!(loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancer.getPublicPort() == loadBalancerModel.publicPort)) { assertHostPublicPortUnique(loadBalancerModel.host, loadBalancerModel.publicPort); }
-
+        if(! loadBalancer.getHost().equals(loadBalancerModel.host) && loadBalancerRepository.countByHostPublicPort(loadBalancerModel.host, loadBalancerModel.statsPort) != 0L) {
+            loadBalancer.setStatsPort(generatePortValue(loadBalancerModel.host));
+        }
 
         loadBalancer.setName(loadBalancerModel.name);
         loadBalancer.setHost(loadBalancerModel.host);
         loadBalancer.setInstallationPath(loadBalancerModel.installationPath);
         loadBalancer.setSshKey(loadBalancerModel.sshKey);
         loadBalancer.setUserName(loadBalancerModel.userName);
-        loadBalancer.setPublicPort(loadBalancerModel.publicPort);
         loadBalancer.setCheckTimeout(loadBalancerModel.checkTimeout);
         loadBalancer.setConnectTimeout(loadBalancerModel.connectTimeout);
         loadBalancer.setClientTimeout(loadBalancerModel.clientTimeout);

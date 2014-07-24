@@ -27,7 +27,7 @@ public class HibernateApplicationGroupRepositoryTest {
     @Transactional()
     public void testFindByNameLike() throws Exception {
         assertNotNull(applicationGroupRepository);
-        applicationGroupRepository.save(new ApplicationGroup("test"));
+        applicationGroupRepository.save(new ApplicationGroup("test", 10001));
         assertEquals("Should be one", 1, applicationGroupRepository.findByNameLike("test").size());
         assertEquals("Should get none", 0, applicationGroupRepository.findByNameLike("blabla").size());
     }

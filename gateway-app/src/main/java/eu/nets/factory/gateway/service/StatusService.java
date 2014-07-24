@@ -133,7 +133,7 @@ public class StatusService {
                 message.append("Application instance : " + instance.getName() + " " + instance.getHost() + ":" + instance.getPort() + "" + instance.getPath() + ".\n");
                 message.append("\t went from status " + oldStatus + " to " + newStatus + ". \n");
 
-                message.append("In loadbalancer " + lb.getName() + "  " + lb.getHost() + ":" + lb.getPublicPort() + ". \n");
+                message.append("In loadbalancer " + lb.getName() + "  " + lb.getHost() + ":" + lb.getStatsPort() + ". \n");
                 log.info("Email msg: {}", message.toString());
                 emailService.sendEmail(application.getEmails(), "HaProxy change in status", message.toString());
 
@@ -153,7 +153,7 @@ public class StatusService {
     //Should be private. but used in test. fix later
     public List<String> readCSV(LoadBalancer loadBalancer) {
         //log.info("StatusService.readCSV");
-        int port = loadBalancer.getPublicPort() + 1;
+        int port = loadBalancer.getStatsPort() + 1;
         String csvFile = "http://vm-stapp-145:" + port + "/proxy-stats;csv";
 
         URL url;

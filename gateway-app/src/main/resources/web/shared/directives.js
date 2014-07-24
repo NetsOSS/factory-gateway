@@ -57,7 +57,11 @@ define([ 'angular' ], function (angular) {
           if ($scope.lb.id != null) {
             console.log('Updating LB');
             $scope.lb.applications = [];
-            GatewayData.LoadBalancerController.update($scope.lb.id, $scope.lb);
+            GatewayData.LoadBalancerController.update($scope.lb.id, $scope.lb).then(function(newLb){
+                if($scope.lb.statsPort != newLb.statsPort) {
+                    alert('Updated port: ' + newLb.statsPort);
+                }
+            });
           } else {
             console.log('Createing LB');
             GatewayData.LoadBalancerController.create($scope.lb).then(function (data) {

@@ -14,4 +14,7 @@ public interface ApplicationGroupRepository extends JpaRepository<ApplicationGro
 
     @Query("select count(id) from ApplicationGroup where name = ?1")
     long countByName(String name);
+
+    @Query("select count(id) from ApplicationGroup where port = ?1")
+    long countByPort(int port);
 }

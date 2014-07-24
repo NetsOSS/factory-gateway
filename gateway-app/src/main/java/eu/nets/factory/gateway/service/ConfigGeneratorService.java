@@ -49,7 +49,7 @@ public class ConfigGeneratorService {
         List<String> rules = new ArrayList<>();
         List<String> backends = new ArrayList<>();
         List<String> use_backends = new ArrayList<>();
-        int loadBalancerPort = loadBalancer.getPublicPort();
+        int loadBalancerPort = loadBalancer.getStatsPort();
 
         List<Application> lbApplications = loadBalancer.getApplications();
         lbApplications.sort(new NameAndRuleComparator());
@@ -129,11 +129,11 @@ public class ConfigGeneratorService {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
 
-        int loadBalancerPort = loadBalancer.getPublicPort();
+        int loadBalancerPort = loadBalancer.getStatsPort();
 
         writeDefaultsStart(printWriter, loadBalancer);
 
-        printWriter.println(TAB2 + "bind *:" + loadBalancer.getPublicPort());
+        printWriter.println(TAB2 + "bind *:" + loadBalancer.getStatsPort());
 
         // Write content
         for (String rule : rules) {
@@ -147,7 +147,7 @@ public class ConfigGeneratorService {
         }
 
         printWriter.println();
-        int statsPort = loadBalancer.getPublicPort();
+        int statsPort = loadBalancer.getStatsPort();
         printWriter.println(TAB + "listen stats *:" + ++statsPort);
 
         writeDefaultsEnd(printWriter,loadBalancer.getName());

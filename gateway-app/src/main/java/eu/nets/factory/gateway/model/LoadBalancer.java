@@ -35,7 +35,7 @@ public class LoadBalancer extends AbstractEntity{
     private String userName;
 
     @NotNull
-    @Min(1)
+    @Min(20000)
     @Max(65535)
     private int publicPort;
 
@@ -67,13 +67,13 @@ public class LoadBalancer extends AbstractEntity{
     private List<Application> applications;
 
 
-    public LoadBalancer(String name, String host, String installationPath, String sshKey, int publicPort, String userName, int checkTimeout, int connectTimeout, int serverTimeout, int clientTimeout, int retries) {
+    public LoadBalancer(String name, String host, String installationPath, String sshKey, int statsPort, String userName, int checkTimeout, int connectTimeout, int serverTimeout, int clientTimeout, int retries) {
         this.name = name;
         this.host = host;
         this.installationPath = installationPath;
         this.sshKey = sshKey;
         this.userName = userName;
-        this.publicPort = publicPort;
+        this.publicPort = statsPort;
         this.checkTimeout = checkTimeout;
         this.connectTimeout = connectTimeout;
         this.serverTimeout = serverTimeout;
@@ -116,12 +116,11 @@ public class LoadBalancer extends AbstractEntity{
     public String getUserName() { return userName; }
     public void setUserName(String userName) { this.userName = userName; }
 
-    public int getPublicPort() {
+    public int getStatsPort() {
         return publicPort;
     }
-
-    public void setPublicPort(int publicPort) {
-        this.publicPort = publicPort;
+    public void setStatsPort(int statsPort) {
+        this.publicPort = statsPort;
     }
 
     public List<Application> getApplications() {
@@ -135,7 +134,6 @@ public class LoadBalancer extends AbstractEntity{
     public int getRetries() {
         return retries;
     }
-
     public void setRetries(int retries) {
         this.retries = retries;
     }
@@ -143,7 +141,6 @@ public class LoadBalancer extends AbstractEntity{
     public int getClientTimeout() {
         return clientTimeout;
     }
-
     public void setClientTimeout(int clientTimeout) {
         this.clientTimeout = clientTimeout;
     }
@@ -151,7 +148,6 @@ public class LoadBalancer extends AbstractEntity{
     public int getServerTimeout() {
         return serverTimeout;
     }
-
     public void setServerTimeout(int serverTimeout) {
         this.serverTimeout = serverTimeout;
     }
@@ -159,7 +155,6 @@ public class LoadBalancer extends AbstractEntity{
     public int getConnectTimeout() {
         return connectTimeout;
     }
-
     public void setConnectTimeout(int connectTimeout) {
         this.connectTimeout = connectTimeout;
     }
@@ -167,7 +162,6 @@ public class LoadBalancer extends AbstractEntity{
     public int getCheckTimeout() {
         return checkTimeout;
     }
-
     public void setCheckTimeout(int checkTimeout) {
         this.checkTimeout = checkTimeout;
     }

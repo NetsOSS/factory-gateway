@@ -59,7 +59,7 @@ public class StatusControllerTest {
         loadModelOne = loadBalancerController.create(loadModelOne);
         loadModelTwo = loadBalancerController.create(loadModelTwo);
 
-        ApplicationGroup groupOne = new ApplicationGroup("GroupOne");
+        ApplicationGroup groupOne = new ApplicationGroup("GroupOne", 10001);
         AppGroupModel groupModel = new AppGroupModel(groupOne);
         groupModel = applicationGroupController.create(groupModel);
 

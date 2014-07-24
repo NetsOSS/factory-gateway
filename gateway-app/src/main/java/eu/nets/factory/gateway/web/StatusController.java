@@ -263,7 +263,7 @@ public class StatusController {
         log.info("StatusController.checkStatusAPI, lbid={}, status= {}", lbId, statusChange);
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(lbId);
 
-        String statsPage = "http://"+loadBalancer.getHost()+":"+(loadBalancer.getPublicPort()+1)+"/proxy-stats";
+        String statsPage = "http://"+loadBalancer.getHost()+":"+(loadBalancer.getStatsPort()+1)+"/proxy-stats";
         try {
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost(statsPage);

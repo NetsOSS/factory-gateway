@@ -91,7 +91,7 @@ public class ApplicationGroupControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        ApplicationGroup applicationGroup = new ApplicationGroup("GroupX");
+        ApplicationGroup applicationGroup = new ApplicationGroup("GroupX", 10001);
         AppGroupModel appGroupModel = applicationGroupController.create(new AppGroupModel(applicationGroup));
         assertThat(applicationGroupController.listAllAppGroups().size()).isNotNull().isEqualTo(4);
         assertThat(applicationGroupController.search("GroupX")).isNotNull().hasSize(1);
@@ -108,7 +108,7 @@ public class ApplicationGroupControllerTest {
 
     @Test()
     public void testCreateValidName() throws Exception {
-        ApplicationGroup applicationGroup =  new ApplicationGroup("GroupX");
+        ApplicationGroup applicationGroup =  new ApplicationGroup("GroupX", 10001);
         AppGroupModel appGroupModel = new AppGroupModel(applicationGroup);
 
         try { //name already exists - not unique

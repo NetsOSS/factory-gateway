@@ -11,6 +11,7 @@ public class AppGroupModel {
     public Long id;
 
     public String name;
+    public int port;
     public List<AppModel> applications;
 
     public AppGroupModel() { }
@@ -20,15 +21,16 @@ public class AppGroupModel {
     }
 
     private AppGroupModel(ApplicationGroup applicationGroup, Boolean summary) {
-        this(applicationGroup.getId(), applicationGroup.getName());
+        this(applicationGroup.getId(), applicationGroup.getName(), applicationGroup.getPort());
         if(!summary) {
             this.applications = applicationGroup.getApplications().stream().map(AppModel::summary).collect(toList());
         }
     }
 
-    public AppGroupModel(Long id, String name) {
+    public AppGroupModel(Long id, String name, int port) {
         this.id = id;
         this.name = name;
+        this.port = port;
     }
 
     public static AppGroupModel summary(ApplicationGroup applicationGroup) {
@@ -41,6 +43,9 @@ public class AppGroupModel {
 
     public String getName() { return name; }
     //public void setName(String name) { this.name = name; }
+
+    public int getPort() { return port; }
+    //public void setPort(int port) { this.port = port; }
 
     public List<AppModel> getApplications() { return applications; }
 }

@@ -26,6 +26,15 @@
                  required
                  placeholder="Enter application group name">
         </div>
+
+        <div class="form-group">
+          <label for="inAppGroupPort">Port</label>
+          <input type="text" ng-model="appGroup.port" class="form-control"
+                 name="port"
+                 required
+                 placeholder="Enter application group port - range 10000 - 20000">
+        </div>
+
         <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
       </form>
     </div>
@@ -35,9 +44,18 @@
 
 <div class="panel panel-default">
   <div class="panel-body">
-    {{appGroup.name}} has {{appGroup.applications.length}} applications.
+  <div class="row">
+    <div class="col-sm-6">
+    <ul class="list-unstyled">
+      <li>port: {{appGroup.port}}</li>
+      <li>{{appGroup.name}} has {{appGroup.applications.length}} applications.</li>
+    </ul>
+      </div>
+    <div class="col-sm-6">
     <div class="btn-group pull-right ">
       <a><span ng-click="removeGroup(appGroup)" class="glyphicon glyphicon-trash"></span></a>
+    </div>
+      </div>
     </div>
   </div>
 </div>

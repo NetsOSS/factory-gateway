@@ -233,7 +233,7 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch (GatewayException ignore) { }
     }
-
+    /*
     @Test()
     public void testCreateValidPublicPort() throws Exception {
         LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
@@ -251,7 +251,7 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch (GatewayException ignore) { }
     }
-
+    */
     @Test()
     public void testCreateUniqueHostInstallationPath() throws Exception {
         LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "instPathTwo", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
@@ -261,7 +261,7 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch (GatewayException ignore) { }
     }
-
+    /*
     @Test()
     public void testCreateUniqueHostPublicPort() throws Exception {
         LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "X", "X", 234, "factory", 2000, 1000, 60000, 60000, 3);
@@ -271,6 +271,7 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch (GatewayException ignore) { }
     }
+    */
     @Test()
     public void testCreateValidClientTimeoutAndServerTimeout() throws Exception {
         LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
@@ -314,7 +315,7 @@ public void testFindEntityById() throws Exception {
         loadBalancerModel.installationPath = "/batcave";
         loadBalancerModel.sshKey = "nananananananana";
         loadBalancerModel.userName = "factory";
-        loadBalancerModel.publicPort = 1;
+        //loadBalancerModel.publicPort = 1;
         loadBalancerModel.checkTimeout = 2000;
         loadBalancerModel.connectTimeout = 1000;
         loadBalancerModel.clientTimeout = 60000;
@@ -448,6 +449,7 @@ public void testFindEntityById() throws Exception {
         } catch (GatewayException ignore) { }
     }
 
+    /*
     @Test()
     public void testUpdateValidPublicPort() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
@@ -464,6 +466,7 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch (GatewayException ignore) { }
     }
+    */
 
     @Test
     public void testUpdateUniqueHostInstallationPath() throws Exception {
@@ -471,7 +474,7 @@ public void testFindEntityById() throws Exception {
 
         //host & installationPath remains the same
         loadBalancerModel.name = "X";
-        loadBalancerModel.publicPort = 987;
+        //loadBalancerModel.publicPort = 987;
         assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isInstanceOf(LoadBalancerModel.class);
 
         try { //host & installationPath already exists - not unique
@@ -484,21 +487,20 @@ public void testFindEntityById() throws Exception {
     }
 
     @Test
-    public void testUpdateUniqueHostPublicPort() throws Exception {
+    public void testUpdateUniqueHostStatsPort() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
 
-        //host & publicPort remains the same
+        //host & statsPort remains the same
         loadBalancerModel.name = "X";
         loadBalancerModel.installationPath = "/X";
         assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isInstanceOf(LoadBalancerModel.class);
 
-        try {//host & publicPort already exists - not unique
-            loadBalancerModel.host = "hostTwo";
-            loadBalancerModel.publicPort = 234;
-            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        loadBalancerModel.host = "hostTwo";
+        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel).getStatsPort()).isEqualTo(20002);
+
+        loadBalancerModel.host = "X";
+        assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel).getStatsPort()).isEqualTo(20002);
+
     }
     @Test()
     public void testUpdateClientTimeoutEqualsServerTimeout() throws Exception {

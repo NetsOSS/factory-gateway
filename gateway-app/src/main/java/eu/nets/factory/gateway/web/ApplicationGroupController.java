@@ -75,9 +75,16 @@ public class ApplicationGroupController {
         }
     }
 
+    private void assertPortUnique(int port) {
+        if(applicationGroupRepository.countByPort(port) > 0L) {
+            throw new GatewayException("Could not create Application Group. Port '" + port + "' is already in use.");
+        }
+    }
+
     private void assertValidModel(AppGroupModel appGroupModel) {
         if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
         if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
+        if(appGroupModel.getPort() < 10000 || appGroupModel.getPort() > 19999) throw new  GatewayException("Could not create ApplicationGroup. Port must be a number between 10 000 and 20 000. Received: " + appGroupModel.getPort());
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -87,8 +94,9 @@ public class ApplicationGroupController {
 
         assertValidModel(appGroupModel);
         assertNameUnique(appGroupModel.name);
+        assertPortUnique(appGroupModel.port);
 
-        ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName());
+        ApplicationGroup applicationGroup = new ApplicationGroup(appGroupModel.getName(), appGroupModel.getPort());
         applicationGroup = applicationGroupRepository.save(applicationGroup);
 
         return new AppGroupModel(applicationGroup);
@@ -117,9 +125,10 @@ public class ApplicationGroupController {
 
         assertValidModel(appGroupModel);
         ApplicationGroup applicationGroup = findEntityById(id);
-        if(!(applicationGroup.getName().equals(appGroupModel.name))) { assertNameUnique(appGroupModel.name); }
+        if(!(applicationGroup.getName().equals(appGroupModel.getName()))) { assertNameUnique(appGroupModel.getName()); }
 
-        applicationGroup.setName(appGroupModel.name);
+        applicationGroup.setName(appGroupModel.getName());
+        applicationGroup.setPort(appGroupModel.getPort());
 
         return new AppGroupModel(applicationGroup);
     }

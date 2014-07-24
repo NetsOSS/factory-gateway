@@ -38,9 +38,9 @@ public class InitTestClass {
 
 
         //ApplicationGroups
-        ApplicationGroup groupOne = new ApplicationGroup("GroupOne");
-        ApplicationGroup groupTwo = new ApplicationGroup("GroupTwo");
-        ApplicationGroup groupThree = new ApplicationGroup("GroupThree");
+        ApplicationGroup groupOne = new ApplicationGroup("GroupOne", 10000);
+        ApplicationGroup groupTwo = new ApplicationGroup("GroupTwo", 10500);
+        ApplicationGroup groupThree = new ApplicationGroup("GroupThree", 19999);
         AppGroupModel groupModelOne = new AppGroupModel(groupOne);
         AppGroupModel groupModelTwo = new AppGroupModel(groupTwo);
         AppGroupModel groupModelThree = new AppGroupModel(groupThree);
