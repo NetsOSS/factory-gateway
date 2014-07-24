@@ -16,6 +16,6 @@
     "bootstrap": "~3.1.1",
     "requirejs": "~2.1.11",
     "requirejs-domready": "~2.0.1",
-    "angular-ui-date": "~0.0.3"
+    "angular-ui-sortable": "~0.12.8"
   }
 }
