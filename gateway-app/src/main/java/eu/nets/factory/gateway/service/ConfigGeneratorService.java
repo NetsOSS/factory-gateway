@@ -129,7 +129,9 @@ public class ConfigGeneratorService {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
 
-        writeDefaultsStart(printWriter);
+        int loadBalancerPort = loadBalancer.getPublicPort();
+
+        writeDefaultsStart(printWriter, loadBalancer);
 
         printWriter.println(TAB2 + "bind *:" + loadBalancer.getPublicPort());
 
@@ -146,7 +148,7 @@ public class ConfigGeneratorService {
 
         printWriter.println();
         int statsPort = loadBalancer.getPublicPort();
-        printWriter.println(TAB + "listen stats *:" + statsPort);
+        printWriter.println(TAB + "listen stats *:" + ++statsPort);
 
         writeDefaultsEnd(printWriter,loadBalancer.getName());
 
@@ -155,7 +157,7 @@ public class ConfigGeneratorService {
         return stringWriter.toString();
     }
 
-    private void writeDefaultsStart(PrintWriter pw) {
+    private void writeDefaultsStart(PrintWriter pw, LoadBalancer loadBalancer) {
         pw.println(TAB + "global");
         pw.println(TAB2 + "daemon");
         pw.println(TAB2 + "maxconn 256");
@@ -163,9 +165,15 @@ public class ConfigGeneratorService {
         pw.println();
         pw.println(TAB + "defaults");
         pw.println(TAB2 + "mode http");
+        pw.println(TAB2 + "timeout check " + loadBalancer.getCheckTimeout() + "ms");
+        pw.println(TAB2 + "timeout connect " + loadBalancer.getConnectTimeout() + "ms");
+        pw.println(TAB2 + "timeout server " + loadBalancer.getServerTimeout() + "ms");
+        pw.println(TAB2 + "timeout client " + loadBalancer.getClientTimeout() + "ms");
+        pw.println(TAB2 + "retries " + loadBalancer.getRetries());
+        /*
         pw.println(TAB2 + "timeout connect 5000ms");
         pw.println(TAB2 + "timeout client 50000ms");
-        pw.println(TAB2 + "timeout server 50000ms");
+        pw.println(TAB2 + "timeout server 50000ms");*/
         pw.println();
         pw.println(TAB + "frontend http-in");
     }

@@ -48,8 +48,9 @@ define([ 'angular' ], function (angular) {
             }
         }
           $scope.validateServerClient = function() {
+              $scope.lb.clientTimeout = $scope.lb.serverTimeout;
               return $scope.lb.serverTimeout==$scope.lb.clientTimeout;
-          }
+      }
 
         $scope.updateOrCreateLB = function () {
           console.log('LB in form: ', $scope.lb);
