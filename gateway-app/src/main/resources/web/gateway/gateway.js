@@ -265,6 +265,7 @@ define([
         GatewayData.ApplicationController.removeHeaderRule(app.id,headerRule.id).then(function (data) {
           app.headerRules.splice( app.headerRules.indexOf(headerRule), 1);
         });
+
       };
 
       $scope.updateApplicationRules = function (app) {
