@@ -198,17 +198,7 @@ public class ApplicationControllerTest {
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //publicUrl does not start with '/[a-zA-Z]'
-            appModel.publicUrl = "/3";
-            applicationController.create(appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
 
-        try { //publicUrl contains whitespace
-            appModel.publicUrl = "/as d";
-            applicationController.create(appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
     }
 
     @Test()
@@ -234,17 +224,7 @@ public class ApplicationControllerTest {
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //checkPath does not start with '/[a-zA-Z]'
-            appModel.checkPath = "/3";
-            applicationController.create(appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
 
-        try { //checkPath contains whitespace
-            appModel.checkPath = "/as d";
-            applicationController.create(appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
     }
 
     @Test()
@@ -381,17 +361,7 @@ public class ApplicationControllerTest {
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //publicUrl does not start with '/[a-zA-Z]'
-            appModel.publicUrl = "/3";
-            applicationController.update(appModel.getId(), appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
 
-        try { //publicUrl contains whitespace
-            appModel.publicUrl = "/as d";
-            applicationController.update(appModel.getId(), appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
     }
 
     @Test
@@ -399,8 +369,9 @@ public class ApplicationControllerTest {
         AppModel appModel = applicationController.search("Grandiosa").get(0);
 
         try { //checkPath is blank
-            appModel.checkPath = "";
+            appModel.checkPath = "a";
             applicationController.update(appModel.getId(), appModel);
+            //boolean match = Pattern.matches("^/\\S*$", appModel.getCheckPath());
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
@@ -410,17 +381,7 @@ public class ApplicationControllerTest {
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
-        try { //checkPath does not start with '/[a-zA-Z]'
-            appModel.checkPath = "/3";
-            applicationController.update(appModel.getId(), appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
 
-        try { //checkPath contains whitespace
-            appModel.checkPath = "/as d";
-            applicationController.update(appModel.getId(), appModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
     }
 
     @Test

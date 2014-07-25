@@ -124,10 +124,10 @@ public class ApplicationController {
         if (appModel.getName() == null || !Pattern.matches("^\\S+$", appModel.getName()))
             throw new GatewayException("Could not create Application. Name must match pattern '^\\S+$'.");
 
-        /*if (appModel.getPublicUrl() == null || !Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl()))
-            throw new GatewayException("Could not create Application. PublicUrl must match pattern '^/[a-zA-Z]\\S*$'.");
-        if (appModel.getCheckPath() == null || !Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath()))
-            throw new GatewayException("Could not create Application. CheckPath must match pattern '^/[a-zA-Z]\\S*$'.");*/
+        if (appModel.getPublicUrl() == null || !Pattern.matches("^/.*", appModel.getPublicUrl()))
+            throw new GatewayException("Could not create Application. PublicUrl must match pattern '^\\S+$'.");
+        if (appModel.getCheckPath() == null || !Pattern.matches("^/.*", appModel.getCheckPath()))
+            throw new GatewayException("Could not create Application. CheckPath must match pattern '^\\S+$'.");
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

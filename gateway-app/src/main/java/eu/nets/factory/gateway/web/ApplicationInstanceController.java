@@ -109,7 +109,7 @@ public class ApplicationInstanceController {
         try {
             url = new URL("http://"+appInstModel.getServer());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new GatewayException("Could not create ApplicationInstance. Invalid server url: " +appInstModel.getServer()+" Exception: "+e);
         }
         

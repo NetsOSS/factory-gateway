@@ -27,7 +27,7 @@ public class ApplicationInstance extends AbstractEntity {
 
 
     //@Pattern(regexp = "^$|^/[a-zA-Z]\\S*$")
-    @Pattern(regexp = "^\\S+$")
+    @Pattern(regexp = "^/.*")
     private String path;
 
     @Column(nullable = false, name = "ha_proxy_state")
