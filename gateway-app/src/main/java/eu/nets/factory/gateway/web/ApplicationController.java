@@ -149,8 +149,6 @@ public class ApplicationController {
     }
 
 
-
-
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
     @ResponseBody //has to be here
     public void remove(@PathVariable Long id) {
@@ -163,7 +161,24 @@ public class ApplicationController {
         }
 
         ApplicationGroup applicationGroup = application.getApplicationGroup();
+
+        List<Application> applications = applicationGroup.getApplications();
+        int indexOfRemoved = applications.indexOf(application);
+
+        //To not get constrain violations.
+        application.setIndexOrder(Integer.MAX_VALUE);
+        applicationRepository.save(application);
+        applicationRepository.flush();
+
+        for (int i = indexOfRemoved + 1; i < applications.size(); i++) {
+            Application currApp = applications.get(i);
+            currApp.moveDown();
+            applicationRepository.save(currApp);
+        }
+
         applicationGroup.removeApplication(application);
+
+
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -282,21 +297,24 @@ public class ApplicationController {
     @ResponseBody
     public HeaderRuleModel addHeaderRule(@PathVariable Long applicationId, @RequestBody HeaderRuleModel headerRuleModel) {
         log.info("ApplicationController.addHeaderRule");
-        if(applicationRepository.findOne(applicationId) == null) throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
+        if (applicationRepository.findOne(applicationId) == null)
+            throw new GatewayException("Could not create ApplicationInstance. ApplicationID did not match the ID of any known application.");
 
         Application application = applicationRepository.findOne(applicationId);
-        HeaderRule headerRule = new HeaderRule(headerRuleModel.getName(),headerRuleModel.getPrefixMatch(),application);
+        HeaderRule headerRule = new HeaderRule(headerRuleModel.getName(), headerRuleModel.getPrefixMatch(), application);
         headerRule = headerRuleRepository.save(headerRule);
         application.addHeaderRule(headerRule);
         return new HeaderRuleModel(headerRule);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/data/application/{applicationId}/removeRule/{headerId}",produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.DELETE, value = "/data/application/{applicationId}/removeRule/{headerId}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody //has to be here
     public AppModel removeHeaderRule(@PathVariable Long applicationId, @PathVariable Long headerId) {
         log.info("ApplicationController.removeHeaderRule");
-        if(applicationRepository.findOne(applicationId) == null) throw new GatewayException("ApplicationID did not match the ID of any known application.");
-        if(headerRuleRepository.findOne(headerId) == null) throw new GatewayException("HeaderRuleID did not match the ID of any known headerRule.");
+        if (applicationRepository.findOne(applicationId) == null)
+            throw new GatewayException("ApplicationID did not match the ID of any known application.");
+        if (headerRuleRepository.findOne(headerId) == null)
+            throw new GatewayException("HeaderRuleID did not match the ID of any known headerRule.");
         Application application = applicationRepository.findOne(applicationId);
 
         HeaderRule headerRule = headerRuleRepository.findOne(headerId);
@@ -304,7 +322,6 @@ public class ApplicationController {
 
         return new AppModel(application);
     }
-
 
 
 }
