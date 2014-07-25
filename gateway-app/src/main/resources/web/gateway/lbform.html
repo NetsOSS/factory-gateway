@@ -83,7 +83,8 @@
              name="client"
              required integer
              min = "1"
-          disabled>
+             disabled
+              title = "Client timeout is equal to server timeout">
       <span class="bg-danger" ng-show="lbform.client.$error.integer">This is not valid integer!</span>
       <span class="bg-danger" ng-show="lbform.client.$error.min">  The value must be larger than 1!</span>
       <span class="bg-danger" ng-show="!validateServerClient()">Must be equal to server </span>
