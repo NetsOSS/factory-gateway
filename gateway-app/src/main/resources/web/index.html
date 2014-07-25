@@ -7,8 +7,9 @@
         'angular': 'bower/angular/angular',
         'bootstrap': 'bower/bootstrap/dist/js/bootstrap.min',
         'angular-route': 'bower/angular-route/angular-route',
-        'angular-ui-date': 'bower/angular-ui-date/src/date',
+        'angular-ui-sortable': 'bower/angular-ui-sortable/sortable',
         'jquery': 'bower/jquery/dist/jquery',
+        'jquery-ui': 'bower/jquery-ui/jquery-ui',
         'lodash': 'bower/lodash/dist/lodash'
       },
 
@@ -20,19 +21,23 @@
         'angular-route': {
           deps: ['angular']
         },
-        'angular-ui-date': {
-          deps: ['angular']
+        'angular-ui-sortable': {
+          deps: ['angular','jquery','jquery-ui']
         },
         'bootstrap': {
           deps: ['jquery']
         },
         'jquery': {
+        },
+        'jquery-ui': {
+          deps: ['jquery']
         }
       }
     };
 
   </script>
   <script src="web/bower/requirejs/require.js" data-main="web/gateway-main.js"></script>
+
   <link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap.css"/>
 
   <!--<link rel="stylesheet" href="web/bower/bootstrap/dist/css/bootstrap-theme.min.css"/>-->

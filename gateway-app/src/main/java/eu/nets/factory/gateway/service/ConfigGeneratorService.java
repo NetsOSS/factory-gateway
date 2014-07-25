@@ -28,36 +28,13 @@ public class ConfigGeneratorService {
         return null;
     }
 
-
-    /**
-     * Sorts the applications. First on name.
-     * If 2 applications has the same name, sort on the number of header rules.
-     * Such that the app with more headers, will be used before the others which accept all headers.
-     * <p/>
-     * Another way of sorting this, would be to search for all with the same acl path, and negate all other rules.
-     * Then the sorting would not be necessary
-     */
-    class NameAndRuleComparator implements Comparator<Application> {
-        @Override
-        public int compare(Application app1, Application app2) {
-            int aclUrl = app1.getPublicUrl().compareTo(app2.getPublicUrl());
-            if (aclUrl == 0)
-                return app2.getHeaderRules().size() - app1.getHeaderRules().size();
-            return aclUrl;
-        }
-    }
-
     public String generateConfig(LoadBalancer loadBalancer) {
 
         List<String> backends = new ArrayList<>();
         HashMap<String, List<String>> frontends = new HashMap<>();
 
-        List<Application> lbApplications = loadBalancer.getApplications();
-        lbApplications.sort(new NameAndRuleComparator());
-
-
         // Populate variables
-        for (Application application : lbApplications) {
+        for (Application application : loadBalancer.getApplications()) {
 
             StringWriter stringWriter = new StringWriter();
             PrintWriter printWriter = new PrintWriter(stringWriter);

@@ -2,6 +2,7 @@
 
 require([
   'angular',
+  'angular-ui-sortable',
   'bootstrap',
   './shared',
   './gateway/gateway'

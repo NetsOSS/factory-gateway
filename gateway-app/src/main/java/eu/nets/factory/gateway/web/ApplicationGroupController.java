@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
@@ -22,6 +23,9 @@ public class ApplicationGroupController {
 
     private final Logger log = getLogger(getClass());
     @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
     private ApplicationGroupRepository applicationGroupRepository;
 
 
@@ -29,7 +33,7 @@ public class ApplicationGroupController {
     @ResponseBody
     public List<AppGroupModel> listAllAppGroups() {
         log.info("ApplicationGroupController.listAllAppGroups");
-        return  applicationGroupRepository.findAll().stream().map(AppGroupModel::new).collect(toList());
+        return applicationGroupRepository.findAll().stream().map(AppGroupModel::new).collect(toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/application-group/find", produces = APPLICATION_JSON_VALUE)
@@ -53,10 +57,14 @@ public class ApplicationGroupController {
     public ApplicationGroup findEntityById(@PathVariable Long id) {
         log.info("ApplicationGroupController.findEntityById, id={}", id);
 
-        if(id == null) { throw new EntityNotFoundException("Application", id); }
+        if (id == null) {
+            throw new EntityNotFoundException("Application", id);
+        }
 
         ApplicationGroup applicationGroup = applicationGroupRepository.findOne(id);
-        if(applicationGroup == null) { throw new EntityNotFoundException("ApplicationGroup", id); }
+        if (applicationGroup == null) {
+            throw new EntityNotFoundException("ApplicationGroup", id);
+        }
 
         return applicationGroup;
     }
@@ -70,7 +78,7 @@ public class ApplicationGroupController {
     }
 
     private void assertNameUnique(String name) {
-        if(applicationGroupRepository.countByName(name) > 0L) {
+        if (applicationGroupRepository.countByName(name) > 0L) {
             throw new GatewayException("Could not create Application Group. Name '" + name + "' is already in use.");
         }
     }
@@ -148,5 +156,63 @@ public class ApplicationGroupController {
     @ResponseBody
     public AppGroupModel removeApplication(@PathVariable Long id, @RequestBody Long appId) {
         return null;
+    }
+
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{appGroupId}/changeIndexOrder" , consumes = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void changeIndexOrderOfApplications(@PathVariable Long appGroupId, @RequestBody ObjectNode body) {
+        ApplicationGroup applicationGroup = findEntityById(appGroupId);
+        List<Application> applications = applicationGroup.getApplications();
+
+        int fromIndex = body.get("from").asInt();
+        int toIndex = body.get("to").asInt();
+
+        if(fromIndex<0 || toIndex<0 || fromIndex>applications.size() || toIndex>applications.size() || fromIndex==toIndex){
+            log.debug("Invalid indexes. Can't change order.");
+            return;
+        }
+
+
+        Application moved = applications.get(fromIndex);
+
+       /* System.out.println("Moving app " + moved.getName() + " from " + fromIndex + " ->  to " + toIndex);
+
+        for (Application application : applications) {
+            System.out.println("BEFORE " + application.getName() + " = " + application.getIndexOrder());
+        }*/
+
+        moved.setIndexOrder(Integer.MAX_VALUE);
+        applicationRepository.saveAndFlush(moved);
+
+        if(fromIndex> toIndex){
+
+            for (int i = fromIndex - 1; i >= toIndex; i--) {
+                Application app = applications.get(i);
+                app.moveUp();
+                //System.out.println("Moving app " + app.getName() + " up ->  to index=" + app.getIndexOrder());
+                applicationRepository.save(app);
+                applicationRepository.flush();
+            }
+
+        }
+        if (fromIndex < toIndex) {
+
+            for (int i = fromIndex + 1; i <= toIndex; i++) {
+                Application app = applications.get(i);
+                app.moveDown();
+                //System.out.println("Moving app " + app.getName() + " down ->  to index=" + app.getIndexOrder());
+            }
+
+        }
+        applicationRepository.save(applications);
+        applicationRepository.flush();
+        //applications.subList(fromIndex, toIndex).stream().forEach(Application::moveDown);
+        moved.setIndexOrder(toIndex);
+        applicationRepository.save(applications);
+
+        /*for (Application application : applications) {
+            System.out.println("AFTER " + application.getId() + ":" + application.getIndexOrder());
+        }*/
     }
 }

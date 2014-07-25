@@ -1,3 +1,37 @@
+<!--<div class="row">
+  <ul ui-sortable="sortableOptionsA" class="list items-container" ng-model="yourObjects">
+       <li class="item sortable"  ng-repeat="item in yourObjects">{{item.name}}</li>
+   </ul>
+
+
+   <h2>One sortable list</h2>
+   <ul ui-sortable="sortableOptionsA" ng-model="allAppGroups[0].applications">
+       <li ng-repeat="item in allAppGroups[0].applications">{{item.name}}</li>
+   </ul>
+
+   <div class="panel-group" id="accordion" ui-sortable="sortableOptionsA" ng-model="allAppGroups[0].applications">
+       <div class="panel panel-default"  ng-repeat="item in allAppGroups[0].applications">
+           <div class="panel-heading">
+               <h4 class="panel-title">
+                   <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+
+                   </a>
+                   {{item.name}}
+               </h4>
+           </div>
+           <div id="collapseOne" class="panel-collapse collapse in">
+               <div class="panel-body">
+                   Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+               </div>
+           </div>
+       </div>
+
+
+   </div>
+
+
+</div>
+-->
 <div class="row">
 
 
@@ -60,8 +94,8 @@
   </div>
 </div>
 
-<div class="panel-group" id="tab-{{appGroup.id}}-panel">
-  <div class="panel panel-success" ng-repeat="app in appGroup.applications">
+<div class="panel-group" id="tab-{{appGroup.id}}-panel" ui-sortable="sortableApps" ng-model="appGroup.applications">
+  <div class="panel panel-success" ng-repeat="app in appGroup.applications"   >
     <div class="panel-heading">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#tab-{{app.id}}-panel">
@@ -204,64 +238,74 @@
       </span>
       </div>
     </div>
+
   </div>
 
-  <div class="panel panel-success">
+
+
+
+
+
+
+</div>
+
+<div class="panel panel-success">
     <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#tab-{{appGroup.id}}"
-           href="#tab-{{appGroup.id}}-newApp">
-          <span class="glyphicon glyphicon-plus"></span> New application to {{appGroup.name}}
-        </a>
-      </h4>
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#tab-{{appGroup.id}}"
+               href="#tab-{{appGroup.id}}-newApp">
+                <span class="glyphicon glyphicon-plus"></span> New application to {{appGroup.name}}
+            </a>
+        </h4>
     </div>
     <div id="tab-{{appGroup.id}}-newApp" class="panel-collapse collapse ">
-      <div class="panel-body">
-        <form role="form" ng-submit="createApplication(appGroup)" name="createAppForm" novalidate>
+        <div class="panel-body">
+            <form role="form" ng-submit="createApplication(appGroup)" name="createAppForm" novalidate>
 
-          <div class="form-group">
-            <label for="inAppName2">Name</label>
-            <input type="text" ng-model="newApp.name" class="form-control" id="inAppName2"
-                   name="name"
-                   ng-pattern="/^\S+$/"
-                   required
-                   placeholder="Enter application name">
-            <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
-          </div>
-          <div class="form-group">
-            <label for="inAppPublicUrl2">Public Path</label>
-            <input type="text" ng-model="newApp.publicUrl" class="form-control "
-                   id="inAppPublicUrl2"
-                   name="publicUrl"
-                   ng-pattern="/^/[a-zA-Z]+\S*$/"
-                   required
-                   placeholder="Enter public url">
-            <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-          </div>
-          <div class="form-group">
-            <label for="inAppEmails2">Emails (for notification). Separate by ,</label>
-            <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails2"
-                   name="emails"
-                   required
-                   placeholder="Enter email(s)">
-          </div>
-          <div class="form-group">
-            <label for="inAppCheckPath2">Check path</label>
-            <input type="text" ng-model="newApp.checkPath" class="form-control "
-                   id="inAppCheckPath2"
-                   name="checkpath"
-                   ng-pattern="/^/[a-zA-Z]+\S*$/"
-                   required
-                   placeholder="Enter check path">
-            <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-          </div>
+                <div class="form-group">
+                    <label for="inAppName2">Name</label>
+                    <input type="text" ng-model="newApp.name" class="form-control" id="inAppName2"
+                           name="name"
+                           ng-pattern="/^\S+$/"
+                           required
+                           placeholder="Enter application name">
+                    <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
+                </div>
+                <div class="form-group">
+                    <label for="inAppPublicUrl2">Public Path</label>
+                    <input type="text" ng-model="newApp.publicUrl" class="form-control "
+                           id="inAppPublicUrl2"
+                           name="publicUrl"
+                           ng-pattern="/^/[a-zA-Z]+\S*$/"
+                           required
+                           placeholder="Enter public url">
+                    <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                </div>
+                <div class="form-group">
+                    <label for="inAppEmails2">Emails (for notification). Separate by ,</label>
+                    <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails2"
+                           name="emails"
+                           required
+                           placeholder="Enter email(s)">
+                </div>
+                <div class="form-group">
+                    <label for="inAppCheckPath2">Check path</label>
+                    <input type="text" ng-model="newApp.checkPath" class="form-control "
+                           id="inAppCheckPath2"
+                           name="checkpath"
+                           ng-pattern="/^/[a-zA-Z]+\S*$/"
+                           required
+                           placeholder="Enter check path">
+                    <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                </div>
 
-          <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
-        </form>
-      </div>
+                <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
+
+
 </div>
 </div>
 </div>

@@ -2,6 +2,7 @@ package eu.nets.factory.gateway.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -49,6 +50,7 @@ public class Application extends AbstractEntity {
     private int failoverLoadBalancerSetupValue;
 
     @Column(name = "index_order")
+    @Min(0)
     private int indexOrder;
 
     @OneToMany(mappedBy = "application", orphanRemoval = true, cascade = CascadeType.PERSIST)
@@ -121,5 +123,12 @@ public class Application extends AbstractEntity {
 
     public void setIndexOrder(int indexOrder) {
         this.indexOrder = indexOrder;
+    }
+    public void moveDown(){
+        this.indexOrder--;
+    }
+
+    public void moveUp(){
+        this.indexOrder++;
     }
 }

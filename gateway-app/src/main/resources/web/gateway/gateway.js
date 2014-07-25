@@ -5,7 +5,7 @@ define([
     'angular'
 ], function (require, angular) {
     var templatePrefix = require.toUrl("./");
-    var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives', 'shared.filters']);
+    var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives', 'shared.filters','ui.sortable']);
 
 
     gateway.config(function ($routeProvider, $httpProvider) {
@@ -321,6 +321,28 @@ define([
         };
 
 
+      $scope.sortableApps = {
+        stop : function(e, ui) {
+          var movedApp = ui.item.scope().app;
+
+          var moveObj= {
+            "from": ui.item.sortable.index,
+            "to": ui.item.sortable.dropindex
+          };
+          console.log('moved', movedApp, moveObj.from, moveObj.to);
+
+          //If to is undefined, the item did not move. (Dragged back to the same position) -> Do nothing
+          if(typeof moveObj.to === 'undefined')
+            return;
+
+          console.log(moveObj);
+          GatewayData.ApplicationGroupController.changeIndexOrderOfApplications(movedApp.applicationGroupId,moveObj).then(function (data) {
+          });
+        }
+      };
+
+
+
     });
 
     //Application controller
@@ -401,6 +423,11 @@ define([
             $('#modalAppInstDetails').modal('show');
 
         };
+
+
+
+
+
 
     });
 

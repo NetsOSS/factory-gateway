@@ -64,6 +64,7 @@ public class LoadBalancer extends AbstractEntity{
      */
 
     @ManyToMany(targetEntity = Application.class, mappedBy = "loadBalancers")
+    @OrderBy("index_order")
     private List<Application> applications;
 
 

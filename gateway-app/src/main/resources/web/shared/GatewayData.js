@@ -139,6 +139,15 @@ define([], function () {
       return ApplicationController.search($route.current.params.name);
     };
     this.ApplicationGroupController = {};
+    this.ApplicationGroupController.changeIndexOrderOfApplications = function (appGroupId, body) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/application-groups/{appGroupId}/changeIndexOrder';
+      req.url = req.url.replace(/{appGroupId}/, appGroupId);
+      req.data = body;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationGroupController.create = function (appGroupModel) {
       var req = {};
       req.method = 'POST';
