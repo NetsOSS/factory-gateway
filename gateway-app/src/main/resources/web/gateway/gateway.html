@@ -110,7 +110,7 @@
           <a> <span ng-click="showUpdateApplicationRules(app)" class="glyphicon glyphicon-edit" title="Edit header rules"></span></a>
 
         <a> <span ng-click="showUpdateApplication(app)" class="glyphicon glyphicon-pencil" title="Edit application"> </span></a>
-        <a> <span ng-click="removeApp(appGroup,app)" class="glyphicon glyphicon-trash" title="Remove application"> </span></a>
+        <a> <span ng-click="showDeleteAppWarning(app, appGroup)" class="glyphicon glyphicon-trash" title="Remove application"> </span></a>
         <a ng-href="#/app/{{app.id}}"> <span class="glyphicon glyphicon-chevron-right" title="Go to detail page"> </span></a>
 
         <!--
@@ -413,6 +413,22 @@
 </div>
 <hr>
 
+<div class="modal" id="deleteWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Are you sure you want to delete?
+        <button type="button" class="btn btn-info" data-dismiss="modal" ng-click="removeApp()">
+          Yes
+        </button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal update Application app) -->
 <div class="modal fade" id="modalUpdateApp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

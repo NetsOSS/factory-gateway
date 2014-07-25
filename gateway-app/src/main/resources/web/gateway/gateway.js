@@ -253,6 +253,19 @@ define([
             $('#modalUpdateApp').modal('show');
         };
 
+        $scope.showDeleteAppWarning = function (app, appGroup) {
+            $scope.appToBeDeleted = app;
+            $scope.appGroupToBeSpliced = appGroup;
+            $('#deleteWarningModal').modal('show');
+        };
+
+        $scope.removeApp = function() {
+            GatewayData.ApplicationController.remove($scope.appToBeDeleted.id).then(function (data) {
+                $scope.appGroupToBeSpliced.applications.splice($scope.appGroupToBeSpliced.applications.indexOf($scope.appToBeDeleted), 1);
+            });
+
+        };
+
 
       // ------------------------ Header Rules For Application --------------------------------------
       $scope.showUpdateApplicationRules = function (app) {
