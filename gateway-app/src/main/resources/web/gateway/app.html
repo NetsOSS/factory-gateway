@@ -18,9 +18,28 @@
   Edit Application
 </button>
 
-<button type="button" class="btn btn-danger" ng-click="removeApp()"><span class="glyphicon glyphicon-trash"></span>
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteWarningModal"><span
+    class="glyphicon glyphicon-trash"></span>
   Delete Application
 </button>
+
+<div class="modal" id="deleteWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Are you sure you want to delete?
+        <button type="button" class="btn btn-info" data-dismiss="modal" ng-click="removeApp()">
+          Yes
+        </button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <button class="btn btn-info" data-toggle="modal" data-target="#myInstModal"><span
     class="glyphicon glyphicon-plus"></span> Create Instance
@@ -31,8 +50,8 @@
     Change setup <span class="caret "></span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li><a ng-click = "changeSetup(app.id, 'HOT_HOT')">HOT_HOT</a></li>
-    <li><a ng-click = "changeSetup(app.id, 'HOT_STANDBY')">HOT_STANDBY</a></li>
+    <li><a ng-click="changeSetup(app.id, 'HOT_HOT')">HOT_HOT</a></li>
+    <li><a ng-click="changeSetup(app.id, 'HOT_STANDBY')">HOT_STANDBY</a></li>
   </ul>
 </div>
 
@@ -41,8 +60,8 @@
     Set sticky<span class="caret "></span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li><a ng-click = "setSticky(app.id, 'STICKY')">STICKY</a></li>
-    <li><a ng-click = "setSticky(app.id, 'NOT_STICKY')">NOT_STICKY</a></li>
+    <li><a ng-click="setSticky(app.id, 'STICKY')">STICKY</a></li>
+    <li><a ng-click="setSticky(app.id, 'NOT_STICKY')">NOT_STICKY</a></li>
   </ul>
 </div>
 
@@ -289,6 +308,7 @@
 
   </div>
 </div>
+
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">

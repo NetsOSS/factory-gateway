@@ -19,9 +19,25 @@
                 class="glyphicon glyphicon-pencil"></span> Edit</a>
             <a ng-click="startLoadBalancer()" class="btn btn-warning btn-sm"><span
                 class="glyphicon glyphicon-play"></span> Start</a>
-            <a ng-click="removeLoadBalancer()" class="btn btn-danger btn-sm"><span
+            <a data-toggle = "modal" data-target="#deleteWarningModal"class="btn btn-danger btn-sm"><span
                 class="glyphicon glyphicon-trash"></span> Remove</a>
           </span>
+        </div>
+      </div>
+
+      <div class="modal" id="deleteWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              Are you sure you want to delete?
+              <button type="button" class="btn btn-info" data-dismiss="modal" ng-click="removeLoadBalancer()">
+                Yes
+              </button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -205,9 +221,3 @@
 </div>
 
 <hr>
-<button type="button" class="btn btn-warning" ng-click="startLoadBalancer()"><span
-    class="glyphicon glyphicon-play"></span> Start LoadBalancer
-</button>
-<button type="button" class="btn btn-danger" ng-click="removeLoadBalancer()"><span
-    class="glyphicon glyphicon-trash"></span> Delete LB
-</button>

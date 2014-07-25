@@ -385,8 +385,8 @@ define([
         $scope.removeApp = function () {
             console.log("Deleting id: ", $scope.app.id);
             GatewayData.ApplicationController.remove($scope.app.id).then(function (data) {
-                history.back();
                 $scope.$apply();
+                history.back();
             });
         };
 
