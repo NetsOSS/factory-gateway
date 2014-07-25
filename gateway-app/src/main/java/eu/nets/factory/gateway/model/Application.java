@@ -19,11 +19,11 @@ public class Application extends AbstractEntity {
     @Pattern(regexp = "^\\S+$")
     private String name;
 
-    @Pattern(regexp = "^/[a-zA-Z]\\S*$")
+    @Pattern(regexp = "^/\\S*$")
     @Column(nullable = false, name = "publicurl")
     private String publicUrl;
 
-    @Pattern(regexp = "^/[a-zA-Z]\\S*$")
+    @Pattern(regexp = "^/\\S*$")
     @Column(nullable = false, name = "checkpath")
     private String checkPath;
 

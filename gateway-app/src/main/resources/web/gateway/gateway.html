@@ -276,7 +276,7 @@
                     <input type="text" ng-model="newApp.publicUrl" class="form-control "
                            id="inAppPublicUrl2"
                            name="publicUrl"
-                           ng-pattern="/^/[a-zA-Z]+\S*$/"
+                           ng-pattern="/^//"
                            required
                            placeholder="Enter public url">
                     <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
@@ -293,7 +293,7 @@
                     <input type="text" ng-model="newApp.checkPath" class="form-control "
                            id="inAppCheckPath2"
                            name="checkpath"
-                           ng-pattern="/^/[a-zA-Z]+\S*$/"
+                           ng-pattern="/^//"
                            required
                            placeholder="Enter check path">
                     <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>

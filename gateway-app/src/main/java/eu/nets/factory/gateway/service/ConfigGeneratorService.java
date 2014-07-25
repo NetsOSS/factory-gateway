@@ -70,6 +70,10 @@ public class ConfigGeneratorService {
             printWriter.println();
             printWriter.println(TAB + "backend " + application.getName());
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
+            if(application.getApplicationInstances().size()>0){
+                //reqrep ^([^\ ]*)\ /lang/blog/(.*) \1\ /blog/lang/\2
+                printWriter.println(TAB2 + "reqrep ^([^\\ ]*)\\ "+application.getPublicUrl()+"(.*) \\1\\ "+application.getApplicationInstances().get(0).getPath()+"\\2");
+            }
 
             //debug, adding headers to see which was chosen.
             /// reqadd X-CustomHeader:\ debugMode

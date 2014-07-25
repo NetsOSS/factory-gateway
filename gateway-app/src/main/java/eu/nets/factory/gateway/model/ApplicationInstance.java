@@ -25,7 +25,9 @@ public class ApplicationInstance extends AbstractEntity {
     @Max(65535)
     private int port;
 
-    @Pattern(regexp = "^$|^/[a-zA-Z]\\S*$")
+
+    //@Pattern(regexp = "^$|^/[a-zA-Z]\\S*$")
+    @Pattern(regexp = "^\\S+$")
     private String path;
 
     @Column(nullable = false, name = "ha_proxy_state")

@@ -115,6 +115,7 @@ public class ApplicationController {
     }
 
     private void assertValidModel(AppModel appModel) {
+        //is this needed? The object already have the same constraints.
         if (appModel == null) throw new GatewayException("Could not create Application. Invalid ApplicationModel.");
         if (appModel.getApplicationGroupId() == null)
             throw new GatewayException("Could not create Application. Invalid ApplicationGroupID: " + appModel.getApplicationGroupId());
@@ -122,10 +123,11 @@ public class ApplicationController {
             throw new GatewayException("Could not create Application. ApplicationGroupID did not match the ID of any known application group.");
         if (appModel.getName() == null || !Pattern.matches("^\\S+$", appModel.getName()))
             throw new GatewayException("Could not create Application. Name must match pattern '^\\S+$'.");
-        if (appModel.getPublicUrl() == null || !Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl()))
+
+        /*if (appModel.getPublicUrl() == null || !Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getPublicUrl()))
             throw new GatewayException("Could not create Application. PublicUrl must match pattern '^/[a-zA-Z]\\S*$'.");
         if (appModel.getCheckPath() == null || !Pattern.matches("^/[a-zA-Z]\\S*$", appModel.getCheckPath()))
-            throw new GatewayException("Could not create Application. CheckPath must match pattern '^/[a-zA-Z]\\S*$'.");
+            throw new GatewayException("Could not create Application. CheckPath must match pattern '^/[a-zA-Z]\\S*$'.");*/
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
