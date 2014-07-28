@@ -147,8 +147,8 @@ public class ConfigGeneratorService {
         }
 
         printWriter.println();
-        int statsPort = loadBalancer.getStatsPort();
-        printWriter.println(TAB + "listen stats *:" + ++statsPort);
+
+        printWriter.println(TAB + "listen stats *:" + loadBalancer.getStatsPort());
 
         writeDefaultsEnd(printWriter, loadBalancer.getName());
 

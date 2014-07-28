@@ -154,7 +154,6 @@ public class StatusService {
     public List<String> readCSV(LoadBalancer loadBalancer) {
         //log.info("StatusService.readCSV");
 
-
         String csvFile = "http://"+ loadBalancer.getHost()+":" +  loadBalancer.getStatsPort() + "/proxy-stats;csv";
 
         URL url;
