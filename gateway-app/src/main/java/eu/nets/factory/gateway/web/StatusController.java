@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -259,25 +261,28 @@ public class StatusController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/status/checkStatusAPI/{lbId}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public StatusChange changeStatusAPI(@PathVariable Long lbId, @RequestBody StatusChange statusChange) {
+    public StatusChange changeStatusAPI(HttpServletRequest request,HttpServletResponse response, @PathVariable Long lbId, @RequestBody StatusChange statusChange) {
         log.info("StatusController.checkStatusAPI, lbid={}, status= {}", lbId, statusChange);
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(lbId);
 
-        String statsPage = "http://"+loadBalancer.getHost()+":"+(loadBalancer.getStatsPort()+1)+"/proxy-stats";
+        String statsPage = "http://"+loadBalancer.getHost()+":"+(loadBalancer.getStatsPort())+"/proxy-stats";
         try {
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost(statsPage);
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> params = new ArrayList<NameValuePair>(3);
             params.add(new BasicNameValuePair("s", statusChange.s));
             params.add(new BasicNameValuePair("action",statusChange.action));
             params.add(new BasicNameValuePair("b","#"+statusChange.b));
             httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
     //Execute and get the response.
-            HttpResponse response = httpclient.execute(httppost);
-            log.debug("HTTP statysCode :{} ",response.getStatusLine().getStatusCode());
-            HttpEntity entity = response.getEntity();
+            HttpResponse responseClient = httpclient.execute(httppost);
+            //log.debug("HTTP statysCode :{} ",responseClient.getStatusLine().getStatusCode());
+            //HttpEntity entity = responseClient.getEntity();
+
+            response.setStatus(responseClient.getStatusLine().getStatusCode());
+
             //entity.
 
             /*if (entity != null) {
@@ -290,6 +295,7 @@ public class StatusController {
             }*/
         } catch (Exception e) {
             e.printStackTrace();
+            response.setStatus(503);
         }
 
         applicationInstanceController.setProxyStateForInstance(statusChange.s,statusChange.action.toUpperCase());
