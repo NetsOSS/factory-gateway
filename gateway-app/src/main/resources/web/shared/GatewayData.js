@@ -109,6 +109,16 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationController.setStickyAndStartLoadBalancer2 = function (id, sticky, payload) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/applications/{id}/setSticky2/{sticky}';
+      req.url = req.url.replace(/{id}/, id);
+      req.url = req.url.replace(/{sticky}/, sticky);
+      req.data = payload;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationController.update = function (id, appModel) {
       var req = {};
       req.method = 'PUT';

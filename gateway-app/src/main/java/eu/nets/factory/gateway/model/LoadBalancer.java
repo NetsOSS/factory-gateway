@@ -55,13 +55,6 @@ public class LoadBalancer extends AbstractEntity{
 
     @Column(nullable = false, name = "retries")
     private int retries;
-    /*
-    public int checkTimeout;
-    public int connectTimeout;
-    public int serverTimeout;
-    public int clientTimeout;
-    public int retries;
-     */
 
     @ManyToMany(targetEntity = Application.class, mappedBy = "loadBalancers")
     @OrderBy("index_order")

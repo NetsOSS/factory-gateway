@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
@@ -134,9 +135,10 @@ public class LoadBalancerController {
     }
 
     private int generatePortValue(String host) {
-
+        Random r = new Random(System.currentTimeMillis());
         for(int port = 20000; port < 65536; port++) {
-            if (loadBalancerRepository.countByHostPublicPort(host, port) == 0L) return port;
+            int newPort=r.nextInt(45535)+20000;
+            if (loadBalancerRepository.countByHostPublicPort(host, newPort) == 0L) return newPort;
         }
 
         throw new GatewayException("Could not create Load Balancer. All port allocated to Load Balancer stats are already in use for host '" + host + "'.");
