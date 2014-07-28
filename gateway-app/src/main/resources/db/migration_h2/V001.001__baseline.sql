@@ -23,7 +23,6 @@ CREATE TABLE load_balancer (
   server_timeout    INTEGER DEFAULT 60000 NOT NULL,
   client_timeout    INTEGER DEFAULT 60000 NOT NULL,
   retries           INTEGER DEFAULT 3 NOT NULL,
-  test_field        VARCHAR(10),
   CONSTRAINT uq_host_installation_path  UNIQUE (host, installation_path),
   CONSTRAINT uq_host_public_port        UNIQUE (host, public_port),
   CONSTRAINT chk_server_client          CHECK (server_timeout = client_timeout)
