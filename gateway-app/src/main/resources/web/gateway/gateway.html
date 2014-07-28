@@ -80,13 +80,11 @@
   <div class="panel-body">
   <div class="row">
     <div class="col-sm-6">
-    <ul class="list-unstyled">
-      <li>port: {{appGroup.port}}</li>
-      <li>{{appGroup.name}} has {{appGroup.applications.length}} applications.</li>
-    </ul>
+      Port: {{appGroup.port}}
       </div>
     <div class="col-sm-6">
-    <div class="btn-group pull-right ">
+    <div class="pull-right ">
+        <span class="badge" title="Number of instances in this application">{{appGroup.applications.length}}</span>
       <a><span ng-click="showDeleteAppGroupWarning(appGroup)" class="glyphicon glyphicon-trash"></span></a>
     </div>
       </div>
@@ -94,9 +92,9 @@
   </div>
 </div>
 
-<div class="panel-group" id="tab-{{appGroup.id}}-panel" ui-sortable="sortableApps" ng-model="appGroup.applications">
-  <div class="panel panel-success" ng-repeat="app in appGroup.applications"   >
-    <div class="panel-heading">
+<div class="panel-group" id="tab-{{appGroup.id}}-panel" ng-model="appGroup.applications" ui-sortable="sortableApps" >
+  <div class="panel panel-success" ng-repeat="app in appGroup.applications"  >
+    <div class="panel-heading drag-handle">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#tab-{{app.id}}-panel">
           {{app.name}}

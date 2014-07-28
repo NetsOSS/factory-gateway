@@ -339,6 +339,7 @@ define([
 
 
       $scope.sortableApps = {
+        handle: ".drag-handle",
         stop : function(e, ui) {
           var movedApp = ui.item.scope().app;
 
