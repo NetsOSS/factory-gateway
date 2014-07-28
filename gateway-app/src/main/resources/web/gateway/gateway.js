@@ -197,6 +197,7 @@ define([
         // ----------------------- Application Group functions ------------------------------------
         $scope.createApplicationGroup = function () {
             GatewayData.ApplicationGroupController.create($scope.newAppGroup).then(function (data) {
+
                 $scope.allAppGroups.push(data);
                 $scope.newAppGroup = {};
             });

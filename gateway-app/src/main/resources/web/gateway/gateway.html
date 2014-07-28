@@ -51,32 +51,33 @@
     <div class="panel-body">
       <h3>New application group</h3>
 
-      <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
+      <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm" novalidate>
 
         <div class="form-group">
           <label for="inAppGroupName">Name</label>
-          <input type="text" ng-model="appGroup.name" class="form-control"
+          <input type="text" ng-model="newAppGroup.name" class="form-control"
                  name="name"
+                id="inAppGroupName"
                  required
                  placeholder="Enter application group name">
         </div>
 
         <div class="form-group">
-          <label for="inAppGroupPort">HAProxy Public Port</label>
+          <label for="inAppGroupPort">Port</label>
           <input type="number" ng-model="newAppGroup.port" class="form-control"
                  name="port"
                  id="inAppGroupPort"
-                 min = "1"
-                 max = "65000"
-                 placeholder="Enter application group port - range 1 - 65000"
+                 min = "1024"
+                 max = "64999"
+                 placeholder="Enter application group port - range 1024 - 64999"
                  integer required >
             <span class="bg-danger" ng-show="createAppGroupForm.port.$error.integer">This is not valid integer!</span>
-            <span class="bg-danger" ng-show="createAppGroupForm.port.$error.min">  The value must be larger than 1!</span>
+            <span class="bg-danger" ng-show="createAppGroupForm.port.$error.min">  The value must be larger than 1024!</span>
             <span class="bg-danger" ng-show="createAppGroupForm.port.$error.max">  The value must be smaller than 65000!</span>
 
         </div>
 
-        <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
+          <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
       </form>
     </div>
   </div>
@@ -315,81 +316,6 @@
 </div>
 </div>
 
-<div class="row">
-  <a href="" ng-model="collapsedGroup" ng-click="collapsedGroup=!collapsedGroup"><strong>Toggle
-    (show/hide)</strong> old gui</a>
-
-  <div ng-show="collapsedGroup">
-    <h3>All Application Groups</h3>
-
-    <div class="panel-group" id="accordion">
-      <div class="panel panel-primary" ng-repeat="appGroup in allAppGroups">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapseGroup{{appGroup.id}}">
-
-              <span class="glyphicon glyphicon-collapse-down"></span>
-              {{appGroup.name}}
-              <div class="pull-right">
-                <a href="" ng-click="showCreateApplicationForGroup(appGroup)" class="whitelink">
-                  <span class="glyphicon glyphicon-plus "></span>
-                  New application
-                </a>
-
-                <a href="#/group/{{appGroup.id}}" class="whitelink">
-                  <span class="glyphicon glyphicon-info-sign "></span>
-                  More info
-                </a>
-                <!--<span class="glyphicon glyphicon-eye-open "></span>-->
-              </div>
-
-            </a>
-          </h4>
-        </div>
-        <div id="collapseGroup{{appGroup.id}}" class="panel-collapse collapse ">
-          <div class="panel-body">
-            <div class="list-group">
-              <a href="#/app/{{appInGroup.id}}" class="list-group-item"
-                 ng-repeat="appInGroup in appGroup.applications">
-                <span class="badge">{{appInGroup.applicationInstances.length}}</span>
-                <b> {{appInGroup.name}}</b> {{appInGroup.publicUrl}}
-              </a>
-            </div>
-            <p ng-hide="appGroup.applications.length">No applications</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel-group" id="accordion2">
-      <div class="panel panel-success">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-              <span class="glyphicon glyphicon-plus "></span> New Application Group
-            </a>
-          </h4>
-        </div>
-        <div id="collapseOne" class="panel-collapse collapse">
-          <div class="panel-body">
-            <form role="form" ng-submit="createApplicationGroup()" name="createAppGroupForm">
-
-              <div class="form-group">
-                <label for="inAppGroupName">Name</label>
-                <input type="text" ng-model="appGroup.name" class="form-control" id="inAppGroupName"
-                       name="name"
-                       required
-                       placeholder="Enter application group name">
-              </div>
-              <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <hr>
 
 <div class="row">
@@ -560,7 +486,7 @@
                 </div>
 
                 <h3>New rule</h3>
-                <form role="form" ng-submit="updateApplicationRules()" >
+                <form role="form" ng-submit="updateApplicationRules()" name="createRuleForm" >
 
                     <div class="form-group" >
                         <label for="inRuleName">Headername</label>
@@ -572,12 +498,13 @@
                         <label for="inRuleName">Prefix match</label>
                         <input type="text" ng-model="inRule.prefixMatch" class="form-control" id="inRuleMatch"
                                name="name"
-                               required placeholder="Enter match"/>
+                               required placeholder="Enter match"
+                        />
                     </div>
 
 
 
-                    <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="createRuleForm.$invalid">Add</button>
                 </form>
             </div>
             <div class="modal-footer">

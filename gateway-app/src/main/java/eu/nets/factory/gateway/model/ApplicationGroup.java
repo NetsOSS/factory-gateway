@@ -14,12 +14,15 @@ import java.util.List;
         @UniqueConstraint(columnNames = "port")})
 public class ApplicationGroup extends AbstractEntity {
 
+    public static final int INSTANCE_PORT_MIN = 1024;
+    public static final int INSTANCE_PORT_MAX = 64999;
+
     @Pattern(regexp = "^\\S+$")
     private String name;
 
     @NotNull
-    @Min(1)
-    @Max(65000)
+    @Min(INSTANCE_PORT_MIN)
+    @Max(INSTANCE_PORT_MAX)
     private int port;
 
     @OneToMany(mappedBy = "applicationGroup", orphanRemoval = true, cascade = CascadeType.PERSIST)

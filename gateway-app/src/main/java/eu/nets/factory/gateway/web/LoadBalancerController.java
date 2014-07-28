@@ -130,13 +130,13 @@ public class LoadBalancerController {
         if(loadBalancerModel.getInstallationPath() == null  || ! Pattern.matches("^/[a-zA-Z]\\S*$", loadBalancerModel.getInstallationPath())) throw new GatewayException("Could not create Load Balancer. Installation Path must match pattern '^/[a-zA-Z]\\S*$'.");
         if(loadBalancerModel.getSshKey() == null || ! Pattern.matches("[\\s\\S]+", loadBalancerModel.getSshKey())) throw new GatewayException("Could not create Load Balancer. Ssh Key must match pattern '.+'.");
         if(loadBalancerModel.clientTimeout != loadBalancerModel.serverTimeout) {throw new GatewayException("Could not create LoadBalancer. Servertimeout must be equal to clientTimeout: " + loadBalancerModel.clientTimeout + "!=" + loadBalancerModel.serverTimeout);}
-        if(hasPort)
-            if(loadBalancerModel.getStatsPort() < 20000 || loadBalancerModel.getStatsPort() > 65535) throw new GatewayException("Could not create LoadBalancer. StatsPort must be a number between 20 000 and 65 535. Received: " + loadBalancerModel.getStatsPort());
+        //if(hasPort)
+           // if(loadBalancerModel.getStatsPort() < 20000 || loadBalancerModel.getStatsPort() > 65535) throw new GatewayException("Could not create LoadBalancer. StatsPort must be a number between 20 000 and 65 535. Received: " + loadBalancerModel.getStatsPort());
     }
 
     private int generatePortValue(String host) {
         Random r = new Random(System.currentTimeMillis());
-        for(int port = 20000; port < 65536; port++) {
+        for(int port = LoadBalancer.STATS_PORT_MIN; port <= LoadBalancer.STATS_PORT_MAX; port++) {
             //int newPort=r.nextInt(45535)+20000;
             if (loadBalancerRepository.countByHostPublicPort(host, port) == 0L) return port;
         }

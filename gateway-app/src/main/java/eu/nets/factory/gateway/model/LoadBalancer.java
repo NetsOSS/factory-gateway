@@ -18,6 +18,8 @@ import java.util.List;
         @UniqueConstraint(columnNames = {"host", "publicPort"})})
 public class LoadBalancer extends AbstractEntity{
 
+    public static final int STATS_PORT_MIN = 65000;
+    public static final int STATS_PORT_MAX = 65299;
     @NotBlank
     @Pattern(regexp = "^\\S+$")
     private String name;
@@ -35,8 +37,8 @@ public class LoadBalancer extends AbstractEntity{
     private String userName;
 
     @NotNull
-    @Min(20000)
-    @Max(65535)
+    @Min(STATS_PORT_MIN)
+    @Max(STATS_PORT_MAX)
     private int publicPort;
 
     @Column(nullable = false, name = "check_timeout")

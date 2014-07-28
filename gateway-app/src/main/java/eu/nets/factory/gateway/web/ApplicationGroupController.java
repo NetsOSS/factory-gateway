@@ -91,8 +91,8 @@ public class ApplicationGroupController {
 
     private void assertValidModel(AppGroupModel appGroupModel) {
         if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
-        if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'." + appGroupModel.getName());
-        if(appGroupModel.getPort() < 1 || appGroupModel.getPort() > 65000) throw new  GatewayException("Could not create ApplicationGroup. Port must be a number between 10 000 and 20 000. Received: " + appGroupModel.getPort());
+        if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
+        if(appGroupModel.getPort() < ApplicationGroup.INSTANCE_PORT_MIN || appGroupModel.getPort() > ApplicationGroup.INSTANCE_PORT_MAX) throw new  GatewayException("Could not create ApplicationGroup. Port must be a number between "+ApplicationGroup.INSTANCE_PORT_MIN+" and "+ApplicationGroup.INSTANCE_PORT_MAX+". Received: " + appGroupModel.getPort());
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/application-group", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
