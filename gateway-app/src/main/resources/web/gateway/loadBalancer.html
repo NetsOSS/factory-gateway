@@ -106,7 +106,6 @@
     <th>Downtime</th>
     <th>Status</th>
     <th>Actions</th>
-    <th>Actions2</th>
   </tr>
   </thead>
 
@@ -123,15 +122,6 @@
     <td>{{s.data.lastchg | secondstime}}</td>
     <td>{{s.data.downtime | secondstime}}</td>
     <td>{{s.data.status}}</td>
-    <td>
-      <div style="margin:0" ng-hide="s.data.svname  == 'FRONTEND' || s.data.svname  == 'BACKEND'">
-        <select id="{{s.data.svname}}-state" ng-model="selectedState" ng-change="setProxyState(s.data.svname)">
-          <option>READY</option>
-          <option>MAINT</option>
-          <option>DRAIN</option>
-        </select>
-      </div>
-    </td>
     <td>
       <div ng-hide="s.data.svname  == 'FRONTEND' || s.data.svname  == 'BACKEND'">
         <select id="{{s.data.svname}}-state2" ng-model="selectedState" ng-change="setProxyStateWithAPI(s.data)">
