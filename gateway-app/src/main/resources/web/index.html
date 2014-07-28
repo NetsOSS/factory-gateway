@@ -45,9 +45,9 @@
   <style>
     .alert-messages {
       position: fixed;
-      width: 100%;
+      width: 30%;
       z-index: 10000;
-
+      right:10px;
     }
 
     .white {
@@ -150,17 +150,18 @@
   <!-- /.container-fluid -->
 </nav>
 
+<!--
 <div class="alert-messages">
   <div class="container">
-    <div class="row">
+    <div>
 
       <div class="col-md-6 col-md-offset-6">
 
         <div class="alert alert-danger alert-dismissible" id="messageDisplay" style="display:none">
 
-          <button type="button" class="close" onclick="$('#messageDisplay').hide()"><span
+          <button type="button" class="close" onclick="$('#messageDisplay').hide()"  ><span
               aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <span id="MessageDisplayText">asdasda sada sda sdassssssssssssssssssssssss aaa  </span>
+          <span id="MessageDisplayText"> Stor beskjed .. Wazzup</span>
         </div>
 
         <div class="alert alert-success alert-dismissible" id="messageDisplaySuccess" style="display:none">
@@ -175,8 +176,21 @@
     </div>
   </div>
 </div>
-
+-->
 <div class="container">
+    <div class="alert alert-danger alert-dismissible alert-messages" id="messageDisplay"  style="display:none">
+
+        <button type="button" class="close" onclick="$('#messageDisplay').hide()"><span
+                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <span id="MessageDisplayText"> Stor beskjed .. 222</span>
+    </div>
+
+    <div class="alert alert-success alert-dismissible alert-messages" id="messageDisplaySuccess" style="display:none">
+
+        <button type="button" class="close" onclick="$('#messageDisplaySuccess').hide()"><span
+                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <span id="MessageDisplaySuccessText">aa</span>
+    </div>
 
   <div ng-view></div>
 </div>

@@ -54,21 +54,16 @@ define([
                         $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
                     }
                     if (response.config.method == "POST") {
-                        //console.log("Update successfully" ,response);
                         $("#MessageDisplaySuccessText").text("Created " + response.data.name + " successfully.");
                         $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
                     }
-                    //console.log("Response: ",response)
+
                     return response || $q.when(response);
                 },
 
                 responseError: function (rejection) {
                     // Called when another XHR request returns with an error status code.
-
                     if (rejection.status == 400) {
-                        //alert(rejection.data);
-                        // $scope.messageError=rejection.data;
-
                         $("#MessageDisplayText").text(rejection.data);
                         $("#messageDisplay").show().delay(5000).fadeOut('slow');
 
