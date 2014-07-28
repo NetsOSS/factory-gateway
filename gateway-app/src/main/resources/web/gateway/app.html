@@ -82,7 +82,7 @@
 
         <div ng-repeat="a in app.applicationInstances | filter:appInstId">
           <a class="btn btn-default btn-sm pull-right col-md-1"
-             href="http://{{a.host}}:{{a.port}}{{app.checkPath}}">Visit</a>
+             href="http://{{a.server}}">Visit</a>
         </div>
       </div>
       <hr>

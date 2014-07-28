@@ -105,6 +105,14 @@
 <!-- Tabs for showing status
 -->
 
+<div >
+  <h3>Status: <span class="text-success" ng-show="rawStatusForOneInst">HAproxy is running
+            <span class="glyphicon glyphicon-thumbs-up"></span></span>
+            <span class="text-danger" ng-hide="rawStatusForOneInst">HAproxy is not running
+            <span class="glyphicon glyphicon-thumbs-down"></span></span>
+  </h3>
+</div>
+
 <ul class="nav nav-tabs row" role="tablist">
   <li class="active"><a href="#queue" role="tab" data-toggle="tab">Queue</a></li>
   <li><a href="#sessionRate" role="tab" data-toggle="tab">Session rate</a></li>
