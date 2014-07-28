@@ -8,7 +8,7 @@ define([
     var gateway = angular.module('gateway', ['ngRoute', 'shared.services', 'shared.directives', 'shared.filters','ui.sortable']);
 
 
-    gateway.config(function ($routeProvider, $httpProvider) {
+    gateway.config(function ($routeProvider, $httpProvider,$locationProvider) {
         $routeProvider.
             when('/', {
                 controller: 'FrontPageCtrl',
@@ -38,8 +38,8 @@ define([
             .when('/allLb', {
                 controller: 'LoadBalancersCtrl',
                 templateUrl: templatePrefix + "allLoadBalancers.html"
-            })
-        ;
+            }) ;
+      //$locationProvider.html5Mode(true);
 
         $httpProvider.interceptors.push(['$q', function ($q) {
             return {
@@ -163,8 +163,8 @@ define([
 
     gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, GatewayData) {
         $scope.newApp = {}; //Model for new ApplicationForm
-        $scope.newAppInstForm = {};
-
+      $scope.newAppInstForm = {};
+      $scope.newAppGroup={};
 
         $scope.addAppInst = function (app) {
             console.log("New app inst : ", $scope.newAppInstForm, " to ", app.id);
@@ -196,9 +196,9 @@ define([
 
         // ----------------------- Application Group functions ------------------------------------
         $scope.createApplicationGroup = function () {
-            GatewayData.ApplicationGroupController.create($scope.appGroup).then(function (data) {
+            GatewayData.ApplicationGroupController.create($scope.newAppGroup).then(function (data) {
                 $scope.allAppGroups.push(data);
-                $scope.appGroup = {};
+                $scope.newAppGroup = {};
             });
         };
 
