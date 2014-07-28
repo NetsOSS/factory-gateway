@@ -153,8 +153,9 @@ public class StatusService {
     //Should be private. but used in test. fix later
     public List<String> readCSV(LoadBalancer loadBalancer) {
         //log.info("StatusService.readCSV");
-        int port = loadBalancer.getStatsPort() + 1;
-        String csvFile = "http://vm-stapp-145:" + port + "/proxy-stats;csv";
+
+
+        String csvFile = "http://"+ loadBalancer.getHost()+":" +  loadBalancer.getStatsPort() + "/proxy-stats;csv";
 
         URL url;
         HttpURLConnection conn;
