@@ -18,8 +18,8 @@ public class ApplicationGroup extends AbstractEntity {
     private String name;
 
     @NotNull
-    @Min(10000)
-    @Max(19999)
+    @Min(1)
+    @Max(65000)
     private int port;
 
     @OneToMany(mappedBy = "applicationGroup", orphanRemoval = true, cascade = CascadeType.PERSIST)
