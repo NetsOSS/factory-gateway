@@ -486,7 +486,7 @@
                 </div>
 
                 <h3>New rule</h3>
-                <form role="form" ng-submit="updateApplicationRules()" >
+                <form role="form" ng-submit="updateApplicationRules()" name="createRuleForm" >
 
                     <div class="form-group" >
                         <label for="inRuleName">Headername</label>
@@ -504,7 +504,7 @@
 
 
 
-                    <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="createRuleForm.$invalid">Add</button>
                 </form>
             </div>
             <div class="modal-footer">
