@@ -217,9 +217,9 @@ define([
 
         });
 
-        $scope.removeGroup = function (appGroup) {
-            GatewayData.ApplicationGroupController.remove(appGroup.id).then(function (data) {
-                $scope.allAppGroups.splice($scope.allAppGroups.indexOf(appGroup), 1);
+        $scope.removeGroup = function () {
+            GatewayData.ApplicationGroupController.remove($scope.appGroupToBeDeleted.id).then(function (data) {
+                $scope.allAppGroups.splice($scope.allAppGroups.indexOf($scope.appGroupToBeDeleted), 1);
             });
         };
 
@@ -230,13 +230,11 @@ define([
             });
         };
 
-        $scope.removeAppInst = function (app, appInst) {
-            console.log("Remove ", appInst, " from appg  ", app, " index: ", app.applicationInstances.indexOf(appInst));
-            GatewayData.ApplicationInstanceController.remove(appInst.id).then(function (data) {
-                app.applicationInstances.splice(app.applicationInstances.indexOf(appInst), 1);
+        $scope.removeAppInst = function () {
+            console.log("Remove ", $scope.appInstToBeDeleted, " from appg  ",  $scope.appToBeSpliced, " index: ",  $scope.appToBeSpliced.applicationInstances.indexOf($scope.appInstToBeDeleted));
+            GatewayData.ApplicationInstanceController.remove($scope.appInstToBeDeleted.id).then(function (data) {
+                $scope.appToBeSpliced.applicationInstances.splice($scope.appToBeSpliced.applicationInstances.indexOf($scope.appInstToBeDeleted), 1);
             });
-
-
         };
 
         $scope.showUpdateApplication = function (app) {
@@ -251,7 +249,18 @@ define([
         $scope.showDeleteAppWarning = function (app, appGroup) {
             $scope.appToBeDeleted = app;
             $scope.appGroupToBeSpliced = appGroup;
-            $('#deleteWarningModal').modal('show');
+            $('#deleteAppWarningModal').modal('show');
+        };
+
+        $scope.showDeleteAppGroupWarning = function (appGroup) {
+            $scope.appGroupToBeDeleted = appGroup;
+            $('#deleteAppGroupWarningModal').modal('show');
+        };
+
+        $scope.showDeleteAppInstWarning = function(app, appInst) {
+            $scope.appInstToBeDeleted = appInst;
+            $scope.appToBeSpliced = app;
+            $('#deleteAppInstWarningModal').modal('show');
         };
 
         $scope.removeApp = function() {
@@ -439,16 +448,17 @@ define([
 
     });
 
-
+    //  ------------------------ApplicationInstanceControler------------------------------
     gateway.controller('AppInstCtrl', function ($scope, $routeParams, GatewayData) {
         GatewayData.ApplicationInstanceController.findById($routeParams.id).then(function (data) {
             $scope.appInst = data;
         });
 
         $scope.deleteAppInst = function () {
+            console.log("Removing: ", $scope.appInst);
             GatewayData.ApplicationInstanceController.remove($scope.appInst.id).then(function (data) {
                 history.back();
-                $scope.$apply();
+                //$scope.$apply();
             });
         };
 

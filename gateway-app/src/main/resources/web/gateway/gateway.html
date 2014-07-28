@@ -87,7 +87,7 @@
       </div>
     <div class="col-sm-6">
     <div class="btn-group pull-right ">
-      <a><span ng-click="removeGroup(appGroup)" class="glyphicon glyphicon-trash"></span></a>
+      <a><span ng-click="showDeleteAppGroupWarning(appGroup)" class="glyphicon glyphicon-trash"></span></a>
     </div>
       </div>
     </div>
@@ -160,7 +160,7 @@
               <div class="panel-heading">
                 {{appInst.name}}
                 <div class="btn-group pull-right ">
-                  <a> <span ng-click="removeAppInst(app,appInst)" class="glyphicon glyphicon-trash"></span></a>
+                  <a> <span ng-click="showDeleteAppInstWarning(app,appInst)" class="glyphicon glyphicon-trash"></span></a>
                   <a ng-href="#/appInst/{{appInst.id}}"><span class="glyphicon glyphicon-chevron-right"></span></a>
                   <!--
                   <div click-to-edit="appInst.server" save-function="updateAppInst(appInst)"></div>
@@ -413,13 +413,47 @@
 </div>
 <hr>
 
-<div class="modal" id="deleteWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel"
+<div class="modal" id="deleteAppWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel"
      aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         Are you sure you want to delete?
         <button type="button" class="btn btn-info" data-dismiss="modal" ng-click="removeApp()">
+          Yes
+        </button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteAppGroupWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Are you sure you want to delete?
+        <button type="button" class="btn btn-info" data-dismiss="modal" ng-click="removeGroup()">
+          Yes
+        </button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteAppInstWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Are you sure you want to delete?
+        <button type="button" class="btn btn-info" data-dismiss="modal" ng-click="removeAppInst()">
           Yes
         </button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">
