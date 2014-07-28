@@ -152,8 +152,8 @@ public class ApplicationInstanceController {
         ApplicationInstance applicationInstance = findEntityById(id);
         if (!applicationInstance.getName().equals(appInstModel.name)) { assertNameUnique(appInstModel.name); }
 
-        boolean startLoadBalancer = false;
-        if(appInstModel.weight != applicationInstance.getWeight()) { startLoadBalancer = true; }
+        //boolean startLoadBalancer = false;
+        //if(appInstModel.weight != applicationInstance.getWeight()) { startLoadBalancer = true; }
         
         URL url=null;
         try {
@@ -170,7 +170,7 @@ public class ApplicationInstanceController {
         applicationInstance.setHaProxyStateValue(appInstModel.haProxyState);
         applicationInstance.setWeight(appInstModel.getWeight());
 
-        if(startLoadBalancer) { startLoadBalancer(id); }
+        //if(startLoadBalancer) { startLoadBalancer(id); }
 
         return new AppInstModel(applicationInstance);
 
@@ -181,7 +181,7 @@ public class ApplicationInstanceController {
     public AppInstModel setProxyStateForInstanceAndStartLoadbalancer(@PathVariable String name, @PathVariable String proxyState) {
 
         Long id = setProxyStateForInstance(name, proxyState).getId();
-        startLoadBalancer(id);
+        //startLoadBalancer(id);
 
         return findById(id);
 
@@ -229,8 +229,8 @@ public class ApplicationInstanceController {
         ApplicationInstance applicationInstance = findEntityById(id);
 
         for (LoadBalancer loadBalancer : applicationInstance.getApplication().getLoadBalancers()) {
-            haProxyService.pushConfigFile(loadBalancer);
-            haProxyService.start(loadBalancer);
+            //haProxyService.pushConfigFile(loadBalancer);
+            //haProxyService.start(loadBalancer);
         }
     }
 

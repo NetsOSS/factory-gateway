@@ -232,10 +232,10 @@ public class ApplicationController {
 
         Application application = findEntityById(id);
 
-        for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
+        /*for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
             haProxyService.pushConfigFile(loadBalancer);
             haProxyService.start(loadBalancer);
-        }
+        }*/
 
         return appModel;
     }
@@ -248,13 +248,24 @@ public class ApplicationController {
 
         Application application = findEntityById(id);
 
-        for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
+        /*for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
             haProxyService.pushConfigFile(loadBalancer);
             haProxyService.start(loadBalancer);
-        }
+        }*/
 
         return appModel;
     }
+
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}/setSticky2/{sticky}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AppModel setStickyAndStartLoadBalancer2(@PathVariable Long id, @PathVariable  StickySession sticky) {
+        Application application = findEntityById(id);
+        application.setStickySession(sticky);
+         return new AppModel(application);
+    }
+
+
 
     protected AppModel setSticky(Long id, String sticky) {
 
