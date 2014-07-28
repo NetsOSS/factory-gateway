@@ -451,38 +451,6 @@ define([], function () {
     this.resolve.LoadBalancerController.search = function (GatewayData, $route) {
       return LoadBalancerController.search($route.current.params.name);
     };
-    this.PersonController = {};
-    this.PersonController.create = function (personModel) {
-      var req = {};
-      req.method = 'POST';
-      req.url = prefix + '/data/persons';
-      req.data = personModel;
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.PersonController.list = function () {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/persons';
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.PersonController.search = function (name) {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/search';
-      req.params = {};
-      req.params.name = name;
-      return $http(req).then(getData);
-    };
-    var PersonController = this.PersonController;
-    this.resolve.PersonController = {};
-    this.resolve.PersonController.list = function (GatewayData, $route) {
-      return PersonController.list();
-    };
-    this.resolve.PersonController.search = function (GatewayData, $route) {
-      return PersonController.search($route.current.params.name);
-    };
     this.StatusController = {};
     this.StatusController.changeStatusAPI = function (lbId, statusChange) {
       var req = {};

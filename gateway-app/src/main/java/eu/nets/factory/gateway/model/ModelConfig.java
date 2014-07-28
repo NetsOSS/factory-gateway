@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 
 import com.jolbox.bonecp.BoneCPDataSource;
+import eu.nets.factory.gateway.GatewayException;
 import org.apache.commons.lang.StringUtils;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
@@ -105,6 +106,14 @@ public class ModelConfig {
         if (settings.migrateDatabase()) {
             log.info("Running migrations");
             Flyway flyway = new Flyway();
+
+            if(settings.getDatabaseUrl().startsWith("jdbc:oracle"))
+                flyway.setLocations("db/migration_oracle");
+            else if (settings.getDatabaseUrl().startsWith("jdbc:h2:file"))
+                flyway.setLocations("db/migration_h2");
+            else
+                throw new GatewayException("Wrong jdbc-url");
+
             flyway.setDataSource(ds);
             flyway.setOutOfOrder(true);
             MigrationInfoService info = flyway.info();
@@ -126,7 +135,7 @@ public class ModelConfig {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(GatewaySettings settings, DataSource dataSource,
                                                                        @Value("${hibernate.hbm2ddl.auto:validate}") String hbm2ddl,
                                                                        @Value("${hibernate.showSql:false}") boolean showSql,
                                                                        @Value("${hibernate.dialect:}") String dialect) throws ClassNotFoundException {
@@ -135,7 +144,7 @@ public class ModelConfig {
         if (dialect.equals("")) {
             dialect = guessDialect(dataSource);
         }
-        if(dialect.equals(H2Dialect.class.getName())) {
+        if(settings.getDatabaseUrl().startsWith("jdbc:h2:mem")) {
             hbm2ddl = "create";
         }
         x.setJpaPropertyMap(createJpaMap(hbm2ddl, showSql, dialect));

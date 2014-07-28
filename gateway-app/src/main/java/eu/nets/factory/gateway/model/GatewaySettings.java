@@ -34,7 +34,7 @@ public class GatewaySettings {
     }
 
     public boolean migrateDatabase() {
-        return !getDatabaseUrl().contains("h2");
+        return !getDatabaseUrl().startsWith("jdbc:h2:mem");
     }
 
     public String getDatabaseUrl() {
@@ -47,7 +47,8 @@ public class GatewaySettings {
                 case "ofbje":
                 case "ogamm":
                 case "mbyhr":
-                    return "jdbc:oracle:thin:@vm-udb-7:1521:u7utv";
+//                    return "jdbc:oracle:thin:@vm-udb-7:1521:u7utv";
+                    return environment.getRequiredProperty("database.url");
             }
 
             throw new IllegalStateException("Could not find database URL for user " + userName);
@@ -59,14 +60,14 @@ public class GatewaySettings {
     }
 
     public String getDatabaseUsername() {
-        if (local || unitTest) {
+        if ((local || unitTest) && !getDatabaseUrl().startsWith("jdbc:h2:file")) {
             return userName;
         }
         return environment.getRequiredProperty("database.username");
     }
 
     public String getDatabasePassword() {
-        if (local || unitTest) {
+        if ((local || unitTest) && !getDatabaseUrl().startsWith("jdbc:h2:file")) {
             return userName;
         }
         return environment.getRequiredProperty("database.password");

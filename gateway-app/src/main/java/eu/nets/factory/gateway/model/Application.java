@@ -20,7 +20,7 @@ public class Application extends AbstractEntity {
     private String name;
 
     @Pattern(regexp = "^/.*")
-    @Column(nullable = false, name = "publicurl")
+    @Column(nullable = false, name = "public_path")
     private String publicUrl;
 
     @Pattern(regexp = "^/.*")
