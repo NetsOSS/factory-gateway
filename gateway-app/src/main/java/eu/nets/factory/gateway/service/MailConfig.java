@@ -14,12 +14,15 @@ import java.util.Properties;
 public class MailConfig {
 
     // TODO: Add value from a properties file - @Value breaks tests
-//    @Value("${email.host}")
-    private String host = "localhost";
+    @Value("${email.host:localhost}" )
+    private String host;
 
     // TODO: Add value from a properties file - @Value breaks tests
-//    @Value("${email.port}")
-    private Integer port = 25;
+    @Value("${email.port:25}")
+    private Integer port;
+
+    @Value("${email.address.from:haproxy@nets.eu}")
+    private String fromAddress;
 
     @Bean
     public JavaMailSender javaMailService() {
@@ -36,9 +39,10 @@ public class MailConfig {
     private Properties getMailProperties() {
         Properties properties = new Properties();
         properties.setProperty("mail.transport.protocol", "smtp");
-        //properties.setProperty("mail.smtp.auth", "false");
-       // properties.setProperty("mail.smtp.starttls.enable", "false");
-       // properties.setProperty("mail.debug", "false");
         return properties;
+    }
+
+    public String getFromAddress() {
+        return fromAddress;
     }
 }
