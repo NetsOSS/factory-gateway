@@ -399,15 +399,6 @@
             <span class="bg-danger" ng-show="editAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <!--<div class="form-group"
-               ng-class="{'has-error': editAppForm.emails.$invalid && editAppForm.emails.$dirty}">
-            <label for="inAppEmailsUpdate">Emails (for notification). Separate by ,</label>
-            <input type="text" ng-model="updateApp.emails" class="form-control " id="inAppEmailsUpdate"
-                   name="emails"
-                   required
-                   placeholder="Enter email(s)">
-          </div>-->
-
           <label>Emails (fields can be empty)</label>
           <div class="row form-group" data-ng-repeat = "mail in updateEmails">
 

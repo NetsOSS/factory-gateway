@@ -395,6 +395,13 @@ define([
                 $scope.localApp = angular.copy($scope.app);
                 $scope.onAppLoadDone = true;
                 $scope.newApp = angular.copy($scope.app);
+                $scope.updateEmails = [];
+
+                var emails = data.emails.split(",");
+                for(var i = 0; i < emails.length; i++) {
+                    $scope.updateEmails.push({"id":"mail"+i, "name":emails[i]});
+                }
+
 
                 //Find more info  (name) about the group it belongs too.
                 GatewayData.ApplicationGroupController.findById($scope.app.applicationGroupId).then(function (data) {
@@ -428,8 +435,39 @@ define([
             });
         };
 
+        $scope.showNewMailFieldForUpdate = function(mail) {
+            return mail.id == $scope.updateEmails[$scope.updateEmails.length-1].id;
+        };
+
+        $scope.addMailFieldForUpdate = function () {
+            var newField = $scope.updateEmails.length+1;
+            $scope.updateEmails.push({'id':'mail'+newField});
+
+        };
+
+        $scope.removeMailFieldForUpdate = function() {
+            var removeField = $scope.updateEmails.length-1;
+            if(removeField > 0) {
+                $scope.updateEmails.pop();
+            }
+        };
+
 
         $scope.updateApplication = function () {
+
+            var mails ="";
+            var comma = false;
+            for(var i = 0; i < $scope.updateEmails.length; i++) {
+                if ($scope.updateEmails[i].name != null && $scope.updateEmails[i].name.length > 0) {
+                    if (comma) {
+                        mails = mails + "," + $scope.updateEmails[i].name;
+                    } else {
+                        mails = mails + $scope.updateEmails[i].name;
+                        comma = true;
+                    }
+                }
+            }
+            $scope.newApp.emails = mails;
             GatewayData.ApplicationController.update($scope.newApp.id, $scope.newApp).then(function (data) {
                 $scope.app = data;
             });
