@@ -127,26 +127,22 @@
 
           <div class="dropdown" id="dropdowndiv">
             <input class="btn btn-default dropdown-toggle" type="text" id="searchInput" data-toggle="dropdown"
-                   placeholder="Search" ng-model="search" ng-change = "getData()">
-                <!--onkeypress= "search()"-->
+                   placeholder="Search" ng-model="search" ng-change = "getData()" ng-click = "getData()">
             <span class="caret"></span>
             </input>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="dropdownlist" ng-model = "applicationList" data-ng-repeat = "app in applicationList">
-              <li id = "{{app.id}}" ><a href ="/#/app/{{app.id}}">{{app.name}}</a></li>
-
-              </li>
-            </ul>
-
-          </div>
+              <ul class="dropdown-menu" id = "dropdown" role="menu"  ng-model = "applicationList" >
+                <li><a><b>Applications</b></a></li>
+                <li ng-repeat = "application in applicationList"><a href ="/#/app/{{application.id}}">{{application.name}}</a></li>
+                <li class="divider"></li>
+                <li><a><b>Application Instances</b></a></li>
+                <li ng-repeat = "appInst in applicationInstanceList"><a href ="/#/appInst/{{appInst.id}}">{{appInst.name}}</a></li>
+                <li class="divider"></li>
+                <li><a><b>Load Balancers</b></a></li>
+                <li data-ng-repeat="lb in loadBalancerList"><a href = "#/lb/{{lb.id}}">{{lb.name}}</a></li>
+              </ul>
+           </div>
         </div>
-
       </form>
-
-
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"> v1.2 ALPHA</a></li>
-
-      </ul>
 
     </div>
     <!-- /.navbar-collapse -->

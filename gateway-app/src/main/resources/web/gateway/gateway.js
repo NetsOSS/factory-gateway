@@ -84,16 +84,41 @@ define([
     gateway.controller('IndexController', function ($location, $scope, $filter, GatewayData) {
 
         $scope.applicationList =[];
+        $scope.applicationInstanceList =[];
+        $scope.loadBalancerList =[];
 
         $scope.getData = function() {
 
             var search = document.getElementById("searchInput").value;
+            $scope.applicationList =[];
+            $scope.applicationInstanceList =[];
+            $scope.loadBalancerList =[];
 
-            $scope.applications = GatewayData.ApplicationController.search(search).then(function (data) {
-                for(var i = 0; i < data.length; i++) {
-                    $scope.applicationList.push(data[i]);
-                }
-            });
+
+            if(search.length > 0) {
+                GatewayData.ApplicationController.search(search).then(function (data) {
+                    $scope.applicationList = data;
+
+                });
+
+                GatewayData.ApplicationInstanceController.search(search).then(function (data) {
+                    $scope.applicationInstanceList = data;
+                });
+
+                GatewayData.LoadBalancerController.search(search).then(function (data) {
+                    $scope.loadBalancerList = data;
+                });
+            } else {
+                GatewayData.ApplicationController.listAllApps().then(function(data){
+                    $scope.applicationList = data;
+                });
+                GatewayData.ApplicationInstanceController.listAllAppInsts().then(function (data) {
+                    $scope.applicationInstanceList = data;
+                });
+                GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
+                    $scope.loadBalancerList = data;
+                });
+            }
         };
     });
 
