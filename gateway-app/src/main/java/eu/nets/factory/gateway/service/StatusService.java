@@ -48,7 +48,7 @@ public class StatusService {
     private HashMap<Long, List<StatusModel>> loadBalancerStatuses = new HashMap<>();
 
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 1000)
     public void autoPoll() {
         //log.info("StatusService.autoPoll {} , #loadBalancers {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
         List<LoadBalancer> lbList = loadBalancerRepository.findAll();

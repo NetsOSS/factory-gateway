@@ -550,12 +550,11 @@ define([
 
         };
 
-        $scope.setProxyStateWithAPI = function (statusObj) {
+        $scope.setProxyStateWithAPI = function (statusObj,state) {
             console.log(statusObj);
             //iid = b
 
-            var sel = document.getElementById(statusObj.svname + "-state2");
-            var state = sel.options[sel.selectedIndex].value;
+
 
             // var dataMsg = "s="+statusObj.svname+"&action="+state+"&b=#"+statusObj.iid;
             var statusChangeObj = {
@@ -628,6 +627,7 @@ define([
             });
 
 
+
             //Reload config file.. should maybe be saved as a string in LB model.
 
 
@@ -663,6 +663,7 @@ define([
         var updateLBisOlineStatus = function () {
             GatewayData.StatusController.isLoadBalancerOnline($routeParams.id).then(function (data) {
                 $scope.isLBonline = data;
+
                 console.log("LB is online ? ", data);
             });
         };
@@ -672,11 +673,12 @@ define([
             console.log('Loading status');
             updateLBisOlineStatus();
             GatewayData.StatusController.getStatusForLoadbalancer($routeParams.id).then(function (data) {
-                $scope.rawStatus = data;
+
+              $scope.rawStatus = data;
             });
 
             if ($scope.autoRefresh) {
-                poller = $timeout(loadStatus, 5000);
+                poller = $timeout(loadStatus, 1000);
             }
 
         };
