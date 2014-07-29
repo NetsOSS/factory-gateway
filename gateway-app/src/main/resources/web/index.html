@@ -131,8 +131,12 @@
                 <!--onkeypress= "search()"-->
             <span class="caret"></span>
             </input>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="dropdownlist">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="dropdownlist" ng-model = "applicationList" data-ng-repeat = "app in applicationList">
+              <li id = "{{app.id}}" ><a href ="/#/app/{{app.id}}">{{app.name}}</a></li>
+
+              </li>
             </ul>
+
           </div>
         </div>
 
@@ -192,7 +196,6 @@
         <span id="MessageDisplaySuccessText">aa</span>
 
     </div>
-
   <div ng-view></div>
 </div>
 </body>

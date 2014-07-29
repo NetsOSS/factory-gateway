@@ -83,82 +83,18 @@ define([
     });
     gateway.controller('IndexController', function ($location, $scope, $filter, GatewayData) {
 
-        $scope.getData = function () {
+        $scope.applicationList =[];
+
+        $scope.getData = function() {
+
             var search = document.getElementById("searchInput").value;
-            $("#dropdowndiv").append(
-                $("#dropdownlist").empty()
-            );
 
-            if (search != "") {
-                GatewayData.ApplicationController.search(search).then(function (data) {
-                    if (data.length > 0) {
-                        $("#dropdowndiv").append(
-                            $("#dropdownlist").append(
-                                "<li role = 'presentation'><a role = 'menuitem' ><b>Applications</b></a></li>"
-                            )
-                        )
-                        for (var i = 0; i < data.length; i++) {
-                            $("#dropdowndiv").append(
-                                $("#dropdownlist").append(
-                                    "<li role = 'presentation'><a role = 'menuitem'href =  /#/app/" + data[i].id + ">" + data[i].name + "</a></li>"
-                                )
-                            )
-                        }
-
-                        $("#dropdowndiv").append(
-                            $("#dropdownlist").append(
-                                "<li role='presentation' class='divider'></li>"
-                            )
-                        )
-                    }
-                });
-
-                GatewayData.ApplicationInstanceController.search(search).then(function (data) {
-                    if (data.length > 0) {
-                        $("#dropdowndiv").append(
-                            $("#dropdownlist").append(
-                                "<li role = 'presentation'><a role = 'menuitem' ><b>Application Instances</b></a></li>"
-                            )
-                        )
-                        for (var i = 0; i < data.length; i++) {
-                            $("#dropdowndiv").append(
-                                $("#dropdownlist").append(
-                                    "<li role = 'presentation'><a role = 'menuitem'href =  /#/appInst/" + data[i].id + ">" + data[i].name + "</a></li>"
-                                )
-                            )
-                        }
-
-                        $("#dropdowndiv").append(
-                            $("#dropdownlist").append(
-                                "<li role='presentation' class='divider'></li>"
-                            )
-                        )
-                    }
-                });
-                GatewayData.LoadBalancerController.search(search).then(function (data) {
-                    if (data.length) {
-                        $("#dropdowndiv").append(
-                            $("#dropdownlist").append(
-                                "<li role = 'presentation'><a role = 'menuitem' ><b>Load Balancers</b></a></li>"
-                            )
-                        )
-                        for (var i = 0; i < data.length; i++) {
-                            $("#dropdowndiv").append(
-                                $("#dropdownlist").append(
-                                    "<li role = 'presentation'><a role = 'menuitem'href =  /#/lb/" + data[i].id + ">" + data[i].name + "</a></li>"
-                                )
-                            )
-                        }
-
-                        $("#dropdowndiv").append(
-                            $("#dropdownlist").append(
-                                "<li role='presentation' class='divider'></li>"
-                            )
-                        )
-                    }
-                });
-            }
-        }
+            $scope.applications = GatewayData.ApplicationController.search(search).then(function (data) {
+                for(var i = 0; i < data.length; i++) {
+                    $scope.applicationList.push(data[i]);
+                }
+            });
+        };
     });
 
     gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, GatewayData) {
@@ -257,14 +193,40 @@ define([
             });
         };
 
+        //Update Application start
+        $scope.showNewMailFieldForUpdate = function(mail) {
+            return mail.id == $scope.updateEmails[$scope.updateEmails.length-1].id;
+        };
+
+        $scope.addMailFieldForUpdate = function () {
+            var newField = $scope.updateEmails.length+1;
+            $scope.updateEmails.push({'id':'mail'+newField});
+
+        };
+
+        $scope.removeMailFieldForUpdate = function() {
+            var removeField = $scope.updateEmails.length-1;
+            if(removeField > 0) {
+                $scope.updateEmails.pop();
+            }
+        };
+
         $scope.showUpdateApplication = function (app) {
             $scope.updateApp = {};
 
             $scope.updateApp = angular.copy(app);
             $scope.updateApp.applicationInstances = [];
             $scope.updateApp.loadBalancers = [];
+            $scope.updateEmails = [];
+
+            var mails = app.emails.split(",");
+            for(var i = 0; i < mails.length; i++) {
+                $scope.updateEmails.push({'id':i, 'name':mails[i]});
+            }
             $('#modalUpdateApp').modal('show');
         };
+
+        //Update Application end
 
         $scope.showDeleteAppWarning = function (app, appGroup) {
             $scope.appToBeDeleted = app;
@@ -311,13 +273,30 @@ define([
         });
       };
       // ------------------------------ Update Application ------------------------
+
         $scope.updateApplication = function () {
             var foundGroup = $filter('getById')($scope.allAppGroups, $scope.updateApp.applicationGroupId);
             var foundAppIndex = $filter('getIndexById')(foundGroup.applications, $scope.updateApp.id);
 
+            var mails ="";
+            var comma = false;
+            for(var i = 0; i < $scope.updateEmails.length; i++) {
+                if ($scope.updateEmails[i].name != null && $scope.updateEmails[i].name.length > 0) {
+                    if (comma) {
+                        mails = mails + "," + $scope.updateEmails[i].name;
+                    } else {
+                        mails = mails + $scope.updateEmails[i].name;
+                        comma = true;
+                    }
+                }
+            }
+            $scope.updateApp.emails = mails;
+
+
             GatewayData.ApplicationController.update($scope.updateApp.id, $scope.updateApp).then(function (data) {
                 foundGroup.applications[foundAppIndex] = data;
                 $scope.updateApp = {};
+                $scope.updateEmails =[];
                 $('#modalUpdateApp').modal('hide');
             });
         };
@@ -335,16 +314,21 @@ define([
             copyNewApp.applicationGroupId = appGroup.id;
             //console.log("CreateApp to appGrpId ",appGroup.id, " app : ", copyNewApp);
             var mails ="";
+            var comma = false;
             for(var i = 0; i < $scope.emailFields.length; i++) {
-                if(i < $scope.emailFields.length-1) {
-                    mails = mails + $scope.emailFields[i].name+",";
-                } else {
-                    mails = mails + $scope.emailFields[i].name;
+                if($scope.emailFields[i].name != null && $scope.emailFields[i].name.length >0) {
+                    if (comma) {
+                        mails = mails + ","+ $scope.emailFields[i].name;
+                    } else {
+                        mails = mails + $scope.emailFields[i].name;
+                        comma = true;
+                    }
                 }
             }
             copyNewApp.emails = mails;
             GatewayData.ApplicationController.create(copyNewApp).then(function (data) {
                 appGroup.applications.push(data);
+                $scope.emailFields = [{'id':"mail1"}];
 
 
             });
