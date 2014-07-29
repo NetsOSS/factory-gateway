@@ -113,9 +113,9 @@
 
     <tbody>
     <tr ng-repeat="s in rawStatus"
-        ng-class="{ UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.data.status]">
+        ng-class="{OPEN:'info',UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.data.status]">
 
-        <td ng-class="{1:'primary', 2:'info','':'active'}[s.data.bck]">{{s.data.pxname}}</td>
+        <td>{{s.data.pxname}}</td>
         <td>{{s.data.svname}}</td>
         <td>{{s.data.scur}}</td>
         <td>{{s.data.stot}}</td>
@@ -126,11 +126,11 @@
         <td>{{s.data.status}}</td>
         <td>
             <div ng-hide="s.data.svname  == 'FRONTEND' || s.data.svname  == 'BACKEND'">
-                <a class="btn btn-danger btn-xs"
-                   ng-click="setProxyStateWithAPI(s.data,'maint')">Maint</a>
-                <a class="btn btn-success btn-xs" disabled="{{s.data.status='UP'}}"
-                   ng-click="setProxyStateWithAPI(s.data,'ready')">Ready</a>
-                <a class="btn btn-info btn-xs"
+                <a class="btn btn-success btn-xs" ng-disabled="s.data.status=='UP'" ng-click="setProxyStateWithAPI(s.data,'ready')">Ready</a>
+                <a class="btn btn-danger  btn-xs" ng-disabled="s.data.status=='MAINT'" ng-click="setProxyStateWithAPI(s.data,'maint')">Maint</a>
+
+
+                <a class="btn btn-info btn-xs" ng-disabled="s.data.status=='DRAIN'"
                    ng-click="setProxyStateWithAPI(s.data,'drain')">Drain</a>
             </div>
         </td>
