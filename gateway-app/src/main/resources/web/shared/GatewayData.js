@@ -438,6 +438,15 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.LoadBalancerController.stopLoadBalancer = function (id, payload) {
+      var req = {};
+      req.method = 'POST';
+      req.url = prefix + '/data/load-balancers/{id}/stop';
+      req.url = req.url.replace(/{id}/, id);
+      req.data = payload;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.LoadBalancerController.update = function (id, loadBalancerModel) {
       var req = {};
       req.method = 'PUT';

@@ -276,4 +276,14 @@ public class LoadBalancerController {
         haProxyService.start(loadBalancer);
         return new LoadBalancerModel(loadBalancer);
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/data/load-balancers/{id}/stop", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public LoadBalancerModel stopLoadBalancer(@PathVariable Long id) {
+        log.info("LoadBalancerController.stopLoadBalancer() id={}", id);
+
+        LoadBalancer loadBalancer = findEntityById(id);
+        haProxyService.stop(loadBalancer);
+        return new LoadBalancerModel(loadBalancer);
+    }
 }

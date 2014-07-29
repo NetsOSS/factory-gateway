@@ -17,10 +17,12 @@
           <span class="btn-group">
             <a data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm"><span
                     class="glyphicon glyphicon-pencil"></span> Edit</a>
-            <a ng-click="startLoadBalancer()" class="btn btn-warning btn-sm"><span
-                    class="glyphicon glyphicon-play"></span> Start</a>
+            <a ng-click="startLoadBalancer()" class="btn btn-success btn-sm"><span
+                    class="glyphicon glyphicon-play"></span> {{isLBonline&& 'Restart' || 'Start'}}</a>
+            <a ng-click="stopLoadBalancer()" ng-disabled="!isLBonline" class="btn btn-warning btn-sm"><span
+                class="glyphicon glyphicon-stop"></span> Stop</a>
             <a data-toggle="modal" data-target="#deleteWarningModal" class="btn btn-danger btn-sm"><span
-                    class="glyphicon glyphicon-trash"></span> Remove</a>
+                    class="glyphicon glyphicon-trash"></span> Delete</a>
           </span>
                 </div>
             </div>

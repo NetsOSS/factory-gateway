@@ -546,7 +546,7 @@ define([
         $scope.inLBList = [];
         $scope.allLBList = [];
 
-        $scope.autoRefresh = false;
+        $scope.autoRefresh = true;
         $scope.lbLoadingDone = false;
         var LBid = $routeParams.id;
 
@@ -616,6 +616,11 @@ define([
             GatewayData.LoadBalancerController.startLoadBalancer($scope.lb.id);
         };
 
+      $scope.stopLoadBalancer = function () {
+        console.log("stop LoadBalancer function");
+        GatewayData.LoadBalancerController.stopLoadBalancer($scope.lb.id);
+      };
+
 
         var reloadAppLists = function () {
             $scope.inLBList = [];
@@ -684,15 +689,15 @@ define([
         $scope.isLBonline = false;
         var updateLBisOlineStatus = function () {
             GatewayData.StatusController.isLoadBalancerOnline($routeParams.id).then(function (data) {
-                $scope.isLBonline = data;
+                $scope.isLBonline = (data==='true');
 
-                console.log("LB is online ? ", data);
+//                console.log("LB is online ? ",    $scope.isLBonline, "type:", typeof    $scope.isLBonline);
             });
         };
 
 
         var loadStatus = function () {
-            console.log('Loading status');
+//            console.log('Loading status');
             updateLBisOlineStatus();
             GatewayData.StatusController.getStatusForLoadbalancer($routeParams.id).then(function (data) {
 
