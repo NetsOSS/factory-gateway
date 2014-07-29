@@ -165,6 +165,25 @@ define([
         $scope.newApp = {}; //Model for new ApplicationForm
       $scope.newAppInstForm = {};
       $scope.newAppGroup={};
+        $scope.emailFields = [{'id':"mail1"}];
+
+        $scope.showNewMailField = function(mail) {
+            return mail.id == $scope.emailFields[$scope.emailFields.length-1].id;
+        };
+
+        $scope.addMailField = function () {
+            var newField = $scope.emailFields.length+1;
+            $scope.emailFields.push({'id':'mail'+newField});
+
+
+        };
+
+        $scope.removeMailField = function() {
+            var removeField = $scope.emailFields.length-1;
+            if(removeField > 0) {
+                $scope.emailFields.pop();
+            }
+        };
 
         $scope.addAppInst = function (app) {
             console.log("New app inst : ", $scope.newAppInstForm, " to ", app.id);
@@ -315,6 +334,15 @@ define([
             var copyNewApp = angular.copy($scope.newApp);
             copyNewApp.applicationGroupId = appGroup.id;
             //console.log("CreateApp to appGrpId ",appGroup.id, " app : ", copyNewApp);
+            var mails ="";
+            for(var i = 0; i < $scope.emailFields.length; i++) {
+                if(i < $scope.emailFields.length-1) {
+                    mails = mails + $scope.emailFields[i].name+",";
+                } else {
+                    mails = mails + $scope.emailFields[i].name;
+                }
+            }
+            copyNewApp.emails = mails;
             GatewayData.ApplicationController.create(copyNewApp).then(function (data) {
                 appGroup.applications.push(data);
 
