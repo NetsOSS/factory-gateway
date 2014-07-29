@@ -63,7 +63,7 @@ public class StatusControllerTest {
         AppGroupModel groupModel = new AppGroupModel(groupOne);
         groupModel = applicationGroupController.create(groupModel);
 
-        Application application = new Application("Finch", "/finch", groupOne, "email", "/finch/ping", 0);
+        Application application = new Application("Finch", "/finch", groupOne, "email", "/finch/ping", "/finch", 0);
         AppModel appModel = new AppModel(application);
         appModel.applicationGroupId = groupModel.getId();
         appModel = applicationController.create(appModel);
@@ -80,7 +80,7 @@ public class StatusControllerTest {
         loadBalancerController.addApplication(loadModelTwo.id, appModel.getId());
 
 
-        List<String> csvString = new ArrayList<String>();
+        List<String> csvString = new ArrayList<>();
         csvString.add("# pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,comp_in,comp_out,comp_byp,comp_rsp,lastsess,\n");
         csvString.add("http-i   n,FRONTEND,,,0,6,2000,16,2660,3142,0,0,10,,,,,OPEN,,,,,,,,,1,1,0,,,,0,0,0,6,,,,0,0,0,10,6,0,,0,4,16,,,0,0,0,0,,\n");
         csvString.add("Finch,Finch1,0,0,0,0,32,0,0,0,,0,,0,0,0,0,UP,1,1,0,0,0,11616,0,,1,2,1,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,\n");
@@ -105,7 +105,7 @@ public class StatusControllerTest {
     @Test
     public void testParseCSV() throws Exception {
 
-        List<String> csvString = new ArrayList<String>();
+        List<String> csvString = new ArrayList<>();
         csvString.add("# pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,comp_in,comp_out,comp_byp,comp_rsp,lastsess,\n");
         csvString.add("http-i   n,FRONTEND,,,0,6,2000,16,2660,3142,0,0,10,,,,,OPEN,,,,,,,,,1,1,0,,,,0,0,0,6,,,,0,0,0,10,6,0,,0,4,16,,,0,0,0,0,,\n");
         csvString.add("Finch,Finch1,0,0,0,0,32,0,0,0,,0,,0,0,0,0,UP,1,1,0,0,0,11616,0,,1,2,1,,0,,2,0,,0,L4OK,,0,0,0,0,0,0,0,0,,,,0,0,,,,,-1,\n");

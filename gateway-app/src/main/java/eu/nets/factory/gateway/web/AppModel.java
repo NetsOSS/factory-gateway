@@ -18,6 +18,7 @@ public  class AppModel {
     public Long applicationGroupId;
     public String emails;
     public String checkPath;
+    public String privatePath;
     public StickySession stickySession;
     public FailoverLoadBalancerSetup failoverLoadBalancerSetup;
 
@@ -29,7 +30,7 @@ public  class AppModel {
     }
 
     private AppModel(Application application, Boolean summary) {
-        this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup(),application.getEmails(), application.getCheckPath());
+        this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup(),application.getEmails(), application.getCheckPath(), application.getPrivatePath());
 
         this.stickySession = application.getStickySession();
         this.failoverLoadBalancerSetup = application.getFailoverLoadBalancerSetup();
@@ -42,13 +43,14 @@ public  class AppModel {
         }
     }
 
-    public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup,String emails, String checkPath) {
+    public AppModel(Long id, String name, String url, ApplicationGroup applicationGroup,String emails, String checkPath, String privatePath) {
         this.id = id;
         this.name = name;
         this.publicUrl = url;
         this.applicationGroupId = applicationGroup.getId();
         this.emails=emails;
         this.checkPath = checkPath;
+        this.privatePath = privatePath;
     }
 
     public static AppModel summary(Application application) {
@@ -74,6 +76,10 @@ public  class AppModel {
 
     public String getCheckPath() {
         return checkPath;
+    }
+
+    public String getPrivatePath() {
+        return privatePath;
     }
 
     public String getStickySession() { return stickySession.name(); }

@@ -27,6 +27,10 @@ public class Application extends AbstractEntity {
     @Column(nullable = false, name = "checkpath")
     private String checkPath;
 
+    @Pattern(regexp = "^/.*")
+    @Column(nullable = false)
+    private String privatePath;
+
     @ManyToMany
     @JoinTable(name = "load_balancer_application",
                 joinColumns = {@JoinColumn(name = "application_id")},
@@ -56,12 +60,13 @@ public class Application extends AbstractEntity {
     @OneToMany(mappedBy = "application", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<HeaderRule> headerRules = new ArrayList<>();
 
-    public Application(String name, String url, ApplicationGroup applicationGroup, String emails, String checkPath, int indexOrder) {
+    public Application(String name, String url, ApplicationGroup applicationGroup, String emails, String checkPath, String privatePath, int indexOrder) {
         this.name = name;
         this.publicUrl = url;
         this.applicationGroup = applicationGroup;
         this.emails=emails;
         this.checkPath = checkPath;
+        this.privatePath = privatePath;
         this.indexOrder = indexOrder;
 
         this.stickySessionValue = StickySession.STICKY.ordinal();
@@ -88,6 +93,10 @@ public class Application extends AbstractEntity {
     }
     public void setCheckPath(String checkPath) {
         this.checkPath = checkPath;
+    }
+
+    public String getPrivatePath() {
+        return privatePath;
     }
 
     public StickySession getStickySession() {

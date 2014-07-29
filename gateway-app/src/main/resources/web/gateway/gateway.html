@@ -239,7 +239,7 @@
                     <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
                 </div>
                 <div class="form-group">
-                    <label for="inAppPublicUrl2">Public Path</label>
+                    <label for="inAppPublicUrl2">Public path</label>
                     <input type="text" ng-model="newApp.publicUrl" class="form-control "
                            id="inAppPublicUrl2"
                            name="publicUrl"
@@ -259,8 +259,7 @@
                          name=""
                          placeholder="Enter email address"
                          class = "form-control">
-
-                </div>
+                  </div>
                   <a ng-show="showNewMailField(mail)" ng-click="addMailField()" class="btn btn-info"><span class="glyphicon glyphicon-plus-sign"></span></a>
                   <a ng-show="showNewMailField(mail)" ng-click="removeMailField()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
               </div>
@@ -273,6 +272,17 @@
                            required
                            placeholder="Enter check path">
                     <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="inAppPrivatePath">Private path</label>
+                  <input type="text" ng-model="newApp.privatePath" class="form-control "
+                         id="inAppPrivatePath"
+                         name="privatepath"
+                         ng-pattern="/^//"
+                         required
+                         placeholder="Enter private path">
+                  <span class="bg-danger" ng-show="createAppForm.privatepath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
                 </div>
 
                 <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
@@ -424,6 +434,17 @@
                    required
                    placeholder="Enter check path">
             <span class="bg-danger" ng-show="editAppForm.checkPath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+          </div>
+
+          <div class="form-group">
+            <label for="inAppPrivatePathUpdate">Private path</label>
+            <input type="text" ng-model="updateApp.privatePath" class="form-control "
+                   id="inAppPrivatePathUpdate"
+                   name="privatepath"
+                   ng-pattern="/^//"
+                   required
+                   placeholder="Enter private path">
+            <span class="bg-danger" ng-show="editAppForm.privatepath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
           <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>

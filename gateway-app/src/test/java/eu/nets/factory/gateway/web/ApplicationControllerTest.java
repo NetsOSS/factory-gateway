@@ -122,7 +122,7 @@ public class ApplicationControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", 0);
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", "/beta", 0);
         AppModel appModel = new AppModel(application);
         appModel = applicationController.create(appModel);
 
@@ -147,7 +147,7 @@ public class ApplicationControllerTest {
 
     @Test()
     public void testCreateValidName() throws Exception {
-        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", 0);
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", "/beta", 0);
         AppModel appModel = new AppModel(application);
 
         try { //name already exists - not unique
@@ -177,7 +177,7 @@ public class ApplicationControllerTest {
 
     @Test()
     public void testCreateValidPublicUrl() throws Exception {
-        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", 0);
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", "/beta", 0);
         AppModel appModel = new AppModel(application);
 
         try { //publicUrl is null
@@ -203,7 +203,7 @@ public class ApplicationControllerTest {
 
     @Test()
     public void testCreateValidCheckPath() throws Exception {
-        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", 0);
+        Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", "/beta", 0);
         AppModel appModel = new AppModel(application);
 
         try { //checkPath is null
@@ -229,7 +229,7 @@ public class ApplicationControllerTest {
 
     @Test()
     public void testCreateValidApplicationGroup() throws Exception {
-        Application application = new Application("Alpha", "X", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "", "/alpha/ping", 0);
+        Application application = new Application("Alpha", "X", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "", "/alpha/ping", "/alpha", 0);
         AppModel appModel = new AppModel(application);
 
         try { //applicationGroup has invalid id

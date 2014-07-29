@@ -1,6 +1,9 @@
 package eu.nets.factory.gateway.service;
 
-import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationInstance;
+import eu.nets.factory.gateway.model.HeaderRule;
+import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.web.AppGroupModel;
 import eu.nets.factory.gateway.web.ApplicationGroupController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,10 +72,9 @@ public class ConfigGeneratorService {
             printWriter.println();
             printWriter.println(TAB + "backend " + application.getName());
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
-            if(application.getApplicationInstances().size()>0){
-                //reqrep ^([^\ ]*)\ /lang/blog/(.*) \1\ /blog/lang/\2
-                printWriter.println(TAB2 + "reqrep ^([^\\ ]*)\\ "+application.getPublicUrl()+"(.*) \\1\\ "+application.getApplicationInstances().get(0).getPath()+"\\2");
-            }
+
+            //reqrep ^([^\ ]*)\ /lang/blog/(.*) \1\ /blog/lang/\2
+            printWriter.println(TAB2 + "reqrep ^([^\\ ]*)\\ "+application.getPublicUrl()+"(.*) \\1\\ "+application.getPrivatePath()+"\\2");
 
             //debug, adding headers to see which was chosen.
             /// reqadd X-CustomHeader:\ debugMode

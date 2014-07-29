@@ -1,0 +1,2 @@
+ALTER TABLE application_instance
+ALTER COLUMN path VARCHAR(100) NULL;
