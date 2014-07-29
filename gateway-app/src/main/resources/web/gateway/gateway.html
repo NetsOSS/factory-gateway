@@ -119,33 +119,7 @@
         <a> <span ng-click="showDeleteAppWarning(app, appGroup)" class="glyphicon glyphicon-trash" title="Remove application"> </span></a>
         <a ng-href="#/app/{{app.id}}"> <span class="glyphicon glyphicon-chevron-right" title="Go to detail page"> </span></a>
 
-        <!--
-        <div class="btn-group pull-right ">
-          <span class="badge">{{app.applicationInstances.length}}</span>
-          <button go-click="/app/{{app.id}}">
-            <span class="glyphicon glyphicon-new-window"></span> Details
-          </button>
-          <button ng-click="showUpdateApplication(app)"> <span
-            class="glyphicon glyphicon-pencil"></span> Edit
-          </button>
-          <button ng-click="removeApp(appGroup,app)"> <span
-            class="glyphicon glyphicon-trash"></span> Remove
-          </button>
-        </div>
-        -->
 
-        <!--
-        <span class="badge">{{app.applicationInstances.length}}</span>
-        <button ng-click="showUpdateApplication(app)"> <span
-          class="glyphicon glyphicon-wrench"></span> Edit
-        </button>
-        <button ng-click="removeApp(appGroup,app)"> <span
-          class="glyphicon glyphicon-trash"></span> Remove
-        </button>
-        <button go-click="/app/{{app.id}}" class="btn">
-          <span class="glyphicon glyphicon-chevron-right"></span> Details
-        </button>
-        -->
       </span>
       </h4>
     </div>
@@ -154,18 +128,15 @@
       <div class="panel-body">
         <div class="row">
 
-          <!--
-          <div class="col-md-4" ng-repeat="appInst in app.applicationInstances">
-            <div class="alert alert-warning" role="alert">
-              {{appInst.host}}:{{appInst.port}}{{appInst.path}}
-            </div>
-          </div>-->
+
 
           <div class="col-md-4" ng-repeat="appInst in app.applicationInstances">
             <div class="panel panel-warning">
               <div class="panel-heading">
                 {{appInst.name}}
-                <div class="btn-group pull-right ">
+                <div class=" pull-right ">
+                    <a class="btn btn-xs" ng-class="{true: 'btn-primary', false: 'btn-success'}[!appInst.backup]"
+                       ng-click="setToBackup(appInst)">{{appInst.backup && 'Backup' || 'Primary'}}</a>
                   <a> <span ng-click="showDeleteAppInstWarning(app,appInst)" class="glyphicon glyphicon-trash"></span></a>
                   <a ng-href="#/appInst/{{appInst.id}}"><span class="glyphicon glyphicon-chevron-right"></span></a>
                   <!--
@@ -176,6 +147,8 @@
               <div class="panel-body">
                 <div click-to-edit="appInst.server"
                      save-function="updateAppInst(appInst)"></div>
+
+
               </div>
             </div>
           </div>
@@ -223,18 +196,6 @@
           <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'NOT_STICKY')"
                   ng-class="{STICKY:'', NOT_STICKY:'active',  STICKY_NEW_COOKIE:'','':'hidden'}[app.stickySession]">
             NOT Sticky
-          </button>
-        </div>
-        <strong>Mode:</strong>
-
-        <div class="btn-group btn-toggle">
-          <button class="btn btn-default btn-sm" ng-click="changeHotMode(app, 'HOT_HOT')"
-                  ng-class="{HOT_HOT:'active', HOT_STANDBY:'', '':'hidden'}[app.failoverLoadBalancerSetup]">
-            HOT_HOT
-          </button>
-          <button class="btn btn-default btn-sm" ng-click="changeHotMode(app, 'HOT_STANDBY')"
-                  ng-class="{HOT_HOT:'', HOT_STANDBY:'active', '':'hidden'}[app.failoverLoadBalancerSetup]">
-            HOT_STANDBY
           </button>
         </div>
 

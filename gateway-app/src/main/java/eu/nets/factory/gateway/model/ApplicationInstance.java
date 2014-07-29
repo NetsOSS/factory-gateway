@@ -42,6 +42,8 @@ public class ApplicationInstance extends AbstractEntity {
     @ManyToOne
     private Application application;
 
+    private boolean backup;
+
 
     public ApplicationInstance(String name, String host, int port, String path, Application application) {
         this.name = name;
@@ -51,6 +53,7 @@ public class ApplicationInstance extends AbstractEntity {
         this.application = application;
         this.haProxyStateValue = HaProxyState.READY.ordinal();
         this.weight = 10;
+        this.backup =false;
     }
 
     public ApplicationInstance() { }
@@ -86,4 +89,20 @@ public class ApplicationInstance extends AbstractEntity {
 
     public int getWeight() { return weight; }
     public void setWeight(int weight) { this.weight = weight; }
+
+    public int getHaProxyStateValue() {
+        return haProxyStateValue;
+    }
+
+    public void setHaProxyStateValue(int haProxyStateValue) {
+        this.haProxyStateValue = haProxyStateValue;
+    }
+
+    public boolean isBackup() {
+        return backup;
+    }
+
+    public void setBackup(boolean isBackup) {
+        this.backup = isBackup;
+    }
 }

@@ -99,7 +99,7 @@ public class ConfigGeneratorService {
                 if (applicationInstance.getHaProxyState().name().equals("MAINT"))
                     serverConfigLine += " disabled";
 
-                if (application.getFailoverLoadBalancerSetup().name().equals("HOT_STANDBY") && i > 0)
+                if(applicationInstance.isBackup())
                     serverConfigLine += " backup";
 
                 if (application.getStickySession().name().equals("STICKY") || application.getStickySession().name().equals("STICKY_NEW_COOKIE"))

@@ -366,6 +366,13 @@ define([
             });
         };
 
+      $scope.setToBackup = function (appInst) {
+
+        var objNode = {"backup" : !appInst.backup};
+        GatewayData.ApplicationInstanceController.setToBackup(appInst.id,objNode).then(function(data){
+          appInst.backup= !appInst.backup;
+        });
+      };
 
       $scope.sortableApps = {
         handle: ".drag-handle",

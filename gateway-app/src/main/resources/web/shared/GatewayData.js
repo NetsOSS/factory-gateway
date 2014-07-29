@@ -307,6 +307,15 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.ApplicationInstanceController.setToBackup = function (id, body) {
+      var req = {};
+      req.method = 'PUT';
+      req.url = prefix + '/data/instances/{id}/setBackup';
+      req.url = req.url.replace(/{id}/, id);
+      req.data = body;
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.ApplicationInstanceController.update = function (id, appInstModel) {
       var req = {};
       req.method = 'PUT';

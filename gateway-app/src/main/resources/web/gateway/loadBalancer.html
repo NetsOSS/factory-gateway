@@ -113,7 +113,7 @@
   <tr ng-repeat="s in rawStatus"
       ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.data.status]">
 
-    <td>{{s.data.pxname}}</td>
+    <td ng-class="{1:'primary', 2:'info','':'active'}[s.data.bck]">{{s.data.pxname}}</td>
     <td>{{s.data.svname}}</td>
     <td>{{s.data.scur}}</td>
     <td>{{s.data.stot}}</td>

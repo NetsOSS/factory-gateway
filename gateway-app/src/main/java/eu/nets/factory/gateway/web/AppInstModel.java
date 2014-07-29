@@ -14,6 +14,7 @@ public class AppInstModel {
 
     public HaProxyState haProxyState;
     public int weight;
+    public boolean backup;
 
 
     public AppInstModel() {
@@ -27,6 +28,7 @@ public class AppInstModel {
 
         haProxyState = applicationInstance.getHaProxyState();
         weight = applicationInstance.getWeight();
+       backup=applicationInstance.isBackup();
         if (!summary) {
             //this.application = new AppModel(applicationInstance.getApplication());
         }
@@ -68,4 +70,12 @@ public class AppInstModel {
 
     public int getWeight() { return weight; }
     public void setWeight(int weight) { this.weight = weight; }
+
+    public boolean isBackup() {
+        return backup;
+    }
+
+    public void setBackup(boolean isBackup) {
+        this.backup = isBackup;
+    }
 }
