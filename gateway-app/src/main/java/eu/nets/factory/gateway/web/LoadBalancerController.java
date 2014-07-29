@@ -137,8 +137,8 @@ public class LoadBalancerController {
     private int generatePortValue(String host) {
         Random r = new Random(System.currentTimeMillis());
         for(int port = LoadBalancer.STATS_PORT_MIN; port <= LoadBalancer.STATS_PORT_MAX; port++) {
-            //int newPort=r.nextInt(45535)+20000;
-            if (loadBalancerRepository.countByHostPublicPort(host, port) == 0L) return port;
+            int newPort= r.nextInt(LoadBalancer.STATS_PORT_MAX-LoadBalancer.STATS_PORT_MIN)+LoadBalancer.STATS_PORT_MIN;
+            if (loadBalancerRepository.countByHostPublicPort(host, newPort) == 0L) return newPort;
         }
 
         throw new GatewayException("Could not create Load Balancer. All port allocated to Load Balancer stats are already in use for host '" + host + "'.");
