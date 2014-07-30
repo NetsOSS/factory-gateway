@@ -1,17 +1,57 @@
+<!--<div class="row">
+  <ul ui-sortable="sortableOptionsA" class="list items-container" ng-model="yourObjects">
+       <li class="item sortable"  ng-repeat="item in yourObjects">{{item.name}}</li>
+   </ul>
+
+
+   <h2>One sortable list</h2>
+   <ul ui-sortable="sortableOptionsA" ng-model="allAppGroups[0].applications">
+       <li ng-repeat="item in allAppGroups[0].applications">{{item.name}}</li>
+   </ul>
+
+   <div class="panel-group" id="accordion" ui-sortable="sortableOptionsA" ng-model="allAppGroups[0].applications">
+       <div class="panel panel-default"  ng-repeat="item in allAppGroups[0].applications">
+           <div class="panel-heading">
+               <h4 class="panel-title">
+                   <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+
+                   </a>
+                   {{item.name}}
+               </h4>
+           </div>
+           <div id="collapseOne" class="panel-collapse collapse in">
+               <div class="panel-body">
+                   Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+               </div>
+           </div>
+       </div>
+
+
+   </div>
+
+
+</div>
+-->
 <div class="row">
 
 
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="#newGroup" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> New
-    Group</a></li>
-  <li ng-repeat="appGroup in allAppGroups"><a href="#tab-{{appGroup.id}}" role="tab"
-                                              data-toggle="tab">{{appGroup.name}}</a></li>
+  <li ng-class = "{true: 'active'}[currentAppGroupId == newGroupURL]"><a href="#/application-groups/newGroup" role="tab" ><span class="glyphicon glyphicon-plus"></span>
+    New Group
+  </a></li>
+  <li ng-repeat="appGroup in allAppGroups"
+      ng-class="{true: 'active'}[currentAppGroupId == appGroup.id]"
+      >
+    <a href="#/application-groups/{{appGroup.id}}" role="tab">
+    {{appGroup.name}}
+    </a>
+  </li>
 </ul>
 
 <!-- Tab panes -->
 <div class="tab-content">
-<div class="tab-pane active" id="newGroup">
+<div class="tab-pane" id="newGroup" ng-class = "{true: 'active'}[currentAppGroupId == newGroupURL]">
 
   <div class="panel panel-default">
     <div class="panel-body">
@@ -48,7 +88,7 @@
     </div>
   </div>
 </div>
-<div class="tab-pane" id="tab-{{appGroup.id}}" ng-repeat="appGroup in allAppGroups">
+<div class="tab-pane" ng-class="{true: 'active'}[currentAppGroupId == appGroup.id]" ng-repeat="appGroup in allAppGroups">
 
 <div class="panel panel-default">
   <div class="panel-body">
@@ -182,8 +222,8 @@
 <div class="panel panel-success">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#tab-{{appGroup.id}}"
-               href="#tab-{{appGroup.id}}-newApp">
+            <a data-toggle="collapse" data-parent="/#/#tab-{{appGroup.id}}"
+               href="/#/#tab-{{appGroup.id}}-newApp">
                 <span class="glyphicon glyphicon-plus"></span> New application to {{appGroup.name}}
             </a>
         </h4>

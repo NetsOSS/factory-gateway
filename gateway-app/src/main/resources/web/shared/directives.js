@@ -3,8 +3,9 @@
 define([ 'angular' ], function (angular) {
   var directives = angular.module('shared.directives', []);
 
-
   var INTEGER_REGEXP = /^\-?\d+$/;
+
+
   directives.directive('integer', function () {
 
     return {

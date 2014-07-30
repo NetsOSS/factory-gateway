@@ -10,7 +10,7 @@ define([
 
     gateway.config(function ($routeProvider, $httpProvider,$locationProvider) {
         $routeProvider.
-            when('/', {
+            when('/application-groups/:applicationGroupId?', {
                 controller: 'FrontPageCtrl',
                 templateUrl: templatePrefix + "gateway.html"
             }).
@@ -38,7 +38,9 @@ define([
             .when('/allLb', {
                 controller: 'LoadBalancersCtrl',
                 templateUrl: templatePrefix + "allLoadBalancers.html"
-            }) ;
+            })
+            .otherwise({redirectTo: '/application-groups'});
+      //$locationProvider.html5Mode(true);
 
         $httpProvider.interceptors.push(['$q', function ($q) {
             return {
@@ -118,11 +120,15 @@ define([
         };
     });
 
-    gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, GatewayData) {
-        $scope.newApp = {}; /* Model for new ApplicationForm */
-      $scope.newAppGroup={};
+    gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, $routeParams, GatewayData) {
+        $scope.currentAppGroupId = $routeParams.applicationGroupId;
+        $scope.newApp = {}; //Model for new ApplicationForm
+     // $scope.newAppInstForm = {};
+        $scope.newAppGroup={};
         $scope.emailFields = [{'id':"mail1"}];
-      $scope.showAppInstForm=false;
+         $scope.showAppInstForm=false;
+        $scope.newGroupURL = "newGroup";
+
 
         $scope.showNewMailField = function(mail) {
             return mail.id == $scope.emailFields[$scope.emailFields.length-1].id;
