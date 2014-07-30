@@ -1,0 +1,22 @@
+<h3 ng-hide="appGroupObj">New Application Group</h3>
+<h3 ng-show="appGroupObj">Update Application Group</h3>
+
+<form role="form" ng-submit="updateApplicationGroup()" name="editAppGroupForm" novalidate>
+
+  <div class="form-group">
+    <label for="inAppGroupName">Name</label>
+    <input type="text" ng-model="localAppGroup.name" class="form-control" id="inAppGroupName" name="name"
+           required
+           placeholder="Enter application group name">
+  </div>
+
+  <div>
+    <label for="inAppGroup">Port</label>
+    <input type="number" ng-model="localAppGroup.port" class="form-control" id="inAppGroupPort" name="port"
+        required
+        placeholder="=Enter application group port - range 1024 - 64999">
+  </div>
+
+  <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid" ng-show="appGroupObj">Update</button>
+  <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid" ng-hide="appGroupObj" >Create</button>
+</form>

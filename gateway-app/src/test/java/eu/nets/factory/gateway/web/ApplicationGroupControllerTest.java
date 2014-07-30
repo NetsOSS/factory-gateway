@@ -85,11 +85,6 @@ public class ApplicationGroupControllerTest {
     }
 
     @Test
-    public void testAssertNameUnique() throws Exception {
-        //assertThat(true).isEqualTo(false); // this method is private
-    }
-
-    @Test
     public void testCreate() throws Exception {
         ApplicationGroup applicationGroup = new ApplicationGroup("GroupX", 10001);
         AppGroupModel appGroupModel = applicationGroupController.create(new AppGroupModel(applicationGroup));
@@ -165,37 +160,46 @@ public class ApplicationGroupControllerTest {
         AppGroupModel appGroupModel = applicationGroupController.search("GroupTwo").get(0);
 
         appGroupModel.name = "GroupX";
+        appGroupModel.port = 1234;
 
         appGroupModel = applicationGroupController.update(appGroupModel.id, appGroupModel);
 
-        assertThat(applicationGroupController.listAllAppGroups()).isNotNull().hasSize(3).onProperty("name").contains("GroupX").excludes("GroupTwo");
+        assertThat(applicationGroupController.listAllAppGroups()).isNotNull().hasSize(3).onProperty("name").contains("GroupX").excludes("GroupTwo"); //.onProperty("port").contains(1234).excludes(10500);
+
+        try {
+            applicationGroupController.update(null, appGroupModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
 
         try {
             applicationGroupController.update(-1L, appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
+        } catch(GatewayException ignore) { }
+
+        try {
+            applicationGroupController.update(appGroupModel.id, null);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
     }
 
     @Test
     public void testUpdateValidName() throws Exception {
         AppGroupModel appGroupModel = applicationGroupController.search("GroupOne").get(0);
 
-
-        try {
+        try { //name is already in use
             appGroupModel.name = "GroupThree";
-            applicationGroupController.update(appGroupModel.getId(), appGroupModel);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
-
-        try { //name is blank
-            appGroupModel.name = "";
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
 
         try { //name is null
             appGroupModel.name = null;
+            applicationGroupController.update(appGroupModel.getId(), appGroupModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //name is blank
+            appGroupModel.name = "";
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
@@ -207,6 +211,28 @@ public class ApplicationGroupControllerTest {
         } catch(GatewayException ignore) { }
     }
 
+    @Test
+    public void testUpdateValidPort() throws Exception {
+        AppGroupModel appGroupModel = applicationGroupController.search("GroupOne").get(0);
+
+        try { //port is already in use
+            appGroupModel.port = 10500;
+            applicationGroupController.update(appGroupModel.getId(), appGroupModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //port less than min value
+            appGroupModel.port = 1;
+            applicationGroupController.update(appGroupModel.getId(), appGroupModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+
+        try { //port is greater max value
+            appGroupModel.port = 9000000;
+            applicationGroupController.update(appGroupModel.getId(), appGroupModel);
+            fail("Expected exception");
+        } catch(GatewayException ignore) { }
+    }
 
     @Test
     public void testGetApplications() throws Exception {
@@ -223,10 +249,5 @@ public class ApplicationGroupControllerTest {
             applicationGroupController.getApplications(null);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-    }
-
-    @Test
-    public void testRemoveApplication() throws Exception {
-        // this function does not do anything...
     }
 }

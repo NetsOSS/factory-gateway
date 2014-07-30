@@ -20,7 +20,6 @@ public  class AppModel {
     public String checkPath;
     public String privatePath;
     public StickySession stickySession;
-    public FailoverLoadBalancerSetup failoverLoadBalancerSetup;
 
     public AppModel() { }
 
@@ -33,12 +32,10 @@ public  class AppModel {
         this(application.getId(), application.getName(), application.getPublicUrl(), application.getApplicationGroup(),application.getEmails(), application.getCheckPath(), application.getPrivatePath());
 
         this.stickySession = application.getStickySession();
-        this.failoverLoadBalancerSetup = application.getFailoverLoadBalancerSetup();
         this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::summary).collect(toList());
         this.headerRules=application.getHeaderRules(). stream().map(HeaderRuleModel::summary).collect(toList());
         
         if(!summary) {
-            //this.applicationInstances = application.getApplicationInstances().stream().map(AppInstModel::new).collect(toList());
             this.loadBalancers = application.getLoadBalancers().stream().map(LoadBalancerModel::summary).collect(toList());
         }
     }
@@ -85,11 +82,7 @@ public  class AppModel {
     public String getStickySession() { return stickySession.name(); }
     public void setStickySession(String state) { this.stickySession = StickySession.valueOf(state); }
 
-    public String getFailoverLoadBalancerSetup() { return failoverLoadBalancerSetup.name(); }
-    public void setFailoverLoadBalancerSetup(String setup) { this.failoverLoadBalancerSetup = FailoverLoadBalancerSetup.valueOf(setup); }
-
     public List<HeaderRuleModel> getHeaderRules() {
         return headerRules;
     }
-
 }

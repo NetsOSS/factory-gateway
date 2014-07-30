@@ -49,7 +49,6 @@ public class GatewaySettings {
                 case "ogamm":
                     return "jdbc:oracle:thin:@vm-udb-7:1521:u7utv";
                 case "mbyhr":
-//                    return "jdbc:oracle:thin:@vm-udb-7:1521:u7utv";
                     return environment.getRequiredProperty("database.url");
             }
 

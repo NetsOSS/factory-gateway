@@ -12,14 +12,8 @@ import static org.fest.assertions.Formatting.format;
 
 
 public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
-
-
     protected AppModelAssert(AppModel actual) { super(AppModelAssert.class, actual); }
 
-
-    /*
-     *
-     */
     public AppModelAssert hasId(Long expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -27,9 +21,7 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
 
         return this;
     }
-    /*
-     *
-     */
+
     public AppModelAssert doesNotHaveId(Long expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -38,9 +30,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert hasName(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -49,9 +38,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert doesNotHaveName(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -60,9 +46,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert hasPublicUrl(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -71,9 +54,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert doesNotHavePublicUrl(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -82,9 +62,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert hasEmails(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -93,9 +70,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert doesNotHaveEmails(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -104,9 +78,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert hasCheckPath(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -115,9 +86,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert doesNotHaveCheckPath(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -126,10 +94,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-
-    /*
-     *
-     */
     private AppModelAssert hasAppInst(AppInstModel expected) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -145,9 +109,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return null;
     }
 
-    /*
-     *
-     */
     private AppModelAssert hasAppInst(String expected) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -163,9 +124,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return null;
     }
 
-    /*
-     *
-     */
     private AppModelAssert excludesAppInst(AppInstModel x) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -180,9 +138,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     private AppModelAssert excludesAppInst(String x) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -197,9 +152,7 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     * Ignores sequence and duplicates
-     */
+    /* Ignores sequence and duplicates */
     public AppModelAssert hasAppInsts(AppInstModel... sequence) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -214,9 +167,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert hasAppInsts(String... sequence) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -231,9 +181,7 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     * Ignores sequence
-     */
+    /* Ignores sequence */
     public AppModelAssert hasExactAppInsts(AppInstModel... sequence) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -247,9 +195,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert hasExactAppInsts(String... sequence) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -263,9 +208,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert excludesAppInsts(AppInstModel... sequence) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -278,9 +220,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert excludesAppInsts(String... sequence) {
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
@@ -293,10 +232,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-
-    /*
-     *
-     */
     public AppModelAssert hasAppGroup(Long expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -304,9 +239,7 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
 
         return this;
     }
-    /*
- *
- */
+
     public AppModelAssert doesNotHaveAppGroupId(Long expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
@@ -315,10 +248,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-
-    /*
-     *
-     */
     private AppModelAssert hasLoadBalancer(LoadBalancerModel expected) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -334,9 +263,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return null;
     }
 
-    /*
-     *
-     */
     private AppModelAssert hasLoadBalancer(String expected) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -352,9 +278,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return null;
     }
 
-    /*
-     *
-     */
     private AppModelAssert excludesLoadBalancer(LoadBalancerModel x) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -369,9 +292,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     private AppModelAssert excludesLoadBalancer(String x) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -386,9 +306,7 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     * Ignores sequence and duplicates
-     */
+    /* Ignores sequence and duplicates */
     public AppModelAssert hasLoadBalancers(LoadBalancerModel... sequence) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -403,9 +321,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert hasLoadBalancers(String... sequence) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -420,9 +335,7 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     * Ignores sequence
-     */
+    /* Ignores sequence */
     public AppModelAssert hasExactLoadBalancers(LoadBalancerModel... sequence) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -436,9 +349,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert hasExactLoadBalancers(String... sequence) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -452,9 +362,7 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
- * Ignores sequence and duplicates
- */
+    /* Ignores sequence and duplicates */
     public AppModelAssert excludesLoadBalancers(LoadBalancerModel... sequence) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -467,9 +375,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
         return this;
     }
 
-    /*
-     *
-     */
     public AppModelAssert excludesLoadBalancers(String... sequence) {
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
@@ -481,7 +386,6 @@ public class AppModelAssert extends GenericAssert<AppModelAssert, AppModel> {
 
         return this;
     }
-
 
 
     protected final void validateIsNotNull(List<?> objects) {

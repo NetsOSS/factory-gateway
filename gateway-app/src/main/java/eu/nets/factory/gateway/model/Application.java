@@ -51,7 +51,7 @@ public class Application extends AbstractEntity {
     private int stickySessionValue;
 
     @Column(nullable = false, name = "failover_load_balancer_setup")
-    private int failoverLoadBalancerSetupValue;
+    private int failoverLoadBalancerSetupValue; /* TODO - remove!*/
 
     @Column(name = "index_order")
     @Min(0)
@@ -70,7 +70,7 @@ public class Application extends AbstractEntity {
         this.indexOrder = indexOrder;
 
         this.stickySessionValue = StickySession.STICKY.ordinal();
-        this.failoverLoadBalancerSetupValue = FailoverLoadBalancerSetup.HOT_HOT.ordinal();
+        this.failoverLoadBalancerSetupValue = 0;
     }
 
     public Application(){}
@@ -104,9 +104,6 @@ public class Application extends AbstractEntity {
     }
     public void setStickySession(StickySession stickySession) { this.stickySessionValue = stickySession.ordinal(); }
 
-    public FailoverLoadBalancerSetup getFailoverLoadBalancerSetup() { return FailoverLoadBalancerSetup.values()[failoverLoadBalancerSetupValue]; }
-    public void setFailoverLoadBalancerSetup(FailoverLoadBalancerSetup failoverLoadBalancerSetup) { this.failoverLoadBalancerSetupValue = failoverLoadBalancerSetup.ordinal(); }
-
     public ApplicationGroup getApplicationGroup() {
         return applicationGroup;
     }
@@ -129,14 +126,13 @@ public class Application extends AbstractEntity {
     public int getIndexOrder() {
         return indexOrder;
     }
-
     public void setIndexOrder(int indexOrder) {
         this.indexOrder = indexOrder;
     }
+
     public void moveDown(){
         this.indexOrder--;
     }
-
     public void moveUp(){
         this.indexOrder++;
     }

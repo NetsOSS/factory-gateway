@@ -99,10 +99,6 @@ public class ModelConfig {
         ds.setStatementsCacheSize(1000);
         ds.setStatisticsEnabled(true);
 
-//        if (testOnStart) {
-//            testConnection(ds, jdbcUrl);
-//        }
-
         if (settings.migrateDatabase()) {
             log.info("Running migrations");
             Flyway flyway = new Flyway();
@@ -185,12 +181,6 @@ public class ModelConfig {
 
         map.put(USE_SECOND_LEVEL_CACHE, false);
 
-//        map.put(CACHE_REGION_FACTORY, org.hibernate.cache.ehcache.EhCacheRegionFactory.class.getName());
-//        map.put(USE_SECOND_LEVEL_CACHE, true);
-//        map.put(USE_QUERY_CACHE, true);
-//        map.put(SHARED_CACHE_MODE, SharedCacheMode.ENABLE_SELECTIVE.name());
-//        map.put(SHARED_CACHE_MODE, SharedCacheMode.NONE.name());
-
         if (!dialect.equals("")) {
             map.put(DIALECT, dialect);
         }
@@ -214,14 +204,6 @@ public class ModelConfig {
         return new TransactionTemplate(platformTransactionManager);
     }
 
-    /*
-    @Bean
-    public MBeanExporter jmxService(Statistics statistics) {
-        MBeanExporter exporter = new MBeanExporter();
-        exporter.setBeans(ImmutableMap.of("Hibernate:name=statistics", (Object) statistics));
-        return exporter;
-    }
-    */
     @Bean
     public Statistics statisticsService(SessionFactory sessionFactory) {
         return sessionFactory.getStatistics();

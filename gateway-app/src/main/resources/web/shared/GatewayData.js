@@ -17,16 +17,6 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.ApplicationController.configureHaproxySetupAndStartLoadbalancer = function (id, setup, payload) {
-      var req = {};
-      req.method = 'PUT';
-      req.url = prefix + '/data/applications/{id}/configureHaproxySetupAndStartLoadbalancer/{setup}';
-      req.url = req.url.replace(/{id}/, id);
-      req.url = req.url.replace(/{setup}/, setup);
-      req.data = payload;
-      req.params = {};
-      return $http(req).then(getData);
-    };
     this.ApplicationController.create = function (appModel) {
       var req = {};
       req.method = 'POST';
@@ -99,20 +89,10 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.ApplicationController.setStickyAndStartLoadBalancer = function (id, sticky, payload) {
+    this.ApplicationController.setSticky = function (id, sticky, payload) {
       var req = {};
       req.method = 'PUT';
       req.url = prefix + '/data/applications/{id}/setSticky/{sticky}';
-      req.url = req.url.replace(/{id}/, id);
-      req.url = req.url.replace(/{sticky}/, sticky);
-      req.data = payload;
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.ApplicationController.setStickyAndStartLoadBalancer2 = function (id, sticky, payload) {
-      var req = {};
-      req.method = 'PUT';
-      req.url = prefix + '/data/applications/{id}/setSticky2/{sticky}';
       req.url = req.url.replace(/{id}/, id);
       req.url = req.url.replace(/{sticky}/, sticky);
       req.data = payload;
@@ -202,15 +182,6 @@ define([], function () {
       req.method = 'DELETE';
       req.url = prefix + '/data/application-groups/{id}';
       req.url = req.url.replace(/{id}/, id);
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.ApplicationGroupController.removeApplication = function (id, appId) {
-      var req = {};
-      req.method = 'PUT';
-      req.url = prefix + '/data/application-groups/{id}/remove-application';
-      req.url = req.url.replace(/{id}/, id);
-      req.data = appId;
       req.params = {};
       return $http(req).then(getData);
     };

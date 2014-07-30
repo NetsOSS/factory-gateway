@@ -80,24 +80,6 @@ public class SshConnection implements Closeable {
         }
     }
 
-//    /**
-//     * Writes the given file to the remotePath
-//     *
-//     * @param file
-//     * @param remotePath
-//     * @throws IOException
-//     */
-//    public void writeRemoteFile(final File file, final String remotePath) throws IOException {
-//        SFTPClient sftpClient = sshClient.newSFTPClient();
-//        try {
-//            sftpClient.put(new FileSystemFile(file), remotePath);
-//        } catch (SFTPException e) {
-//            String errorMessage = "Could not upload file to " + remotePath + ": " + e.getLocalizedMessage() + "/path";
-//            log.warn(errorMessage, e);
-//            throw new GatewayException(errorMessage);
-//        }
-//    }
-
     @Override
     public void close() {
         try {

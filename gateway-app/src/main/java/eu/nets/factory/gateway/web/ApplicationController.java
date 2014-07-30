@@ -59,7 +59,6 @@ public class ApplicationController {
         return applications.stream().map(AppModel::new).collect(toList());
     }
 
-
     public Application getApplicationByExactName(String name) {
         List<Application> applications;
 
@@ -76,7 +75,7 @@ public class ApplicationController {
             return applications.get(0);
 
         for (Application app : applications) {
-            if (app.getName().equals(name)) //name.equals(app.getName())) // nullPointerException if name == null
+            if (app.getName().equals(name))
                 return app;
         }
 
@@ -115,7 +114,7 @@ public class ApplicationController {
     }
 
     private void assertValidModel(AppModel appModel) {
-        //is this needed? The object already have the same constraints.
+        //is this needed? The object already have the same constraints. //we cannot run test on constraint violations
         if (appModel == null) throw new GatewayException("Could not create Application. Invalid ApplicationModel.");
         if (appModel.getApplicationGroupId() == null)
             throw new GatewayException("Could not create Application. Invalid ApplicationGroupID: " + appModel.getApplicationGroupId());
@@ -148,9 +147,8 @@ public class ApplicationController {
         return new AppModel(application);
     }
 
-
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/applications/{id}")
-    @ResponseBody //has to be here
+    @ResponseBody
     public void remove(@PathVariable Long id) {
         log.info("ApplicationController.remove, id={}", id);
 
@@ -177,8 +175,6 @@ public class ApplicationController {
         }
 
         applicationGroup.removeApplication(application);
-
-
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -201,7 +197,6 @@ public class ApplicationController {
         application.setEmails(appModel.getEmails());
         application.setCheckPath(appModel.getCheckPath());
         application.setStickySession(appModel.stickySession);
-        application.setFailoverLoadBalancerSetup(appModel.failoverLoadBalancerSetup);
 
         return new AppModel(application);
     }
@@ -224,51 +219,9 @@ public class ApplicationController {
         return application.getLoadBalancers().stream().map(LoadBalancerModel::new).collect(toList());
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}/configureHaproxySetupAndStartLoadbalancer/{setup}", produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public AppModel configureHaproxySetupAndStartLoadbalancer(@PathVariable Long id, @PathVariable String setup) {
-
-        AppModel appModel = configureHaproxySetup(id, setup);
-
-        Application application = findEntityById(id);
-
-        /*for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
-            haProxyService.pushConfigFile(loadBalancer);
-            haProxyService.start(loadBalancer);
-        }*/
-
-        return appModel;
-    }
-
     @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}/setSticky/{sticky}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppModel setStickyAndStartLoadBalancer(@PathVariable Long id, @PathVariable String sticky) {
-
-        AppModel appModel = setSticky(id, sticky);
-
-        Application application = findEntityById(id);
-
-        /*for (LoadBalancer loadBalancer : application.getLoadBalancers()) {
-            haProxyService.pushConfigFile(loadBalancer);
-            haProxyService.start(loadBalancer);
-        }*/
-
-        return appModel;
-    }
-
-
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/applications/{id}/setSticky2/{sticky}", produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public AppModel setStickyAndStartLoadBalancer2(@PathVariable Long id, @PathVariable  StickySession sticky) {
-        Application application = findEntityById(id);
-        application.setStickySession(sticky);
-         return new AppModel(application);
-    }
-
-
-
-    protected AppModel setSticky(Long id, String sticky) {
-
+    public AppModel setSticky(@PathVariable Long id, @PathVariable String sticky) {
         if (sticky == null) throw new GatewayException("Sticky cannot be null: " + sticky);
 
         boolean found = false;
@@ -277,32 +230,12 @@ public class ApplicationController {
                 found = true;
             }
         }
-        if (!found) {
-            throw new GatewayException("Detected non-valid enum-value for StickySession: " + sticky);
-        }
+        if (!found) { throw new GatewayException("Detected non-valid enum-value for StickySession: " + sticky); }
+
         AppModel appModel = findById(id);
         appModel.setStickySession(sticky);
         return update(id, appModel);
     }
-
-    protected AppModel configureHaproxySetup(Long id, String setup) {
-        if (setup == null) throw new GatewayException("Setup cannot be null: " + setup);
-
-        boolean found = false;
-        for (int i = 0; i < FailoverLoadBalancerSetup.values().length; i++) {
-            if (setup.equals(FailoverLoadBalancerSetup.values()[i].name())) {
-                found = true;
-            }
-        }
-        if (!found) {
-            throw new GatewayException("Detected non-valid enum-value for FailoverLoadBalancerSetup: " + setup);
-        }
-
-        AppModel appModel = findById(id);
-        appModel.setFailoverLoadBalancerSetup(setup);
-        return update(id, appModel);
-    }
-
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/application/{applicationId}/newRule", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -319,7 +252,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/data/application/{applicationId}/removeRule/{headerId}", produces = APPLICATION_JSON_VALUE)
-    @ResponseBody //has to be here
+    @ResponseBody
     public AppModel removeHeaderRule(@PathVariable Long applicationId, @PathVariable Long headerId) {
         log.info("ApplicationController.removeHeaderRule");
         if (applicationRepository.findOne(applicationId) == null)
@@ -333,6 +266,4 @@ public class ApplicationController {
 
         return new AppModel(application);
     }
-
-
 }

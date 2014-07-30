@@ -22,14 +22,6 @@ public class LoadBalancerModel {
     public int clientTimeout;
     public int retries;
 
-    /*
-    check_timeout INTEGER DEFAULT 2000 NOT NULL,
-  connect_timeout INTEGER DEFAULT 1000 NOT NULL,
-  server_timeout INTEGER DEFAULT 60000 NOT NULL,
-  client_timeout INTEGER DEFAULT 60000 NOT NULL,
-  retries INTEGER DEFAULT 3 NOT NULL,
-     */
-
     public LoadBalancerModel() { }
 
     public LoadBalancerModel(LoadBalancer loadBalancer) {

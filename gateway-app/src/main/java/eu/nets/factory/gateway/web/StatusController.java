@@ -4,13 +4,11 @@ import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.service.EmailService;
 import eu.nets.factory.gateway.service.StatusService;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,10 +59,7 @@ public class StatusController {
         log.info("StatusController.isLoadBalancerOnline, id={}", id);
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
-        if (loadBalancer == null) {
-            throw new EntityNotFoundException("LoadBalancer", id);
-        }
-        //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
+        if (loadBalancer == null) { throw new EntityNotFoundException("LoadBalancer", id); }
         List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
 
         if (list == null) return false;
@@ -73,9 +67,7 @@ public class StatusController {
         if (list.size() < 1) return false;
         String status = list.get(0).data.get("status");
 
-        if (status == null || status.equals("offline")) return false;
-
-        return true;
+        return !(status == null || status.equals("offline"));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/server-status", produces = APPLICATION_JSON_VALUE)
@@ -94,21 +86,13 @@ public class StatusController {
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
 
         for (LoadBalancer loadBalancer : loadBalancers) {
-
-
             List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(loadBalancer.getId());
+
             if (statusModelsFromCSV == null || statusModelsFromCSV.isEmpty()) {
-                //HAproxy Not running
-                /*
-                For all loadbalancer that this application has.
-                If the load balancer is not running.
-                Add all applicationinstances as not running.
-                 */
                 log.info("");
                 for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
                     applicationStatusModel.applicationInstances.put(loadBalancer.getId(), null);
                 }
-                //applicationStatusModel.data.put(loadBalancer.getId(),null);
             }
             for (StatusModel statusModel : statusModelsFromCSV) {
                 if (!statusModel.data.get("pxname").equals(application.getName())) {
@@ -120,11 +104,9 @@ public class StatusController {
                 if (!svname.equals("BACKEND")) {
                     applicationStatusModel.getByName(svname).ifPresent(m -> m.statuses.put(loadBalancer.getId(), statusModel.data));
                 } else {
-                    //FRONTEND
                     applicationStatusModel.data.putAll(statusModel.data);
                 }
             }
-
         }
 
         return applicationStatusModel;
@@ -160,9 +142,7 @@ public class StatusController {
     }
 
 
-    /*
-    Possibly an unnecessary method
-     */
+    /* Possibly an unnecessary method */
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/backend-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public HashMap<Long, StatusModel> getBackendStatusForApplication(@PathVariable Long id) {
@@ -276,23 +256,13 @@ public class StatusController {
             params.add(new BasicNameValuePair("b","#"+statusChange.b));
             httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
-    //Execute and get the response.
+            //Execute and get the response.
             HttpResponse responseClient = httpclient.execute(httppost);
             //log.debug("HTTP statysCode :{} ",responseClient.getStatusLine().getStatusCode());
             //HttpEntity entity = responseClient.getEntity();
 
             response.setStatus(responseClient.getStatusLine().getStatusCode());
 
-            //entity.
-
-            /*if (entity != null) {
-                InputStream instream = entity.getContent();
-                try {
-                    // do something useful
-                } finally {
-                    instream.close();
-                }
-            }*/
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(503);
@@ -302,6 +272,4 @@ public class StatusController {
 
         return statusChange;
     }
-
-
 }

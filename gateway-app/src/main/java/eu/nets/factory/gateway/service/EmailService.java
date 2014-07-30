@@ -30,7 +30,6 @@ public class EmailService {
             return false;
         }
 
-
         log.info("EmailService.sendEmail to:{} , subject:{} , msg: {}",to,subject,message);
         JavaMailSender mailSender = mailConfig.javaMailService();
 
@@ -52,5 +51,4 @@ public class EmailService {
 
         return true;
     }
-
 }

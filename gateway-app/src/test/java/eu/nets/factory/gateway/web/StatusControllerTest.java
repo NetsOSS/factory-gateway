@@ -6,7 +6,6 @@ import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.slf4j.LoggerFactory.getLogger;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={WebConfig.class})
@@ -32,8 +30,6 @@ public class StatusControllerTest {
     @Autowired
     StatusController statusController;
 
-    private final Logger log = getLogger(getClass());
-
     @Autowired
     private LoadBalancerController loadBalancerController;
 
@@ -45,9 +41,6 @@ public class StatusControllerTest {
 
     @Autowired
     private ApplicationGroupController applicationGroupController;
-
-    @Autowired
-    private InitTestClass initTestClass;
 
     @Test
     public void testGetBackendStatus() {
@@ -73,7 +66,7 @@ public class StatusControllerTest {
         AppInstModel instModelOne = new AppInstModel(appInstOne);
         AppInstModel instModelTwo = new AppInstModel(appInstTwo);
 
-        instModelOne=  applicationInstanceController.create(appModel.getId(), instModelOne);
+        instModelOne = applicationInstanceController.create(appModel.getId(), instModelOne);
         instModelTwo = applicationInstanceController.create(appModel.getId(), instModelTwo);
 
         loadBalancerController.addApplication(loadModelOne.id, appModel.getId());

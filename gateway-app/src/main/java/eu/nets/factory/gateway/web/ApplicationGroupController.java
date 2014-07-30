@@ -133,7 +133,8 @@ public class ApplicationGroupController {
 
         assertValidModel(appGroupModel);
         ApplicationGroup applicationGroup = findEntityById(id);
-        if(!(applicationGroup.getName().equals(appGroupModel.getName()))) { assertNameUnique(appGroupModel.getName()); }
+        if(! applicationGroup.getName().equals(appGroupModel.getName())) { assertNameUnique(appGroupModel.name); }
+        if(applicationGroup.getPort() != appGroupModel.getPort()) assertPortUnique(appGroupModel.port);
 
         applicationGroup.setName(appGroupModel.getName());
         applicationGroup.setPort(appGroupModel.getPort());
@@ -152,13 +153,6 @@ public class ApplicationGroupController {
         return applicationGroup.getApplications().stream().map(AppModel::new).collect(toList());
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{id}/remove-application", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public AppGroupModel removeApplication(@PathVariable Long id, @RequestBody Long appId) {
-        return null;
-    }
-
-
     @RequestMapping(method = RequestMethod.PUT, value = "/data/application-groups/{appGroupId}/changeIndexOrder" , consumes = APPLICATION_JSON_VALUE)
     @ResponseBody
     public void changeIndexOrderOfApplications(@PathVariable Long appGroupId, @RequestBody ObjectNode body) {
@@ -173,14 +167,7 @@ public class ApplicationGroupController {
             return;
         }
 
-
         Application moved = applications.get(fromIndex);
-
-       /* System.out.println("Moving app " + moved.getName() + " from " + fromIndex + " ->  to " + toIndex);
-
-        for (Application application : applications) {
-            System.out.println("BEFORE " + application.getName() + " = " + application.getIndexOrder());
-        }*/
 
         moved.setIndexOrder(Integer.MAX_VALUE);
         applicationRepository.saveAndFlush(moved);
@@ -194,25 +181,18 @@ public class ApplicationGroupController {
                 applicationRepository.save(app);
                 applicationRepository.flush();
             }
-
         }
+
         if (fromIndex < toIndex) {
 
             for (int i = fromIndex + 1; i <= toIndex; i++) {
                 Application app = applications.get(i);
                 app.moveDown();
-                //System.out.println("Moving app " + app.getName() + " down ->  to index=" + app.getIndexOrder());
             }
-
         }
         applicationRepository.save(applications);
         applicationRepository.flush();
-        //applications.subList(fromIndex, toIndex).stream().forEach(Application::moveDown);
         moved.setIndexOrder(toIndex);
         applicationRepository.save(applications);
-
-        /*for (Application application : applications) {
-            System.out.println("AFTER " + application.getId() + ":" + application.getIndexOrder());
-        }*/
     }
 }

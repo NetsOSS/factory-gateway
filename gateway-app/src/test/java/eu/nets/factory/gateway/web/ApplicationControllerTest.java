@@ -51,8 +51,6 @@ public class ApplicationControllerTest {
         initTestClass.init();
     }
 
-    String classId = "ApplicationControllerTest";
-
     @Test
     public void testListAllApps() throws Exception {
         List<AppModel> appModels = applicationController.listAllApps();
@@ -116,11 +114,6 @@ public class ApplicationControllerTest {
     }
 
     @Test
-    public void testAssertNameUnique() throws Exception {
-        //assertThat(true).isEqualTo(false); // this method is private
-    }
-
-    @Test
     public void testCreate() throws Exception {
         Application application = new Application("Beta", "/beta", applicationGroupRepository.findByNameLike("GroupTwo").get(0), "betaMail", "/beta/ping", "/beta", 0);
         AppModel appModel = new AppModel(application);
@@ -136,8 +129,6 @@ public class ApplicationControllerTest {
         CustomAssertions.assertThat(appModel).hasAppGroup(applicationGroupRepository.findByNameLike("GroupTwo").get(0).getId()).hasExactAppInsts(new AppInstModel[]{}).hasExactLoadBalancers(new LoadBalancerModel[]{});
 
         assertThat(applicationController.findEntityById(appModel.getId()).getStickySession()).isNotNull().isEqualTo(StickySession.STICKY);
-        assertThat(applicationController.findEntityById(appModel.getId()).getFailoverLoadBalancerSetup()).isNotNull().isEqualTo(FailoverLoadBalancerSetup.HOT_HOT);
-
 
         try { // appModel == null
             applicationController.create(null);
@@ -280,15 +271,12 @@ public class ApplicationControllerTest {
         appModel.applicationInstances = null;
         appModel.loadBalancers = null;
         appModel.setStickySession("NOT_STICKY");
-        appModel.setFailoverLoadBalancerSetup("HOT_STANDBY");
         appModel = applicationController.update(appModel.getId(), appModel);
 
         assertThat(applicationController.listAllApps()).isNotNull().hasSize(3).onProperty("name").excludes("Grandiosa").contains("Beta");
         CustomAssertions.assertThat(applicationController.search("Beta").get(0)).hasName("Beta").hasPublicUrl("/beta").hasEmails("BetaMail").hasCheckPath("/beta/ping");
         CustomAssertions.assertThat(applicationController.search("Beta").get(0)).doesNotHaveAppGroupId(-6L).hasAppInsts(new AppInstModel[]{}).hasLoadBalancers(new LoadBalancerModel[]{});
         assertThat(applicationController.search("Beta").get(0).getStickySession()).isNotNull().isEqualTo("NOT_STICKY");
-        assertThat(applicationController.search("Beta").get(0).getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_STANDBY");
-
 
         try { //model is null
             applicationController.update(appModel.getId(), null);
@@ -360,8 +348,6 @@ public class ApplicationControllerTest {
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-
-
     }
 
     @Test
@@ -380,8 +366,6 @@ public class ApplicationControllerTest {
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-
-
     }
 
     @Test
@@ -411,45 +395,6 @@ public class ApplicationControllerTest {
 
         try {
             applicationController.getLoadBalancers(null);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
-    }
-
-    @Test
-    public void testConfigureHaproxySetup() {
-
-        AppModel modelOne = applicationController.findById(applicationController.search("Kamino").get(0).getId());
-        AppModel modelTwo = applicationController.findById(applicationController.search("Grandiosa").get(0).getId());
-
-        assertThat(modelOne).isNotNull();
-        assertThat(modelTwo).isNotNull();
-
-        assertThat(modelOne.getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_HOT");
-        assertThat(modelTwo.getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_HOT");
-
-        modelOne = applicationController.configureHaproxySetup(modelOne.getId(), "HOT_STANDBY");
-        modelTwo = applicationController.configureHaproxySetup(modelTwo.getId(), "HOT_STANDBY");
-
-        assertThat(modelOne.getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_STANDBY");
-        assertThat(modelTwo.getFailoverLoadBalancerSetup()).isNotNull().isEqualTo("HOT_STANDBY");
-
-        try { //id null
-            applicationController.configureHaproxySetup(null, "HOT_HOT");
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
-
-        try { //setup null
-            applicationController.configureHaproxySetup(modelOne.getId(), null);
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
-
-        try { // non excisting id
-            applicationController.configureHaproxySetup(-1L, "HOT_HOT");
-            fail("Expected exception");
-        } catch(GatewayException ignore) { }
-
-        try { // non valid setup-value
-            applicationController.configureHaproxySetup(modelOne.getId(), "NON_VALID_SETUP");
             fail("Expected exception");
         } catch(GatewayException ignore) { }
     }

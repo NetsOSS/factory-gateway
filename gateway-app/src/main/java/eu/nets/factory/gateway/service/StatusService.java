@@ -3,10 +3,7 @@ package eu.nets.factory.gateway.service;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.web.ApplicationController;
-import eu.nets.factory.gateway.web.LoadBalancerController;
-import eu.nets.factory.gateway.web.LoadBalancerModel;
 import eu.nets.factory.gateway.web.StatusModel;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -20,7 +17,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -33,8 +29,6 @@ public class StatusService {
 
     @Autowired
     private ApplicationController applicationController;
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     LoadBalancerRepository loadBalancerRepository;
@@ -42,15 +36,11 @@ public class StatusService {
     @Autowired
     EmailService emailService;
 
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
     private HashMap<Long, List<StatusModel>> loadBalancerStatuses = new HashMap<>();
 
 
     @Scheduled(fixedRate = 1000)
     public void autoPoll() {
-        //log.info("StatusService.autoPoll {} , #loadBalancers {}", dateFormat.format(new Date()), loadBalancerStatuses.size());
         List<LoadBalancer> lbList = loadBalancerRepository.findAll();
 
         for (LoadBalancer lb : lbList) {
@@ -63,11 +53,6 @@ public class StatusService {
                 loadBalancerStatuses.put(lb.getId(), listStatus);
 
             } catch (GatewayException ge) {
-                //happens when a haproxy is offline
-                //if (oldListStatusList.isEmpty()) {
-                //Was offline last time also. No need to send emails.
-
-                //} else {
                 List<StatusModel> offlineList = new ArrayList<>();
                 for (Application application : lb.getApplications()) {
 
@@ -89,9 +74,6 @@ public class StatusService {
 
                 }
                 loadBalancerStatuses.put(lb.getId(), offlineList);
-                //log.info("StatusService.autoPoll {} at {}:{} is offline. Exception : '{}'", lb.getName(), lb.getHost(), lb.getPublicPort(), ge.getMessage());
-
-                //  }
             }
         }
 
@@ -136,13 +118,8 @@ public class StatusService {
                 message.append("In loadbalancer " + lb.getName() + "  " + lb.getHost() + ":" + lb.getStatsPort() + ". \n");
                 log.info("Email msg: {}", message.toString());
                 emailService.sendEmail(application.getEmails(), "HaProxy change in status", message.toString());
-
-
             }
-
-
         }
-
     }
 
 
@@ -152,7 +129,6 @@ public class StatusService {
 
     //Should be private. but used in test. fix later
     public List<String> readCSV(LoadBalancer loadBalancer) {
-        //log.info("StatusService.readCSV");
 
         String csvFile = "http://"+ loadBalancer.getHost()+":" +  loadBalancer.getStatsPort() + "/proxy-stats;csv";
 
@@ -175,7 +151,6 @@ public class StatusService {
             }
             bufferedReader.close();
         } catch (Exception e) {
-            // e.printStackTrace();
             throw new GatewayException("Cannot connect to HAproxy. " + loadBalancer.getName() + " with csv at : " + csvFile);
 
         }
@@ -194,7 +169,6 @@ public class StatusService {
 
     //Should be private. but used in test. fix later
     public List<StatusModel> parseCSV(List<String> csvStrings, LoadBalancer lb) {
-        //log.info("StatusService.parseCSV");
 
         if (csvStrings == null) {
             throw new GatewayException("Received List was null.");

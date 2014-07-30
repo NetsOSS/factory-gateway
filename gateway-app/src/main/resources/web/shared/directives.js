@@ -29,8 +29,6 @@ define([ 'angular' ], function (angular) {
     return {
       restrict: 'E',
       templateUrl: 'web/gateway/lbform.html',
-      //template: "<div><span>{{mandateperson.id}}<span><input type='text' ng-model='mandateperson.firstname' /></div>",
-      //scope: { mandateperson: '=' },
       scope: false,
       controller: function ($scope, $routeParams, GatewayData) {
         $scope.isNewLb = $scope.lb == null;
@@ -70,7 +68,6 @@ define([ 'angular' ], function (angular) {
           }
         };
       }
-      //controller: 'LoadBalancerFormCtrl'
     };
   });
 
@@ -83,12 +80,9 @@ define([ 'angular' ], function (angular) {
         onCreated: '='
       },
       controller: function ($scope, $routeParams, GatewayData) {
-       // console.log('$scope.onCreated', $scope.onCreated);
-       // console.log('$scope.$parent[$scope.onCreated]', $scope.$parent[$scope.onCreated]);
 
         $scope.localApp = angular.copy($scope.appObj);
         var isAppNew = $scope.localApp === undefined;
-        //console.log('IsNew : ', isAppNew);
         if (isAppNew)
           $scope.localApp = {};
         else {

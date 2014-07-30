@@ -2,11 +2,6 @@
   <h1>Application Instance: {{appInst.name}}</h1>
   <ul class="list-unstyled">
     <li>ID: {{appInst.id}}</li>
-    <!--
-    <li>Host: {{appInst.host}}</li>
-    <li>Port: {{appInst.port}}</li>
-    <li>Path: {{appInst.path}}</li>
-    -->
     <li>Server: {{appInst.server}}</li>
     <li>Haproxy State: {{appInst.haProxyState}}</li>
     <li>Weight: {{appInst.weight}}</li>
@@ -14,15 +9,13 @@
       <ul ng-repeat="(lb, value) in rawStatusForOneInst">
         <li><a href="#/lb/{{lb}}">{{lb}}</a></li>
       </ul>
-
     </li>
-    <ul ng-show="!rawStatusForOneInst">No loadbalancers associated with this application instance
-    </ul>
-    <button class="btn btn-info" data-toggle="modal" data-target="#myModal"><span
-        class="glyphicon glyphicon-pencil"></span> Edit
+    <ul ng-show="!rawStatusForOneInst">No loadbalancers associated with this application instance</ul>
+    <button class="btn btn-info" data-toggle="modal" data-target="#myModal">
+      <span class="glyphicon glyphicon-pencil"></span> Edit
     </button>
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAppInstWarningModal"><span
-        class="glyphicon glyphicon-trash"></span> Delete
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAppInstWarningModal">
+      <span class="glyphicon glyphicon-trash"></span> Delete
     </button>
 
   </ul>
@@ -62,24 +55,6 @@
             <label for="inAppInstName">Name</label>
             <input type="text" ng-model="appInst.name" class="form-control" id="inAppInstName">
           </div>
-          <!--
-          <div class="form-group">
-            <label for="inAppInstHost">Host</label>
-            <input type="text" ng-model="appInst.host" class="form-control " id="inAppInstHost" name="host"
-                   required
-                   placeholder="Enter host">
-          </div>
-          <div class="form-group">
-            <label for="inAppInstPort">Port</label>
-            <input type="number" ng-model="appInst.port" class="form-control" id="inAppInstPort"
-                   placeholder="Enter port">
-          </div>
-          <div class="form-group">
-            <label for="inAppInstPath">Path</label>
-            <input type="text" ng-model="appInst.path" class="form-control" id="inAppInstPath"
-                   placeholder="Enter path / url">
-          </div>
-          -->
           <div class="form-group">
             <label for="inAppInstServer">Server</label>
             <input type="text" ng-model="appInst.server" class="form-control " id="inAppInstServer" name="server"
@@ -102,9 +77,7 @@
   </div>
 </div>
 
-<!-- Tabs for showing status
--->
-
+<!-- Tabs for showing status -->
 <div >
   <h3>Status: <span class="text-success" ng-show="rawStatusForOneInst">HAproxy is running
             <span class="glyphicon glyphicon-thumbs-up"></span></span>

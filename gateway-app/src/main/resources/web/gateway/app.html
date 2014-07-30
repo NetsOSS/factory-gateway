@@ -5,8 +5,7 @@
   <li>Number of instances: {{app.applicationInstances.length}}</li>
   <li>In group: {{appGroup.name}} ({{app.applicationGroupId}})</li>
   <li>Check path: {{app.checkPath}}</li>
-  <li>Failover setup: {{app.failoverLoadBalancerSetup}}</li>
-  <li>Sticky status: {{app.stickySession}}</li>
+  <li>Emails: {{app.emails}}</li>
   <li>In load balancers:
     <ul ng-repeat="lbForApp in app.loadBalancers">
       <li><a href="#/lb/{{lbForApp.id}}"> {{lbForApp.name}} ({{lbForApp.id}})</a></li>
@@ -14,13 +13,13 @@
   </li>
 </ul>
 
-<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-tag"></span>
-  Edit Application
+<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span>
+  Edit
 </button>
 
 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteWarningModal"><span
     class="glyphicon glyphicon-trash"></span>
-  Delete Application
+  Delete
 </button>
 
 <div class="modal" id="deleteWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel"
@@ -45,23 +44,14 @@
     class="glyphicon glyphicon-plus"></span> Create Instance
 </button>
 
-<div class="btn-group">
+<div class="btn-group pull-right">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    Change setup <span class="caret "></span>
-  </button>
-  <ul class="dropdown-menu" role="menu">
-    <li><a ng-click="changeSetup(app.id, 'HOT_HOT')">HOT_HOT</a></li>
-    <li><a ng-click="changeSetup(app.id, 'HOT_STANDBY')">HOT_STANDBY</a></li>
-  </ul>
-</div>
-
-<div class="btn-group">
-  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    Set sticky<span class="caret "></span>
+    {{app.stickySession}}<span class="caret "></span>
   </button>
   <ul class="dropdown-menu" role="menu">
     <li><a ng-click="setSticky(app.id, 'STICKY')">STICKY</a></li>
     <li><a ng-click="setSticky(app.id, 'NOT_STICKY')">NOT_STICKY</a></li>
+    <li><a ng-click="setSticky(app.id, 'STICKY_NEW_COOKIE')">STICKY_NEW_COOKIE</a></li>
   </ul>
 </div>
 
@@ -139,13 +129,8 @@
 
   </table>
 </div>
-</hr>
-<!-- Not used
-<app-form app-obj="localApp" on-created="onUpdatedApp" ng-if="onAppLoadDone"></app-form>
--->
 
 <hr>
-
 
 <!-- Modal Server /App instance details-->
 <div class="modal fade bs-example-modal-lg" id="modalAppInstDetails" tabindex="-1" role="dialog"

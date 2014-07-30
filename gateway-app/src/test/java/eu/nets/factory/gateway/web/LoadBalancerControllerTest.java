@@ -50,7 +50,7 @@ public class LoadBalancerControllerTest {
     }
 
     @Test
-public void testFindEntityById() throws Exception {
+    public void testFindEntityById() throws Exception {
         assertThat(loadBalancerController.findEntityById(loadBalancerController.search("Knut").get(0).getId())).isNotNull();
         assertThat(loadBalancerController.findEntityById(loadBalancerController.search("Knut").get(0).getId()).getName()).isNotNull().isEqualTo("Knut");
 
@@ -91,21 +91,6 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch(GatewayException ignore) {
         }
-    }
-
-    @Test
-    public void testAssertNameUnique() throws Exception {
-        //assertThat(true).isEqualTo(false); // this method is private
-    }
-
-    @Test
-    public void testAssertHostInstallationPathUnique() throws Exception {
-        //assertThat(true).isEqualTo(false); // this method is private
-    }
-
-    @Test
-    public void testAssertHostPublicPortUnique() throws Exception {
-        //assertThat(true).isEqualTo(false); // this method is private
     }
 
     @Test
@@ -212,8 +197,6 @@ public void testFindEntityById() throws Exception {
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
         } catch (GatewayException ignore) { }
-
-
     }
 
     @Test()
@@ -233,25 +216,7 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch (GatewayException ignore) { }
     }
-    /*
-    @Test()
-    public void testCreateValidPublicPort() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
-        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
 
-        try { //publicPort is less than 1
-            loadBalancerModel.publicPort = 0;
-            loadBalancerController.create(loadBalancerModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-
-        try { //publicPort is greater than 65535
-            loadBalancerModel.publicPort = 65536;
-            loadBalancerController.create(loadBalancerModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-    }
-    */
     @Test()
     public void testCreateUniqueHostInstallationPath() throws Exception {
         LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "instPathTwo", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
@@ -261,17 +226,7 @@ public void testFindEntityById() throws Exception {
             fail("Expected exception");
         } catch (GatewayException ignore) { }
     }
-    /*
-    @Test()
-    public void testCreateUniqueHostPublicPort() throws Exception {
-        LoadBalancer loadBalancer = new LoadBalancer("Bob", "hostTwo", "X", "X", 234, "factory", 2000, 1000, 60000, 60000, 3);
-        LoadBalancerModel loadBalancerModel = new LoadBalancerModel(loadBalancer);
-        try {
-            loadBalancerController.create(loadBalancerModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-    }
-    */
+
     @Test()
     public void testCreateValidClientTimeoutAndServerTimeout() throws Exception {
         LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
@@ -315,7 +270,6 @@ public void testFindEntityById() throws Exception {
         loadBalancerModel.installationPath = "/batcave";
         loadBalancerModel.sshKey = "nananananananana";
         loadBalancerModel.userName = "factory";
-        //loadBalancerModel.publicPort = 1;
         loadBalancerModel.checkTimeout = 2000;
         loadBalancerModel.connectTimeout = 1000;
         loadBalancerModel.clientTimeout = 60000;
@@ -449,32 +403,12 @@ public void testFindEntityById() throws Exception {
         } catch (GatewayException ignore) { }
     }
 
-    /*
-    @Test()
-    public void testUpdateValidPublicPort() throws Exception {
-        LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
-
-        try { //publicPort is less than 1
-            loadBalancerModel.publicPort = 0;
-            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-
-        try { //publicPort is greater than 65535
-            loadBalancerModel.publicPort = 65536;
-            loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-    }
-    */
-
     @Test
     public void testUpdateUniqueHostInstallationPath() throws Exception {
         LoadBalancerModel loadBalancerModel = loadBalancerController.search("Per").get(0);
 
         //host & installationPath remains the same
         loadBalancerModel.name = "X";
-        //loadBalancerModel.publicPort = 987;
         assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel)).isInstanceOf(LoadBalancerModel.class);
 
         try { //host & installationPath already exists - not unique
@@ -499,11 +433,8 @@ public void testFindEntityById() throws Exception {
         int statsPort = loadBalancerController.update(loadBalancerModel.id, loadBalancerModel).getStatsPort();
         assertTrue(statsPort <= LoadBalancer.STATS_PORT_MAX);
         assertTrue(statsPort >= LoadBalancer.STATS_PORT_MIN);
-
-        //loadBalancerModel.host = "X";
-        //assertThat(loadBalancerController.update(loadBalancerModel.id, loadBalancerModel).getStatsPort()).isEqualTo(20002);
-
     }
+
     @Test()
     public void testUpdateClientTimeoutEqualsServerTimeout() throws Exception {
         LoadBalancer loadBalancer = new LoadBalancer("Batman", "X", "/X", "X", 567, "factory", 2000, 1000, 60000, 60000, 3);
@@ -592,16 +523,5 @@ public void testFindEntityById() throws Exception {
             loadBalancerController.removeApplicationFromLoadbalancer(loadBalancerController.search("Knut").get(0).id, -1L);
             fail("Expected exception");
         } catch(GatewayException ignore) { }
-    }
-
-
-    @Test
-    public void testPushConfiguration() throws Exception {
-        //assertThat(true).isEqualTo(false);
-    }
-
-    @Test
-    public void testStartLoadBalancer() throws Exception {
-        //assertThat(true).isEqualTo(false);
     }
 }

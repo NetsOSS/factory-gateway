@@ -39,17 +39,13 @@ define([
                 controller: 'LoadBalancersCtrl',
                 templateUrl: templatePrefix + "allLoadBalancers.html"
             }) ;
-      //$locationProvider.html5Mode(true);
 
         $httpProvider.interceptors.push(['$q', function ($q) {
             return {
-                //http://blog.brunoscopelliti.com/xhr-interceptor-in-an-angularjs-web-app
 
                 /* All the following methods are optional */
                 response: function (response) {
-                    // response.status === 200
                     if (response.config.method == "PUT") {
-                        //console.log("Update successfully" ,response);
                         $("#MessageDisplaySuccessText").text("Updated " + response.data.name + " successfully.");
                         $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
                     }
@@ -62,7 +58,7 @@ define([
                 },
 
                 responseError: function (rejection) {
-                    // Called when another XHR request returns with an error status code.
+                    /* Called when another XHR request returns with an error status code. */
                     if (rejection.status == 400) {
                         $("#MessageDisplayText").text(rejection.data);
                         $("#messageDisplay").show().delay(5000).fadeOut('slow');
@@ -123,8 +119,7 @@ define([
     });
 
     gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, GatewayData) {
-        $scope.newApp = {}; //Model for new ApplicationForm
-     // $scope.newAppInstForm = {};
+        $scope.newApp = {}; /* Model for new ApplicationForm */
       $scope.newAppGroup={};
         $scope.emailFields = [{'id':"mail1"}];
       $scope.showAppInstForm=false;
@@ -156,7 +151,6 @@ define([
 
             GatewayData.ApplicationInstanceController.create(app.id, testObj).then(function (data) {
                 app.applicationInstances.push(data);
-                //$scope.app.newAppInstForm={};
             });
         };
 
@@ -187,18 +181,24 @@ define([
 
         GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
             $scope.allAppGroups = data;
-
-            /*angular.forEach($scope.allAppGroups,function(appGroup,index){
-             angular.forEach(appGroup.applications,function(app,index){
-               app.rules = [
-                 {headerName: 'iv-user',regexMatch: '^050378.*', applicationInstances:[]}
-               ];
-
-             });
-             });*/
-
-
         });
+
+
+        $scope.showUpdateApplicationGroup = function (appGroup) {
+            $scope.updateAppGroup = {};
+
+            $scope.updateAppGroup = angular.copy(appGroup);
+            $('#modalUpdateAppGroup').modal('show');
+        };
+
+        $scope.updateApplicationGroup = function () {
+            GatewayData.ApplicationGroupController.update($scope.updateAppGroup.id, $scope.updateAppGroup).then(function (data) {
+                var foundGroup = $filter('getById')($scope.allAppGroups, data.id);
+                foundGroup.name = data.name;
+                foundGroup.port = data.port;
+                $('#modalUpdateAppGroup').modal('hide');
+            });
+        };
 
         $scope.removeGroup = function () {
             GatewayData.ApplicationGroupController.remove($scope.appGroupToBeDeleted.id).then(function (data) {
@@ -220,7 +220,7 @@ define([
             });
         };
 
-        //Update Application start
+        /* Update Application start */
         $scope.showNewMailFieldForUpdate = function(mail) {
             return mail.id == $scope.updateEmails[$scope.updateEmails.length-1].id;
         };
@@ -253,8 +253,7 @@ define([
             $('#modalUpdateApp').modal('show');
         };
 
-        //Update Application end
-
+        /* Update Application end */
         $scope.showDeleteAppWarning = function (app, appGroup) {
             $scope.appToBeDeleted = app;
             $scope.appGroupToBeSpliced = appGroup;
@@ -339,7 +338,6 @@ define([
         $scope.createApplication = function (appGroup) {
             var copyNewApp = angular.copy($scope.newApp);
             copyNewApp.applicationGroupId = appGroup.id;
-            //console.log("CreateApp to appGrpId ",appGroup.id, " app : ", copyNewApp);
             var mails ="";
             var comma = false;
             for(var i = 0; i < $scope.emailFields.length; i++) {
@@ -364,21 +362,13 @@ define([
         $scope.setSticky = function (app, sticky) {
             console.log("SetSticky : id=", app.id, " sticky=", sticky);
 
-            GatewayData.ApplicationController.setStickyAndStartLoadBalancer(app.id, sticky).then(function (data) {
+            GatewayData.ApplicationController.setSticky(app.id, sticky).then(function (data) {
                 app.stickySession = sticky;
-                //Should check if it was a succkess
-            });
-        };
-
-        $scope.changeHotMode = function (app, mode) {
-            console.log("SetHotMode : id=", app.id, " mode=", mode);
-            GatewayData.ApplicationController.configureHaproxySetupAndStartLoadbalancer(app.id, mode).then(function (data) {
-                app.failoverLoadBalancerSetup = mode;
+                /* Should check if it was a success */
             });
         };
 
       $scope.setToBackup = function (appInst) {
-
         var objNode = {"backup" : !appInst.backup};
         GatewayData.ApplicationInstanceController.setToBackup(appInst.id,objNode).then(function(data){
           appInst.backup= !appInst.backup;
@@ -396,7 +386,7 @@ define([
           };
           console.log('moved', movedApp, moveObj.from, moveObj.to);
 
-          //If to is undefined, the item did not move. (Dragged back to the same position) -> Do nothing
+          /* If to is undefined, the item did not move. (Dragged back to the same position) -> Do nothing */
           if(typeof moveObj.to === 'undefined')
             return;
 
@@ -405,12 +395,9 @@ define([
           });
         }
       };
-
-
-
     });
 
-    //Application controller
+    /* Application controller */
     gateway.controller('AppCtrl', function ($scope, $routeParams, GatewayData) {
 
         $scope.onAppLoadDone = false;
@@ -429,8 +416,7 @@ define([
                     $scope.updateEmails.push({"id":"mail"+i, "name":emails[i]});
                 }
 
-
-                //Find more info  (name) about the group it belongs too.
+                /* Find more info  (name) about the group it belongs too. */
                 GatewayData.ApplicationGroupController.findById($scope.app.applicationGroupId).then(function (data) {
                     $scope.appGroup = data;
                 });
@@ -438,17 +424,8 @@ define([
             });
         };
 
-        $scope.changeSetup = function (id, setup) {
-
-            GatewayData.ApplicationController.configureHaproxySetupAndStartLoadbalancer(id, setup).then(function (data) {
-
-            });
-        };
-
         $scope.setSticky = function (id, sticky) {
-
-            GatewayData.ApplicationController.setStickyAndStartLoadBalancer(id, sticky).then(function (data) {
-
+            GatewayData.ApplicationController.setSticky(id, sticky).then(function (data) {
             });
         };
 
@@ -510,11 +487,8 @@ define([
             });
         };
 
-        //--- Status --
+        /* --- Status --- */
         $scope.getStatusOfApplication = function () {
-            /*GatewayData.StatusController.getBackendStatusForApplication($routeParams.id).then(function (data) {
-             //$scope.statusApp = data;
-             });*/
             GatewayData.StatusController.getServerStatusForApplication($routeParams.id).then(function (data) {
                 $scope.statusAppServers = data;
             });
@@ -526,12 +500,6 @@ define([
             $('#modalAppInstDetails').modal('show');
 
         };
-
-
-
-
-
-
     });
 
     //  ------------------------ApplicationInstanceControler------------------------------
@@ -544,7 +512,6 @@ define([
             console.log("Removing: ", $scope.appInst);
             GatewayData.ApplicationInstanceController.remove($scope.appInst.id).then(function (data) {
                 history.back();
-                //$scope.$apply();
             });
         };
 
@@ -601,11 +568,7 @@ define([
 
         $scope.setProxyStateWithAPI = function (statusObj,state) {
             console.log(statusObj);
-            //iid = b
 
-
-
-            // var dataMsg = "s="+statusObj.svname+"&action="+state+"&b=#"+statusObj.iid;
             var statusChangeObj = {
                 "s": statusObj.svname,
                 "action": state,
@@ -613,8 +576,6 @@ define([
             };
 
             console.log(statusChangeObj);
-            // var statsPage = 'http://'+$scope.lb.host+':'+($scope.lb.publicPort+1)+'/proxy-stats';
-            // statsPage = 'http://localhost:9002/data/applications';
             GatewayData.StatusController.changeStatusAPI($scope.lb.id, statusChangeObj);
         };
 
@@ -634,7 +595,7 @@ define([
         $scope.removeLoadBalancer = function () {
             GatewayData.LoadBalancerController.remove($scope.lb.id).then(function (data) {
                 history.back();
-                $scope.$$phase || $scope.$apply(); // Safe apply
+                $scope.$$phase || $scope.$apply(); /* Safe apply */
             });
         };
 
@@ -655,7 +616,7 @@ define([
             $scope.inLBList = $scope.lb.applications;
 
             GatewayData.ApplicationController.listAllApps().then(function (data) {
-                //Search: Loop through All Apps. Add an app if it does not exist in the Load Balancer.
+                /* Search: Loop through All Apps. Add an app if it does not exist in the Load Balancer. */
                 for (var i = 0; i < data.length; i++) {
                     var contains = false;
                     for (var j = 0; j < $scope.inLBList.length; j++) {
@@ -679,25 +640,7 @@ define([
                 fixed = fixed.replace(re, "\\");
                 $scope.configFile = fixed;
             });
-
-
-
-            //Reload config file.. should maybe be saved as a string in LB model.
-
-
-            //var s = '"    global\n        daemon\n        maxconn 256\n\n    defaults\n        mode http\n        timeout connect 5000ms\n        timeout client 50000ms\n        timeout server 50000ms\n\n    frontend http-in\n        bind *:5000\n        acl Kaminorule path -m beg /kamino\n        acl Sekotrule path -m beg /sekot\n        acl Finchrule path -m beg /finch\n        use_backend Kamino if Kaminorule\n        use_backend Sekot if Sekotrule\n        use_backend Finch if Finchrule\n        \n    backend Kamino\n        option httpchk GET /kamino/v1/ping\n        server kamino1 vm-stapp-145:8100/kamino maxconn 32 check\n        server kamino2 vm-stapp-146:8100/kamino maxconn 32 check\n\n        \n    backend Sekot\n        option httpchk GET /sekot/mcp.html\n        server sekot2 vm-stapp-146:9494/sekot maxconn 32 check\n        server sekot3 vm-stapp-145:9595/sekot maxconn 32 check\n        server sekot1 vm-stapp-145:9494/sekot maxconn 32 check\n\n        \n    backend Finch\n        option httpchk GET /finch/index.html\n        server finch2 vm-stapp-146:7272/finch maxconn 32 check\n        server finch1 vm-stapp-145:7272/finch maxconn 32 check\n        server awd asd:654/sad maxconn 32 check\n\n\n    listen stats *:5001\n        mode http\n        stats enable\n        stats uri /proxy-stats\n        stats admin if TRUE\n"';
-
-
-            // $scope.configFile2=s;
         };
-
-
-
-       /*$scope.pushConfig = function() {
-            GatewayData.LoadBalancerController.pushConfiguration($routeParams.id).then(function (data) {
-
-            });
-       };*/
 
         //----- Status proxy -----------------------
         var poller = null;
@@ -717,14 +660,11 @@ define([
         var updateLBisOlineStatus = function () {
             GatewayData.StatusController.isLoadBalancerOnline($routeParams.id).then(function (data) {
                 $scope.isLBonline = (data==='true');
-
-//                console.log("LB is online ? ",    $scope.isLBonline, "type:", typeof    $scope.isLBonline);
             });
         };
 
 
         var loadStatus = function () {
-//            console.log('Loading status');
             updateLBisOlineStatus();
             GatewayData.StatusController.getStatusForLoadbalancer($routeParams.id).then(function (data) {
 
@@ -738,7 +678,7 @@ define([
         };
         loadStatus();
 
-        //Clean up. Stop poling if leaving page
+        /* Clean up. Stop poling if leaving page */
         $scope.$on('$locationChangeStart', function () {
             $timeout.cancel(poller);
         });
@@ -784,9 +724,6 @@ define([
     gateway.controller('LoadBalancersCtrl', function ($scope, $routeParams, $location, GatewayData) {
         GatewayData.StatusController.getStatusForAllLoadbalancers().then(function (data) {
             $scope.allStatus = data;
-
-
         });
-
     });
 });
