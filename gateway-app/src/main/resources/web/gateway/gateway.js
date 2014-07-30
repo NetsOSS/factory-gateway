@@ -12,7 +12,16 @@ define([
         $routeProvider.
             when('/application-groups/:applicationGroupId?', {
                 controller: 'FrontPageCtrl',
-                templateUrl: templatePrefix + "gateway.html"
+                templateUrl: templatePrefix + "gateway.html",
+                resolve: {
+                    allLBs: function (GatewayData) {
+                        return GatewayData.LoadBalancerController.listAllLoadBalancers();
+                    },
+                    allAppGroups: function (GatewayData) {
+                        return GatewayData.ApplicationGroupController.listAllAppGroups();
+                    }
+                }
+
             }).
             when('/person/:id', {
                 controller: 'PersonCtrl',
@@ -120,7 +129,7 @@ define([
         };
     });
 
-    gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, $routeParams, GatewayData) {
+    gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, $routeParams, GatewayData, allAppGroups, allLBs) {
         $scope.currentAppGroupId = $routeParams.applicationGroupId;
         $scope.newApp = {}; //Model for new ApplicationForm
      // $scope.newAppInstForm = {};
@@ -166,9 +175,11 @@ define([
         };
 
         // ----------------------- Load balancer functions ------------------------------------
-        GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
+       /* GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
             $scope.allLBs = data;
-        });
+        });*/
+
+        $scope.allLBs = allLBs;
 
         $scope.createLoadBalancer = function () {
             GatewayData.LoadBalancerController.create($scope.lb).then(function (data) {
@@ -185,9 +196,11 @@ define([
             });
         };
 
-        GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
+        /*GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
             $scope.allAppGroups = data;
-        });
+        });*/
+
+        $scope.allAppGroups = allAppGroups;
 
 
         $scope.showUpdateApplicationGroup = function (appGroup) {
