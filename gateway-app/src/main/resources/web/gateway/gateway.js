@@ -124,9 +124,10 @@ define([
 
     gateway.controller('FrontPageCtrl', function ($location, $scope, $filter, GatewayData) {
         $scope.newApp = {}; //Model for new ApplicationForm
-      $scope.newAppInstForm = {};
+     // $scope.newAppInstForm = {};
       $scope.newAppGroup={};
         $scope.emailFields = [{'id':"mail1"}];
+      $scope.showAppInstForm=false;
 
         $scope.showNewMailField = function(mail) {
             return mail.id == $scope.emailFields[$scope.emailFields.length-1].id;
@@ -147,14 +148,15 @@ define([
         };
 
         $scope.addAppInst = function (app) {
-            console.log("New app inst : ", $scope.newAppInstForm, " to ", app.id);
+            console.log("New app inst : ", app.newAppInstForm, " to ", app.id);
             var testObj = {};
-            testObj.name = $scope.newAppInstForm.name;
-            testObj.server = $scope.newAppInstForm.host;
+            testObj.name = app.newAppInstForm.name;
+            testObj.server = app.newAppInstForm.host;
             testObj.applicationId = app.id;
 
             GatewayData.ApplicationInstanceController.create(app.id, testObj).then(function (data) {
                 app.applicationInstances.push(data);
+                //$scope.app.newAppInstForm={};
             });
         };
 
