@@ -4,7 +4,7 @@
 <form role="form" ng-submit="updateOrCreateLB()" name="lbform" novalidate>
 
     <div class="form-group">
-        <label for="inLbName">Name</label>
+        <label for="inLBName">Name</label>
         <input type="text" ng-model="lb.name" class="form-control" id="inLBName"
                required
                placeholder="Enter load balancer name">
@@ -16,10 +16,11 @@
                placeholder="Enter host">
     </div>
     <div class="form-group">
-        <label for="inLbHost">Path to a folder to store config files (Must exists on the server)</label>
+        <label for="inLbPath">Working directory</label>
+        <span class="glyphicon glyphicon-question-sign" title="Absolute path to a directory on the load balancer machine&#013;where this load balancer should put its internally needed files:&#013;Config-file, pid-file and start/stop scripts.&#013;&#013;The path must exist on the load balancer machine."></span>
         <input type="text" ng-model="lb.installationPath" class="form-control " id="inLbPath" name="lbPath" ng-pattern="/^/[a-zA-Z]+/"
                required
-               placeholder="Enter path">
+               placeholder="Enter absolute path">
         <span class="bg-danger" ng-show="lbform.lbPath.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
     </div>
     <!--
@@ -105,7 +106,7 @@
   </div>
 
     <div class="form-group">
-        <label for="inLbHost">SSH Key</label>
+        <label for="inLbSshKey">SSH Key</label>
         <textarea rows="12" ng-model="lb.sshKey" class="form-control " id="inLbSshKey"
                required
                placeholder="Enter SSH key" ></textarea>
