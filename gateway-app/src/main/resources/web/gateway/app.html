@@ -56,7 +56,7 @@
 </div>
 
 <hr>
-
+<!--
 <h3>Status of application {{statusAppServers.data.pxname}} : {{statusAppServers.data.status}} | In/out :
   {{statusAppServers.data.bin}}/{{statusAppServers.data.bout}} bytes</h3>
 
@@ -131,6 +131,57 @@
 </div>
 
 <hr>
+-->
+<div ng-repeat="(lbId,backend) in statusAppServers">
+    <h2>In loadbalancer {{lbId}} </h2>
+        <h4>Application : {{backend.name}} <small>{{backend.appId}}</small> </h4>
+        <table class="table">
+            <tr ng-class="">
+                <th>Name</th>
+                <th>Current sessions</th>
+                <th>Total sessions</th>
+                <th>Bytes in</th>
+                <th>Bytes out</th>
+                <th>Last change</th>
+                <th>Downtime</th>
+                <th>Status</th>
+                <th>Backup/Primary</th>
+                <!-- <th>HTTP responses </th>-->
+              </tr>
+            <tr ng-repeat="server in backend.servers" ng-class="colorPicker(server.data)" >
+                <td>>{{server.name}}</td>
+
+                <td>{{server.data.scur}}</td>
+                <td>{{server.data.stot}}</td>
+                <td>{{server.data.bin | bytes}}</td>
+                <td>{{server.data.bout| bytes}}</td>
+                <td>{{server.data.lastchg | secondstime}}</td>
+                <td>{{server.data.downtime | secondstime}}</td>
+                <td>{{server.data.status}} ({{server.data.check_status}})</td>
+                <td>{{(server.data.bck==1) && ' Backup' || 'Primary' }}</td>
+                <!-- <td> 2xx : {{server.data.hrsp_2xx}}, 3xx : {{server.data.hrsp_3xx}}, 5xx : {{server.data.hrsp_5xx}}</td>-->
+            </tr>
+
+            <tr ng-class="colorPicker(backend.data)">
+                <th>Sum stats</th>
+                <!--<th>{{backend.data.pxname}}</th>
+                <th>{{backend.data.svname}}</th>-->
+                <td>{{backend.data.scur}}</td>
+                <td>{{backend.data.stot}}</td>
+                <td>{{backend.data.bin | bytes}}</td>
+                <td>{{backend.data.bout| bytes}}</td>
+                <td>{{backend.data.lastchg | secondstime}}</td>
+                <td>{{backend.data.downtime | secondstime}}</td>
+                <td>{{backend.data.status}}</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+
+
+</div>
+
 
 <!-- Modal Server /App instance details-->
 <div class="modal fade bs-example-modal-lg" id="modalAppInstDetails" tabindex="-1" role="dialog"

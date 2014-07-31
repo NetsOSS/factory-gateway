@@ -491,6 +491,14 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
+    this.StatusController.getStatusForLoadbalancer2 = function (id) {
+      var req = {};
+      req.method = 'GET';
+      req.url = prefix + '/data/load-balancers/{id}/status2';
+      req.url = req.url.replace(/{id}/, id);
+      req.params = {};
+      return $http(req).then(getData);
+    };
     this.StatusController.getStatusForOneServer = function (id) {
       var req = {};
       req.method = 'GET';
@@ -528,6 +536,9 @@ define([], function () {
     };
     this.resolve.StatusController.getStatusForLoadbalancer = function (GatewayData, $route) {
       return StatusController.getStatusForLoadbalancer($route.current.params.id);
+    };
+    this.resolve.StatusController.getStatusForLoadbalancer2 = function (GatewayData, $route) {
+      return StatusController.getStatusForLoadbalancer2($route.current.params.id);
     };
     this.resolve.StatusController.getStatusForOneServer = function (GatewayData, $route) {
       return StatusController.getStatusForOneServer($route.current.params.id);

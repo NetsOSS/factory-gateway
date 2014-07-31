@@ -18,9 +18,9 @@
             <a data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm"><span
                     class="glyphicon glyphicon-pencil"></span> Edit</a>
             <a ng-click="startLoadBalancer()" class="btn btn-success btn-sm"><span
-                    class="glyphicon glyphicon-play"></span> {{isLBonline&& 'Restart' || 'Start'}}</a>
-            <a ng-click="stopLoadBalancer()" ng-disabled="!isLBonline" class="btn btn-warning btn-sm"><span
-                class="glyphicon glyphicon-stop"></span> Stop</a>
+                    class="glyphicon glyphicon-play"></span> {{lbStatus.up&& 'Restart' || 'Start'}}</a>
+            <a ng-click="stopLoadBalancer()" ng-disabled="!lbStatus.up" class="btn btn-warning btn-sm"><span
+                    class="glyphicon glyphicon-stop"></span> Stop</a>
             <a data-toggle="modal" data-target="#deleteWarningModal" class="btn btn-danger btn-sm"><span
                     class="glyphicon glyphicon-trash"></span> Delete</a>
           </span>
@@ -84,9 +84,9 @@
 <hr>
 <div class="row">
     <div class="col-sm-8">
-        <h3>Status: <span class="text-success" ng-show="isLBonline">HAproxy is running
+        <h3>Status: <span class="text-success" ng-show="lbStatus.up">HAproxy is running
             <span class="glyphicon glyphicon-thumbs-up"></span></span>
-            <span class="text-danger" ng-hide="isLBonline">HAproxy is not running
+            <span class="text-danger" ng-hide="lbStatus.up">HAproxy is not running
             <span class="glyphicon glyphicon-thumbs-down"></span></span>
         </h3>
     </div>
@@ -97,54 +97,118 @@
     </div>
 </div>
 
-<table class="table" ng-show="isLBonline">
-    <thead>
-    <tr>
-        <th>Proxy Name</th>
-        <th>Service Name</th>
-        <th>Current Sessions</th>
-        <th>Total Sessions</th>
-        <th>Bytes in</th>
-        <th>Bytes out</th>
-        <th>Last change in status</th>
-        <th>Downtime</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+<!--{{lbStatus.timeStamp}}-->
+Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbStatus.timeStamp.second}} (hh:mm:ss)
 
-    <tbody>
-    <tr ng-repeat="s in rawStatus"
-        ng-class="{OPEN:'info',UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[s.data.status]">
+<div ng-repeat="(key,frontend) in lbStatus.frontends">
+    <h3>{{frontend.name}} <small>{{frontend.groupId}}</small></h3>
 
-        <td>{{s.data.pxname}}</td>
-        <td>{{s.data.svname}}</td>
-        <td>{{s.data.scur}}</td>
-        <td>{{s.data.stot}}</td>
-        <td>{{s.data.bin | bytes}}</td>
-        <td>{{s.data.bout| bytes}}</td>
-        <td>{{s.data.lastchg | secondstime}}</td>
-        <td>{{s.data.downtime | secondstime}}</td>
-        <td>{{s.data.status}}</td>
-        <td>
-            <div ng-hide="s.data.svname  == 'FRONTEND' || s.data.svname  == 'BACKEND'">
-                <a class="btn btn-success btn-xs" ng-disabled="s.data.status=='UP'" ng-click="setProxyStateWithAPI(s.data,'ready')">Ready</a>
-                <a class="btn btn-danger  btn-xs" ng-disabled="s.data.status=='MAINT'" ng-click="setProxyStateWithAPI(s.data,'maint')">Maint</a>
+    <div ng-repeat="backend in frontend.backends">
+        <h4>Application : {{backend.name}} <small>{{backend.appId}}</small> </h4>
+
+        <table class="table">
+            <tr ng-class="">
+                <th>Name</th>
+                <!--<th>{{backend.data.pxname}}</th>
+                <th>{{backend.data.svname}}</th>-->
+                <th>Current sessions</th>
+                <th>Total sessions</th>
+                <th>Bytes in</th>
+                <th>Bytes out</th>
+                <th>Last change</th>
+                <th>Downtime</th>
+                <th>Status</th>
+                <th>Backup/Primary</th>
+               <!-- <th>HTTP responses </th>-->
+                <th>Actions</th>
+            </tr>
+            <tr ng-repeat="server in backend.servers" ng-class="colorPicker(server.data)" >
+
+                <td>  <a ng-click="showInfoModal(server.appInstId)">{{server.name}}</a></td>
+                <!-- <td>{{server.data.pxname}}</td>
+                <td>{{server.data.svname}}</td>-->
+                <td>{{server.data.scur}}</td>
+                <td>{{server.data.stot}}</td>
+                <td>{{server.data.bin | bytes}}</td>
+                <td>{{server.data.bout| bytes}}</td>
+                <td>{{server.data.lastchg | secondstime}}</td>
+                <td>{{server.data.downtime | secondstime}}</td>
+                <td>{{server.data.status}} ({{server.data.check_status}})</td>
+                <td>{{(server.data.bck==1) && ' Backup' || 'Primary' }}</td>
+               <!-- <td> 2xx : {{server.data.hrsp_2xx}}, 3xx : {{server.data.hrsp_3xx}}, 5xx : {{server.data.hrsp_5xx}}</td>-->
+                <td>
+
+                        <a class="btn btn-success btn-xs" ng-disabled="server.data.status=='UP'"
+                           ng-click="setProxyStateWithAPI(server.data,'ready')">Ready</a>
+                        <a class="btn btn-danger  btn-xs" ng-disabled="server.data.status=='MAINT'"
+                           ng-click="setProxyStateWithAPI(server.data,'maint')">Maint</a>
 
 
-                <a class="btn btn-info btn-xs" ng-disabled="s.data.status=='DRAIN'"
-                   ng-click="setProxyStateWithAPI(s.data,'drain')">Drain</a>
-            </div>
-        </td>
-        <td>
+                        <a class="btn btn-info btn-xs" ng-disabled="server.data.status=='DRAIN'"
+                           ng-click="setProxyStateWithAPI(server.data,'drain')">Drain</a>
 
-        </td>
-    </tr>
-    </tbody>
-</table>
+                </td>
+            </tr>
 
-<hr>
+            <tr ng-class="colorPicker(backend.data)">
+                <th>Sum stats</th>
+                <!--<th>{{backend.data.pxname}}</th>
+                <th>{{backend.data.svname}}</th>-->
+                <td>{{backend.data.scur}}</td>
+                <td>{{backend.data.stot}}</td>
+                <td>{{backend.data.bin | bytes}}</td>
+                <td>{{backend.data.bout| bytes}}</td>
+                <td>{{backend.data.lastchg | secondstime}}</td>
+                <td>{{backend.data.downtime | secondstime}}</td>
+                <td>{{backend.data.status}}</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
 
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<!--
+<pre>{{lbStatus}}</pre>
+
+<table class="table  table-hover" ng-show="isLBonline">
+<thead>
+<tr>
+<th>Proxy Name</th>
+<th>Service Name</th>
+
+<th> pid [LFBS]: process id (0 for first instance, 1 for second, ...)</th>
+<th>iid [LFBS]: unique proxy id</th>
+<th>sid [L..S]: server id (unique inside a proxy)</th>
+</tr>
+</thead>
+
+<tbody>
+<tr ng-repeat="s in rawStatus">
+
+<td>{{s.data.pxname}}</td>
+<td>{{s.data.svname}}</td>
+<td>{{s.data.pid}}</td>
+<td>{{s.data.iid}}</td>
+<td>{{s.data.sid}}</td>
+
+
+</tr>
+</tbody>
+</table>-->
+<!--
+<pre>
+    {{rawStatus[0].data | json}}
+</pre>
+-->
 <div class="row">
     <div class="col-sm-6">
         <h3>Application in this Load Balancer</h3>
@@ -191,8 +255,8 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -204,6 +268,32 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalObjectInfo" tabindex="-1" role="dialog" aria-labelledby="modalObjectInfoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="modalObjectInfoLabel">{{modalObj.name}}</h4>
+            </div>
+            <div class="modal-body">
+               <ul>
+                   <li>Server : {{modalObj.server}}</li>
+                   <li>Backup :{{modalObj.backup}}</li>
+                   <li>Weight :{{modalObj.weight}}</li>
+               </ul>
+                <pre>{{modalObj}}</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
             </div>
         </div>
     </div>

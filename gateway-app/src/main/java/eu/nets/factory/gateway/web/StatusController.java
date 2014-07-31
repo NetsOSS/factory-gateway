@@ -4,11 +4,13 @@ import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.service.EmailService;
 import eu.nets.factory.gateway.service.StatusService;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -19,9 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -56,60 +60,35 @@ public class StatusController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/statusIsOnline", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public boolean isLoadBalancerOnline(@PathVariable Long id) {
-        log.info("StatusController.isLoadBalancerOnline, id={}", id);
+       // log.info("StatusController.isLoadBalancerOnline, id={}", id);
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
-        if (loadBalancer == null) { throw new EntityNotFoundException("LoadBalancer", id); }
-        List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
-
-        if (list == null) return false;
+        if (loadBalancer == null) {
+            throw new EntityNotFoundException("LoadBalancer", id);
+        }
+        //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
+        StatusService.Status status = statusService.getStatusForLoadBalancer(id);
+        return status.up;
+       /* if (list == null) return false;
         if (list.isEmpty()) return false;
         if (list.size() < 1) return false;
         String status = list.get(0).data.get("status");
 
-        return !(status == null || status.equals("offline"));
+        if (status == null || status.equals("offline")) return false;
+
+        return true;*/
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/server-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ApplicationStatusModel getServerStatusForApplication(@PathVariable Long id) {
+    public Map<Long,StatusService.BackendStatus> getServerStatusForApplication(@PathVariable Long id) {
 
         Application application = applicationRepository.findOne(id);
         if (application == null) {
             return null;
         }
 
-        ApplicationStatusModel applicationStatusModel = new ApplicationStatusModel();
-        application.getApplicationInstances().
-                forEach(ai -> applicationStatusModel.applicationInstances.put(ai.getId(), new ApplicationInstanceStatusModel(ai)));
-
-        List<LoadBalancer> loadBalancers = application.getLoadBalancers();
-
-        for (LoadBalancer loadBalancer : loadBalancers) {
-            List<StatusModel> statusModelsFromCSV = statusService.getStatusForLoadBalancer(loadBalancer.getId());
-
-            if (statusModelsFromCSV == null || statusModelsFromCSV.isEmpty()) {
-                log.info("");
-                for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                    applicationStatusModel.applicationInstances.put(loadBalancer.getId(), null);
-                }
-            }
-            for (StatusModel statusModel : statusModelsFromCSV) {
-                if (!statusModel.data.get("pxname").equals(application.getName())) {
-                    continue;
-                }
-
-                String svname = statusModel.data.get("svname");
-
-                if (!svname.equals("BACKEND")) {
-                    applicationStatusModel.getByName(svname).ifPresent(m -> m.statuses.put(loadBalancer.getId(), statusModel.data));
-                } else {
-                    applicationStatusModel.data.putAll(statusModel.data);
-                }
-            }
-        }
-
-        return applicationStatusModel;
+        return statusService.getStatusForApplication(application);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applicationInstance/{id}/status", produces = APPLICATION_JSON_VALUE)
@@ -121,28 +100,14 @@ public class StatusController {
         if (applicationInstance == null) {
             throw new EntityNotFoundException("ApplicationInstance", id);
         }
-
         Application application = applicationInstance.getApplication();
-
-        HashMap<Long, StatusModel> appInstStatusModelList = new HashMap<>();
-        for (LoadBalancer lb : application.getLoadBalancers()) {
-            List<StatusModel> list = statusService.getStatusForLoadBalancer(lb.getId());
-
-            for (StatusModel statusModel : list) {
-                if (statusModel.data.get("svname").equals(applicationInstance.getName())) {
-                    appInstStatusModelList.put(lb.getId(), statusModel);
-                }
-            }
-        }
-
-        if (appInstStatusModelList.isEmpty()) {
-            return null;
-        }
-        return appInstStatusModelList;
+        return null;
     }
 
 
-    /* Possibly an unnecessary method */
+    /*
+    Possibly an unnecessary method
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/backend-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public HashMap<Long, StatusModel> getBackendStatusForApplication(@PathVariable Long id) {
@@ -154,14 +119,14 @@ public class StatusController {
             throw new EntityNotFoundException("Application", id);
         }
 
-
+        /*
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for (LoadBalancer loadBalancer : loadBalancers) {
 
             List<StatusModel> models = statusService.getStatusForLoadBalancer(loadBalancer.getId());
 
             hashMap.put(loadBalancer.getId(), getBackendServer(models, application));
-        }
+        }*/
 
         return hashMap;
     }
@@ -194,17 +159,39 @@ public class StatusController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<StatusModel> getStatusForLoadbalancer(@PathVariable Long id) {
-        log.info("StatusController.getStatusForLoadBalancer, id={}", id);
+       // log.info("StatusController.getStatusForLoadBalancer, id={}", id);
 
         LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
         if (loadBalancer == null) {
             throw new EntityNotFoundException("LoadBalancer", id);
         }
         //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
-        List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
+       /* List<StatusModel> list = statusService.getStatusForLoadBalancer(id);
+
         if (list == null) return null;
-        return list.isEmpty() ? null : list;
+        return list.isEmpty() ? null : list;*/
+        return null;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/{id}/status2", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public StatusService.Status getStatusForLoadbalancer2(@PathVariable Long id) {
+        // log.info("StatusController.getStatusForLoadBalancer, id={}", id);
+
+        LoadBalancer loadBalancer = loadBalancerRepository.findOne(id);
+        if (loadBalancer == null) {
+            throw new EntityNotFoundException("LoadBalancer", id);
+        }
+        //Not sure if we should return an empty list or null. But angular currently checks if its null, to see if the proxy is running.
+
+        return  statusService.getStatusForLoadBalancer(loadBalancer.getId());
+
+
+
+    }
+
+
+
 
     // Test metode - kan fjernes
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/sendEmail/{id}", produces = APPLICATION_JSON_VALUE)
@@ -225,7 +212,7 @@ public class StatusController {
         if (loadBalancers.size() == 0) {
             return null;
         }
-        for (LoadBalancer loadBalancer : loadBalancers) {
+       /* for (LoadBalancer loadBalancer : loadBalancers) {
             if (isLoadBalancerOnline(loadBalancer.getId())) {
                 List<StatusModel> list = statusService.getStatusForLoadBalancer(loadBalancer.getId());
                 map.put(loadBalancer.getName(), list);
@@ -234,7 +221,7 @@ public class StatusController {
                 map.put(loadBalancer.getName(), null);
             }
 
-        }
+        }*/
         return map;
     }
 
@@ -268,8 +255,11 @@ public class StatusController {
             response.setStatus(503);
         }
 
-        applicationInstanceController.setProxyStateForInstance(statusChange.s,statusChange.action.toUpperCase());
+        //DO LATER
+        //applicationInstanceController.setProxyStateForInstance(statusChange.s,statusChange.action.toUpperCase());
 
         return statusChange;
     }
+
+
 }

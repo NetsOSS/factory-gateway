@@ -40,18 +40,18 @@ public class ConfigGeneratorService {
 
             StringWriter stringWriter = new StringWriter();
             PrintWriter printWriter = new PrintWriter(stringWriter);
-
+            String frontendKey = application.getApplicationGroup().getName()+"_"+application.getApplicationGroup().getId();
             //frontend
-            if(frontends.containsKey(application.getApplicationGroup().getName())) {
-                List<String> values = frontends.remove(application.getApplicationGroup().getName());
+            if(frontends.containsKey(frontendKey)) {
+                List<String> values = frontends.remove(frontendKey);
                 StringBuilder aclRules = new StringBuilder();
                 aclRules.append("{ path_beg " + application.getPublicUrl() + " } ");
                 for (HeaderRule headerRule : application.getHeaderRules()) {
                     aclRules.append("{ hdr_reg(" + headerRule.getName() + ") " + headerRule.getPrefixMatch() + " } ");
                 }
 
-                values.add("use_backend " + application.getName() + " if " + aclRules.toString());
-                frontends.put(application.getApplicationGroup().getName(), values);
+                values.add("use_backend " + application.getName() + "_" +application.getId() + " if " + aclRules.toString());
+                frontends.put(frontendKey, values);
 
             } else {
                 List<String> values = new ArrayList<>();
@@ -63,14 +63,14 @@ public class ConfigGeneratorService {
                     aclRules.append("{ hdr_reg(" + headerRule.getName() + ") " + headerRule.getPrefixMatch() + " } ");
                 }
 
-                values.add("use_backend " + application.getName() + " if " + aclRules.toString());
-                frontends.put(application.getApplicationGroup().getName(), values);
+                values.add("use_backend " + application.getName() + "_" +application.getId() + " if " + aclRules.toString());
+                frontends.put(frontendKey, values);
             }
 
 
             // backend
             printWriter.println();
-            printWriter.println(TAB + "backend " + application.getName());
+            printWriter.println(TAB + "backend " +  application.getName() + "_" +application.getId());
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 
             //reqrep ^([^\ ]*)\ /lang/blog/(.*) \1\ /blog/lang/\2
@@ -92,7 +92,7 @@ public class ConfigGeneratorService {
             for (int i = 0; i < application.getApplicationInstances().size(); i++) {
                 ApplicationInstance applicationInstance = application.getApplicationInstances().get(i);
 
-                String serverConfigLine = TAB2 + "server " + applicationInstance.getName() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check";
+                String serverConfigLine = TAB2 + "server " +  applicationInstance.getName() + "_" +applicationInstance.getId() +  " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check";
 
                 if (applicationInstance.getWeight() != 0)
                     serverConfigLine += " weight " + applicationInstance.getWeight();
@@ -104,7 +104,7 @@ public class ConfigGeneratorService {
                     serverConfigLine += " backup";
 
                 if (application.getStickySession().name().equals("STICKY") || application.getStickySession().name().equals("STICKY_NEW_COOKIE"))
-                    serverConfigLine += " cookie " + applicationInstance.getName();
+                    serverConfigLine += " cookie " + applicationInstance.getName() + "_" +applicationInstance.getId();
 
                 printWriter.println(serverConfigLine);
             }
@@ -125,11 +125,12 @@ public class ConfigGeneratorService {
         //write frontend
         for(String key: frontends.keySet()) {
             printWriter.println();
+
             printWriter.println(TAB + "frontend " + key);
             int port = 0;
             List<AppGroupModel> groups = applicationGroupController.listAllAppGroups();
             for(AppGroupModel a: groups) {
-                if(a.getName().equals(key)) {
+                if(key.equals(a.getName()+"_"+a.getId())) {
                     port = a.getPort();
                     break;
                 }

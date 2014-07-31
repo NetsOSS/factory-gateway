@@ -493,6 +493,24 @@ define([
                 $scope.app = data;
             });
         };
+      $scope.colorPicker = function (status) {
+        if (status.svname == "BACKEND") {
+          return "active";
+        }
+        if (status.bck == "1")
+          return "info";
+        switch (status.status) {
+          case "UP":
+            return "success";
+          case "MAINT":
+            return "danger";
+          case "DRAIN":
+            return "warning"
+        }
+        return "";
+        //{OPEN:'info',UP:'active', MAINT:'warning', DOWN:'danger','':'active'}[backend.data.status]
+
+      };
 
         $scope.saveAppInst = function () {
             $scope.newAppInstAlertSuccess = true;
@@ -554,150 +572,190 @@ define([
 
     //    ----------------------- Load balancer Controller ------------------------------------
     gateway.controller('LoadBalancerCtrl', function ($scope, $routeParams, $timeout, GatewayData) {
-        $scope.inLBList = [];
-        $scope.allLBList = [];
+      $scope.inLBList = [];
+      $scope.allLBList = [];
 
-        $scope.autoRefresh = true;
-        $scope.lbLoadingDone = false;
-        var LBid = $routeParams.id;
+      $scope.autoRefresh = true;
+      $scope.lbLoadingDone = false;
+      var LBid = $routeParams.id;
 
 
-        GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
-            $scope.lb = data;
-            $scope.lbLoadingDone = true;
-            reloadAppLists();
+      GatewayData.LoadBalancerController.findById($routeParams.id).then(function (data) {
+        $scope.lb = data;
+        $scope.lbLoadingDone = true;
+        reloadAppLists();
+      });
+
+      $scope.addAppToLB = function (appId) {
+        GatewayData.LoadBalancerController.addApplication($scope.lb.id, appId).then(function (data) {
+          $scope.lb = data;
+          reloadAppLists();
+        });
+      };
+      $scope.removeAppFromLB = function (appId) {
+        console.log('Remove app ', appId, ' from LB ', $scope.lb.id);
+        GatewayData.LoadBalancerController.removeApplicationFromLoadbalancer($scope.lb.id, appId).then(function (data) {
+          $scope.lb = data;
+          reloadAppLists();
         });
 
-        $scope.addAppToLB = function (appId) {
-            GatewayData.LoadBalancerController.addApplication($scope.lb.id, appId).then(function (data) {
-                $scope.lb = data;
-                reloadAppLists();
-            });
+      };
+
+      $scope.setProxyStateWithAPI = function (statusObj, state) {
+        console.log(statusObj);
+        //iid = b
+        // var dataMsg = "s="+statusObj.svname+"&action="+state+"&b=#"+statusObj.iid;
+        var statusChangeObj = {
+          "s": statusObj.svname,
+          "action": state,
+          "b": statusObj.iid
         };
-        $scope.removeAppFromLB = function (appId) {
-            console.log('Remove app ', appId, ' from LB ', $scope.lb.id);
-            GatewayData.LoadBalancerController.removeApplicationFromLoadbalancer($scope.lb.id, appId).then(function (data) {
-                $scope.lb = data;
-                reloadAppLists();
-            });
+        GatewayData.StatusController.changeStatusAPI($scope.lb.id, statusChangeObj);
+      };
 
-        };
+      $scope.removeLoadBalancer = function () {
+        GatewayData.LoadBalancerController.remove($scope.lb.id).then(function (data) {
+          history.back();
+          $scope.$$phase || $scope.$apply(); // Safe apply
+        });
+      };
 
-        $scope.setProxyStateWithAPI = function (statusObj,state) {
-            console.log(statusObj);
-
-            var statusChangeObj = {
-                "s": statusObj.svname,
-                "action": state,
-                "b": statusObj.iid
-            };
-
-            console.log(statusChangeObj);
-            GatewayData.StatusController.changeStatusAPI($scope.lb.id, statusChangeObj);
-        };
-
-
-        $scope.setProxyState = function (appInstName) {
-            var sel = document.getElementById(appInstName + "-state");
-            var state = sel.options[sel.selectedIndex].value;
-
-            GatewayData.ApplicationInstanceController.setProxyStateForInstance(appInstName, state).then(function (data) {
-            });
-        };
-
-        $scope.removeLoadBalancer = function () {
-            GatewayData.LoadBalancerController.remove($scope.lb.id).then(function (data) {
-                history.back();
-                $scope.$$phase || $scope.$apply(); /* Safe apply */
-            });
-        };
-
-        $scope.startLoadBalancer = function () {
-            console.log("start LoadBalancer function");
-            GatewayData.LoadBalancerController.startLoadBalancer($scope.lb.id);
-        };
+      $scope.startLoadBalancer = function () {
+        console.log("start LoadBalancer function");
+        GatewayData.LoadBalancerController.startLoadBalancer($scope.lb.id);
+      };
 
       $scope.stopLoadBalancer = function () {
         console.log("stop LoadBalancer function");
         GatewayData.LoadBalancerController.stopLoadBalancer($scope.lb.id);
       };
 
+      $scope.colorPicker = function (status) {
+        if (status.svname == "BACKEND") {
+          return "active";
+        }
+        if (status.bck == "1")
+          return "info";
+        switch (status.status) {
+          case "UP":
+            return "success";
+          case "MAINT":
+            return "danger";
+          case "DRAIN":
+            return "warning"
+        }
+        return "";
+        //{OPEN:'info',UP:'active', MAINT:'warning', DOWN:'danger','':'active'}[backend.data.status]
 
-        var reloadAppLists = function () {
-            $scope.inLBList = [];
-            $scope.allLBList = [];
-            $scope.inLBList = $scope.lb.applications;
+      };
 
-            GatewayData.ApplicationController.listAllApps().then(function (data) {
-                /* Search: Loop through All Apps. Add an app if it does not exist in the Load Balancer. */
-                for (var i = 0; i < data.length; i++) {
-                    var contains = false;
-                    for (var j = 0; j < $scope.inLBList.length; j++) {
+      GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
+        $scope.allAppGroups=data;
 
-                        if (data[i].id == $scope.inLBList[j].id) {
-                            contains = true;
-                            break;
-                        }
-                    }
-                    if (!contains)
-                        $scope.allLBList.push(data[i]);
-                }
+      });
 
+      $scope.getObjectById = function (id) {
+
+
+        console.log("Looking for id=",id);
+        angular.forEach($scope.allAppGroups, function(appGrp){
+          //console.log(key," AppGrp: ",appGrp);
+          if(appGrp.id==id)
+            return appGrp;
+          angular.forEach(appGrp.applications, function(app){
+            //console.log(key," App: ",app);
+            if(app.id==id)
+              return app;
+            angular.forEach(app.applicationInstances, function(appInst){
+              //console.log(key," AppInst: ",appInst);
+              console.log(appInst.id, " =? ",id ,"types : ",typeof appInst.id, " and  ", typeof id);
+              if(appInst.id==id){
+                console.log("Found a match!!!");
+                return appInst;
+              }
             });
-
-            GatewayData.LoadBalancerController.generateConfiguration($routeParams.id).then(function(data) {
-                var fixed = data;
-                fixed = fixed.replace(/\\r\\n/g, "\n");
-                fixed = fixed.replace(/\\n/g, "\n");
-                var re = new RegExp('\\\\\\\\', 'g');
-                fixed = fixed.replace(re, "\\");
-                $scope.configFile = fixed;
-            });
-        };
-
-        //----- Status proxy -----------------------
-        var poller = null;
-        $scope.startStopAutoRefresh = function () {
-            $scope.autoRefresh = !$scope.autoRefresh;
-
-            if ($scope.autoRefresh) {
-                console.log('Starting poller!');
-                loadStatus();
-
-            } else {
-                console.log('Stopped poller!');
-                $timeout.cancel(poller);
-            }
-        };
-        $scope.isLBonline = false;
-        var updateLBisOlineStatus = function () {
-            GatewayData.StatusController.isLoadBalancerOnline($routeParams.id).then(function (data) {
-                $scope.isLBonline = (data==='true');
-            });
-        };
-
-
-        var loadStatus = function () {
-            updateLBisOlineStatus();
-            GatewayData.StatusController.getStatusForLoadbalancer($routeParams.id).then(function (data) {
-
-              $scope.rawStatus = data;
-            });
-
-            if ($scope.autoRefresh) {
-                poller = $timeout(loadStatus, 1000);
-            }
-
-        };
-        loadStatus();
-
-        /* Clean up. Stop poling if leaving page */
-        $scope.$on('$locationChangeStart', function () {
-            $timeout.cancel(poller);
+          });
+          //console.log(key + ': ' + value);
         });
-        $scope.$on('$destroy', function () {
-            $timeout.cancel(poller);
+      };
+
+      $scope.showInfoModal = function (id) {
+        $('#modalObjectInfo').modal('show');
+        $scope.modalObj = $scope.getObjectById(id);
+        console.log(id," found : ", $scope.modalObj);
+        /*GatewayData.ApplicationInstanceController.findById(id).then(function (data) {
+         $scope.modalObj=data;
+         });*/
+
+      };
+
+      var reloadAppLists = function () {
+        $scope.inLBList = [];
+        $scope.allLBList = [];
+        $scope.inLBList = $scope.lb.applications;
+
+        GatewayData.ApplicationController.listAllApps().then(function (data) {
+          //Search: Loop through All Apps. Add an app if it does not exist in the Load Balancer.
+          for (var i = 0; i < data.length; i++) {
+            var contains = false;
+            for (var j = 0; j < $scope.inLBList.length; j++) {
+              if (data[i].id == $scope.inLBList[j].id) {
+                contains = true;
+                break;
+              }
+            }
+            if (!contains)
+              $scope.allLBList.push(data[i]);
+          }
         });
+
+        GatewayData.LoadBalancerController.generateConfiguration($routeParams.id).then(function (data) {
+          var fixed = data;
+          fixed = fixed.replace(/\\r\\n/g, "\n");
+          fixed = fixed.replace(/\\n/g, "\n");
+          var re = new RegExp('\\\\\\\\', 'g');
+          fixed = fixed.replace(re, "\\");
+          $scope.configFile = fixed;
+        });
+
+
+      };
+
+
+      //----- Status proxy -----------------------
+      var poller = null;
+      $scope.startStopAutoRefresh = function () {
+        $scope.autoRefresh = !$scope.autoRefresh;
+
+        if ($scope.autoRefresh) {
+          console.log('Starting poller!');
+          loadStatus();
+
+        } else {
+          console.log('Stopped poller!');
+          $timeout.cancel(poller);
+        }
+      };
+
+      var loadStatus = function () {
+        GatewayData.StatusController.getStatusForLoadbalancer2($routeParams.id).then(function (data) {
+          $scope.lbStatus = data;
+        });
+
+        if ($scope.autoRefresh) {
+          poller = $timeout(loadStatus, 1000);
+        }
+
+      };
+      loadStatus();
+
+      //Clean up. Stop poling if leaving page
+      $scope.$on('$locationChangeStart', function () {
+        $timeout.cancel(poller);
+      });
+      $scope.$on('$destroy', function () {
+        $timeout.cancel(poller);
+      });
 
 
     });

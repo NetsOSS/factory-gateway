@@ -1,9 +1,9 @@
 package eu.nets.factory.gateway.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
-import eu.nets.factory.gateway.web.ApplicationController;
-import eu.nets.factory.gateway.web.StatusModel;
+import eu.nets.factory.gateway.web.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,7 +17,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -29,6 +33,11 @@ public class StatusService {
 
     @Autowired
     private ApplicationController applicationController;
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    ApplicationGroupController applicationGroupController;
 
     @Autowired
     LoadBalancerRepository loadBalancerRepository;
@@ -36,47 +45,146 @@ public class StatusService {
     @Autowired
     EmailService emailService;
 
-    private HashMap<Long, List<StatusModel>> loadBalancerStatuses = new HashMap<>();
 
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+    private Map<Long, Status> loadBalancerStatuses = Collections.emptyMap();
 
     @Scheduled(fixedRate = 1000)
     public void autoPoll() {
-        List<LoadBalancer> lbList = loadBalancerRepository.findAll();
 
-        for (LoadBalancer lb : lbList) {
-            List<StatusModel> oldListStatusList = loadBalancerStatuses.get(lb.getId());
-            try {
-                List<StatusModel> listStatus = parseCSV(readCSV(lb), lb); //throws exception if failed
-                if (oldListStatusList != null && !oldListStatusList.isEmpty())
-                    checkForChangesInStatus(oldListStatusList, listStatus, lb);
+        Map<Long, Status> loadBalancerStatuses = new HashMap<>();
+        for (LoadBalancer lb : loadBalancerRepository.findAll()) {
 
-                loadBalancerStatuses.put(lb.getId(), listStatus);
+            Status status = storeAsBetterObject2(lb);
+            loadBalancerStatuses.put(lb.getId(), status);
+        }
+        this.loadBalancerStatuses = loadBalancerStatuses;
 
-            } catch (GatewayException ge) {
-                List<StatusModel> offlineList = new ArrayList<>();
-                for (Application application : lb.getApplications()) {
+    }
 
+    public Status storeAsBetterObject2(LoadBalancer lb) {
 
-                    StatusModel statusModel = new StatusModel();
-                    statusModel.data.put("pxname", application.getName());
-                    statusModel.data.put("lbname", lb.getName());
-                    statusModel.data.put("svname", "BACKEND");
-                    statusModel.data.put("status", "offline");
-                    offlineList.add(statusModel);
-                    for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                        statusModel = new StatusModel();
-                        statusModel.data.put("pxname", application.getName());
-                        statusModel.data.put("lbname", lb.getName());
-                        statusModel.data.put("svname", applicationInstance.getName());
-                        statusModel.data.put("status", "offline");
-                        offlineList.add(statusModel);
-                    }
+//        Set<Long> applicationGroupIds = lb.getApplications().stream().
+//                map(a -> a.getApplicationGroup().getId()).
+//                collect(Collectors.toSet());
+//
+//        Map<Long, FrontendStatus> frontends = applicationGroupIds.stream().
+//                map(FrontendStatus::new).
+//                collect(Collectors.toMap(fs -> fs.groupId, Function.identity()));
 
-                }
-                loadBalancerStatuses.put(lb.getId(), offlineList);
-            }
+        Map<Long, Map<String, String>> statusMap;
+        boolean isHaproxyUp = true;
+        try {
+            List<String> csvStrings = readCSV(lb);
+            statusMap = parseCSV2(csvStrings, lb);
+
+        } catch (Exception e) {
+            statusMap = Collections.emptyMap();
+            isHaproxyUp = false;
         }
 
+        Map<Long, FrontendStatus> frontends = new HashMap<>();
+        for (Application application : lb.getApplications()) {
+
+            Long applicationGroupId = application.getApplicationGroup().getId();
+            FrontendStatus frontend = frontends.get(applicationGroupId);
+            if (frontend == null) {
+                Map<String, String> data = statusMap.get(applicationGroupId);
+                frontend = new FrontendStatus(data, application.getApplicationGroup());
+                frontends.put(applicationGroupId, frontend);
+            }
+
+            Map<String, String> statusModel = statusMap.get(application.getId());
+            BackendStatus backendStatus = new BackendStatus(statusModel, application);
+
+            for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
+                Map<String, String> data = statusMap.get(applicationInstance.getId());
+                ServerStatus serverStatus = new ServerStatus(data, applicationInstance);
+                backendStatus.servers.add(serverStatus);
+            }
+            frontend.backends.add(backendStatus);
+
+
+        }
+        return new Status(frontends, isHaproxyUp);
+    }
+
+    public class Status {
+        public Map<Long, FrontendStatus> frontends;
+        public final LocalDateTime timeStamp = LocalDateTime.now();
+        public final boolean up;
+
+        public Status(Map<Long, FrontendStatus> frontends, boolean up) {
+            this.frontends = frontends != null ? frontends : Collections.emptyMap();
+            this.up = up;
+        }
+    }
+
+    public class FrontendStatus {
+        public Long groupId;
+        public String name;
+        public Map<String, String> data;
+        //id = data.iid , groupName = pxname
+        public List<BackendStatus> backends = new ArrayList<>();
+
+        public FrontendStatus(Map<String, String> data, ApplicationGroup applicationGroup) {
+            this.data = data != null ? data : Collections.emptyMap();
+            this.name = applicationGroup.getName();
+            this.groupId = applicationGroup.getId();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof FrontendStatus))
+                return false;
+            FrontendStatus f = (FrontendStatus) obj;
+            return groupId.equals(f.groupId);
+        }
+    }
+
+    public class BackendStatus {
+        public Long appId;
+        public String name;
+
+        public Map<String, String> data;
+        public List<ServerStatus> servers = new ArrayList<>();
+
+        public BackendStatus(Map<String, String> data, Application application) {
+            this.data = data != null ? data : Collections.emptyMap();
+            this.appId = application.getId();
+            this.name = application.getName();
+
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof BackendStatus))
+                return false;
+            BackendStatus f = (BackendStatus) obj;
+            return appId.equals(f.appId);
+        }
+    }
+
+    public class ServerStatus {
+        public Map<String, String> data;
+        public Long appInstId;
+        public String name;
+
+        public ServerStatus(Map<String, String> data, ApplicationInstance applicationInstance) {
+            this.data = data != null ? data : Collections.emptyMap();
+            this.name = applicationInstance.getName();
+            this.appInstId = applicationInstance.getId();
+
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof ServerStatus))
+                return false;
+            ServerStatus f = (ServerStatus) obj;
+            return appInstId.equals(f.appInstId);
+        }
     }
 
     //Checks if the state has changes for a status model. Not a fast implementation O(n^2). Could be better.
@@ -118,19 +226,43 @@ public class StatusService {
                 message.append("In loadbalancer " + lb.getName() + "  " + lb.getHost() + ":" + lb.getStatsPort() + ". \n");
                 log.info("Email msg: {}", message.toString());
                 emailService.sendEmail(application.getEmails(), "HaProxy change in status", message.toString());
+
+
             }
+
+
         }
+
     }
 
 
-    public List<StatusModel> getStatusForLoadBalancer(Long loadBalancerId) {
+    public Status getStatusForLoadBalancer(Long loadBalancerId) {
         return loadBalancerStatuses.get(loadBalancerId);
+    }
+
+    public Map<Long,BackendStatus> getStatusForApplication(Application application) {
+        Map<Long,BackendStatus> map = new HashMap<>();
+
+        List<LoadBalancer> loadBalancers = application.getLoadBalancers();
+        for (LoadBalancer lb : loadBalancers) {
+            Status status = getStatusForLoadBalancer(lb.getId());
+            FrontendStatus frontendStatus = status.frontends.get(application.getApplicationGroup().getId());
+            BackendStatus backendStatus = new BackendStatus(null, application);
+            int index = frontendStatus.backends.indexOf(backendStatus);
+            if (index==-1) {
+                continue;
+            }
+
+            map.put(lb.getId(), frontendStatus.backends.get(index));
+        }
+        return map;
     }
 
     //Should be private. but used in test. fix later
     public List<String> readCSV(LoadBalancer loadBalancer) {
+        //log.info("StatusService.readCSV");
 
-        String csvFile = "http://"+ loadBalancer.getHost()+":" +  loadBalancer.getStatsPort() + "/proxy-stats;csv";
+        String csvFile = "http://" + loadBalancer.getHost() + ":" + loadBalancer.getStatsPort() + "/proxy-stats;csv";
 
         URL url;
         HttpURLConnection conn;
@@ -151,16 +283,103 @@ public class StatusService {
             }
             bufferedReader.close();
         } catch (Exception e) {
+            // e.printStackTrace();
             throw new GatewayException("Cannot connect to HAproxy. " + loadBalancer.getName() + " with csv at : " + csvFile);
 
         }
 
-        String[] sArr = stringWriter.toString().split("\n");
-        for (String s : sArr)
-            result.add(s);
 
-        return result;
+        return Arrays.asList(stringWriter.toString().split("\n"));
     }
+
+
+    public Map<Long, Map<String, String>> parseCSV2(List<String> csvStrings, LoadBalancer lb) {
+        //log.info("StatusService.parseCSV");
+
+        if (csvStrings == null) {
+            throw new GatewayException("Received List was null.");
+        }
+        if (csvStrings.size() < 2) {
+            throw new GatewayException("Expected list to be of size 2 or greater.");
+        }
+        if (!(csvStrings.get(0).startsWith("# ")) && (csvStrings.get(1).startsWith("http-in"))) {
+            throw new GatewayException("Unrecognized format in CSV file. Expected first line to start with '# ', and second line to start with 'http-in'");
+        }
+
+        //List<StatusModel> list = new ArrayList<>();
+        Map<Long, Map<String, String>> map = new HashMap<>();
+
+        String[] names = csvStrings.get(0).split(",");
+        names[0] = names[0].replaceAll("# ", "");
+
+        for (int i = 1; i < csvStrings.size(); i++) {
+            Map<String, String> data = new HashMap<>();
+            String csvLine = csvStrings.get(i).substring(0, csvStrings.get(i).length() - 1);
+            String[] splitCsvString = csvLine.split(",", -1);
+
+            for (int j = 0; j < splitCsvString.length; j++) {
+                if (j < names.length) // should not be necessary
+                    data.put(names[j], splitCsvString[j]);
+            }
+            if (lb != null)
+                data.put("lbname", lb.getName());
+
+            /*
+            pxname = Id of appGroup or id of application.
+            svname = FRONTEND, BACKEND, or appInst id
+             */
+            String rawsvname = data.get("svname");
+            String rawpxname = data.get("pxname");
+
+
+            String svname = data.get("svname").replace("^.*?([^\\t_]*)$", "");
+            String pxname = data.get("pxname").replace("^.*?([^\\t_]*)$", "");
+
+
+            if (svname.equals("FRONTEND") || svname.equals("BACKEND")) {
+                if (data.get("pxname").equals("stats")) {
+
+                } else {
+                    try {
+                        pxname = pxname.substring(pxname.lastIndexOf("_") + 1);
+                        Long id = Long.parseLong(pxname);
+                        map.put(id, data);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                try {
+                    svname = svname.substring(svname.lastIndexOf("_") + 1);
+                    Long id = Long.parseLong(svname);
+                    map.put(id, data);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+           /* try{
+                Long id = Long.parseLong(statusModel.data.get("svname"));
+                //Then it is a server
+
+            }catch(NumberFormatException e){
+                //svn
+                //e.printStackTrace();
+                Long id = Long.parseLong(statusModel.data.get("svname"));
+                map.put(id, statusModel);
+            }
+
+            try {
+                Long id = Long.parseLong(statusModel.data.get("pxname"));
+                map.put(id, statusModel);
+            }catch(NumberFormatException e){
+                //e.printStackTrace();
+
+            }*/
+        }
+
+        return map;
+    }
+
 
     //Should be private. but used in test. fix later
     public List<StatusModel> parseCSV(List<String> csvStrings) {
@@ -169,6 +388,7 @@ public class StatusService {
 
     //Should be private. but used in test. fix later
     public List<StatusModel> parseCSV(List<String> csvStrings, LoadBalancer lb) {
+        //log.info("StatusService.parseCSV");
 
         if (csvStrings == null) {
             throw new GatewayException("Received List was null.");
@@ -181,6 +401,7 @@ public class StatusService {
         }
 
         List<StatusModel> list = new ArrayList<>();
+
 
         String[] names = csvStrings.get(0).split(",");
         names[0] = names[0].replaceAll("# ", "");
@@ -197,6 +418,7 @@ public class StatusService {
             if (lb != null)
                 statusModel.data.put("lbname", lb.getName());
             list.add(statusModel);
+
         }
 
         return list;
