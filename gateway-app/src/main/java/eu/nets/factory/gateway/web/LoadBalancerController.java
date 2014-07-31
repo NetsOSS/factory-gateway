@@ -7,6 +7,7 @@ import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.model.LoadBalancerRepository;
 import eu.nets.factory.gateway.service.ConfigGeneratorService;
 import eu.nets.factory.gateway.service.HaProxyService;
+import eu.nets.factory.gateway.service.StatusService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,9 @@ public class LoadBalancerController {
 
     @Autowired
     private HaProxyService haProxyService;
+
+    @Autowired
+    StatusService statusService;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers", produces = APPLICATION_JSON_VALUE)
@@ -145,8 +149,8 @@ public class LoadBalancerController {
         for(Application application : loadBalancer.getApplications()) {
             application.removeLoadBalancer((loadBalancer));
         }
-
-         loadBalancerRepository.delete(id);
+        stopLoadBalancer(id);
+        loadBalancerRepository.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/load-balancers/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -242,7 +246,9 @@ public class LoadBalancerController {
         log.info("LoadBalancerController.stopLoadBalancer() id={}", id);
 
         LoadBalancer loadBalancer = findEntityById(id);
-        haProxyService.stop(loadBalancer);
+        if(statusService.getStatusForLoadBalancer(id) != null && statusService.getStatusForLoadBalancer(id).up) {
+            haProxyService.stop(loadBalancer);
+        }
         return new LoadBalancerModel(loadBalancer);
     }
 }

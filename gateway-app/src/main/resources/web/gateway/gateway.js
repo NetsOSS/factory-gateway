@@ -622,9 +622,10 @@ define([
       };
 
       $scope.removeLoadBalancer = function () {
-        GatewayData.LoadBalancerController.remove($scope.lb.id).then(function (data) {
+          GatewayData.LoadBalancerController.remove($scope.lb.id).then(function (data) {
           history.back();
           $scope.$$phase || $scope.$apply(); // Safe apply
+
         });
       };
 
