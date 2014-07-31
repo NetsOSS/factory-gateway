@@ -347,7 +347,7 @@
 
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -367,7 +367,9 @@
             <span class="bg-danger" ng-show="editAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
           </div>
 
-          <div class="form-group"
+          <H4>Paths</H4>
+          <div class = "row">
+          <div class="form-group col-xs-4"
                ng-class="{'has-error': editAppForm.publicUrl.$invalid && editAppForm.publicUrl.$dirty}">
             <label for="inAppPublicUrl">Public Path</label>
             <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl"
@@ -378,7 +380,7 @@
             <span class="bg-danger" ng-show="editAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <div class="form-group"
+          <div class="form-group col-xs-4"
               ng-class="{'has error': edditAppForm.privatePath.$invalid && editAppForm.checkPath.$dirty}">
             <label for="inAppPrivatePath">Private path</label>
             <input type="text" ng-model="newApp.privatePath" class="form-control " id="inAppPrivatePath"
@@ -389,7 +391,7 @@
             <span class="bg-danger" ng-show="editAppForm.privatepath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <div class="form-group"
+          <div class="form-group col-xs-4"
                ng-class="{'has-error': editAppForm.checkPath.$invalid && editAppForm.checkPath.$dirty}">
             <label for="inAppCheckPath">Check path</label>
             <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath"
@@ -399,7 +401,7 @@
                    placeholder="Enter check path">
             <span class="bg-danger" ng-show="editAppForm.checkPath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
-
+          </div>
           <label>Emails (fields can be empty)</label>
           <div class="row form-group" data-ng-repeat = "mail in updateEmails">
             <div class="col-xs-4">
