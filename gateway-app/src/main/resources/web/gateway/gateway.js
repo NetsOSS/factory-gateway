@@ -600,15 +600,11 @@ define([
 
 
         $scope.setProxyState = function (appInstName) {
-
-
             var sel = document.getElementById(appInstName + "-state");
             var state = sel.options[sel.selectedIndex].value;
 
-            GatewayData.ApplicationInstanceController.setProxyStateForInstanceAndStartLoadbalancer(appInstName, state).then(function (data) {
-
+            GatewayData.ApplicationInstanceController.setProxyStateForInstance(appInstName, state).then(function (data) {
             });
-
         };
 
         $scope.removeLoadBalancer = function () {

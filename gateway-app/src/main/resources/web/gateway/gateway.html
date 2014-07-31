@@ -1,4 +1,3 @@
-
 <div class="row">
 
 
@@ -47,7 +46,6 @@
             <span class="bg-danger" ng-show="createAppGroupForm.port.$error.integer">This is not valid integer!</span>
             <span class="bg-danger" ng-show="createAppGroupForm.port.$error.min">  The value must be larger than 1024!</span>
             <span class="bg-danger" ng-show="createAppGroupForm.port.$error.max">  The value must be smaller than 65000!</span>
-
         </div>
 
           <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
@@ -175,9 +173,7 @@
       </span>
       </div>
     </div>
-
   </div>
-
 </div>
 
 <div class="panel panel-success">
@@ -185,7 +181,7 @@
         <h4 class="panel-title">
             <a data-toggle="collapse"
                href="#{{appGroup.id}}-newApp">
-                <span class="glyphicon glyphicon-plus"></span> New application to {{appGroup.name}}
+                <span class="glyphicon glyphicon-plus"></span> New application in {{appGroup.name}}
             </a>
         </h4>
     </div>
@@ -213,20 +209,17 @@
                     <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
                 </div>
 
-                <label>Emails (fields can be empty)</label>
-                <div class="row form-group" data-ng-repeat = "mail in emailFields">
-
-                  <div class="col-xs-4">
-
-                  <input type="email"
-                         ng-model="mail.name"
-                         name=""
-                         placeholder="Enter email address"
-                         class = "form-control">
-                  </div>
-                  <a ng-show="showNewMailField(mail)" ng-click="addMailField()" class="btn btn-info"><span class="glyphicon glyphicon-plus-sign"></span></a>
-                  <a ng-show="showNewMailField(mail)" ng-click="removeMailField()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
+              <div class="form-group">
+                <label for="inAppPrivatePath">Private path</label>
+                <input type="text" ng-model="newApp.privatePath" class="form-control "
+                       id="inAppPrivatePath"
+                       name="privatepath"
+                       ng-pattern="/^//"
+                       required
+                       placeholder="Enter private path">
+                <span class="bg-danger" ng-show="createAppForm.privatepath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
               </div>
+
                 <div class="form-group">
                     <label for="inAppCheckPath2">Check path</label>
                     <input type="text" ng-model="newApp.checkPath" class="form-control "
@@ -238,18 +231,22 @@
                     <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
                 </div>
 
-                <div class="form-group">
-                  <label for="inAppPrivatePath">Private path</label>
-                  <input type="text" ng-model="newApp.privatePath" class="form-control "
-                         id="inAppPrivatePath"
-                         name="privatepath"
-                         ng-pattern="/^//"
-                         required
-                         placeholder="Enter private path">
-                  <span class="bg-danger" ng-show="createAppForm.privatepath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+              <label>Emails (fields can be empty)</label>
+              <div class="row form-group" data-ng-repeat = "mail in emailFields">
+                <div class="col-xs-4">
+                  <input type="email"
+                         ng-model="mail.name"
+                         name=""
+                         placeholder="Enter email address"
+                         class = "form-control">
                 </div>
+                <!--
+                <a ng-show="showNewMailField(mail)" ng-click="addMailField()" class="btn btn-info"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                <a ng-show="showNewMailField(mail)" ng-click="removeMailField()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                -->
+              </div>
 
-                <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
+              <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
             </form>
         </div>
     </div>
@@ -421,19 +418,15 @@
             <span class="bg-danger" ng-show="editAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <label>Emails (fields can be empty)</label>
-          <div class="row form-group" data-ng-repeat = "mail in updateEmails">
-
-            <div class="col-xs-4">
-
-              <input type="email"
-                     ng-model="mail.name"
-                     name=""
-                     class = "form-control">
-
-            </div>
-            <a ng-show="showNewMailFieldForUpdate(mail)" ng-click="addMailFieldForUpdate()" class="btn btn-info"><span class="glyphicon glyphicon-plus-sign"></span></a>
-            <a ng-show="showNewMailFieldForUpdate(mail)" ng-click="removeMailFieldForUpdate()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
+          <div class="form-group">
+            <label for="inAppPrivatePathUpdate">Private path</label>
+            <input type="text" ng-model="updateApp.privatePath" class="form-control "
+                   id="inAppPrivatePathUpdate"
+                   name="privatepath"
+                   ng-pattern="/^//"
+                   required
+                   placeholder="Enter private path">
+            <span class="bg-danger" ng-show="editAppForm.privatepath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
           <div class="form-group"
@@ -448,15 +441,16 @@
             <span class="bg-danger" ng-show="editAppForm.checkPath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <div class="form-group">
-            <label for="inAppPrivatePathUpdate">Private path</label>
-            <input type="text" ng-model="updateApp.privatePath" class="form-control "
-                   id="inAppPrivatePathUpdate"
-                   name="privatepath"
-                   ng-pattern="/^//"
-                   required
-                   placeholder="Enter private path">
-            <span class="bg-danger" ng-show="editAppForm.privatepath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
+          <label>Emails (fields can be empty)</label>
+          <div class="row form-group" data-ng-repeat = "mail in updateEmails">
+            <div class="col-xs-4">
+              <input type="email"
+                     ng-model="mail.name"
+                     name=""
+                     class = "form-control">
+            </div>
+            <a ng-show="showNewMailFieldForUpdate(mail)" ng-click="addMailFieldForUpdate()" class="btn btn-info"><span class="glyphicon glyphicon-plus-sign"></span></a>
+            <a ng-show="showNewMailFieldForUpdate(mail)" ng-click="removeMailFieldForUpdate()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
           </div>
 
           <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
@@ -490,8 +484,6 @@
                         <button type="button" ng-click="removeRuleFromApp(updateApp, rule)" class="btn btn-danger btn-sm pull-right">Remove
                         </button>
                     </div>
-
-
                 </div>
 
                 <h3>New rule</h3>
@@ -511,8 +503,6 @@
                         />
                     </div>
 
-
-
                     <button type="submit" class="btn btn-primary" ng-disabled="createRuleForm.$invalid">Add</button>
                 </form>
             </div>
@@ -524,7 +514,7 @@
 </div>
 
 
-<!-- Modal Create app (Not used ?) -->
+<!-- TODO Modal Create app (Not used ?) -->
 <div class="modal fade bs-example-modal-lg" id="modalCreateApp" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -532,7 +522,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
             class="sr-only">Close</span></button>
-        <h4 class="modal-title" id=modalCreateAppLabel"> New application to {{currAppGroupSelected.name}}</h4>
+        <h4 class="modal-title" id=modalCreateAppLabel"> New application in {{currAppGroupSelected.name}}</h4>
       </div>
       <div class="modal-body">
         <form role="form" ng-submit="createApplication()" name="createAppForm" novalidate>
@@ -545,6 +535,7 @@
                    placeholder="Enter application name">
             <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
           </div>
+
           <div class="form-group">
             <label for="inAppPublicUrl">Public Path</label>
             <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl"
@@ -554,12 +545,14 @@
                    placeholder="Enter public url">
             <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
+
           <div class="form-group">
             <label for="inAppPublicUrl">Emails (for notification). Separate by ,</label>
             <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
                    required
                    placeholder="Enter email(s)">
           </div>
+
           <div class="form-group">
             <label for="inAppCheckPath">Check path</label>
             <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath"

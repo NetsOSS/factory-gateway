@@ -194,13 +194,7 @@ public class ApplicationInstanceController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/data/instancesByName/{name}/state/{proxyState}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AppInstModel setProxyStateForInstanceAndStartLoadbalancer(@PathVariable String name, @PathVariable String proxyState) {
-        Long id = setProxyStateForInstance(name, proxyState).getId();
-
-        return findById(id);
-    }
-
-    protected AppInstModel setProxyStateForInstance(String name, String proxyState) {
+    public AppInstModel setProxyStateForInstance(@PathVariable String name, @PathVariable String proxyState) {
         if (name == null) {
             throw new GatewayException("ApplicationInstance name can not be null: " + name);
         }
