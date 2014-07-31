@@ -175,9 +175,6 @@ define([
         };
 
         // ----------------------- Load balancer functions ------------------------------------
-       /* GatewayData.LoadBalancerController.listAllLoadBalancers().then(function (data) {
-            $scope.allLBs = data;
-        });*/
 
         $scope.allLBs = allLBs;
 
@@ -195,10 +192,6 @@ define([
                 window.location = "#/application-groups/"+data.id;
             });
         };
-
-        /*GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
-            $scope.allAppGroups = data;
-        });*/
 
         $scope.allAppGroups = allAppGroups;
 
@@ -222,7 +215,7 @@ define([
         $scope.removeGroup = function () {
             GatewayData.ApplicationGroupController.remove($scope.appGroupToBeDeleted.id).then(function (data) {
                 $scope.allAppGroups.splice($scope.allAppGroups.indexOf($scope.appGroupToBeDeleted), 1);
-                window.location = "#/application-groups/newGroup";
+                window.location = "#/application-groups/";
 
             });
         };
