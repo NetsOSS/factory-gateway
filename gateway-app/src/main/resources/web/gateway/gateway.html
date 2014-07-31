@@ -240,10 +240,8 @@
                          placeholder="Enter email address"
                          class = "form-control">
                 </div>
-                <!--
                 <a ng-show="showNewMailField(mail)" ng-click="addMailField()" class="btn btn-info"><span class="glyphicon glyphicon-plus-sign"></span></a>
                 <a ng-show="showNewMailField(mail)" ng-click="removeMailField()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
-                -->
               </div>
 
               <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
@@ -511,65 +509,4 @@
             </div>
         </div>
     </div>
-</div>
-
-
-<!-- TODO Modal Create app (Not used ?) -->
-<div class="modal fade bs-example-modal-lg" id="modalCreateApp" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-            class="sr-only">Close</span></button>
-        <h4 class="modal-title" id=modalCreateAppLabel"> New application in {{currAppGroupSelected.name}}</h4>
-      </div>
-      <div class="modal-body">
-        <form role="form" ng-submit="createApplication()" name="createAppForm" novalidate>
-
-          <div class="form-group">
-            <label for="inAppName">Name</label>
-            <input type="text" ng-model="newApp.name" class="form-control" id="inAppName" name="name"
-                   ng-pattern="/^\S+$/"
-                   required
-                   placeholder="Enter application name">
-            <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
-          </div>
-
-          <div class="form-group">
-            <label for="inAppPublicUrl">Public Path</label>
-            <input type="text" ng-model="newApp.publicUrl" class="form-control " id="inAppPublicUrl"
-                   name="publicUrl"
-                   ng-pattern="/^/[a-zA-Z]+\S*$/"
-                   required
-                   placeholder="Enter public url">
-            <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-          </div>
-
-          <div class="form-group">
-            <label for="inAppPublicUrl">Emails (for notification). Separate by ,</label>
-            <input type="text" ng-model="newApp.emails" class="form-control " id="inAppEmails" name="emails"
-                   required
-                   placeholder="Enter email(s)">
-          </div>
-
-          <div class="form-group">
-            <label for="inAppCheckPath">Check path</label>
-            <input type="text" ng-model="newApp.checkPath" class="form-control " id="inAppCheckPath"
-                   name="checkpath"
-                   ng-pattern="/^/[a-zA-Z]+\S*$/"
-                   required
-                   placeholder="Enter check path">
-            <span class="bg-danger" ng-show="createAppForm.checkpath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
-          </div>
-
-          <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
-        </form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
 </div>

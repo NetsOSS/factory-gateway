@@ -13,11 +13,9 @@ import java.util.Properties;
 @ComponentScan(basePackageClasses = MailConfig.class)
 public class MailConfig {
 
-    // TODO: Add value from a properties file - @Value breaks tests
     @Value("${email.host:localhost}" )
     private String host;
 
-    // TODO: Add value from a properties file - @Value breaks tests
     @Value("${email.port:25}")
     private Integer port;
 

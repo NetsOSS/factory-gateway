@@ -1,0 +1,2 @@
+ALTER TABLE application
+DROP COLUMN failover_load_balancer_setup;

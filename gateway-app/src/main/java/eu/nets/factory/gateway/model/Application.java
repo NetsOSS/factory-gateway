@@ -50,9 +50,6 @@ public class Application extends AbstractEntity {
     @Column(nullable = false, name = "sticky_session")
     private int stickySessionValue;
 
-    @Column(nullable = false, name = "failover_load_balancer_setup")
-    private int failoverLoadBalancerSetupValue; /* TODO - remove!*/
-
     @Column(name = "index_order")
     @Min(0)
     private int indexOrder;
@@ -70,7 +67,6 @@ public class Application extends AbstractEntity {
         this.indexOrder = indexOrder;
 
         this.stickySessionValue = StickySession.STICKY.ordinal();
-        this.failoverLoadBalancerSetupValue = 0;
     }
 
     public Application(){}
