@@ -101,10 +101,12 @@
 Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbStatus.timeStamp.second}} (hh:mm:ss)
 
 <div ng-repeat="(key,frontend) in lbStatus.frontends">
-    <h3>{{frontend.name}} <small>{{frontend.groupId}}</small></h3>
+
+    <h3>{{frontend.name}} <small></small></h3>
 
     <div ng-repeat="backend in frontend.backends">
-        <h4>Application : {{backend.name}} <small>{{backend.appId}}</small> </h4>
+        <h4>Application : {{backend.name}} <small> <a ng-href="http://{{backend.link}}">{{backend.link}}</a></small> </h4>
+
 
         <table class="table">
             <tr ng-class="">

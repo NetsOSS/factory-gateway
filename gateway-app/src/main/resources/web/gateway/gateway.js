@@ -506,19 +506,19 @@ define([
         if (status.svname == "BACKEND") {
           return "active";
         }
-        if (status.bck == "1")
-          return "info";
         switch (status.status) {
           case "UP":
+            if (status.bck == "1")
+              return "info";
             return "success";
           case "MAINT":
+            return "danger";
+          case "DOWN":
             return "danger";
           case "DRAIN":
             return "warning"
         }
         return "";
-        //{OPEN:'info',UP:'active', MAINT:'warning', DOWN:'danger','':'active'}[backend.data.status]
-
       };
 
         $scope.saveAppInst = function () {
@@ -602,7 +602,6 @@ define([
         });
       };
       $scope.removeAppFromLB = function (appId) {
-        console.log('Remove app ', appId, ' from LB ', $scope.lb.id);
         GatewayData.LoadBalancerController.removeApplicationFromLoadbalancer($scope.lb.id, appId).then(function (data) {
           $scope.lb = data;
           reloadAppLists();
@@ -630,12 +629,10 @@ define([
       };
 
       $scope.startLoadBalancer = function () {
-        console.log("start LoadBalancer function");
         GatewayData.LoadBalancerController.startLoadBalancer($scope.lb.id);
       };
 
       $scope.stopLoadBalancer = function () {
-        console.log("stop LoadBalancer function");
         GatewayData.LoadBalancerController.stopLoadBalancer($scope.lb.id);
       };
 
@@ -643,7 +640,6 @@ define([
         if (status.svname == "BACKEND") {
           return "active";
         }
-
         switch (status.status) {
           case "UP":
             if (status.bck == "1")
@@ -658,48 +654,12 @@ define([
         }
         return "";
         //{OPEN:'info',UP:'active', MAINT:'warning', DOWN:'danger','':'active'}[backend.data.status]
-
       };
 
-      GatewayData.ApplicationGroupController.listAllAppGroups().then(function (data) {
-        $scope.allAppGroups=data;
-
-      });
-
-      $scope.getObjectById = function (id) {
-
-
-        console.log("Looking for id=",id);
-        angular.forEach($scope.allAppGroups, function(appGrp){
-          //console.log(key," AppGrp: ",appGrp);
-          if(appGrp.id==id)
-            return appGrp;
-          angular.forEach(appGrp.applications, function(app){
-            //console.log(key," App: ",app);
-            if(app.id==id)
-              return app;
-            angular.forEach(app.applicationInstances, function(appInst){
-              //console.log(key," AppInst: ",appInst);
-              console.log(appInst.id, " =? ",id ,"types : ",typeof appInst.id, " and  ", typeof id);
-              if(appInst.id==id){
-                console.log("Found a match!!!");
-                return appInst;
-              }
-            });
-          });
-          //console.log(key + ': ' + value);
-        });
-      };
 
       $scope.showInfoModal = function (server) {
         $('#modalObjectInfo').modal('show');
-        //$scope.modalObj = $scope.getObjectById(id);
-        //console.log(id," found : ", $scope.modalObj);
         $scope.currModalStatus = server.data;
-        /*GatewayData.ApplicationInstanceController.findById(id).then(function (data) {
-         $scope.modalObj=data;
-         });*/
-
       };
 
       var reloadAppLists = function () {

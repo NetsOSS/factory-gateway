@@ -1,6 +1,5 @@
 package eu.nets.factory.gateway.service;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.*;
 import eu.nets.factory.gateway.web.*;
@@ -20,8 +19,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -96,7 +93,7 @@ public class StatusService {
             }
 
             Map<String, String> statusModel = statusMap.get(application.getId());
-            BackendStatus backendStatus = new BackendStatus(statusModel, application);
+            BackendStatus backendStatus = new BackendStatus(statusModel, application,lb.getHost());
 
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
                 Map<String, String> data = statusMap.get(applicationInstance.getId());
@@ -146,14 +143,16 @@ public class StatusService {
     public class BackendStatus {
         public Long appId;
         public String name;
-
+        public String link;
         public Map<String, String> data;
         public List<ServerStatus> servers = new ArrayList<>();
 
-        public BackendStatus(Map<String, String> data, Application application) {
+        public BackendStatus(Map<String, String> data, Application application, String host) {
             this.data = data != null ? data : Collections.emptyMap();
             this.appId = application.getId();
             this.name = application.getName();
+            link= host+":"+application.getApplicationGroup().getPort()+""+application.getPrivatePath();
+
 
         }
 
@@ -247,7 +246,7 @@ public class StatusService {
         for (LoadBalancer lb : loadBalancers) {
             Status status = getStatusForLoadBalancer(lb.getId());
             FrontendStatus frontendStatus = status.frontends.get(application.getApplicationGroup().getId());
-            BackendStatus backendStatus = new BackendStatus(null, application);
+            BackendStatus backendStatus = new BackendStatus(null, application, lb.getHost());
             int index = frontendStatus.backends.indexOf(backendStatus);
             if (index==-1) {
                 continue;
