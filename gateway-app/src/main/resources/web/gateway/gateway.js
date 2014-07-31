@@ -48,6 +48,9 @@ define([
                 controller: 'LoadBalancersCtrl',
                 templateUrl: templatePrefix + "allLoadBalancers.html"
             })
+            .when('/help', {
+              templateUrl: templatePrefix + "help.html"
+            })
             .otherwise({redirectTo: '/application-groups'});
       //$locationProvider.html5Mode(true);
 
