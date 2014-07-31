@@ -60,11 +60,20 @@ define([
                 /* All the following methods are optional */
                 response: function (response) {
                     if (response.config.method == "PUT") {
+                      if(response.data.name==undefined){
+                        $("#MessageDisplaySuccessText").text("Updated.");
+                      }else{
                         $("#MessageDisplaySuccessText").text("Updated " + response.data.name + " successfully.");
+                      }
+
                         $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
                     }
                     if (response.config.method == "POST") {
+                      if(response.data.name==undefined){
+                        $("#MessageDisplaySuccessText").text("Updated.");
+                      }else {
                         $("#MessageDisplaySuccessText").text("Created " + response.data.name + " successfully.");
+                      }
                         $('#messageDisplaySuccess').show().delay(2000).fadeOut('slow');
                     }
 
@@ -634,12 +643,15 @@ define([
         if (status.svname == "BACKEND") {
           return "active";
         }
-        if (status.bck == "1")
-          return "info";
+
         switch (status.status) {
           case "UP":
+            if (status.bck == "1")
+              return "info";
             return "success";
           case "MAINT":
+            return "danger";
+          case "DOWN":
             return "danger";
           case "DRAIN":
             return "warning"
