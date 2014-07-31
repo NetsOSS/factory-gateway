@@ -99,6 +99,10 @@ public class Application extends AbstractEntity {
         return privatePath;
     }
 
+    public void setPrivatePath(String privatePath) {
+        this.privatePath = privatePath;
+    }
+
     public StickySession getStickySession() {
         return StickySession.values()[stickySessionValue];
     }

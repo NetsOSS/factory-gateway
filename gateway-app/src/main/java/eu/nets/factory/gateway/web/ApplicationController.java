@@ -197,6 +197,7 @@ public class ApplicationController {
         application.setEmails(appModel.getEmails());
         application.setCheckPath(appModel.getCheckPath());
         application.setStickySession(appModel.stickySession);
+        application.setPrivatePath(appModel.privatePath);
 
         return new AppModel(application);
     }

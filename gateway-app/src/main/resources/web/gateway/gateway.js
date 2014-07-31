@@ -193,6 +193,7 @@ define([
 
                 $scope.allAppGroups.push(data);
                 $scope.newAppGroup = {};
+                $scope.currentAppGroupId = data.id;
             });
         };
 
