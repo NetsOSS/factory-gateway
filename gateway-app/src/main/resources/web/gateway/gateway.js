@@ -190,10 +190,9 @@ define([
         // ----------------------- Application Group functions ------------------------------------
         $scope.createApplicationGroup = function () {
             GatewayData.ApplicationGroupController.create($scope.newAppGroup).then(function (data) {
-
                 $scope.allAppGroups.push(data);
                 $scope.newAppGroup = {};
-                $scope.currentAppGroupId = data.id;
+                window.location = "#/application-groups/"+data.id;
             });
         };
 
@@ -223,6 +222,8 @@ define([
         $scope.removeGroup = function () {
             GatewayData.ApplicationGroupController.remove($scope.appGroupToBeDeleted.id).then(function (data) {
                 $scope.allAppGroups.splice($scope.allAppGroups.indexOf($scope.appGroupToBeDeleted), 1);
+                window.location = "#/application-groups/newGroup";
+
             });
         };
 
