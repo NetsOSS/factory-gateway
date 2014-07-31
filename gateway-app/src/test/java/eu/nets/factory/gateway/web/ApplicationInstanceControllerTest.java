@@ -269,35 +269,4 @@ public class ApplicationInstanceControllerTest {
         assertThat(appInstModel.getServer()).isNotNull().isEqualTo("hostOne:8080/kamino/1.0");
     }
 
-    @Test()
-    public void testSetProxyStateByInstanceName() throws Exception {
-
-        AppInstModel appInstModel = applicationInstanceController.search("Kamino1.0").get(0);
-
-        AppInstModel testModel = applicationInstanceController.setProxyStateForInstance(appInstModel.getName(), "MAINT");
-
-        assertThat(testModel.applicationId).isNotNull().isEqualTo(appInstModel.applicationId);
-        assertThat(testModel.id).isNotNull().isEqualTo(appInstModel.id);
-        assertThat(testModel.name).isNotNull().isEqualTo("Kamino1.0");
-        assertThat(testModel.getHaProxyState()).isNotNull().isEqualTo("MAINT");
-
-        try {
-            applicationInstanceController.setProxyStateForInstance(appInstModel.getName(), null);
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-
-        try {
-            applicationInstanceController.setProxyStateForInstance(null, "MAINT");
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-        try {
-            applicationInstanceController.setProxyStateForInstance(appInstModel.getName(), "NOTVALIDSTATE");
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-
-        try {
-            applicationInstanceController.setProxyStateForInstance("Namethatdoesnotexist", "MAINT");
-            fail("Expected exception");
-        } catch (GatewayException ignore) { }
-    }
 }

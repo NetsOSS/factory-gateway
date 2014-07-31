@@ -85,20 +85,6 @@ public class LoadBalancerController {
         return new LoadBalancerModel(findEntityById(id));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/data/load-balancers/findBySsh/{sshKey}", produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public LoadBalancerModel findBySshKey(@PathVariable String sshKey) {
-        log.info("LoadBalancerController.findBySshKey, sshKey={}", sshKey);
-        List<LoadBalancer> all = loadBalancerRepository.findAll();
-        for (LoadBalancer l : all) {
-            if (l.getSshKey().equals(sshKey)) {
-                return new LoadBalancerModel(l);
-            }
-        }
-
-        throw new EntityNotFoundException("LoadBalancer", sshKey);
-    }
-
     private void assertNameUnique(String name) {
         log.info("LoadBalancerController.assertNameUnique, name={}", name);
 

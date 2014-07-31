@@ -255,8 +255,19 @@ public class StatusController {
             response.setStatus(503);
         }
 
-        //DO LATER
-        //applicationInstanceController.setProxyStateForInstance(statusChange.s,statusChange.action.toUpperCase());
+        //Saving state
+        String name = statusChange.s;
+        String idStr = name.substring(name.lastIndexOf("_")+1);
+        try{
+            Long id = Long.parseLong(idStr);
+            ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
+            HaProxyState haProxyState = HaProxyState.valueOf(statusChange.action.toUpperCase());
+            applicationInstance.setHaProxyStateValue(haProxyState);
+
+
+        }catch(NumberFormatException e){
+            e.printStackTrace();
+        }
 
         return statusChange;
     }

@@ -191,42 +191,4 @@ public class ApplicationInstanceController {
         return new AppInstModel(applicationInstance);
 
     }
-
-    @RequestMapping(method = RequestMethod.PUT, value = "/data/instancesByName/{name}/state/{proxyState}", produces = APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public AppInstModel setProxyStateForInstance(@PathVariable String name, @PathVariable String proxyState) {
-        if (name == null) {
-            throw new GatewayException("ApplicationInstance name can not be null: " + name);
-        }
-        if (proxyState == null) {
-            throw new GatewayException("ProxyState can not be null: " + proxyState);
-        }
-
-        boolean found = false;
-        for (int i = 0; i < HaProxyState.values().length; i++) {
-            if (proxyState.equals(HaProxyState.values()[i].name())) {
-                found = true;
-            }
-        }
-        if (!found) {
-            throw new GatewayException("Detected non-valid enum-value for Haproxystate: " + proxyState);
-        }
-
-        List<ApplicationInstance> applicationInstances = applicationInstanceRepository.findAll();
-        ApplicationInstance applicationInstance = null;
-
-        for (ApplicationInstance appInst : applicationInstances) {
-            if (appInst.getName().equals(name)) {
-                applicationInstance = appInst;
-                break;
-            }
-        }
-        if (applicationInstance == null) {
-            throw new GatewayException("ApplicationInstance with this name not found: " + name);
-        }
-
-        AppInstModel appInstModel = new AppInstModel(applicationInstance);
-        appInstModel.setHaProxyState(proxyState);
-        return update(appInstModel.getId(), appInstModel);
-    }
 }

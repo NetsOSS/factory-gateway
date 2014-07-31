@@ -268,16 +268,6 @@ define([], function () {
       req.params.name = name;
       return $http(req).then(getData);
     };
-    this.ApplicationInstanceController.setProxyStateForInstance = function (name, proxyState, payload) {
-      var req = {};
-      req.method = 'PUT';
-      req.url = prefix + '/data/instancesByName/{name}/state/{proxyState}';
-      req.url = req.url.replace(/{name}/, name);
-      req.url = req.url.replace(/{proxyState}/, proxyState);
-      req.data = payload;
-      req.params = {};
-      return $http(req).then(getData);
-    };
     this.ApplicationInstanceController.setToBackup = function (id, body) {
       var req = {};
       req.method = 'PUT';
@@ -333,14 +323,6 @@ define([], function () {
       req.method = 'GET';
       req.url = prefix + '/data/load-balancers/{id}/models';
       req.url = req.url.replace(/{id}/, id);
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.LoadBalancerController.findBySshKey = function (sshKey) {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/load-balancers/findBySsh/{sshKey}';
-      req.url = req.url.replace(/{sshKey}/, sshKey);
       req.params = {};
       return $http(req).then(getData);
     };
@@ -431,9 +413,6 @@ define([], function () {
     this.resolve.LoadBalancerController = {};
     this.resolve.LoadBalancerController.findById = function (GatewayData, $route) {
       return LoadBalancerController.findById($route.current.params.id);
-    };
-    this.resolve.LoadBalancerController.findBySshKey = function (GatewayData, $route) {
-      return LoadBalancerController.findBySshKey($route.current.params.sshKey);
     };
     this.resolve.LoadBalancerController.findEntityById = function (GatewayData, $route) {
       return LoadBalancerController.findEntityById($route.current.params.id);

@@ -81,17 +81,6 @@ public class LoadBalancerControllerTest {
         } catch(GatewayException ignore) { }
     }
 
-    @Test
-    public void testFindBySshKey() throws Exception {
-        assertThat(loadBalancerController.findBySshKey("sshTwo")).isNotNull();
-        assertThat(loadBalancerController.findBySshKey("sshTwo").name).isNotNull().isEqualTo("Knut");
-
-        try {
-            loadBalancerController.findBySshKey("derp");
-            fail("Expected exception");
-        } catch(GatewayException ignore) {
-        }
-    }
 
     @Test
     public void testCreate() throws Exception {
