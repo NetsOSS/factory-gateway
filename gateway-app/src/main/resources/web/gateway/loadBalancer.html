@@ -124,7 +124,7 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
             </tr>
             <tr ng-repeat="server in backend.servers" ng-class="colorPicker(server.data)" >
 
-                <td>  <a ng-click="showInfoModal(server.appInstId)">{{server.name}}</a></td>
+                <td>  <a ng-click="showInfoModal(server)">{{server.name}}</a></td>
                 <!-- <td>{{server.data.pxname}}</td>
                 <td>{{server.data.svname}}</td>-->
                 <td>{{server.data.scur}}</td>
@@ -281,10 +281,110 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="modalObjectInfoLabel">{{modalObj.name}}</h4>
+                <h4 class="modal-title" id="modalObjectInfoLabel">Status</h4>
             </div>
             <div class="modal-body">
-               <ul>
+                <h3>Sessions</h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Current sessions</th>
+                        <th>Total sessions</th>
+                        <th>Max sessions</th>
+                        <th>Limit sessions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.scur}}</td>
+                        <td>{{currModalStatus.stot}}</td>
+                        <td>{{currModalStatus.smax}}</td>
+                        <td>{{currModalStatus.slim}}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+                <h3>HTTP responses</h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>1xx</th>
+                        <th>2xx</th>
+                        <th>3xx</th>
+                        <th>4xx</th>
+                        <th>5xx</th>
+                        <th>other</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.hrsp_1xx}}</td>
+                        <td>{{currModalStatus.hrsp_2xx}}</td>
+                        <td>{{currModalStatus.hrsp_3xx}}</td>
+                        <td>{{currModalStatus.hrsp_4xx}}</td>
+                        <td>{{currModalStatus.hrsp_5xx}}</td>
+                        <td>{{currModalStatus.hrsp_other}}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+
+                <h3>Server</h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Last change</th>
+                        <th>Total downtime</th>
+                        <th>Check status (layer)</th>
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.status}}</td>
+                        <td>{{currModalStatus.lastchg | secondstime}}</td>
+                        <td>{{currModalStatus.downtime | secondstime}}</td>
+                        <td>{{currModalStatus.check_status}}</td>
+
+                    </tr>
+                    </tbody>
+
+                </table>
+
+
+                <h3>Traffic</h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Bytes in</th>
+                        <th>Bytes out</th>
+
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.bin | bytes}}</td>
+                        <td>{{currModalStatus.bout | bytes}} s</td>
+
+
+                    </tr>
+                    </tbody>
+
+                </table>
+
+                <ul>
                    <li>Server : {{modalObj.server}}</li>
                    <li>Backup :{{modalObj.backup}}</li>
                    <li>Weight :{{modalObj.weight}}</li>
@@ -299,4 +399,97 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
     </div>
 </div>
 
-<hr>
+<!-- Modal Server /App instance details-->
+<div class="modal fade bs-example-modal-lg" id="modalAppInstDetails" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="modalAppInstDetailsLabel"> {{currModalStatus.pxname}}:
+                    {{currModalStatus.svname}}</h4>
+            </div>
+            <div class="modal-body">
+
+                <h3>Sessions</h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Current sessions</th>
+                        <th>Total sessions</th>
+                        <th>Max sessions</th>
+                        <th>Limit sessions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.scur}}</td>
+                        <td>{{currModalStatus.stot}}</td>
+                        <td>{{currModalStatus.smax}}</td>
+                        <td>{{currModalStatus.slim}}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+
+                <h3>Server</h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Last change</th>
+                        <th>Total downtime</th>
+                        <th>Check status (layer)</th>
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.status}}</td>
+                        <td>{{currModalStatus.lastchg | secondstime}}</td>
+                        <td>{{currModalStatus.downtime | secondstime}}</td>
+                        <td>{{currModalStatus.check_status}}</td>
+
+                    </tr>
+                    </tbody>
+
+                </table>
+
+
+                <h3>Traffic</h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Bytes in</th>
+                        <th>Bytes out</th>
+
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{{currModalStatus.bin | bytes}}</td>
+                        <td>{{currModalStatus.bout | bytes}} s</td>
+
+
+                    </tr>
+                    </tbody>
+
+                </table>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

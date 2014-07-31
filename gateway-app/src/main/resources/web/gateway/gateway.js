@@ -679,10 +679,11 @@ define([
         });
       };
 
-      $scope.showInfoModal = function (id) {
+      $scope.showInfoModal = function (server) {
         $('#modalObjectInfo').modal('show');
-        $scope.modalObj = $scope.getObjectById(id);
-        console.log(id," found : ", $scope.modalObj);
+        //$scope.modalObj = $scope.getObjectById(id);
+        //console.log(id," found : ", $scope.modalObj);
+        $scope.currModalStatus = server.data;
         /*GatewayData.ApplicationInstanceController.findById(id).then(function (data) {
          $scope.modalObj=data;
          });*/
