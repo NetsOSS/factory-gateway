@@ -24,13 +24,10 @@ public class TestController {
     private final Logger log = getLogger(getClass());
     private int statusCode = 200;
     private int sleepTime = 0;
-    private int retries = 0;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Map<String, String>> dumpRequest(HttpServletRequest request,HttpServletResponse response) throws IOException {
-
-        retries++;
 
         try {
             Thread.sleep(sleepTime);
@@ -62,7 +59,6 @@ public class TestController {
         }
         request.getSession().setAttribute("Request-Count", ++requestCount);
         contextMap.put("Request-Count", String.valueOf(requestCount));
-        contextMap.put("Retry-Count", ""+retries);
 
         returnMap.put("Headers", headerMap);
         returnMap.put("Context", contextMap);
