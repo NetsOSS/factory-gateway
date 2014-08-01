@@ -47,7 +47,7 @@ public class StatusService {
 
     private Map<Long, Status> loadBalancerStatuses = Collections.emptyMap();
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 1000)
     public void autoPoll() {
 
         Map<Long, Status> loadBalancerStatuses = new HashMap<>();
@@ -202,7 +202,6 @@ public class StatusService {
                 detectChangesInBackend(backendOld, backendNew,lb);
 
             }
-
         }
 
     }
@@ -224,8 +223,6 @@ public class StatusService {
             if (!oldStatus.equals(newStatus)) {
                 log.info("StatusService.checkForChangesInStatus() : {} went from status {} -> {}", serverNew.name, oldStatus, newStatus);
 
-
-
                 if (application == null) {
                     log.info("Error getting the application, Should never happen?");
                     continue;
@@ -239,7 +236,6 @@ public class StatusService {
                 }
                 if (instance == null)
                     continue;
-
 
                 StringBuilder message = new StringBuilder();
                 message.append("Application : " + application.getName() + " in group: " + application.getApplicationGroup().getName() + ".\n");
@@ -258,7 +254,6 @@ public class StatusService {
     }
 
 
-
     public Status getStatusForLoadBalancer(Long loadBalancerId) {
         return loadBalancerStatuses.get(loadBalancerId);
     }
@@ -275,7 +270,6 @@ public class StatusService {
             if (index == -1) {
                 continue;
             }
-
             map.put(lb.getId(), frontendStatus.backends.get(index));
         }
         return map;
@@ -283,8 +277,6 @@ public class StatusService {
 
     //Should be private. but used in test. fix later
     public List<String> readCSV(LoadBalancer loadBalancer) {
-        //log.info("StatusService.readCSV");
-
         String csvFile = "http://" + loadBalancer.getHost() + ":" + loadBalancer.getStatsPort() + "/proxy-stats;csv";
 
         URL url;
@@ -310,15 +302,11 @@ public class StatusService {
             throw new GatewayException("Cannot connect to HAproxy. " + loadBalancer.getName() + " with csv at : " + csvFile);
 
         }
-
-
         return Arrays.asList(stringWriter.toString().split("\n"));
     }
 
 
     public Map<Long, Map<String, String>> parseCSV2(List<String> csvStrings, LoadBalancer lb) {
-        //log.info("StatusService.parseCSV");
-
         if (csvStrings == null) {
             throw new GatewayException("Received List was null.");
         }
@@ -348,20 +336,17 @@ public class StatusService {
                 data.put("lbname", lb.getName());
 
             /*
+            IDs are stored as "NAME_ID"
             pxname = Id of appGroup or id of application.
             svname = FRONTEND, BACKEND, or appInst id
              */
-            String rawsvname = data.get("svname");
-            String rawpxname = data.get("pxname");
 
-
-            String svname = data.get("svname").replace("^.*?([^\\t_]*)$", "");
-            String pxname = data.get("pxname").replace("^.*?([^\\t_]*)$", "");
-
+            String svname = data.get("svname");
+            String pxname = data.get("pxname");
 
             if (svname.equals("FRONTEND") || svname.equals("BACKEND")) {
                 if (data.get("pxname").equals("stats")) {
-
+                    //Stats are not showed, not sure if we want this in our model.
                 } else {
                     try {
                         pxname = pxname.substring(pxname.lastIndexOf("_") + 1);
@@ -380,24 +365,6 @@ public class StatusService {
                     e.printStackTrace();
                 }
             }
-           /* try{
-                Long id = Long.parseLong(statusModel.data.get("svname"));
-                //Then it is a server
-
-            }catch(NumberFormatException e){
-                //svn
-                //e.printStackTrace();
-                Long id = Long.parseLong(statusModel.data.get("svname"));
-                map.put(id, statusModel);
-            }
-
-            try {
-                Long id = Long.parseLong(statusModel.data.get("pxname"));
-                map.put(id, statusModel);
-            }catch(NumberFormatException e){
-                //e.printStackTrace();
-
-            }*/
         }
 
         return map;
@@ -409,7 +376,9 @@ public class StatusService {
         return parseCSV(csvStrings, null);
     }
 
-    //Should be private. but used in test. fix later
+    /*
+    Method is not used. Except tests.
+     */
     public List<StatusModel> parseCSV(List<String> csvStrings, LoadBalancer lb) {
         //log.info("StatusService.parseCSV");
 
@@ -424,8 +393,6 @@ public class StatusService {
         }
 
         List<StatusModel> list = new ArrayList<>();
-
-
         String[] names = csvStrings.get(0).split(",");
         names[0] = names[0].replaceAll("# ", "");
 
