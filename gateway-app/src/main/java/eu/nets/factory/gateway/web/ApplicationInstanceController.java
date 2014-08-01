@@ -92,6 +92,7 @@ public class ApplicationInstanceController {
             throw new GatewayException("Could not create ApplicationInstance. Invalid ApplicationInstanceModel: " + appInstModel);
         if (appInstModel.getName() == null || !Pattern.matches("^\\S+$", appInstModel.getName()))
             throw new GatewayException("Could not create ApplicationInstance. Name must match pattern '^\\S+$'.  Received: " + appInstModel.name);
+        //TODO: test Name for symbols the config file can't handle, such as æ, ø and å
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/applications/{applicationId}/instances", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

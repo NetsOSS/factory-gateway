@@ -29,9 +29,9 @@
           <label for="inAppGroupName">Name</label>
           <input type="text" ng-model="newAppGroup.name" class="form-control"
                  name="name"
-                id="inAppGroupName"
-                 required
-                 placeholder="Enter application group name">
+                 id="inAppGroupName"
+                 placeholder="Enter application group name"
+                 required>
         </div>
 
         <div class="form-group">
@@ -48,6 +48,7 @@
             <span class="bg-danger" ng-show="createAppGroupForm.port.$error.max">  The value must be smaller than 65000!</span>
         </div>
 
+        <!-- TODO: empty form on creation -->
           <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid">Create</button>
       </form>
     </div>
@@ -151,8 +152,6 @@
       </div>
 
       <div class="panel-footer ">
-        <strong>Sticky sessions:</strong>
-
         <div class="btn-group btn-toggle">
           <button class="btn btn-default btn-sm" ng-click="setSticky(app, 'STICKY')"
                   ng-class="{STICKY:'active', NOT_STICKY:'', STICKY_NEW_COOKIE:'', '':'hidden'}[app.stickySession]">
@@ -169,7 +168,8 @@
         </div>
 
       <span class="pull-right">
-        <strong>Check path:</strong> {{app.checkPath}}
+        <a><strong>Email:</strong> {{app.emails}} </a>
+        <a><strong> Check path:</strong> {{app.checkPath}}</a>
       </span>
       </div>
     </div>
@@ -194,8 +194,8 @@
                     <input type="text" ng-model="newApp.name" class="form-control" id="inAppName2"
                            name="name"
                            ng-pattern="/^\S+$/"
-                           required
-                           placeholder="Enter application name">
+                           placeholder="Enter application name"
+                           required>
                     <span class="bg-danger" ng-show="createAppForm.name.$error.pattern">Invalid name: Cannot contain white-spaces. Use - instead</span>
                 </div>
               <H4>Paths</H4>
@@ -246,6 +246,7 @@
                 <a ng-show="showNewMailField(mail)" ng-click="removeMailField()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
               </div>
 
+              <!-- TODO: empty form on creation -->
               <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid">Create</button>
             </form>
         </div>
@@ -374,6 +375,7 @@
             <span class="bg-danger" ng-show="createAppGroupForm.port.$error.max">  The value must be smaller than 65000!</span>
           </div>
 
+          <!-- TODO: close form on update -->
           <button type="submit" class="btn btn-primary" ng-disabled="editAppGroupForm.$invalid">Update</button>
         </form>
       </div>
@@ -443,6 +445,7 @@
             <span class="bg-danger" ng-show="editAppForm.checkPath.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
           </div>
+
           <label>Emails (fields can be empty)</label>
           <div class="row form-group" data-ng-repeat = "mail in updateEmails">
             <div class="col-xs-4">
@@ -455,6 +458,7 @@
             <a ng-show="showNewMailFieldForUpdate(mail)" ng-click="removeMailFieldForUpdate()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
           </div>
 
+          <!-- TODO: close form on update -->
           <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
         </form>
       </div>
@@ -509,6 +513,7 @@
                 </form>
             </div>
             <div class="modal-footer">
+              <!-- TODO: close form on creation? -->
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

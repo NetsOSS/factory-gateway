@@ -278,7 +278,7 @@
   </div>
 </div>
 
-
+<!-- TODO: remove form? -->
 <div class="modal fade" id="myInstModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
   <div class="modal-dialog">
@@ -332,8 +332,8 @@
             <span class="bg-danger" ng-show="newInstanceForm.path.$error.pattern">Invalid path: Must start with / followed by a letter. Cannot contain white-spaces</span>
           </div>
 
-          <button type="submit" class="btn btn-primary" ng-disabled="newInstanceForm.$invalid ">Submit
-          </button>
+          <!-- TODO: close form on creation? -->
+          <button type="submit" class="btn btn-primary" ng-disabled="newInstanceForm.$invalid ">Submit</button>
         </form>
 
       </div>
@@ -414,6 +414,7 @@
             <a ng-show="showNewMailFieldForUpdate(mail)" ng-click="removeMailFieldForUpdate()" class="btn btn-info"><span class="glyphicon glyphicon-minus-sign"></span></a>
           </div>
 
+          <!-- TODO: close form on update -->
           <button type="submit" class="btn btn-primary" ng-disabled="editAppForm.$invalid">Update</button>
         </form>
       </div>

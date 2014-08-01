@@ -106,6 +106,7 @@ public class LoadBalancerController {
     private void assertValidModel(LoadBalancerModel loadBalancerModel) {
         if(loadBalancerModel == null) { throw new GatewayException("Could not create LoadBalancer. Invalid LoadBalancerModel."); }
         if(loadBalancerModel.getName() == null  || ! Pattern.matches("^\\S+$", loadBalancerModel.getName())) throw new GatewayException("Could not create Load Balancer. Name must match pattern '^\\S+$'.");
+        //TODO: test Name for symbols the config file can't handle, such as æ, ø and å
         if(loadBalancerModel.getHost() == null || ! Pattern.matches(".+", loadBalancerModel.getHost())) throw new GatewayException("Could not create Load Balancer. Host must match pattern '.+'.");
         if(loadBalancerModel.getInstallationPath() == null  || ! Pattern.matches("^/[a-zA-Z]\\S*$", loadBalancerModel.getInstallationPath())) throw new GatewayException("Could not create Load Balancer. Installation Path must match pattern '^/[a-zA-Z]\\S*$'.");
         if(loadBalancerModel.getSshKey() == null || ! Pattern.matches("[\\s\\S]+", loadBalancerModel.getSshKey())) throw new GatewayException("Could not create Load Balancer. Ssh Key must match pattern '.+'.");

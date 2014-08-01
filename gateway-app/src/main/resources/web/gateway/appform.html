@@ -17,6 +17,7 @@
         <span class="bg-danger" ng-show="createAppForm.publicUrl.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
     </div>
 
+  <!-- TODO: close form on update/creation -->
     <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" ng-show="appObj">Update</button>
     <button type="submit" class="btn btn-primary" ng-disabled="createAppForm.$invalid" ng-hide="appObj" >Create</button>
 </form>

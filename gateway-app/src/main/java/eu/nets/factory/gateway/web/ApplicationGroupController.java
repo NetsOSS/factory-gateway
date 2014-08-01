@@ -92,6 +92,7 @@ public class ApplicationGroupController {
     private void assertValidModel(AppGroupModel appGroupModel) {
         if(appGroupModel == null) throw new GatewayException("Could not create ApplicationGroup. Invalid ApplicationGroupModel.");
         if(appGroupModel.getName() == null || ! Pattern.matches("^\\S+$", appGroupModel.getName())) throw new GatewayException("Could not create ApplicationGroup. Name must match pattern '^\\S+$'.");
+        //TODO: test Name for symbols the config file can't handle, such as æ, ø and å
         if(appGroupModel.getPort() < ApplicationGroup.INSTANCE_PORT_MIN || appGroupModel.getPort() > ApplicationGroup.INSTANCE_PORT_MAX) throw new  GatewayException("Could not create ApplicationGroup. Port must be a number between "+ApplicationGroup.INSTANCE_PORT_MIN+" and "+ApplicationGroup.INSTANCE_PORT_MAX+". Received: " + appGroupModel.getPort());
     }
 

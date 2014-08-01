@@ -439,14 +439,6 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.StatusController.getBackendStatusForApplication = function (id) {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/applications/{id}/backend-status';
-      req.url = req.url.replace(/{id}/, id);
-      req.params = {};
-      return $http(req).then(getData);
-    };
     this.StatusController.getServerStatusForApplication = function (id) {
       var req = {};
       req.method = 'GET';
@@ -459,14 +451,6 @@ define([], function () {
       var req = {};
       req.method = 'GET';
       req.url = prefix + '/data/all-load-alancers/status';
-      req.params = {};
-      return $http(req).then(getData);
-    };
-    this.StatusController.getStatusForLoadbalancer = function (id) {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/load-balancers/{id}/status';
-      req.url = req.url.replace(/{id}/, id);
       req.params = {};
       return $http(req).then(getData);
     };
@@ -494,27 +478,13 @@ define([], function () {
       req.params = {};
       return $http(req).then(getData);
     };
-    this.StatusController.sendEmail = function (id) {
-      var req = {};
-      req.method = 'GET';
-      req.url = prefix + '/data/load-balancers/sendEmail/{id}';
-      req.url = req.url.replace(/{id}/, id);
-      req.params = {};
-      return $http(req).then(getData);
-    };
     var StatusController = this.StatusController;
     this.resolve.StatusController = {};
-    this.resolve.StatusController.getBackendStatusForApplication = function (GatewayData, $route) {
-      return StatusController.getBackendStatusForApplication($route.current.params.id);
-    };
     this.resolve.StatusController.getServerStatusForApplication = function (GatewayData, $route) {
       return StatusController.getServerStatusForApplication($route.current.params.id);
     };
     this.resolve.StatusController.getStatusForAllLoadbalancers = function (GatewayData, $route) {
       return StatusController.getStatusForAllLoadbalancers();
-    };
-    this.resolve.StatusController.getStatusForLoadbalancer = function (GatewayData, $route) {
-      return StatusController.getStatusForLoadbalancer($route.current.params.id);
     };
     this.resolve.StatusController.getStatusForLoadbalancer2 = function (GatewayData, $route) {
       return StatusController.getStatusForLoadbalancer2($route.current.params.id);
@@ -524,9 +494,6 @@ define([], function () {
     };
     this.resolve.StatusController.isLoadBalancerOnline = function (GatewayData, $route) {
       return StatusController.isLoadBalancerOnline($route.current.params.id);
-    };
-    this.resolve.StatusController.sendEmail = function (GatewayData, $route) {
-      return StatusController.sendEmail($route.current.params.id);
     };
   }
   

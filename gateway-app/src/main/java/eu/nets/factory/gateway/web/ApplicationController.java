@@ -114,7 +114,7 @@ public class ApplicationController {
     }
 
     private void assertValidModel(AppModel appModel) {
-        //is this needed? The object already have the same constraints. //we cannot run test on constraint violations
+        //is this needed? The object already have the same constraints. //we cannot run test on constraint violations...
         if (appModel == null) throw new GatewayException("Could not create Application. Invalid ApplicationModel.");
         if (appModel.getApplicationGroupId() == null)
             throw new GatewayException("Could not create Application. Invalid ApplicationGroupID: " + appModel.getApplicationGroupId());
@@ -122,6 +122,7 @@ public class ApplicationController {
             throw new GatewayException("Could not create Application. ApplicationGroupID did not match the ID of any known application group.");
         if (appModel.getName() == null || !Pattern.matches("^\\S+$", appModel.getName()))
             throw new GatewayException("Could not create Application. Name must match pattern '^\\S+$'.");
+        //TODO: test Name for symbols the config file can't handle, such as æ, ø and å
 
         if (appModel.getPublicUrl() == null || !Pattern.matches("^/.*", appModel.getPublicUrl()))
             throw new GatewayException("Could not create Application. PublicUrl must match pattern '^\\S+$'.");

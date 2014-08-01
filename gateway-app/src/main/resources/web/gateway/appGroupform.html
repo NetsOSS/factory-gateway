@@ -17,6 +17,7 @@
         placeholder="=Enter application group port - range 1024 - 64999">
   </div>
 
+  <!-- TODO: close form on update/creation -->
   <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid" ng-show="appGroupObj">Update</button>
   <button type="submit" class="btn btn-primary" ng-disabled="createAppGroupForm.$invalid" ng-hide="appGroupObj" >Create</button>
 </form>
