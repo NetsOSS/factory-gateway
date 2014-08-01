@@ -47,13 +47,15 @@ public class StatusService {
 
     private Map<Long, Status> loadBalancerStatuses = Collections.emptyMap();
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 30000)
     public void autoPoll() {
 
         Map<Long, Status> loadBalancerStatuses = new HashMap<>();
         for (LoadBalancer lb : loadBalancerRepository.findAll()) {
 
             Status status = storeAsBetterObject2(lb);
+
+            checkForChangesInStatus2(getStatusForLoadBalancer(lb.getId()), status,lb);
             loadBalancerStatuses.put(lb.getId(), status);
         }
         this.loadBalancerStatuses = loadBalancerStatuses;
@@ -93,7 +95,7 @@ public class StatusService {
             }
 
             Map<String, String> statusModel = statusMap.get(application.getId());
-            BackendStatus backendStatus = new BackendStatus(statusModel, application,lb.getHost());
+            BackendStatus backendStatus = new BackendStatus(statusModel, application, lb.getHost());
 
             for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
                 Map<String, String> data = statusMap.get(applicationInstance.getId());
@@ -151,9 +153,7 @@ public class StatusService {
             this.data = data != null ? data : Collections.emptyMap();
             this.appId = application.getId();
             this.name = application.getName();
-            link= host+":"+application.getApplicationGroup().getPort()+""+application.getPrivatePath();
-
-
+            link = host + ":" + application.getApplicationGroup().getPort() + "" + application.getPrivatePath();
         }
 
         @Override
@@ -174,7 +174,6 @@ public class StatusService {
             this.data = data != null ? data : Collections.emptyMap();
             this.name = applicationInstance.getName();
             this.appInstId = applicationInstance.getId();
-
         }
 
         @Override
@@ -186,31 +185,56 @@ public class StatusService {
         }
     }
 
-    //Checks if the state has changes for a status model. Not a fast implementation O(n^2). Could be better.
-    private void checkForChangesInStatus(List<StatusModel> oldlistStatus, List<StatusModel> newlistStatus, LoadBalancer lb) {
-        for (StatusModel oldStatusModel : oldlistStatus) {
-            int index = newlistStatus.indexOf(oldStatusModel);
-            if (index == -1) {
-                log.info("A status model (backend) was removed");
+    private void checkForChangesInStatus2(Status oldStatus, Status newStatus, LoadBalancer lb) {
+        if (oldStatus == null || newStatus == null)
+            return;
+
+        for (Long frontendKey : newStatus.frontends.keySet()) {
+            FrontendStatus frontendNew = newStatus.frontends.get(frontendKey);
+            FrontendStatus frontendOld = oldStatus.frontends.get(frontendKey);
+            if (frontendOld == null)
                 continue;
+            for(BackendStatus backendOld : frontendOld.backends){
+                int index = frontendNew.backends.indexOf(backendOld);
+                if(index==-1)
+                    continue;
+                BackendStatus backendNew = frontendNew.backends.get(index);
+                detectChangesInBackend(backendOld, backendNew,lb);
+
             }
-            StatusModel newStatusModel = newlistStatus.get(index);
-            String oldStatus = oldStatusModel.data.get("status");
-            String newStatus = newStatusModel.data.get("status");
+
+        }
+
+    }
+
+    private void detectChangesInBackend(BackendStatus oldBackendStatus, BackendStatus newBackendStatus, LoadBalancer lb) {
+        for (ServerStatus serverOld : oldBackendStatus.servers){
+            int index = newBackendStatus.servers.indexOf(serverOld);
+            if(index==-1)
+                continue;
+            ServerStatus serverNew = newBackendStatus.servers.get(index);
+            if(serverNew.data.isEmpty() || serverOld.data.isEmpty())
+                continue;
+
+            String oldStatus = serverOld.data.get("status");
+            String newStatus = serverNew.data.get("status");
+            Application application = applicationRepository.findOne(newBackendStatus.appId);
+
 
             if (!oldStatus.equals(newStatus)) {
-                log.info("StatusService.checkForChangesInStatus() : {} went from status {} -> {}", oldStatusModel, oldStatus, newStatus);
+                log.info("StatusService.checkForChangesInStatus() : {} went from status {} -> {}", serverNew.name, oldStatus, newStatus);
 
-                String appName = newStatusModel.data.get("pxname");
-                Application application = applicationController.getApplicationByExactName(appName);
+
+
                 if (application == null) {
                     log.info("Error getting the application, Should never happen?");
                     continue;
                 }
                 log.info("StatusService.checkForChangesInStatus() : Sending email to :  {}", application.getEmails());
                 ApplicationInstance instance = null;
+
                 for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                    if (newStatusModel.data.get("svname").equals(applicationInstance.getName()))
+                    if(serverNew.appInstId.equals(applicationInstance.getId()))
                         instance = applicationInstance;
                 }
                 if (instance == null)
@@ -229,18 +253,18 @@ public class StatusService {
 
             }
 
-
         }
 
     }
+
 
 
     public Status getStatusForLoadBalancer(Long loadBalancerId) {
         return loadBalancerStatuses.get(loadBalancerId);
     }
 
-    public Map<Long,BackendStatus> getStatusForApplication(Application application) {
-        Map<Long,BackendStatus> map = new HashMap<>();
+    public Map<Long, BackendStatus> getStatusForApplication(Application application) {
+        Map<Long, BackendStatus> map = new HashMap<>();
 
         List<LoadBalancer> loadBalancers = application.getLoadBalancers();
         for (LoadBalancer lb : loadBalancers) {
@@ -248,7 +272,7 @@ public class StatusService {
             FrontendStatus frontendStatus = status.frontends.get(application.getApplicationGroup().getId());
             BackendStatus backendStatus = new BackendStatus(null, application, lb.getHost());
             int index = frontendStatus.backends.indexOf(backendStatus);
-            if (index==-1) {
+            if (index == -1) {
                 continue;
             }
 
