@@ -659,8 +659,13 @@ define([
 
 
       $scope.showInfoModal = function (server) {
+        console.log(server);
         $('#modalObjectInfo').modal('show');
         $scope.currModalStatus = server.data;
+
+        GatewayData.ApplicationInstanceController.findById(server.appInstId).then(function (data) {
+          $scope.appInstance = data;
+        });
       };
 
       var reloadAppLists = function () {
@@ -694,6 +699,9 @@ define([
 
 
       };
+
+        $("[data-toggle='tooltip']").tooltip();
+
 
 
       //----- Status proxy -----------------------

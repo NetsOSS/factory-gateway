@@ -117,8 +117,8 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
                 <th>Total sessions</th>
                 <th>Bytes in</th>
                 <th>Bytes out</th>
-                <th>Last change</th>
-                <th>Downtime</th>
+                <th title="number of seconds since the last UP<->DOWN transition">Last change</th>
+                <th title="total downtime (in seconds). The value for the backend is the downtime for the whole backend, not the sum of the server downtime.">Downtime</th>
                 <th>Status</th>
                 <th>Backup/Primary</th>
                <!-- <th>HTTP responses </th>-->
@@ -133,6 +133,7 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
                 <td>{{server.data.stot}}</td>
                 <td>{{server.data.bin | bytes}}</td>
                 <td>{{server.data.bout| bytes}}</td>
+
                 <td>{{server.data.lastchg | secondstime}}</td>
                 <td>{{server.data.downtime | secondstime}}</td>
                 <td>{{server.data.status}} ({{server.data.check_status}})</td>
@@ -178,39 +179,6 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
 
 
 
-<!--
-<pre>{{lbStatus}}</pre>
-
-<table class="table  table-hover" ng-show="isLBonline">
-<thead>
-<tr>
-<th>Proxy Name</th>
-<th>Service Name</th>
-
-<th> pid [LFBS]: process id (0 for first instance, 1 for second, ...)</th>
-<th>iid [LFBS]: unique proxy id</th>
-<th>sid [L..S]: server id (unique inside a proxy)</th>
-</tr>
-</thead>
-
-<tbody>
-<tr ng-repeat="s in rawStatus">
-
-<td>{{s.data.pxname}}</td>
-<td>{{s.data.svname}}</td>
-<td>{{s.data.pid}}</td>
-<td>{{s.data.iid}}</td>
-<td>{{s.data.sid}}</td>
-
-
-</tr>
-</tbody>
-</table>-->
-<!--
-<pre>
-    {{rawStatus[0].data | json}}
-</pre>
--->
 <div class="row">
     <div class="col-sm-6">
         <h3>Application in this Load Balancer</h3>
@@ -283,33 +251,68 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="modalObjectInfoLabel">Status</h4>
+                <h4 class="modal-title" id="modalObjectInfoLabel">Status {{appInstance.name}}</h4>
             </div>
             <div class="modal-body">
-                <h3>Sessions</h3>
+                <ul class="list-inline">
+                    <li>Server : <a ng-href="http://{{appInstance.server}}">{{appInstance.server}}</a></li>
+                    <li>Backup :{{appInstance.backup}}</li>
+                    <li>Weight :{{appInstance.weight}}</li>
+                </ul>
+                <h3>Sessions (TCP)</h3>
 
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th>Current sessions</th>
-                        <th>Total sessions</th>
-                        <th>Max sessions</th>
-                        <th>Limit sessions</th>
+                        <th>Current</th>
+                        <th># last second</th>
+                        <th>Total</th>
+                        <th>Max</th>
+                        <th>Limit</th>
+                        <th>Avarage session time (last 1024 requests)</th>
                     </tr>
                     </thead>
 
                     <tbody>
                     <tr>
+
                         <td>{{currModalStatus.scur}}</td>
+                        <td>{{currModalStatus.rate}}</td>
                         <td>{{currModalStatus.stot}}</td>
                         <td>{{currModalStatus.smax}}</td>
                         <td>{{currModalStatus.slim}}</td>
+                        <td>{{currModalStatus.ttime}}</td>
+
+
+                    </tr>
+                    </tbody>
+
+                </table>
+                <h3>HTTP </h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>HTTP request last second</th>
+                        <th>Max request per second observed</th>
+                        <th>Total number of HTTP requests received</th>
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+
+                        <td>{{currModalStatus.req_rate}}</td>
+                        <td>{{currModalStatus.req_rate_max }}</td>
+                        <td>{{currModalStatus.req_tot }}</td>
+
                     </tr>
                     </tbody>
 
                 </table>
 
-                <h3>HTTP responses</h3>
+                <h3>HTTP response status codes</h3>
 
                 <table class="table table-bordered">
                     <thead>
@@ -325,6 +328,7 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
 
                     <tbody>
                     <tr>
+
                         <td>{{currModalStatus.hrsp_1xx}}</td>
                         <td>{{currModalStatus.hrsp_2xx}}</td>
                         <td>{{currModalStatus.hrsp_3xx}}</td>
@@ -335,6 +339,9 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
                     </tbody>
 
                 </table>
+                Request errors : {{currModalStatus.ereq}}
+
+
 
 
                 <h3>Server</h3>
@@ -346,6 +353,8 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
                         <th>Last change</th>
                         <th>Total downtime</th>
                         <th>Check status (layer)</th>
+                        <th>Number of failed checks</th>
+                        <th>Failed checks details</th>
 
                     </tr>
                     </thead>
@@ -356,6 +365,8 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
                         <td>{{currModalStatus.lastchg | secondstime}}</td>
                         <td>{{currModalStatus.downtime | secondstime}}</td>
                         <td>{{currModalStatus.check_status}}</td>
+                        <td>{{currModalStatus.chkfail}}</td>
+                        <td>{{currModalStatus.hanafail }}</td>
 
                     </tr>
                     </tbody>
@@ -386,12 +397,8 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
 
                 </table>
 
-                <ul>
-                   <li>Server : {{modalObj.server}}</li>
-                   <li>Backup :{{modalObj.backup}}</li>
-                   <li>Weight :{{modalObj.weight}}</li>
-               </ul>
-                <pre>{{modalObj}}</pre>
+
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -401,97 +408,3 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
     </div>
 </div>
 
-<!-- Modal Server /App instance details-->
-<div class="modal fade bs-example-modal-lg" id="modalAppInstDetails" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="modalAppInstDetailsLabel"> {{currModalStatus.pxname}}:
-                    {{currModalStatus.svname}}</h4>
-            </div>
-            <div class="modal-body">
-
-                <h3>Sessions</h3>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Current sessions</th>
-                        <th>Total sessions</th>
-                        <th>Max sessions</th>
-                        <th>Limit sessions</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr>
-                        <td>{{currModalStatus.scur}}</td>
-                        <td>{{currModalStatus.stot}}</td>
-                        <td>{{currModalStatus.smax}}</td>
-                        <td>{{currModalStatus.slim}}</td>
-                    </tr>
-                    </tbody>
-
-                </table>
-
-
-                <h3>Server</h3>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Last change</th>
-                        <th>Total downtime</th>
-                        <th>Check status (layer)</th>
-
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr>
-                        <td>{{currModalStatus.status}}</td>
-                        <td>{{currModalStatus.lastchg | secondstime}}</td>
-                        <td>{{currModalStatus.downtime | secondstime}}</td>
-                        <td>{{currModalStatus.check_status}}</td>
-
-                    </tr>
-                    </tbody>
-
-                </table>
-
-
-                <h3>Traffic</h3>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Bytes in</th>
-                        <th>Bytes out</th>
-
-
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr>
-                        <td>{{currModalStatus.bin | bytes}}</td>
-                        <td>{{currModalStatus.bout | bytes}} s</td>
-
-
-                    </tr>
-                    </tbody>
-
-                </table>
-
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
