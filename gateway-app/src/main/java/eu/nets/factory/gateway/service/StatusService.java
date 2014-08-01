@@ -153,7 +153,7 @@ public class StatusService {
             this.data = data != null ? data : Collections.emptyMap();
             this.appId = application.getId();
             this.name = application.getName();
-            link = host + ":" + application.getApplicationGroup().getPort() + "" + application.getPrivatePath();
+            link = host + ":" + application.getApplicationGroup().getPort() + "" + application.getPublicUrl();
         }
 
         @Override
