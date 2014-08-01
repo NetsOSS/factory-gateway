@@ -131,6 +131,9 @@
             <span class="caret"></span>
             </input>
               <ul class="dropdown-menu" id = "dropdown" role="menu"  ng-model = "applicationList" >
+                <li><a><b>Application Groups</b></a></li>
+                <li ng-repeat = "group in appGroupList"><a href ="/#/application-groups/{{group.id}}">{{group.name}}</a></li>
+                <li class="divider"></li>
                 <li><a><b>Applications</b></a></li>
                 <li ng-repeat = "application in applicationList"><a href ="/#/app/{{application.id}}">{{application.name}}</a></li>
                 <li class="divider"></li>

@@ -105,6 +105,7 @@ define([
         $scope.applicationList =[];
         $scope.applicationInstanceList =[];
         $scope.loadBalancerList =[];
+        $scope.appGroupList = [];
 
         $scope.getData = function() {
 
@@ -112,12 +113,14 @@ define([
             $scope.applicationList =[];
             $scope.applicationInstanceList =[];
             $scope.loadBalancerList =[];
-
+            $scope.appGroupList = [];
 
             if(search.length > 0) {
+                GatewayData.ApplicationGroupController.search(search).then(function(data) {
+                    $scope.appGroupList = data;
+                });
                 GatewayData.ApplicationController.search(search).then(function (data) {
                     $scope.applicationList = data;
-
                 });
 
                 GatewayData.ApplicationInstanceController.search(search).then(function (data) {
@@ -128,6 +131,9 @@ define([
                     $scope.loadBalancerList = data;
                 });
             } else {
+                GatewayData.ApplicationGroupController.listAllAppGroups().then(function(data) {
+                    $scope.appGroupList = data;
+                });
                 GatewayData.ApplicationController.listAllApps().then(function(data){
                     $scope.applicationList = data;
                 });
