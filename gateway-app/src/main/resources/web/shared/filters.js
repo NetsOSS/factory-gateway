@@ -1,6 +1,6 @@
 'use strict';
 
-define([ 'angular' ], function (angular) {
+define(['angular'], function (angular) {
   var filters = angular.module('shared.filters', []);
 
 
@@ -28,11 +28,11 @@ define([ 'angular' ], function (angular) {
     };
 
   });
-  filters.filter('bytes', function(){
-    return function(bytes){
-      if(isNaN(bytes))
+  filters.filter('bytes', function () {
+    return function (bytes) {
+      if (isNaN(bytes))
         return "";
-      if(bytes == 0) return '0 Byte';
+      if (bytes == 0) return '0 Byte';
       var k = 1000;
       var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
       var i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -40,10 +40,10 @@ define([ 'angular' ], function (angular) {
     }
   });
 
-  filters.filter('getById', function() {
-    return function(input, id) {
-      var i=0, len=input.length;
-      for (; i<len; i++) {
+  filters.filter('getById', function () {
+    return function (input, id) {
+      var i = 0, len = input.length;
+      for (; i < len; i++) {
         if (+input[i].id == +id) {
           return input[i];
         }
@@ -51,10 +51,10 @@ define([ 'angular' ], function (angular) {
       return null;
     }
   });
-  filters.filter('getIndexById', function() {
-    return function(input, id) {
-      var i=0, len=input.length;
-      for (; i<len; i++) {
+  filters.filter('getIndexById', function () {
+    return function (input, id) {
+      var i = 0, len = input.length;
+      for (; i < len; i++) {
         if (+input[i].id == +id) {
           return i;
         }

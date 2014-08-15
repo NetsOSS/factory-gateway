@@ -1,6 +1,6 @@
 'use strict';
 
-define([ 'angular' ], function (angular) {
+define(['angular'], function (angular) {
   var directives = angular.module('shared.directives', []);
 
   var INTEGER_REGEXP = /^\-?\d+$/;
@@ -37,29 +37,29 @@ define([ 'angular' ], function (angular) {
         if ($scope.lb != null) {
           $scope.isNewLb = $scope.lb.id == null;
           console.log('cecking id');
-        }else {
-            $scope.lb={
-                checkTimeout:2000,
-                connectTimeout:1000,
-                serverTimeout:60000,
-                clientTimeout:60000,
-                retries:3
-            }
+        } else {
+          $scope.lb = {
+            checkTimeout: 2000,
+            connectTimeout: 1000,
+            serverTimeout: 60000,
+            clientTimeout: 60000,
+            retries: 3
+          }
         }
-          $scope.validateServerClient = function() {
-              $scope.lb.clientTimeout = $scope.lb.serverTimeout;
-              return $scope.lb.serverTimeout==$scope.lb.clientTimeout;
-      };
+        $scope.validateServerClient = function () {
+          $scope.lb.clientTimeout = $scope.lb.serverTimeout;
+          return $scope.lb.serverTimeout == $scope.lb.clientTimeout;
+        };
 
         $scope.updateOrCreateLB = function () {
           console.log('LB in form: ', $scope.lb);
           if ($scope.lb.id != null) {
             console.log('Updating LB');
             $scope.lb.applications = [];
-            GatewayData.LoadBalancerController.update($scope.lb.id, $scope.lb).then(function(newLb){
-                if($scope.lb.statsPort != newLb.statsPort) {
-                    alert('Updated port: ' + newLb.statsPort);
-                }
+            GatewayData.LoadBalancerController.update($scope.lb.id, $scope.lb).then(function (newLb) {
+              if ($scope.lb.statsPort != newLb.statsPort) {
+                alert('Updated port: ' + newLb.statsPort);
+              }
             });
           } else {
             console.log('Createing LB');
@@ -99,7 +99,7 @@ define([ 'angular' ], function (angular) {
               $scope.onCreated(data);
             });
           } else {
-            GatewayData.ApplicationController.update($scope.localApp.id, $scope.localApp).then(function(data){
+            GatewayData.ApplicationController.update($scope.localApp.id, $scope.localApp).then(function (data) {
               console.log('Updating exisitng');
               $scope.onCreated(data);
             });
@@ -131,24 +131,24 @@ define([ 'angular' ], function (angular) {
   });
 
 
-  directives.directive("clickToEdit", function() {
+  directives.directive("clickToEdit", function () {
     var editorTemplate = '<div class="click-to-edit">' +
-        '<div ng-hide="view.editorEnabled">' +
-        '{{value}} ' +
-        '<a><span ng-click="enableEditor()" class="glyphicon glyphicon-pencil pull-right"></span></a>'+
-        '' +
-        '</div>' +
-        '<div ng-show="view.editorEnabled">' +
-        '<form>' +
-        '<input class="form-control" ng-model="view.editableValue">' +
-        '<div class="btn-group pull-right ">' +
-        '<a ng-click="save()"><button type="submit" style="visibility: hidden"></button><span class="glyphicon glyphicon-floppy-disk"></span></a>' +
-        ' ' +
-        '<a ng-click="disableEditor()"><span class="glyphicon glyphicon-floppy-remove"></span></a>' +
-        '</div>' +
-        '</form>' +
-        '</div>' +
-        '</div>';
+      '<div ng-hide="view.editorEnabled">' +
+      '{{value}} ' +
+      '<a><span ng-click="enableEditor()" class="glyphicon glyphicon-pencil pull-right"></span></a>' +
+      '' +
+      '</div>' +
+      '<div ng-show="view.editorEnabled">' +
+      '<form>' +
+      '<input class="form-control" ng-model="view.editableValue">' +
+      '<div class="btn-group pull-right ">' +
+      '<a ng-click="save()"><button type="submit" style="visibility: hidden"></button><span class="glyphicon glyphicon-floppy-disk"></span></a>' +
+      ' ' +
+      '<a ng-click="disableEditor()"><span class="glyphicon glyphicon-floppy-remove"></span></a>' +
+      '</div>' +
+      '</form>' +
+      '</div>' +
+      '</div>';
 
     return {
       restrict: "A",
@@ -156,28 +156,28 @@ define([ 'angular' ], function (angular) {
       template: editorTemplate,
       scope: {
         value: "=clickToEdit",
-        saveCallback : "&saveFunction"
+        saveCallback: "&saveFunction"
         //callback:
       },
-      controller: function($scope,$timeout) {
+      controller: function ($scope, $timeout) {
         $scope.view = {
           editableValue: $scope.value,
           editorEnabled: false
         };
 
-        $scope.enableEditor = function() {
+        $scope.enableEditor = function () {
           $scope.view.editorEnabled = true;
           $scope.view.editableValue = $scope.value;
         };
 
-        $scope.disableEditor = function() {
+        $scope.disableEditor = function () {
           $scope.view.editorEnabled = false;
         };
 
-        $scope.save = function() {
+        $scope.save = function () {
           $scope.value = $scope.view.editableValue;
           $scope.disableEditor();
-          $timeout(function() {
+          $timeout(function () {
             $scope.saveCallback();
           });
         };
@@ -185,22 +185,19 @@ define([ 'angular' ], function (angular) {
     };
   });
 
-  directives.directive( 'goClick', function ( $location ) {
-    return function ( scope, element, attrs ) {
+  directives.directive('goClick', function ($location) {
+    return function (scope, element, attrs) {
       var path;
 
-      attrs.$observe( 'goClick', function (val) {
+      attrs.$observe('goClick', function (val) {
         path = val;
       });
 
-      element.bind( 'click', function () {
-        scope.$apply( function () {
-          $location.path( path );
+      element.bind('click', function () {
+        scope.$apply(function () {
+          $location.path(path);
         });
       });
     };
   });
-
 });
-
-

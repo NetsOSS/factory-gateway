@@ -1,8 +1,9 @@
 package eu.nets.factory.gateway.web;
 
 public class StatusChange {
-    public String s,action,b;
-    public StatusChange(){
+    public String s, action, b;
+
+    public StatusChange() {
     }
 
 
@@ -38,6 +39,6 @@ public class StatusChange {
 
     @Override
     public String toString() {
-        return "s="+s+"action="+action+"b="+b;
+        return "s=" + s + "action=" + action + "b=" + b;
     }
 }

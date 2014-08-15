@@ -35,10 +35,13 @@ javax.validation:validation-api:1.1.0.Final:jar
 javax.xml.stream:stax-api:1.0-2:jar
 jaxen:jaxen:1.1.6:jar
 net.jcip:jcip-annotations:1.0:jar
+net.schmizz:sshj:0.10.0:jar
 org.apache.commons:commons-lang3:3.3.2:jar
 org.apache.httpcomponents:httpclient:4.3.3:jar
 org.apache.httpcomponents:httpcore:4.3.2:jar
 org.aspectj:aspectjrt:1.7.4:jar
+org.bouncycastle:bcpkix-jdk15on:1.50:jar
+org.bouncycastle:bcprov-jdk15on:1.50:jar
 org.codehaus.woodstox:stax2-api:3.1.1:jar
 org.eclipse.jetty:jetty-http:9.1.0.v20131115:jar
 org.eclipse.jetty:jetty-io:9.1.0.v20131115:jar

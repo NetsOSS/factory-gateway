@@ -1,19 +1,18 @@
 package eu.nets.factory.gateway.app;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.GenericConfigurator;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import eu.nets.factory.gateway.web.WebConfig;
 import eu.nets.oss.jetty.ContextPathConfig;
 import eu.nets.oss.jetty.EmbeddedJettyBuilder;
 import eu.nets.oss.jetty.EmbeddedSpringBuilder;
 import eu.nets.oss.jetty.StaticConfig;
 import eu.nets.oss.jetty.StdoutRedirect;
-import eu.nets.factory.gateway.web.WebConfig;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;

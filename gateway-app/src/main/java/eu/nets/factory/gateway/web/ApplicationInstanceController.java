@@ -3,18 +3,25 @@ package eu.nets.factory.gateway.web;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
-import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationInstance;
+import eu.nets.factory.gateway.model.ApplicationInstanceRepository;
+import eu.nets.factory.gateway.model.ApplicationRepository;
 import eu.nets.factory.gateway.service.HaProxyService;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -183,7 +190,7 @@ public class ApplicationInstanceController {
     @RequestMapping(method = RequestMethod.PUT, value = "/data/instances/{id}/setBackup", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public AppInstModel setToBackup(@PathVariable Long id, @RequestBody ObjectNode body) {
-        log.info("ApplicationInstanceController.setBackup, id={} to {}", id,body.get("backup").asBoolean());
+        log.info("ApplicationInstanceController.setBackup, id={} to {}", id, body.get("backup").asBoolean());
 
         ApplicationInstance applicationInstance = applicationInstanceRepository.findOne(id);
         if (applicationInstance == null)

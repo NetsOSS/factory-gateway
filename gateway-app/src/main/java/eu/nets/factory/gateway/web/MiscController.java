@@ -9,6 +9,6 @@ public class MiscController {
 
     @RequestMapping("/")
     public ModelAndView hello() {
-       return new ModelAndView("index.html");
+        return new ModelAndView("index.html");
     }
 }

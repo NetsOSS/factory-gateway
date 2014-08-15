@@ -1,100 +1,108 @@
 <div class="row">
 
-    <div class="panel-group" id="accordion">
-        <div class="panel panel-success">
-            <div class="panel-heading clearfix">
-                <h4 class="panel-title pull-left" style="padding-top: 7.5px;">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                        Load Balancer: {{lb.name}}
-                    </a>
-                </h4>
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-success">
+      <div class="panel-heading clearfix">
+        <h4 class="panel-title pull-left" style="padding-top: 7.5px;">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+            Load Balancer: {{lb.name}}
+          </a>
+        </h4>
 
-                <div class="pull-right">
+        <div class="pull-right">
           <span>
             <span class="badge">{{lb.applications.length}}</span>
           </span>
 
           <span class="btn-group">
-            <a data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm"><span
-                    class="glyphicon glyphicon-pencil"></span> Edit</a>
-            <a ng-click="startLoadBalancer()" class="btn btn-success btn-sm"><span
-                    class="glyphicon glyphicon-play"></span> {{lbStatus.up&& 'Restart' || 'Start'}}</a>
-            <a ng-click="stopLoadBalancer()" ng-disabled="!lbStatus.up" class="btn btn-warning btn-sm"><span
-                    class="glyphicon glyphicon-stop"></span> Stop</a>
-            <a data-toggle="modal" data-target="#deleteWarningModal" class="btn btn-danger btn-sm"><span
-                    class="glyphicon glyphicon-trash"></span> Delete</a>
+            <a data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm">
+              <span class="glyphicon glyphicon-pencil"></span>
+              Edit
+            </a>
+            <a ng-click="startLoadBalancer()" class="btn btn-success btn-sm">
+              <span class="glyphicon glyphicon-play"></span>
+              {{lbStatus.up&& 'Restart' || 'Start'}}
+            </a>
+            <a ng-click="stopLoadBalancer()" ng-disabled="!lbStatus.up" class="btn btn-warning btn-sm">
+              <span class="glyphicon glyphicon-stop"></span>
+              Stop
+            </a>
+            <a data-toggle="modal" data-target="#deleteWarningModal" class="btn btn-danger btn-sm">
+              <span class="glyphicon glyphicon-trash"></span>
+              Delete
+            </a>
           </span>
-                </div>
-            </div>
-
-            <div class="modal" id="deleteWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            Are you sure you want to delete?
-                            <button type="button" class="btn btn-info" data-dismiss="modal"
-                                    ng-click="removeLoadBalancer()">
-                                Yes
-                            </button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="collapseOne" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled">
-                                <li>InstallationPath: {{lb.installationPath}}</li>
-                                <li>Host: {{lb.host}}</li>
-                                <li>Port: {{lb.statsPort}}</li>
-                                <li>Stats page: <a href="http://{{lb.host}}:{{lb.statsPort}}/proxy-stats">{{lb.host}}:{{lb.statsPort}}/proxy-stats</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled">
-                                <li>Username: {{lb.userName}}</li>
-                                <li>
-                                    <a href="" ng-model="collapsedSSHkey" ng-click="collapsedSSHkey=!collapsedSSHkey">
-                                        <strong>SSH key</strong> (show/hide)
-                                    </a>
-                                </li>
-                            </ul>
-
-
-                            <div ng-show="collapsedSSHkey">
-                                <pre>{{lb.sshKey}}</pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
-</div>
+      </div>
 
+      <div class="modal" id="deleteWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalWarningLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              Are you sure you want to delete?
+              <button type="button" class="btn btn-info" data-dismiss="modal" ng-click="removeLoadBalancer()">
+                Yes
+              </button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-6">
+              <ul class="list-unstyled">
+                <li>InstallationPath: {{lb.installationPath}}</li>
+                <li>Host: {{lb.host}}</li>
+                <li>Port: {{lb.statsPort}}</li>
+                <li>Stats page: <a href="http://{{lb.host}}:{{lb.statsPort}}/proxy-stats">{{lb.host}}:{{lb.statsPort}}/proxy-stats</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="col-sm-6">
+              <ul class="list-unstyled">
+                <li>Username: {{lb.userName}}</li>
+                <li>
+                  <a href="" ng-model="collapsedSSHkey" ng-click="collapsedSSHkey=!collapsedSSHkey">
+                    <strong>SSH key</strong> (show/hide)
+                  </a>
+                </li>
+              </ul>
+              <div ng-show="collapsedSSHkey">
+                <pre>{{lb.sshKey}}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <hr>
 <div class="row">
-    <div class="col-sm-8">
-        <h3>Status: <span class="text-success" ng-show="lbStatus.up">HAproxy is running
-            <span class="glyphicon glyphicon-thumbs-up"></span></span>
-            <span class="text-danger" ng-hide="lbStatus.up">HAproxy is not running
-            <span class="glyphicon glyphicon-thumbs-down"></span></span>
-        </h3>
-    </div>
+  <div class="col-sm-8">
+    <h3>Status: <span class="text-success" ng-show="lbStatus.up">
+      HAproxy is running
+      <span class="glyphicon glyphicon-thumbs-up"></span>
+    </span>
+    <span class="text-danger" ng-hide="lbStatus.up">
+      HAproxy is not running
+      <span class="glyphicon glyphicon-thumbs-down"></span>
+    </span>
+    </h3>
+  </div>
 
-    <div class="col-sm-4">
-        <a class="btn pull-right" ng-class="{true: 'btn-primary', false: 'btn-success'}[!autoRefresh]"
-           ng-click="startStopAutoRefresh()">Turn {{!autoRefresh&& 'on' || 'off'}} autorefresh</a>
-    </div>
+  <div class="col-sm-4">
+    <a class="btn pull-right" ng-class="{true: 'btn-primary', false: 'btn-success'}[!autoRefresh]" ng-click="startStopAutoRefresh()">
+      Turn {{!autoRefresh&& 'on' || 'off'}} autorefresh
+    </a>
+  </div>
 </div>
 
 <!--{{lbStatus.timeStamp}}-->
@@ -102,309 +110,276 @@ Last update at : {{lbStatus.timeStamp.hour}}:{{lbStatus.timeStamp.minute}}:{{lbS
 
 <div ng-repeat="(key,frontend) in lbStatus.frontends">
 
-    <h3>{{frontend.name}} <small></small></h3>
+  <h3>{{frontend.name}}
+    <small></small>
+  </h3>
 
-    <div ng-repeat="backend in frontend.backends">
-        <h4>Application : {{backend.name}} <small> <a ng-href="http://{{backend.link}}">{{backend.link}}</a></small> </h4>
+  <div ng-repeat="backend in frontend.backends">
+    <h4>Application : {{backend.name}}
+      <small><a ng-href="http://{{backend.link}}">{{backend.link}}</a></small>
+    </h4>
 
+    <table class="table">
+      <tr ng-class="">
+        <th>Name</th>
+        <!--<th>{{backend.data.pxname}}</th>
+        <th>{{backend.data.svname}}</th>-->
+        <th>Current sessions</th>
+        <th>Total sessions</th>
+        <th>Bytes in</th>
+        <th>Bytes out</th>
+        <th title="number of seconds since the last UP<->DOWN transition">Last change</th>
+        <th title="total downtime (in seconds). The value for the backend is the downtime for the whole backend, not the sum of the server downtime.">
+          Downtime
+        </th>
+        <th>Status</th>
+        <th>Backup/Primary</th>
+        <!-- <th>HTTP responses </th>-->
+        <th>Actions</th>
+      </tr>
+      <tr ng-repeat="server in backend.servers" ng-class="colorPicker(server.data)">
 
-        <table class="table">
-            <tr ng-class="">
-                <th>Name</th>
-                <!--<th>{{backend.data.pxname}}</th>
-                <th>{{backend.data.svname}}</th>-->
-                <th>Current sessions</th>
-                <th>Total sessions</th>
-                <th>Bytes in</th>
-                <th>Bytes out</th>
-                <th title="number of seconds since the last UP<->DOWN transition">Last change</th>
-                <th title="total downtime (in seconds). The value for the backend is the downtime for the whole backend, not the sum of the server downtime.">Downtime</th>
-                <th>Status</th>
-                <th>Backup/Primary</th>
-               <!-- <th>HTTP responses </th>-->
-                <th>Actions</th>
-            </tr>
-            <tr ng-repeat="server in backend.servers" ng-class="colorPicker(server.data)" >
+        <td><a ng-click="showInfoModal(server)">{{server.name}}</a></td>
+        <!-- <td>{{server.data.pxname}}</td>
+        <td>{{server.data.svname}}</td>-->
+        <td>{{server.data.scur}}</td>
+        <td>{{server.data.stot}}</td>
+        <td>{{server.data.bin | bytes}}</td>
+        <td>{{server.data.bout| bytes}}</td>
 
-                <td>  <a ng-click="showInfoModal(server)">{{server.name}}</a></td>
-                <!-- <td>{{server.data.pxname}}</td>
-                <td>{{server.data.svname}}</td>-->
-                <td>{{server.data.scur}}</td>
-                <td>{{server.data.stot}}</td>
-                <td>{{server.data.bin | bytes}}</td>
-                <td>{{server.data.bout| bytes}}</td>
+        <td>{{server.data.lastchg | secondstime}}</td>
+        <td>{{server.data.downtime | secondstime}}</td>
+        <td>{{server.data.status}} ({{server.data.check_status}})</td>
+        <td>{{(server.data.bck==1) && ' Backup' || 'Primary' }}</td>
+        <!-- <td> 2xx : {{server.data.hrsp_2xx}}, 3xx : {{server.data.hrsp_3xx}}, 5xx : {{server.data.hrsp_5xx}}</td>-->
+        <td>
 
-                <td>{{server.data.lastchg | secondstime}}</td>
-                <td>{{server.data.downtime | secondstime}}</td>
-                <td>{{server.data.status}} ({{server.data.check_status}})</td>
-                <td>{{(server.data.bck==1) && ' Backup' || 'Primary' }}</td>
-               <!-- <td> 2xx : {{server.data.hrsp_2xx}}, 3xx : {{server.data.hrsp_3xx}}, 5xx : {{server.data.hrsp_5xx}}</td>-->
-                <td>
+          <a class="btn btn-success btn-xs"
+             ng-disabled="server.data.status=='UP'"
+             ng-click="setProxyStateWithAPI(server.data,'ready')">
+            Ready
+          </a>
+          <a class="btn btn-danger btn-xs"
+             ng-disabled="server.data.status=='MAINT'"
+             ng-click="setProxyStateWithAPI(server.data,'maint')">
+            Maint
+          </a>
+          <a class="btn btn-info btn-xs"
+             ng-disabled="server.data.status=='DRAIN'"
+             ng-click="setProxyStateWithAPI(server.data,'drain')">
+            Drain
+          </a>
+        </td>
+      </tr>
 
-                        <a class="btn btn-success btn-xs" ng-disabled="server.data.status=='UP'"
-                           ng-click="setProxyStateWithAPI(server.data,'ready')">Ready</a>
-                        <a class="btn btn-danger  btn-xs" ng-disabled="server.data.status=='MAINT'"
-                           ng-click="setProxyStateWithAPI(server.data,'maint')">Maint</a>
-
-
-                        <a class="btn btn-info btn-xs" ng-disabled="server.data.status=='DRAIN'"
-                           ng-click="setProxyStateWithAPI(server.data,'drain')">Drain</a>
-
-                </td>
-            </tr>
-
-            <tr ng-class="colorPicker(backend.data)">
-                <th>Sum stats</th>
-                <!--<th>{{backend.data.pxname}}</th>
-                <th>{{backend.data.svname}}</th>-->
-                <td>{{backend.data.scur}}</td>
-                <td>{{backend.data.stot}}</td>
-                <td>{{backend.data.bin | bytes}}</td>
-                <td>{{backend.data.bout| bytes}}</td>
-                <td>{{backend.data.lastchg | secondstime}}</td>
-                <td>{{backend.data.downtime | secondstime}}</td>
-                <td>{{backend.data.status}}</td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-
-    </div>
-
+      <tr ng-class="colorPicker(backend.data)">
+        <th>Sum stats</th>
+        <!--<th>{{backend.data.pxname}}</th>
+        <th>{{backend.data.svname}}</th>-->
+        <td>{{backend.data.scur}}</td>
+        <td>{{backend.data.stot}}</td>
+        <td>{{backend.data.bin | bytes}}</td>
+        <td>{{backend.data.bout| bytes}}</td>
+        <td>{{backend.data.lastchg | secondstime}}</td>
+        <td>{{backend.data.downtime | secondstime}}</td>
+        <td>{{backend.data.status}}</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
 </div>
 
-
-
-
-
-
-
 <div class="row">
-    <div class="col-sm-6">
-        <h3>Application in this Load Balancer</h3>
+  <div class="col-sm-6">
+    <h3>Application in this Load Balancer</h3>
 
-        <div class="list-group">
-            <a class="list-group-item" ng-repeat="a in inLBList">
-                <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
+    <div class="list-group">
+      <a class="list-group-item" ng-repeat="a in inLBList">
+        <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
 
-                <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">Remove
-                </button>
-            </a>
-        </div>
-
+        <button type="button" ng-click="removeAppFromLB(a.id)" class="btn btn-danger btn-sm pull-right">
+          Remove
+        </button>
+      </a>
     </div>
+  </div>
 
-
-    <div class="col-sm-6">
-        <h3>Add new application (from existing applications) </h3>
-
-        <div class="list-group">
-
-
-            <a class="list-group-item" ng-repeat="a in allLBList">
-                <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
-                <button type="button" ng-click="addAppToLB(a.id)" class="btn btn-primary btn-sm pull-right">Add</button>
-            </a>
-        </div>
+  <div class="col-sm-6">
+    <h3>Add new application (from existing applications) </h3>
+    <div class="list-group">
+      <a class="list-group-item" ng-repeat="a in allLBList">
+        <b> {{a.name}}</b> {{a.publicUrl}} ({{a.id}}) GroupId: {{a.applicationGroupId}}
+        <button type="button" ng-click="addAppToLB(a.id)" class="btn btn-primary btn-sm pull-right">Add</button>
+      </a>
     </div>
+  </div>
 
 </div>
 
 <hr>
 <div class="row">
 
-    <button type="button" class="btn btn-primary" ng-model="collapseConfig" ng-click="collapseConfig=!collapseConfig">
-        Show new configfile for Haproxy
-    </button>
+  <button type="button" class="btn btn-primary" ng-model="collapseConfig" ng-click="collapseConfig=!collapseConfig">
+    Show new configfile for Haproxy
+  </button>
 
-    <div ng-show="collapseConfig">
-        <pre>{{configFile}}</pre>
-    </div>
+  <div ng-show="collapseConfig">
+    <pre>{{configFile}}</pre>
+  </div>
 </div>
 <hr>
-
 
 <!-- Modal -->
 <div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog ">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Update</h4>
-            </div>
-            <div class="modal-body">
-                <lb-form ng-if="lbLoadingDone"></lb-form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-            </div>
-        </div>
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Update</h4>
+      </div>
+      <div class="modal-body">
+        <lb-form ng-if="lbLoadingDone"></lb-form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+      </div>
     </div>
+  </div>
 </div>
-
 
 <div class="modal fade" id="modalObjectInfo" tabindex="-1" role="dialog" aria-labelledby="modalObjectInfoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="modalObjectInfoLabel">Status {{appInstance.name}}</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-inline">
-                    <li>Server : <a ng-href="http://{{appInstance.server}}">{{appInstance.server}}</a></li>
-                    <li>Backup :{{appInstance.backup}}</li>
-                    <li>Weight :{{appInstance.weight}}</li>
-                </ul>
-                <h3>Sessions (TCP)</h3>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="modalObjectInfoLabel">Status {{appInstance.name}}</h4>
+      </div>
+      <div class="modal-body">
+        <ul class="list-inline">
+          <li>Server : <a ng-href="http://{{appInstance.server}}">{{appInstance.server}}</a></li>
+          <li>Backup :{{appInstance.backup}}</li>
+          <li>Weight :{{appInstance.weight}}</li>
+        </ul>
+        <h3>Sessions (TCP)</h3>
 
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Current</th>
-                        <th># last second</th>
-                        <th>Total</th>
-                        <th>Max</th>
-                        <th>Limit</th>
-                        <th>Avarage session time (last 1024 requests)</th>
-                    </tr>
-                    </thead>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Current</th>
+            <th># last second</th>
+            <th>Total</th>
+            <th>Max</th>
+            <th>Limit</th>
+            <th>Avarage session time (last 1024 requests)</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{currModalStatus.scur}}</td>
+            <td>{{currModalStatus.rate}}</td>
+            <td>{{currModalStatus.stot}}</td>
+            <td>{{currModalStatus.smax}}</td>
+            <td>{{currModalStatus.slim}}</td>
+            <td>{{currModalStatus.ttime}}</td>
+          </tr>
+          </tbody>
+        </table>
 
-                    <tbody>
-                    <tr>
+        <h3>HTTP</h3>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>HTTP request last second</th>
+            <th>Max request per second observed</th>
+            <th>Total number of HTTP requests received</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{currModalStatus.req_rate}}</td>
+            <td>{{currModalStatus.req_rate_max }}</td>
+            <td>{{currModalStatus.req_tot }}</td>
+          </tr>
+          </tbody>
+        </table>
 
-                        <td>{{currModalStatus.scur}}</td>
-                        <td>{{currModalStatus.rate}}</td>
-                        <td>{{currModalStatus.stot}}</td>
-                        <td>{{currModalStatus.smax}}</td>
-                        <td>{{currModalStatus.slim}}</td>
-                        <td>{{currModalStatus.ttime}}</td>
+        <h3>HTTP response status codes</h3>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>1xx</th>
+            <th>2xx</th>
+            <th>3xx</th>
+            <th>4xx</th>
+            <th>5xx</th>
+            <th>other</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{currModalStatus.hrsp_1xx}}</td>
+            <td>{{currModalStatus.hrsp_2xx}}</td>
+            <td>{{currModalStatus.hrsp_3xx}}</td>
+            <td>{{currModalStatus.hrsp_4xx}}</td>
+            <td>{{currModalStatus.hrsp_5xx}}</td>
+            <td>{{currModalStatus.hrsp_other}}</td>
+          </tr>
+          </tbody>
+        </table>
+        Request errors : {{currModalStatus.ereq}}
 
+        <h3>Server</h3>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Status</th>
+            <th>Last change</th>
+            <th>Total downtime</th>
+            <th>Check status (layer)</th>
+            <th>Number of failed checks</th>
+            <th>Failed checks details</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{currModalStatus.status}}</td>
+            <td>{{currModalStatus.lastchg | secondstime}}</td>
+            <td>{{currModalStatus.downtime | secondstime}}</td>
+            <td>{{currModalStatus.check_status}}</td>
+            <td>{{currModalStatus.chkfail}}</td>
+            <td>{{currModalStatus.hanafail }}</td>
+          </tr>
+          </tbody>
+        </table>
 
-                    </tr>
-                    </tbody>
-
-                </table>
-                <h3>HTTP </h3>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>HTTP request last second</th>
-                        <th>Max request per second observed</th>
-                        <th>Total number of HTTP requests received</th>
-
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr>
-
-                        <td>{{currModalStatus.req_rate}}</td>
-                        <td>{{currModalStatus.req_rate_max }}</td>
-                        <td>{{currModalStatus.req_tot }}</td>
-
-                    </tr>
-                    </tbody>
-
-                </table>
-
-                <h3>HTTP response status codes</h3>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>1xx</th>
-                        <th>2xx</th>
-                        <th>3xx</th>
-                        <th>4xx</th>
-                        <th>5xx</th>
-                        <th>other</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr>
-
-                        <td>{{currModalStatus.hrsp_1xx}}</td>
-                        <td>{{currModalStatus.hrsp_2xx}}</td>
-                        <td>{{currModalStatus.hrsp_3xx}}</td>
-                        <td>{{currModalStatus.hrsp_4xx}}</td>
-                        <td>{{currModalStatus.hrsp_5xx}}</td>
-                        <td>{{currModalStatus.hrsp_other}}</td>
-                    </tr>
-                    </tbody>
-
-                </table>
-                Request errors : {{currModalStatus.ereq}}
-
-
-
-
-                <h3>Server</h3>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Last change</th>
-                        <th>Total downtime</th>
-                        <th>Check status (layer)</th>
-                        <th>Number of failed checks</th>
-                        <th>Failed checks details</th>
-
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr>
-                        <td>{{currModalStatus.status}}</td>
-                        <td>{{currModalStatus.lastchg | secondstime}}</td>
-                        <td>{{currModalStatus.downtime | secondstime}}</td>
-                        <td>{{currModalStatus.check_status}}</td>
-                        <td>{{currModalStatus.chkfail}}</td>
-                        <td>{{currModalStatus.hanafail }}</td>
-
-                    </tr>
-                    </tbody>
-
-                </table>
-
-
-                <h3>Traffic</h3>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Bytes in</th>
-                        <th>Bytes out</th>
-
-
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr>
-                        <td>{{currModalStatus.bin | bytes}}</td>
-                        <td>{{currModalStatus.bout | bytes}} s</td>
-
-
-                    </tr>
-                    </tbody>
-
-                </table>
-
-
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-            </div>
-        </div>
+        <h3>Traffic</h3>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Bytes in</th>
+            <th>Bytes out</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{currModalStatus.bin | bytes}}</td>
+            <td>{{currModalStatus.bout | bytes}} s</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+      </div>
     </div>
+  </div>
 </div>
-

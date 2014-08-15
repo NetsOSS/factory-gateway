@@ -1,2 +1,0 @@
-|FunctionalTests.AllTests.BootstrapTest||15:19:19 fr, jun 13, 2014|
-|AvtaleGiroFunctionalTests.AllTests.BootstrapTest||11:41:06 fr, aug 10, 2012|

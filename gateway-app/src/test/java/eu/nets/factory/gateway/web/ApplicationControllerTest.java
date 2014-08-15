@@ -2,7 +2,10 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.CustomAssertions;
 import eu.nets.factory.gateway.GatewayException;
-import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationGroupRepository;
+import eu.nets.factory.gateway.model.StickySession;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -89,12 +90,14 @@ public class ApplicationControllerTest {
         try {
             applicationController.findEntityById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationController.findEntityById(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -105,12 +108,14 @@ public class ApplicationControllerTest {
         try {
             applicationController.findById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationController.findById(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -133,7 +138,8 @@ public class ApplicationControllerTest {
         try { // appModel == null
             applicationController.create(null);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -145,25 +151,29 @@ public class ApplicationControllerTest {
             appModel.name = "Alpha";
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is null
             appModel.name = null;
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is blank
             appModel.name = "";
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name contains a whitespace
             appModel.name = "as d";
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -175,19 +185,22 @@ public class ApplicationControllerTest {
             appModel.publicUrl = null;
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //publicUrl is blank
             appModel.publicUrl = "";
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //publicUrl does not start with '/'
             appModel.publicUrl = "asd";
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
 
     }
@@ -201,19 +214,22 @@ public class ApplicationControllerTest {
             appModel.checkPath = null;
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //checkPath is blank
             appModel.checkPath = "";
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //checkPath does not start with '/'
             appModel.checkPath = "asd";
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
 
     }
@@ -227,13 +243,15 @@ public class ApplicationControllerTest {
             appModel.applicationGroupId = -1L;
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //applicationGroup id is null
             appModel.applicationGroupId = null;
             applicationController.create(appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -252,12 +270,14 @@ public class ApplicationControllerTest {
         try {
             applicationController.remove(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationController.remove(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -281,24 +301,28 @@ public class ApplicationControllerTest {
         try { //model is null
             applicationController.update(appModel.getId(), null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //id is null
             appModel.id = null;
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //invalid id
             appModel.id = -1L;
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //id mismatch
             applicationController.update(applicationController.search("Kamino").get(0).getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -312,25 +336,29 @@ public class ApplicationControllerTest {
             appModel.name = "Kamino";
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is null
             appModel.name = null;
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is blank
             appModel.name = "";
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name contains a whitespace
             appModel.name = "as d";
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -341,13 +369,15 @@ public class ApplicationControllerTest {
             appModel.publicUrl = "";
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //publicUrl does not start with '/'
             appModel.publicUrl = "asd";
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -359,13 +389,15 @@ public class ApplicationControllerTest {
             applicationController.update(appModel.getId(), appModel);
             //boolean match = Pattern.matches("^/\\S*$", appModel.getCheckPath());
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //checkPath does not start with '/'
             appModel.checkPath = "asd";
             applicationController.update(appModel.getId(), appModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -376,12 +408,14 @@ public class ApplicationControllerTest {
         try {
             applicationController.getApplicationGroup(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationController.getApplicationGroup(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -391,12 +425,14 @@ public class ApplicationControllerTest {
         try {
             applicationController.getLoadBalancers(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationController.getLoadBalancers(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test

@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.service;
 
+import java.util.Properties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -7,13 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import java.util.Properties;
-
 @Configuration
 @ComponentScan(basePackageClasses = MailConfig.class)
 public class MailConfig {
 
-    @Value("${email.host:localhost}" )
+    @Value("${email.host:localhost}")
     private String host;
 
     @Value("${email.port:25}")

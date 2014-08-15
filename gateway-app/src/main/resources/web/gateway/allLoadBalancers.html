@@ -10,7 +10,7 @@
   </h3>
 
   <table class="table">
-    <thread>
+    <thead>
       <tr>
         <th>Proxy Name</th>
         <th>Service Name</th>
@@ -23,7 +23,7 @@
         <th>Status</th>
         <th>{{lb.name}}</th>
       </tr>
-    </thread>
+    </thead>
     <tbody>
     <tr ng-repeat="data in lbStatus"
         ng-class="{OPEN:'info', UP:'success', MAINT:'warning', DOWN:'danger','':'active'}[data.data.status]"

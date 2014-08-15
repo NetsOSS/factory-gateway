@@ -1,3 +1,0 @@
-!include -seamless SearchFunctionalTests
-----
-!contents -R -g -p -f -h

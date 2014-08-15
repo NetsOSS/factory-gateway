@@ -1,12 +1,17 @@
 package eu.nets.factory.gateway.model;
 
-import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -35,21 +40,37 @@ public class ApplicationGroup extends AbstractEntity {
         this.port = port;
     }
 
-    public ApplicationGroup(){ }
+    public ApplicationGroup() {
+    }
 
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
 
-    public int getPort() { return port; }
-    public void setPort(int port) { this.port = port; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public List<Application> getApplications() { return applications; }
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
+
     public void addApplication(Application application) {
         applications.add(application);
     }
 
-    public void removeApplication(Application application) { this.applications.remove(application); }
+    public void removeApplication(Application application) {
+        this.applications.remove(application);
+    }
 
     public int applicationCount() {
         return applications.size();

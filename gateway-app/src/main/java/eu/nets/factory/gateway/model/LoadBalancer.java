@@ -1,22 +1,26 @@
 package eu.nets.factory.gateway.model;
 
-import org.hibernate.annotations.Check;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.List;
+import org.hibernate.annotations.Check;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = "name"),
         @UniqueConstraint(columnNames = {"host", "installationPath"}),
         @UniqueConstraint(columnNames = {"host", "publicPort"})})
-public class LoadBalancer extends AbstractEntity{
+public class LoadBalancer extends AbstractEntity {
 
     public static final int STATS_PORT_MIN = 65000;
     public static final int STATS_PORT_MAX = 65299;
@@ -78,12 +82,14 @@ public class LoadBalancer extends AbstractEntity{
         this.applications = new ArrayList<>();
     }
 
-    public LoadBalancer() { }
+    public LoadBalancer() {
+    }
 
 
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -91,6 +97,7 @@ public class LoadBalancer extends AbstractEntity{
     public String getHost() {
         return host;
     }
+
     public void setHost(String host) {
         this.host = host;
     }
@@ -98,6 +105,7 @@ public class LoadBalancer extends AbstractEntity{
     public String getInstallationPath() {
         return installationPath;
     }
+
     public void setInstallationPath(String installationPath) {
         this.installationPath = installationPath;
     }
@@ -105,16 +113,23 @@ public class LoadBalancer extends AbstractEntity{
     public String getSshKey() {
         return sshKey;
     }
+
     public void setSshKey(String sshKey) {
         this.sshKey = sshKey;
     }
 
-    public String getUserName() { return userName; }
-    public void setUserName(String userName) { this.userName = userName; }
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public int getStatsPort() {
         return publicPort;
     }
+
     public void setStatsPort(int statsPort) {
         this.publicPort = statsPort;
     }
@@ -122,7 +137,11 @@ public class LoadBalancer extends AbstractEntity{
     public List<Application> getApplications() {
         return applications;
     }
-    public void addApplication(Application application) { this.applications.add(application); }
+
+    public void addApplication(Application application) {
+        this.applications.add(application);
+    }
+
     public void removeApplication(Application application) {
         this.applications.remove(application);
     }
@@ -130,6 +149,7 @@ public class LoadBalancer extends AbstractEntity{
     public int getRetries() {
         return retries;
     }
+
     public void setRetries(int retries) {
         this.retries = retries;
     }
@@ -137,6 +157,7 @@ public class LoadBalancer extends AbstractEntity{
     public int getClientTimeout() {
         return clientTimeout;
     }
+
     public void setClientTimeout(int clientTimeout) {
         this.clientTimeout = clientTimeout;
     }
@@ -144,6 +165,7 @@ public class LoadBalancer extends AbstractEntity{
     public int getServerTimeout() {
         return serverTimeout;
     }
+
     public void setServerTimeout(int serverTimeout) {
         this.serverTimeout = serverTimeout;
     }
@@ -151,6 +173,7 @@ public class LoadBalancer extends AbstractEntity{
     public int getConnectTimeout() {
         return connectTimeout;
     }
+
     public void setConnectTimeout(int connectTimeout) {
         this.connectTimeout = connectTimeout;
     }
@@ -158,6 +181,7 @@ public class LoadBalancer extends AbstractEntity{
     public int getCheckTimeout() {
         return checkTimeout;
     }
+
     public void setCheckTimeout(int checkTimeout) {
         this.checkTimeout = checkTimeout;
     }

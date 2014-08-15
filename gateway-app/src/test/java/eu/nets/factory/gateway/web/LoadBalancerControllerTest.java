@@ -14,10 +14,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={WebConfig.class})
+@ContextConfiguration(classes = {WebConfig.class})
 @TransactionConfiguration(defaultRollback = true)
 @WebAppConfiguration
 @ActiveProfiles("unitTest")
@@ -32,6 +33,7 @@ public class LoadBalancerControllerTest {
 
     @Autowired
     private InitTestClass initTestClass;
+
     @Before
     public void Before() {
         initTestClass.init();
@@ -57,12 +59,14 @@ public class LoadBalancerControllerTest {
         try {
             loadBalancerController.findEntityById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             loadBalancerController.findEntityById(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -73,12 +77,14 @@ public class LoadBalancerControllerTest {
         try {
             loadBalancerController.findById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             loadBalancerController.findById(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
 
@@ -113,25 +119,29 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.name = "Knut";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is null
             loadBalancerModel.name = null;
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is blank
             loadBalancerModel.name = "";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name contains a whitespace
             loadBalancerModel.name = "as d";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -143,13 +153,15 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.host = null;
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //host is blank
             loadBalancerModel.host = "";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -161,31 +173,36 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.installationPath = null;
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //installationPath is blank
             loadBalancerModel.installationPath = "";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //installationPath does not start with '/'
             loadBalancerModel.installationPath = "asd";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //installationPath does not start with '/[a-zA-Z]'
             loadBalancerModel.installationPath = "/3";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //installationPath contains whitespace
             loadBalancerModel.installationPath = "/as d";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -197,13 +214,15 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.sshKey = null;
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //sshKey is blank
             loadBalancerModel.sshKey = "";
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -213,7 +232,8 @@ public class LoadBalancerControllerTest {
         try {
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -224,7 +244,8 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.clientTimeout = 1;
             loadBalancerController.create(loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -242,12 +263,14 @@ public class LoadBalancerControllerTest {
         try {
             loadBalancerController.remove(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             loadBalancerController.remove(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -271,24 +294,28 @@ public class LoadBalancerControllerTest {
         try {
             loadBalancerController.update(loadBalancerModel.getId(), null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //id is null
             loadBalancerModel.id = null;
             loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //invalid id
             loadBalancerModel.id = -1L;
             loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //id mismatch
             loadBalancerController.update(loadBalancerController.search("Per").get(0).getId(), loadBalancerModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -302,25 +329,29 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.name = "Knut";
             loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is null
             loadBalancerModel.name = null;
             loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is blank
             loadBalancerModel.name = "";
             loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name contains a whitespace
             loadBalancerModel.name = "as d";
             loadBalancerController.update(loadBalancerModel.getId(), loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -331,13 +362,15 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.host = null;
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //host is blank
             loadBalancerModel.host = "";
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -348,31 +381,36 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.installationPath = null;
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //installationPath is blank
             loadBalancerModel.installationPath = "";
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //installationPath does not start with '/'
             loadBalancerModel.installationPath = "asd";
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //installationPath does not start with '/[a-zA-Z]'
             loadBalancerModel.installationPath = "/3";
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //installationPath contains whitespace
             loadBalancerModel.installationPath = "/as d";
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test()
@@ -383,13 +421,15 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.sshKey = null;
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //sshKey is blank
             loadBalancerModel.sshKey = "";
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -405,7 +445,7 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.installationPath = "instPathTwo";
             loadBalancerController.update(loadBalancerModel.id, loadBalancerModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
+        } catch (GatewayException ignore) {
         }
     }
 
@@ -432,7 +472,8 @@ public class LoadBalancerControllerTest {
             loadBalancerModel.clientTimeout = 1;
             loadBalancerController.update(loadBalancer.getId(), loadBalancerModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -445,27 +486,32 @@ public class LoadBalancerControllerTest {
         try { //application is already linked to loadBalancer
             loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, applicationController.search("Kamino").get(0).id);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //loadBalancer id is null
             loadBalancerController.addApplication(null, applicationController.search("Kamino").get(0).id);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //loadBalancer id is invalid
             loadBalancerController.addApplication(-1L, applicationController.search("Kamino").get(0).id);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //application id is null
             loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //application id is invalid
             loadBalancerController.addApplication(loadBalancerController.search("Hans").get(0).id, -1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -476,12 +522,14 @@ public class LoadBalancerControllerTest {
         try { //id is null
             loadBalancerController.getApplications(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //invalid id
             loadBalancerController.getApplications(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -496,21 +544,25 @@ public class LoadBalancerControllerTest {
         try { //loadBalancer id is null
             loadBalancerController.removeApplicationFromLoadbalancer(null, applicationController.search("Grandiosa").get(0).id);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //invalid loadBalancer id
             loadBalancerController.removeApplicationFromLoadbalancer(-1L, applicationController.search("Grandiosa").get(0).id);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //application id is null
             loadBalancerController.removeApplicationFromLoadbalancer(loadBalancerController.search("Knut").get(0).id, null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //invalid application id
             loadBalancerController.removeApplicationFromLoadbalancer(loadBalancerController.search("Knut").get(0).id, -1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 }

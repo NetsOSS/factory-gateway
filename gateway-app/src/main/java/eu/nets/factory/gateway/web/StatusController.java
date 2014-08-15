@@ -1,8 +1,19 @@
 package eu.nets.factory.gateway.web;
 
-import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationInstance;
+import eu.nets.factory.gateway.model.HaProxyState;
+import eu.nets.factory.gateway.model.LoadBalancer;
+import eu.nets.factory.gateway.model.LoadBalancerRepository;
 import eu.nets.factory.gateway.service.EmailService;
 import eu.nets.factory.gateway.service.StatusService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -13,15 +24,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -72,7 +79,7 @@ public class StatusController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/data/applications/{id}/server-status", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<Long,StatusService.BackendStatus> getServerStatusForApplication(@PathVariable Long id) {
+    public Map<Long, StatusService.BackendStatus> getServerStatusForApplication(@PathVariable Long id) {
         Application application = applicationController.findEntityById(id);
 
         return statusService.getStatusForApplication(application);
@@ -120,7 +127,7 @@ public class StatusController {
     @ResponseBody
     public StatusService.Status getStatusForLoadbalancer2(@PathVariable Long id) {
         loadBalancerController.findEntityById(id);
-        return  statusService.getStatusForLoadBalancer(id);
+        return statusService.getStatusForLoadBalancer(id);
     }
 
     //TODO: remove method - this method always returns an empty HashMap
@@ -150,19 +157,19 @@ public class StatusController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/data/status/checkStatusAPI/{lbId}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public StatusChange changeStatusAPI(HttpServletRequest request,HttpServletResponse response, @PathVariable Long lbId, @RequestBody StatusChange statusChange) {
+    public StatusChange changeStatusAPI(HttpServletRequest request, HttpServletResponse response, @PathVariable Long lbId, @RequestBody StatusChange statusChange) {
         log.info("StatusController.checkStatusAPI, lbid={}, status= {}", lbId, statusChange);
         LoadBalancer loadBalancer = loadBalancerController.findEntityById(lbId); //loadBalancerRepository.findOne(lbId);
 
-        String statsPage = "http://"+loadBalancer.getHost()+":"+(loadBalancer.getStatsPort())+"/proxy-stats";
+        String statsPage = "http://" + loadBalancer.getHost() + ":" + (loadBalancer.getStatsPort()) + "/proxy-stats";
         try {
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost(statsPage);
 
             List<NameValuePair> params = new ArrayList<NameValuePair>(3);
             params.add(new BasicNameValuePair("s", statusChange.s));
-            params.add(new BasicNameValuePair("action",statusChange.action));
-            params.add(new BasicNameValuePair("b","#"+statusChange.b));
+            params.add(new BasicNameValuePair("action", statusChange.action));
+            params.add(new BasicNameValuePair("b", "#" + statusChange.b));
             httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
             //Execute and get the response.
@@ -176,13 +183,13 @@ public class StatusController {
 
         //Saving state
         String name = statusChange.s;
-        String idStr = name.substring(name.lastIndexOf("_")+1);
-        try{
+        String idStr = name.substring(name.lastIndexOf("_") + 1);
+        try {
             Long id = Long.parseLong(idStr);
             ApplicationInstance applicationInstance = applicationInstanceController.findEntityById(id);//applicationInstanceRepository.findOne(id);
             HaProxyState haProxyState = HaProxyState.valueOf(statusChange.action.toUpperCase());
             applicationInstance.setHaProxyStateValue(haProxyState);
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
         return statusChange;

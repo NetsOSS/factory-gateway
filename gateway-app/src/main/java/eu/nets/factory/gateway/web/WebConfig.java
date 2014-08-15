@@ -1,13 +1,12 @@
 package eu.nets.factory.gateway.web;
 
-import java.nio.charset.Charset;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.nets.factory.gateway.model.GatewaySettings;
 import eu.nets.factory.gateway.service.MailConfig;
 import eu.nets.factory.gateway.service.ServiceConfig;
 import eu.nets.factory.gateway.web.jackson.GatewayObjectMapper;
+import java.nio.charset.Charset;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

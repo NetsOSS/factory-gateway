@@ -9,15 +9,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("unitTest")
-@ContextConfiguration(classes={ModelConfig.class})
+@ContextConfiguration(classes = {ModelConfig.class})
 @TransactionConfiguration(defaultRollback = true)
 public class HibernateApplicationGroupRepositoryTest {
-
 
 
     @Autowired

@@ -10,14 +10,15 @@
         <li><a href="#/lb/{{lb}}">{{lb}}</a></li>
       </ul>
     </li>
-    <ul ng-show="!rawStatusForOneInst">No loadbalancers associated with this application instance</ul>
-    <button class="btn btn-info" data-toggle="modal" data-target="#myModal">
-      <span class="glyphicon glyphicon-pencil"></span> Edit
-    </button>
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAppInstWarningModal">
-      <span class="glyphicon glyphicon-trash"></span> Delete
-    </button>
-
+    <li>
+      <ul ng-show="!rawStatusForOneInst">No loadbalancers associated with this application instance</ul>
+      <button class="btn btn-info" data-toggle="modal" data-target="#myModal">
+        <span class="glyphicon glyphicon-pencil"></span> Edit
+      </button>
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAppInstWarningModal">
+        <span class="glyphicon glyphicon-trash"></span> Delete
+      </button>
+    </li>
   </ul>
 </div>
 
@@ -42,8 +43,10 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-            class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
         <h4 class="modal-title" id="myModalLabel">Update</h4>
       </div>
       <div class="modal-body">
@@ -80,11 +83,14 @@
 
 <!-- Tabs for showing status -->
 <!-- TODO: remove tabs or fill in data -->
-<div >
-  <h3>Status: <span class="text-success" ng-show="rawStatusForOneInst">HAproxy is running
-            <span class="glyphicon glyphicon-thumbs-up"></span></span>
-            <span class="text-danger" ng-hide="rawStatusForOneInst">HAproxy is not running
-            <span class="glyphicon glyphicon-thumbs-down"></span></span>
+<div>
+  <h3>Status:
+    <span class="text-success" ng-show="rawStatusForOneInst">
+      HAproxy is running <span class="glyphicon glyphicon-thumbs-up"></span>
+    </span>
+    <span class="text-danger" ng-hide="rawStatusForOneInst">
+      HAproxy is not running <span class="glyphicon glyphicon-thumbs-down"></span>
+    </span>
   </h3>
 </div>
 

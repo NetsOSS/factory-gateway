@@ -12,7 +12,6 @@ import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.reflections.Reflections;
 import org.slf4j.Logger;

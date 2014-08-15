@@ -1,5 +1,7 @@
 package eu.nets.factory.gateway.model;
 
+import com.jolbox.bonecp.BoneCPDataSource;
+import eu.nets.factory.gateway.GatewayException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -8,9 +10,6 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.validation.Validator;
-
-import com.jolbox.bonecp.BoneCPDataSource;
-import eu.nets.factory.gateway.GatewayException;
 import org.apache.commons.lang.StringUtils;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
@@ -103,7 +102,7 @@ public class ModelConfig {
             log.info("Running migrations");
             Flyway flyway = new Flyway();
 
-            if(settings.getDatabaseUrl().startsWith("jdbc:oracle"))
+            if (settings.getDatabaseUrl().startsWith("jdbc:oracle"))
                 flyway.setLocations("db/migration_oracle");
             else if (settings.getDatabaseUrl().startsWith("jdbc:h2:file"))
                 flyway.setLocations("db/migration_h2");
@@ -140,7 +139,7 @@ public class ModelConfig {
         if (dialect.equals("")) {
             dialect = guessDialect(dataSource);
         }
-        if(settings.getDatabaseUrl().startsWith("jdbc:h2:mem")) {
+        if (settings.getDatabaseUrl().startsWith("jdbc:h2:mem")) {
             hbm2ddl = "create";
         }
         x.setJpaPropertyMap(createJpaMap(hbm2ddl, showSql, dialect));
@@ -187,7 +186,6 @@ public class ModelConfig {
 
         return map;
     }
-
 
     @Bean
     public SessionFactory sessionFactory(LocalContainerEntityManagerFactoryBean entityManagerFactory) {

@@ -1,8 +1,0 @@
-!|fitnesse.fixtures.SystemPropertySetterFixture|
-|key|value|
-|datasource.username|${DBUser}|
-|datasource.password|${DBPassword}|
-|datasource.url|${DBUrl}|
-
-
-|init test|

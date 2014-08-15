@@ -1,7 +1,6 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.model.ApplicationGroup;
-
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -14,7 +13,8 @@ public class AppGroupModel {
     public int port;
     public List<AppModel> applications;
 
-    public AppGroupModel() { }
+    public AppGroupModel() {
+    }
 
     public AppGroupModel(ApplicationGroup applicationGroup) {
         this(applicationGroup, false);
@@ -22,7 +22,7 @@ public class AppGroupModel {
 
     private AppGroupModel(ApplicationGroup applicationGroup, Boolean summary) {
         this(applicationGroup.getId(), applicationGroup.getName(), applicationGroup.getPort());
-        if(!summary) {
+        if (!summary) {
             this.applications = applicationGroup.getApplications().stream().map(AppModel::summary).collect(toList());
         }
     }
@@ -38,11 +38,19 @@ public class AppGroupModel {
     }
 
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public int getPort() { return port; }
+    public int getPort() {
+        return port;
+    }
 
-    public List<AppModel> getApplications() { return applications; }
+    public List<AppModel> getApplications() {
+        return applications;
+    }
 }

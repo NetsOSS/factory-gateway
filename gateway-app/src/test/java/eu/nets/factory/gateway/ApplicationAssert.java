@@ -4,21 +4,22 @@ import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationGroup;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
-import org.fest.assertions.GenericAssert;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.fest.assertions.GenericAssert;
 
 import static org.fest.assertions.Formatting.format;
 
 
 public class ApplicationAssert extends GenericAssert<ApplicationAssert, Application> {
-    protected ApplicationAssert(Application actual) { super(ApplicationAssert.class, actual); }
+    protected ApplicationAssert(Application actual) {
+        super(ApplicationAssert.class, actual);
+    }
 
     public ApplicationAssert hasName(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
-        if (! actual.getName().equals(expected)) failIfNotEquals(actual.getName(), expected);
+        if (!actual.getName().equals(expected)) failIfNotEquals(actual.getName(), expected);
 
         return this;
     }
@@ -34,7 +35,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
     public ApplicationAssert hasPublicUrl(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
-        if (! actual.getPublicUrl().equals(expected)) failIfNotEquals(actual.getPublicUrl(), expected);
+        if (!actual.getPublicUrl().equals(expected)) failIfNotEquals(actual.getPublicUrl(), expected);
 
         return this;
     }
@@ -50,7 +51,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
     public ApplicationAssert hasEmails(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
-        if (! actual.getEmails().equals(expected)) failIfNotEquals(actual.getEmails(), expected);
+        if (!actual.getEmails().equals(expected)) failIfNotEquals(actual.getEmails(), expected);
 
         return this;
     }
@@ -66,7 +67,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
     public ApplicationAssert hasCheckPath(String expected) {
         if (actual == null && expected == null) return this;
         isNotNull();
-        if (! actual.getCheckPath().equals(expected)) failIfNotEquals(actual.getCheckPath(), expected);
+        if (!actual.getCheckPath().equals(expected)) failIfNotEquals(actual.getCheckPath(), expected);
 
         return this;
     }
@@ -84,8 +85,8 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getApplicationInstances());
         validateIsNotNull(expected);
 
-        for(ApplicationInstance applicationInstance : actual.getApplicationInstances()) {
-            if(applicationInstance == expected) {
+        for (ApplicationInstance applicationInstance : actual.getApplicationInstances()) {
+            if (applicationInstance == expected) {
                 return this;
             }
         }
@@ -99,8 +100,8 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getApplicationInstances());
         validateIsNotNull(expected);
 
-        for(ApplicationInstance applicationInstance : actual.getApplicationInstances()) {
-            if(applicationInstance.getName().equals(expected)) {
+        for (ApplicationInstance applicationInstance : actual.getApplicationInstances()) {
+            if (applicationInstance.getName().equals(expected)) {
                 return this;
             }
         }
@@ -114,8 +115,8 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getApplicationInstances());
         validateIsNotNull(x);
 
-        for(ApplicationInstance applicationInstance : actual.getApplicationInstances()) {
-            if(applicationInstance == x) {
+        for (ApplicationInstance applicationInstance : actual.getApplicationInstances()) {
+            if (applicationInstance == x) {
                 failIfContains(actual.getApplicationInstances(), x);
             }
         }
@@ -128,8 +129,8 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getApplicationInstances());
         validateIsNotNull(x);
 
-        for(ApplicationInstance applicationInstance : actual.getApplicationInstances()) {
-            if(applicationInstance.getName().equals(x)) {
+        for (ApplicationInstance applicationInstance : actual.getApplicationInstances()) {
+            if (applicationInstance.getName().equals(x)) {
                 failIfContains(actual.getApplicationInstances(), x);
             }
         }
@@ -145,7 +146,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
 
         replaceDefaultErrorMessagesWith(format("sequence:<%s>  is not equal to the sequence:<%s>", actual.getApplicationInstances(), sequence));
 
-        for(ApplicationInstance applicationInstance : sequence) {
+        for (ApplicationInstance applicationInstance : sequence) {
             hasApplicationInstance(applicationInstance);
         }
 
@@ -159,7 +160,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
 
         replaceDefaultErrorMessagesWith(format("sequence:<%s>  is not equal to the sequence:<%s>", actual.getApplicationInstances(), sequence));
 
-        for(String name : sequence) {
+        for (String name : sequence) {
             hasApplicationInstance(name);
         }
 
@@ -171,9 +172,10 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
         validateIsNotNull(sequence);
-        if(sequence.length != actual.getApplicationInstances().size()) failIfNotEquals(actual.getApplicationInstances(), list(sequence));
+        if (sequence.length != actual.getApplicationInstances().size())
+            failIfNotEquals(actual.getApplicationInstances(), list(sequence));
 
-        for(ApplicationInstance applicationInstance : sequence) {
+        for (ApplicationInstance applicationInstance : sequence) {
             hasApplicationInstance(applicationInstance);
         }
 
@@ -184,9 +186,10 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         isNotNull();
         validateIsNotNull(actual.getApplicationInstances());
         validateIsNotNull(sequence);
-        if(sequence.length != actual.getApplicationInstances().size()) failIfNotEquals(actual.getApplicationInstances(), list(sequence));
+        if (sequence.length != actual.getApplicationInstances().size())
+            failIfNotEquals(actual.getApplicationInstances(), list(sequence));
 
-        for(String name : sequence) {
+        for (String name : sequence) {
             hasApplicationInstance(name);
         }
 
@@ -198,7 +201,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getApplicationInstances());
         validateIsNotNull(sequence);
 
-        for(ApplicationInstance applicationInstance : sequence) {
+        for (ApplicationInstance applicationInstance : sequence) {
             excludesApplicationInstance(applicationInstance);
         }
 
@@ -210,7 +213,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getApplicationInstances());
         validateIsNotNull(sequence);
 
-        for(String name : sequence) {
+        for (String name : sequence) {
             excludesApplicationInstance(name);
         }
 
@@ -242,8 +245,8 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getLoadBalancers());
         validateIsNotNull(expected);
 
-        for(LoadBalancer loadBalancer : actual.getLoadBalancers()) {
-            if(loadBalancer == expected) {
+        for (LoadBalancer loadBalancer : actual.getLoadBalancers()) {
+            if (loadBalancer == expected) {
                 return this;
             }
         }
@@ -257,8 +260,8 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getLoadBalancers());
         validateIsNotNull(expected);
 
-        for(LoadBalancer loadBalancer : actual.getLoadBalancers()) {
-            if(loadBalancer.getName().equals(expected)) {
+        for (LoadBalancer loadBalancer : actual.getLoadBalancers()) {
+            if (loadBalancer.getName().equals(expected)) {
                 return this;
             }
         }
@@ -272,8 +275,8 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getLoadBalancers());
         validateIsNotNull(x);
 
-        for(LoadBalancer loadBalancer : actual.getLoadBalancers()) {
-            if(loadBalancer == x) {
+        for (LoadBalancer loadBalancer : actual.getLoadBalancers()) {
+            if (loadBalancer == x) {
                 failIfContains(actual.getLoadBalancers(), x);
             }
         }
@@ -286,8 +289,8 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getLoadBalancers());
         validateIsNotNull(x);
 
-        for(LoadBalancer loadBalancer : actual.getLoadBalancers()) {
-            if(loadBalancer.getName().equals(x)) {
+        for (LoadBalancer loadBalancer : actual.getLoadBalancers()) {
+            if (loadBalancer.getName().equals(x)) {
                 failIfContains(actual.getLoadBalancers(), x);
             }
         }
@@ -303,7 +306,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
 
         replaceDefaultErrorMessagesWith(format("sequence:<%s>  is not equal to the sequence:<%s>", actual, sequence));
 
-        for(LoadBalancer loadBalancer : sequence) {
+        for (LoadBalancer loadBalancer : sequence) {
             hasLoadBalancer(loadBalancer);
         }
 
@@ -317,7 +320,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
 
         replaceDefaultErrorMessagesWith(format("sequence:<%s>  is not equal to the sequence:<%s>", actual.getName(), sequence));
 
-        for(String name : sequence) {
+        for (String name : sequence) {
             hasLoadBalancer(name);
         }
 
@@ -329,9 +332,9 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
         validateIsNotNull(sequence);
-        if(sequence.length != actual.getLoadBalancers().size()) failIfNotEquals(actual.getLoadBalancers(), sequence);
+        if (sequence.length != actual.getLoadBalancers().size()) failIfNotEquals(actual.getLoadBalancers(), sequence);
 
-        for(LoadBalancer loadBalancer : sequence) {
+        for (LoadBalancer loadBalancer : sequence) {
             hasLoadBalancer(loadBalancer);
         }
 
@@ -342,9 +345,10 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         isNotNull();
         validateIsNotNull(actual.getLoadBalancers());
         validateIsNotNull(sequence);
-        if(sequence.length != actual.getLoadBalancers().size()) failIfNotEquals(actual.getLoadBalancers(), list(sequence));
+        if (sequence.length != actual.getLoadBalancers().size())
+            failIfNotEquals(actual.getLoadBalancers(), list(sequence));
 
-        for(String name : sequence) {
+        for (String name : sequence) {
             hasLoadBalancer(name);
         }
 
@@ -356,7 +360,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getLoadBalancers());
         validateIsNotNull(sequence);
 
-        for(LoadBalancer loadBalancer : sequence) {
+        for (LoadBalancer loadBalancer : sequence) {
             excludesLoadBalancer(loadBalancer);
         }
 
@@ -368,7 +372,7 @@ public class ApplicationAssert extends GenericAssert<ApplicationAssert, Applicat
         validateIsNotNull(actual.getLoadBalancers());
         validateIsNotNull(sequence);
 
-        for(String name : sequence) {
+        for (String name : sequence) {
             excludesLoadBalancer(name);
         }
 

@@ -20,7 +20,9 @@ public class AppInstModel {
     public AppInstModel() {
     }
 
-    public AppInstModel(ApplicationInstance applicationInstance) { this(applicationInstance, true); }
+    public AppInstModel(ApplicationInstance applicationInstance) {
+        this(applicationInstance, true);
+    }
 
     private AppInstModel(ApplicationInstance applicationInstance, Boolean summary) {
 
@@ -28,14 +30,15 @@ public class AppInstModel {
 
         haProxyState = applicationInstance.getHaProxyState();
         weight = applicationInstance.getWeight();
-       backup=applicationInstance.isBackup();
-        if (!summary) { }
+        backup = applicationInstance.isBackup();
+        if (!summary) {
+        }
     }
 
     public AppInstModel(Long id, String name, String server, Long applicationId) {
         this.id = id;
         this.name = name;
-        this.server=server;
+        this.server = server;
         this.applicationId = applicationId;
     }
 
@@ -62,16 +65,23 @@ public class AppInstModel {
     public String getHaProxyState() {
         return haProxyState.name();
     }
+
     public void setHaProxyState(String state) {
         this.haProxyState = HaProxyState.valueOf(state);
     }
 
-    public int getWeight() { return weight; }
-    public void setWeight(int weight) { this.weight = weight; }
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
 
     public boolean isBackup() {
         return backup;
     }
+
     public void setBackup(boolean isBackup) {
         this.backup = isBackup;
     }

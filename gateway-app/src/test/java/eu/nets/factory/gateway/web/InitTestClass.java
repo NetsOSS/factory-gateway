@@ -52,7 +52,7 @@ public class InitTestClass {
         //Applications
         Application applicationOne = new Application("Kamino", "/kamino", applicationGroupController.findEntityById(groupModelOne.getId()), "mailTwo", "/kamino/v1/ping", "/kamino", 0);
         Application applicationTwo = new Application("Grandiosa", "/grandiosa", applicationGroupController.findEntityById(groupModelTwo.getId()), "mailTwo", "/grandiosa/ping", "/grandiosa", 1);
-        Application applicationThree = new Application("Alpha", "/alpha", applicationGroupController.findEntityById(groupModelTwo.getId()),"mailOne", "/alpha/ping", "/alpha", 2);
+        Application applicationThree = new Application("Alpha", "/alpha", applicationGroupController.findEntityById(groupModelTwo.getId()), "mailOne", "/alpha/ping", "/alpha", 2);
         AppModel appModelOne = new AppModel(applicationOne);
         AppModel appModelTwo = new AppModel(applicationTwo);
         AppModel appModelThree = new AppModel(applicationThree);

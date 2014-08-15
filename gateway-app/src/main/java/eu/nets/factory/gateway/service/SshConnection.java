@@ -1,6 +1,14 @@
 package eu.nets.factory.gateway.service;
 
 import eu.nets.factory.gateway.GatewayException;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 import net.schmizz.sshj.Config;
 import net.schmizz.sshj.DefaultConfig;
 import net.schmizz.sshj.SSHClient;
@@ -9,10 +17,6 @@ import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.userauth.UserAuthException;
 import net.schmizz.sshj.xfer.InMemorySourceFile;
 import org.slf4j.Logger;
-
-import java.io.*;
-import java.net.UnknownHostException;
-import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -53,8 +57,8 @@ public class SshConnection implements Closeable {
         Session session = sshClient.startSession();
         Session.Command cmd = session.exec(command);
 
-        new StreamConsumer("stdout("+command+")", cmd.getInputStream()).start();
-        new StreamConsumer("stderr("+command+")", cmd.getErrorStream()).start();
+        new StreamConsumer("stdout(" + command + ")", cmd.getInputStream()).start();
+        new StreamConsumer("stderr(" + command + ")", cmd.getErrorStream()).start();
 
         cmd.join(timeoutSeconds, TimeUnit.SECONDS);
 
@@ -68,7 +72,7 @@ public class SshConnection implements Closeable {
      * Writes the given fileContents to the given remotePath
      *
      * @param fileContents - The String to write
-     * @param remotePath - Destination path to write to
+     * @param remotePath   - Destination path to write to
      */
     public void writeRemoteFile(final String fileContents, final String remotePath) {
         try (SFTPClient sftpClient = sshClient.newSFTPClient()) {

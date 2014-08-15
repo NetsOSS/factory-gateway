@@ -3,28 +3,33 @@
 
 <form role="form" ng-submit="updateOrCreateLB()" name="lbform" novalidate>
 
-    <div class="form-group">
-        <label for="inLBName">Name</label>
-        <input type="text" ng-model="lb.name" class="form-control" id="inLBName"
-               required
-               placeholder="Enter load balancer name">
-    </div>
-    <div class="form-group">
-        <label for="inLbHost">Host</label>
-        <input type="text" ng-model="lb.host" class="form-control " id="inLbHost"
-               required
-               placeholder="Enter host">
-    </div>
-    <div class="form-group">
-        <label for="inLbPath">Working directory</label>
-        <span class="glyphicon glyphicon-question-sign" title="Absolute path to a directory on the load balancer machine&#013;where this load balancer should put its internally needed files:&#013;Config-file, pid-file and start/stop scripts.&#013;&#013;The path must exist on the load balancer machine."></span>
-        <input type="text" ng-model="lb.installationPath" class="form-control " id="inLbPath" name="lbPath" ng-pattern="/^/[a-zA-Z]+/"
-               required
-               placeholder="Enter absolute path">
-        <span class="bg-danger" ng-show="lbform.lbPath.$error.pattern">This path is not valid! Must start with a / followed by a letter.</span>
-    </div>
+  <div class="form-group">
+    <label for="inLBName">Name</label>
+    <input type="text" ng-model="lb.name" class="form-control" id="inLBName"
+           required
+           placeholder="Enter load balancer name">
+  </div>
+  <div class="form-group">
+    <label for="inLbHost">Host</label>
+    <input type="text" ng-model="lb.host" class="form-control " id="inLbHost"
+           required
+           placeholder="Enter host">
+  </div>
+  <div class="form-group">
+    <label for="inLbPath">Working directory</label>
+    <span class="glyphicon glyphicon-question-sign"
+          title="Absolute path to a directory on the load balancer machine&#013;where this load balancer should put its internally needed files:&#013;Config-file, pid-file and start/stop scripts.&#013;&#013;The path must exist on the load balancer machine."></span>
+    <input type="text" ng-model="lb.installationPath" class="form-control " id="inLbPath" name="lbPath"
+           ng-pattern="/^/[a-zA-Z]+/"
+           required
+           placeholder="Enter absolute path">
+    <span class="bg-danger" ng-show="lbform.lbPath.$error.pattern">
+      This path is not valid! Must start with a / followed by a letter.
+    </span>
+  </div>
 
- <H4>Timeouts</H4>
+  <H4>Timeouts</H4>
+
   <div class="row">
     <div class="col-xs-2 form-group">
       <label for="inLbCheck">Check</label>
@@ -34,9 +39,13 @@
              id="inLbCheck"
              name="check"
              required integer
-             min = "1">
-      <span class="bg-danger" ng-show="lbform.check.$error.integer">This is not valid integer!</span>
-      <span class="bg-danger" ng-show="lbform.check.$error.min">  The value must be larger than 1!</span>
+             min="1">
+      <span class="bg-danger" ng-show="lbform.check.$error.integer">
+        This is not valid integer!
+      </span>
+      <span class="bg-danger" ng-show="lbform.check.$error.min">
+        The value must be larger than 1!
+      </span>
     </div>
     <div class="col-xs-2 form-group">
       <label for="inLbConnect">Connect</label>
@@ -46,9 +55,13 @@
              id="inLbConnect"
              name="connect"
              required integer
-             min = "1">
-      <span class="bg-danger" ng-show="lbform.connect.$error.integer">This is not valid integer!</span>
-      <span class="bg-danger" ng-show="lbform.connect.$error.min">  The value must be larger than 1!</span>
+             min="1">
+      <span class="bg-danger" ng-show="lbform.connect.$error.integer">
+        This is not valid integer!
+      </span>
+      <span class="bg-danger" ng-show="lbform.connect.$error.min">
+        The value must be larger than 1!
+      </span>
     </div>
     <div class="col-xs-2 form-group">
       <label for="inLbServer">Server</label>
@@ -58,11 +71,17 @@
              id="inLbServer"
              name="server"
              required integer
-             min = "1"
-             >
-      <span class="bg-danger" ng-show="lbform.server.$error.integer">This is not valid integer!</span>
-      <span class="bg-danger" ng-show="lbform.server.$error.min">  The value must be larger than 1!</span>
-      <span class="bg-danger" ng-show="!validateServerClient()">Must be equal to client </span>
+             min="1"
+          >
+      <span class="bg-danger" ng-show="lbform.server.$error.integer">
+        This is not valid integer!
+      </span>
+      <span class="bg-danger" ng-show="lbform.server.$error.min">
+        The value must be larger than 1!
+      </span>
+      <span class="bg-danger" ng-show="!validateServerClient()">
+        Must be equal to client
+      </span>
     </div>
     <div class="col-xs-2 form-group">
       <label for="inLbClient">Client</label>
@@ -72,12 +91,18 @@
              id="inLbClient"
              name="client"
              required integer
-             min = "1"
+             min="1"
              disabled
-              title = "Client timeout is equal to server timeout">
-      <span class="bg-danger" ng-show="lbform.client.$error.integer">This is not valid integer!</span>
-      <span class="bg-danger" ng-show="lbform.client.$error.min">  The value must be larger than 1!</span>
-      <span class="bg-danger" ng-show="!validateServerClient()">Must be equal to server </span>
+             title="Client timeout is equal to server timeout">
+      <span class="bg-danger" ng-show="lbform.client.$error.integer">
+        This is not valid integer!
+      </span>
+      <span class="bg-danger" ng-show="lbform.client.$error.min">
+        The value must be larger than 1!
+      </span>
+      <span class="bg-danger" ng-show="!validateServerClient()">
+        Must be equal to server
+      </span>
     </div>
     <div class="col-xs-2 form-group">
       <label for="inLbRetries">Retries</label>
@@ -87,29 +112,37 @@
              id="inLbRetries"
              name="retries"
              required integer
-             min = "1"
-             value = "2">
-      <span class="bg-danger" ng-show="lbform.retries.$error.integer">This is not valid integer!</span>
-      <span class="bg-danger" ng-show="lbform.retries.$error.min">  The value must be larger than 1!</span>
+             min="1"
+             value="2">
+      <span class="bg-danger" ng-show="lbform.retries.$error.integer">
+        This is not valid integer!
+      </span>
+      <span class="bg-danger" ng-show="lbform.retries.$error.min">
+        The value must be larger than 1!
+      </span>
     </div>
   </div>
 
-    <div class="form-group">
-        <label for="inLbSshKey">SSH private key</label>
-        <textarea rows="12" ng-model="lb.sshKey" class="form-control " id="inLbSshKey"
-               required
-               placeholder="Enter SSH key" ></textarea>
-    </div>
+  <div class="form-group">
+    <label for="inLbSshKey">SSH private key</label>
+    <textarea rows="12" ng-model="lb.sshKey" class="form-control " id="inLbSshKey"
+              required
+              placeholder="Enter SSH key"></textarea>
+  </div>
 
-    <div class="form-group">
-        <label for="inLbUserName">Username</label>
-        <input type="text" ng-model="lb.userName" class="form-control " id="inLbUserName"
-               name="username"
-               required
-               placeholder="Enter username">
-    </div>
+  <div class="form-group">
+    <label for="inLbUserName">Username</label>
+    <input type="text" ng-model="lb.userName" class="form-control " id="inLbUserName"
+           name="username"
+           required
+           placeholder="Enter username">
+  </div>
 
   <!-- TODO: close form on update/creation -->
-    <button type="submit" class="btn btn-primary" ng-hide="lb.id"  ng-disabled="lbform.$invalid ">Create</button>
-    <button type="submit" class="btn btn-primary" ng-show="lb.id">Update</button>
+  <button type="submit" class="btn btn-primary" ng-hide="lb.id" ng-disabled="lbform.$invalid ">
+    Create
+  </button>
+  <button type="submit" class="btn btn-primary" ng-show="lb.id">
+    Update
+  </button>
 </form>

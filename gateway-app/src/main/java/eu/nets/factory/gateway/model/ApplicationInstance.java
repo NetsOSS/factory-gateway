@@ -1,12 +1,15 @@
 package eu.nets.factory.gateway.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -34,7 +37,8 @@ public class ApplicationInstance extends AbstractEntity {
     private int haProxyStateValue;
 
     @NotNull
-    @Min(0) //A value of 0 means the server will not participate in load-balancing but will still accept persistent connections. -> the config file does not specify the weight if weight is 0 - haProxys default weight value (1) will be used.
+    @Min(0)
+    //A value of 0 means the server will not participate in load-balancing but will still accept persistent connections. -> the config file does not specify the weight if weight is 0 - haProxys default weight value (1) will be used.
     @Max(256)
     private int weight;
 
@@ -53,42 +57,68 @@ public class ApplicationInstance extends AbstractEntity {
         this.application = application;
         this.haProxyStateValue = HaProxyState.READY.ordinal();
         this.weight = 10;
-        this.backup =false;
+        this.backup = false;
     }
 
-    public ApplicationInstance() { }
+    public ApplicationInstance() {
+    }
 
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getHost() { return host; }
+    public String getHost() {
+        return host;
+    }
+
     public void setHost(String host) {
         this.host = host;
     }
 
-    public int getPort() { return port; }
+    public int getPort() {
+        return port;
+    }
+
     public void setPort(int port) {
         this.port = port;
     }
 
-    public String getPath() { return path; }
+    public String getPath() {
+        return path;
+    }
+
     public void setPath(String path) {
         this.path = path;
     }
 
-    public void setApplication(Application application) { this.application = application; }
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
     public Application getApplication() {
         return application;
     }
 
-    public HaProxyState getHaProxyState() { return HaProxyState.values()[haProxyStateValue]; }
-    public void setHaProxyStateValue(HaProxyState haProxyState) { this.haProxyStateValue = haProxyState.ordinal(); }
+    public HaProxyState getHaProxyState() {
+        return HaProxyState.values()[haProxyStateValue];
+    }
 
-    public int getWeight() { return weight; }
-    public void setWeight(int weight) { this.weight = weight; }
+    public void setHaProxyStateValue(HaProxyState haProxyState) {
+        this.haProxyStateValue = haProxyState.ordinal();
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
 
     public int getHaProxyStateValue() {
         return haProxyStateValue;

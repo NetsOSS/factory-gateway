@@ -9,6 +9,7 @@ public class CustomAssertions extends Assertions {
     public static ApplicationAssert assertThat(Application actual) {
         return new ApplicationAssert(actual);
     }
+
     public static AppModelAssert assertThat(AppModel actual) {
         return new AppModelAssert(actual);
     }

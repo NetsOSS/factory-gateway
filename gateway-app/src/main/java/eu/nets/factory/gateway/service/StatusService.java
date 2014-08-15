@@ -1,15 +1,15 @@
 package eu.nets.factory.gateway.service;
 
 import eu.nets.factory.gateway.GatewayException;
-import eu.nets.factory.gateway.model.*;
-import eu.nets.factory.gateway.web.*;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationGroup;
+import eu.nets.factory.gateway.model.ApplicationInstance;
+import eu.nets.factory.gateway.model.ApplicationRepository;
+import eu.nets.factory.gateway.model.LoadBalancer;
+import eu.nets.factory.gateway.model.LoadBalancerRepository;
+import eu.nets.factory.gateway.web.ApplicationController;
+import eu.nets.factory.gateway.web.ApplicationGroupController;
+import eu.nets.factory.gateway.web.StatusModel;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -18,7 +18,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -55,7 +66,7 @@ public class StatusService {
 
             Status status = storeAsBetterObject2(lb);
 
-            checkForChangesInStatus2(getStatusForLoadBalancer(lb.getId()), status,lb);
+            checkForChangesInStatus2(getStatusForLoadBalancer(lb.getId()), status, lb);
             loadBalancerStatuses.put(lb.getId(), status);
         }
         this.loadBalancerStatuses = loadBalancerStatuses;
@@ -194,12 +205,12 @@ public class StatusService {
             FrontendStatus frontendOld = oldStatus.frontends.get(frontendKey);
             if (frontendOld == null)
                 continue;
-            for(BackendStatus backendOld : frontendOld.backends){
+            for (BackendStatus backendOld : frontendOld.backends) {
                 int index = frontendNew.backends.indexOf(backendOld);
-                if(index==-1)
+                if (index == -1)
                     continue;
                 BackendStatus backendNew = frontendNew.backends.get(index);
-                detectChangesInBackend(backendOld, backendNew,lb);
+                detectChangesInBackend(backendOld, backendNew, lb);
 
             }
         }
@@ -207,12 +218,12 @@ public class StatusService {
     }
 
     private void detectChangesInBackend(BackendStatus oldBackendStatus, BackendStatus newBackendStatus, LoadBalancer lb) {
-        for (ServerStatus serverOld : oldBackendStatus.servers){
+        for (ServerStatus serverOld : oldBackendStatus.servers) {
             int index = newBackendStatus.servers.indexOf(serverOld);
-            if(index==-1)
+            if (index == -1)
                 continue;
             ServerStatus serverNew = newBackendStatus.servers.get(index);
-            if(serverNew.data.isEmpty() || serverOld.data.isEmpty())
+            if (serverNew.data.isEmpty() || serverOld.data.isEmpty())
                 continue;
 
             String oldStatus = serverOld.data.get("status");
@@ -231,7 +242,7 @@ public class StatusService {
                 ApplicationInstance instance = null;
 
                 for (ApplicationInstance applicationInstance : application.getApplicationInstances()) {
-                    if(serverNew.appInstId.equals(applicationInstance.getId()))
+                    if (serverNew.appInstId.equals(applicationInstance.getId()))
                         instance = applicationInstance;
                 }
                 if (instance == null)

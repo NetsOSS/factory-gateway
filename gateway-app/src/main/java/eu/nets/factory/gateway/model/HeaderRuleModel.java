@@ -9,14 +9,17 @@ public class HeaderRuleModel {
         this.name = name;
         this.prefixMatch = prefixMatch;
     }
+
     public HeaderRuleModel() {
 
     }
+
     public HeaderRuleModel(HeaderRule headerRule) {
-        this.name=headerRule.getName();
-        this.prefixMatch=headerRule.getPrefixMatch();
-        this.id=headerRule.getId();
+        this.name = headerRule.getName();
+        this.prefixMatch = headerRule.getPrefixMatch();
+        this.id = headerRule.getId();
     }
+
     public static HeaderRuleModel summary(HeaderRule headerRule) {
         return new HeaderRuleModel(headerRule);
     }

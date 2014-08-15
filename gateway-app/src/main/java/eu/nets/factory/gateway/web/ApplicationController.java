@@ -2,16 +2,27 @@ package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.EntityNotFoundException;
 import eu.nets.factory.gateway.GatewayException;
-import eu.nets.factory.gateway.model.*;
+import eu.nets.factory.gateway.model.Application;
+import eu.nets.factory.gateway.model.ApplicationGroup;
+import eu.nets.factory.gateway.model.ApplicationGroupRepository;
+import eu.nets.factory.gateway.model.ApplicationRepository;
+import eu.nets.factory.gateway.model.HeaderRule;
+import eu.nets.factory.gateway.model.HeaderRuleModel;
+import eu.nets.factory.gateway.model.HeaderRuleRepository;
+import eu.nets.factory.gateway.model.LoadBalancer;
+import eu.nets.factory.gateway.model.StickySession;
 import eu.nets.factory.gateway.service.HaProxyService;
+import java.util.List;
+import java.util.regex.Pattern;
+import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.regex.Pattern;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -232,7 +243,9 @@ public class ApplicationController {
                 found = true;
             }
         }
-        if (!found) { throw new GatewayException("Detected non-valid enum-value for StickySession: " + sticky); }
+        if (!found) {
+            throw new GatewayException("Detected non-valid enum-value for StickySession: " + sticky);
+        }
 
         AppModel appModel = findById(id);
         appModel.setStickySession(sticky);

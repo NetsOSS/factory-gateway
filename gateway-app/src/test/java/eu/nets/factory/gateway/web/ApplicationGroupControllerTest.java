@@ -15,10 +15,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={WebConfig.class})
+@ContextConfiguration(classes = {WebConfig.class})
 @TransactionConfiguration(defaultRollback = true)
 @WebAppConfiguration
 @ActiveProfiles("unitTest")
@@ -39,6 +39,7 @@ public class ApplicationGroupControllerTest {
 
     @Autowired
     private InitTestClass initTestClass;
+
     @Before
     public void Before() {
         initTestClass.init();
@@ -64,12 +65,14 @@ public class ApplicationGroupControllerTest {
         try {
             applicationGroupController.findEntityById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationGroupController.findEntityById(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -80,7 +83,7 @@ public class ApplicationGroupControllerTest {
         try {
             applicationGroupController.findById(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) {
+        } catch (GatewayException ignore) {
         }
     }
 
@@ -103,32 +106,36 @@ public class ApplicationGroupControllerTest {
 
     @Test()
     public void testCreateValidName() throws Exception {
-        ApplicationGroup applicationGroup =  new ApplicationGroup("GroupX", 10001);
+        ApplicationGroup applicationGroup = new ApplicationGroup("GroupX", 10001);
         AppGroupModel appGroupModel = new AppGroupModel(applicationGroup);
 
         try { //name already exists - not unique
             appGroupModel.name = "GroupTwo";
             applicationGroupController.create(appGroupModel);
             fail("Expected exception");
-        } catch (GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is null
             appGroupModel.name = null;
             applicationGroupController.create(appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is blank
             appGroupModel.name = "";
             applicationGroupController.create(appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name contains a whitespace
             appGroupModel.name = "as d";
             applicationGroupController.create(appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -147,12 +154,14 @@ public class ApplicationGroupControllerTest {
         try {
             applicationGroupController.remove(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationGroupController.remove(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -169,17 +178,20 @@ public class ApplicationGroupControllerTest {
         try {
             applicationGroupController.update(null, appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationGroupController.update(-1L, appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationGroupController.update(appGroupModel.id, null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -190,25 +202,29 @@ public class ApplicationGroupControllerTest {
             appGroupModel.name = "GroupThree";
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is null
             appGroupModel.name = null;
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name is blank
             appGroupModel.name = "";
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //name contains a whitespace
             appGroupModel.name = "as d";
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -219,19 +235,22 @@ public class ApplicationGroupControllerTest {
             appGroupModel.port = 10500;
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //port less than min value
             appGroupModel.port = 1;
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try { //port is greater max value
             appGroupModel.port = 9000000;
             applicationGroupController.update(appGroupModel.getId(), appGroupModel);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 
     @Test
@@ -243,11 +262,13 @@ public class ApplicationGroupControllerTest {
         try {
             applicationGroupController.getApplications(-1L);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
 
         try {
             applicationGroupController.getApplications(null);
             fail("Expected exception");
-        } catch(GatewayException ignore) { }
+        } catch (GatewayException ignore) {
+        }
     }
 }

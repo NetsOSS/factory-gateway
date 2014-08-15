@@ -4,6 +4,8 @@ import eu.nets.factory.gateway.model.Application;
 import eu.nets.factory.gateway.model.ApplicationGroup;
 import eu.nets.factory.gateway.model.ApplicationInstance;
 import eu.nets.factory.gateway.model.LoadBalancer;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +16,10 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={WebConfig.class})
+@ContextConfiguration(classes = {WebConfig.class})
 @TransactionConfiguration(defaultRollback = true)
 @WebAppConfiguration
 @ActiveProfiles("unitTest")
@@ -45,8 +44,8 @@ public class StatusControllerTest {
     @Test
     public void testGetBackendStatus() {
 
-        LoadBalancer loadBalancerOne = new LoadBalancer("Grandiosa", "127.0.0.1", "/Grandiosa","ssh", 10003, "factory", 2000, 1000, 60000, 60000, 3);
-        LoadBalancer loadBalancerTwo = new LoadBalancer("Grandiosa2", "127.0.0.1", "/Grandiosa2","ssh", 10004, "factory", 2000, 1000, 60000, 60000, 3);
+        LoadBalancer loadBalancerOne = new LoadBalancer("Grandiosa", "127.0.0.1", "/Grandiosa", "ssh", 10003, "factory", 2000, 1000, 60000, 60000, 3);
+        LoadBalancer loadBalancerTwo = new LoadBalancer("Grandiosa2", "127.0.0.1", "/Grandiosa2", "ssh", 10004, "factory", 2000, 1000, 60000, 60000, 3);
         LoadBalancerModel loadModelOne = new LoadBalancerModel(loadBalancerOne);
         LoadBalancerModel loadModelTwo = new LoadBalancerModel(loadBalancerTwo);
         loadModelOne = loadBalancerController.create(loadModelOne);
@@ -89,8 +88,8 @@ public class StatusControllerTest {
 
         StatusModel backend = statusController.getBackendServer(statusModels, application);
 
-        for(int i = 0; i < names.length; i++) {
-           assertThat(backend.data.get(names[i])).isNotNull().isEqualTo(testValues[i]);
+        for (int i = 0; i < names.length; i++) {
+            assertThat(backend.data.get(names[i])).isNotNull().isEqualTo(testValues[i]);
         }
     }
 
@@ -107,7 +106,7 @@ public class StatusControllerTest {
         csvString.add("stats,FRONTEND,,,1,3,2000,54,13388,130089,0,0,5,,,,,OPEN,,,,,,,,,1,3,0,,,,0,1,0,2,,,,0,48,0,5,7,0,,1,2,61,,,0,0,0,0,,\n");
         csvString.add("stats,BACKEND,0,0,0,1,200,7,13388,130089,0,0,,7,0,0,0,UP,0,0,0,,0,11616,0,,1,3,0,,0,,1,0,,1,,,,0,0,0,0,7,0,,,,,0,0,0,0,0,0,0,\n");
 
-        for(int i = 0; i < csvString.size(); i++) {
+        for (int i = 0; i < csvString.size(); i++) {
             csvString.set(i, csvString.get(i).replaceAll("\n", ""));
         }
 
@@ -118,15 +117,15 @@ public class StatusControllerTest {
         String[] names = csvString.get(0).split(",");
         names[0] = names[0].replaceAll("# ", "");
 
-        for(int i = 0; i < parsedCsvString.size(); i++) {
+        for (int i = 0; i < parsedCsvString.size(); i++) {
             String rebuiltCsvString = "";
 
-            for(int j = 0; j < parsedCsvString.get(i).data.size(); j++) {
+            for (int j = 0; j < parsedCsvString.get(i).data.size(); j++) {
                 rebuiltCsvString += parsedCsvString.get(i).data.get(names[j]) + ",";
             }
 
             System.out.println(rebuiltCsvString);
-            assertThat(rebuiltCsvString).isNotNull().isEqualTo(csvString.get(i+1));
+            assertThat(rebuiltCsvString).isNotNull().isEqualTo(csvString.get(i + 1));
         }
     }
 }

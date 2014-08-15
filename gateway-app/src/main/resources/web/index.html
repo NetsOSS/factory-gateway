@@ -22,7 +22,7 @@
           deps: ['angular']
         },
         'angular-ui-sortable': {
-          deps: ['angular','jquery','jquery-ui']
+          deps: ['angular', 'jquery', 'jquery-ui']
         },
         'bootstrap': {
           deps: ['jquery']
@@ -47,7 +47,7 @@
       position: fixed;
       width: 30%;
       z-index: 10000;
-      right:10px;
+      right: 10px;
     }
 
     .white {
@@ -127,53 +127,57 @@
 
           <div class="dropdown" id="dropdowndiv">
             <input class="btn btn-default dropdown-toggle" type="text" id="searchInput" data-toggle="dropdown"
-                   placeholder="Search" ng-model="search" ng-change = "getData()" ng-click = "getData()">
+                   placeholder="Search" ng-model="search" ng-change="getData()" ng-click="getData()">
             <span class="caret"></span>
             </input>
-              <ul class="dropdown-menu" id = "dropdown" role="menu"  ng-model = "applicationList" >
-                <li><a><b>Application Groups</b></a></li>
-                <li ng-repeat = "group in appGroupList"><a href ="/#/application-groups/{{group.id}}">{{group.name}}</a></li>
-                <li class="divider"></li>
-                <li><a><b>Applications</b></a></li>
-                <li ng-repeat = "application in applicationList"><a href ="/#/app/{{application.id}}">{{application.name}}</a></li>
-                <li class="divider"></li>
-                <li><a><b>Application Instances</b></a></li>
-                <li ng-repeat = "appInst in applicationInstanceList"><a href ="/#/appInst/{{appInst.id}}">{{appInst.name}}</a></li>
-                <li class="divider"></li>
-                <li><a><b>Load Balancers</b></a></li>
-                <li data-ng-repeat="lb in loadBalancerList"><a href = "#/lb/{{lb.id}}">{{lb.name}}</a></li>
-              </ul>
-           </div>
+            <ul class="dropdown-menu" id="dropdown" role="menu" ng-model="applicationList">
+              <li><a><b>Application Groups</b></a></li>
+              <li ng-repeat="group in appGroupList"><a href="/#/application-groups/{{group.id}}">{{group.name}}</a></li>
+              <li class="divider"></li>
+              <li><a><b>Applications</b></a></li>
+              <li ng-repeat="application in applicationList"><a
+                  href="/#/app/{{application.id}}">{{application.name}}</a></li>
+              <li class="divider"></li>
+              <li><a><b>Application Instances</b></a></li>
+              <li ng-repeat="appInst in applicationInstanceList"><a
+                  href="/#/appInst/{{appInst.id}}">{{appInst.name}}</a></li>
+              <li class="divider"></li>
+              <li><a><b>Load Balancers</b></a></li>
+              <li data-ng-repeat="lb in loadBalancerList"><a href="#/lb/{{lb.id}}">{{lb.name}}</a></li>
+            </ul>
+          </div>
         </div>
       </form>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#/help">Help</a></li>
-        </ul>
+      </ul>
 
-        <div class="nav navbar-nav navbar-right">
-            <div class="alert alert-danger alert-dismissible alert-messages" id="messageDisplay"  style="display:none">
+      <div class="nav navbar-nav navbar-right">
+        <div class="alert alert-danger alert-dismissible alert-messages" id="messageDisplay" style="display:none">
 
-                <button type="button" class="close" onclick="$('#messageDisplay').hide()"><span
-                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <span id="MessageDisplayText"> Stor beskjed .. 222</span>
+          <button type="button" class="close" onclick="$('#messageDisplay').hide()"><span
+              aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <span id="MessageDisplayText"> Stor beskjed .. 222</span>
 
-            </div>
-            <div class="alert alert-success alert-dismissible alert-messages" id="messageDisplaySuccess" style="display:none">
+        </div>
+        <div class="alert alert-success alert-dismissible alert-messages" id="messageDisplaySuccess"
+             style="display:none">
 
-                <button type="button" class="close" onclick="$('#messageDisplaySuccess').hide()"><span
-                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <span id="MessageDisplaySuccessText">aa</span>
+          <button type="button" class="close" onclick="$('#messageDisplaySuccess').hide()"><span
+              aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <span id="MessageDisplaySuccessText">aa</span>
 
-            </div>
-
-    </div>
+        </div>
 
       </div>
+
+    </div>
     <!-- /.navbar-collapse -->
   </div>
 
   <!-- /.container-fluid -->
 </nav>
+
 
 
 <div class="container">

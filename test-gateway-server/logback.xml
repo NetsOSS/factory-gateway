@@ -11,7 +11,7 @@ Add debug="true" on the <configuration> element to get more info while Logback l
   </appender>
 
   <logger level="WARN" name="org.eclipse.jetty"/>
-  <logger level="INFO" name="org.springframework" />
+  <logger level="INFO" name="org.springframework"/>
 
   <root level="DEBUG">
     <appender-ref ref="STDOUT"/>

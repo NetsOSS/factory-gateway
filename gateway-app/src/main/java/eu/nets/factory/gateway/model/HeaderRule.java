@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 public class HeaderRule extends AbstractEntity {
 
 
-
     @NotNull
     public String name;
     @NotNull
@@ -21,8 +20,9 @@ public class HeaderRule extends AbstractEntity {
     public HeaderRule(String name, String prefixMatch, Application application) {
         this.name = name;
         this.prefixMatch = prefixMatch;
-        this.application=application;
+        this.application = application;
     }
+
     public HeaderRule() {
 
     }
@@ -44,7 +44,10 @@ public class HeaderRule extends AbstractEntity {
         this.prefixMatch = prefixMatch;
     }
 
-    public void setApplication(Application application) { this.application = application; }
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
     public Application getApplication() {
         return application;
     }

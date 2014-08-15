@@ -1,5 +1,6 @@
 package eu.nets.factory.gateway.web;
 
+import eu.nets.factory.gateway.GatewayException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -8,8 +9,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-
-import eu.nets.factory.gateway.GatewayException;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,7 +43,7 @@ public class GatewayExceptionControllerAdvice {
             for (ConstraintViolation<?> v : cve.getConstraintViolations()) {
                 s.append("The field '").append(v.getPropertyPath()).append("' ").append(v.getMessage()).append(". ");
             }
-        } else if(ge != null) {
+        } else if (ge != null) {
             status = ge.getHttpStatus().value();
             s = new StringBuilder(ge.getMessage());
         } else {

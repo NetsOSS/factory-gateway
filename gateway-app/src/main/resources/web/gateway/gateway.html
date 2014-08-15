@@ -3,14 +3,17 @@
 
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
-  <li ng-class = "{true: 'active'}[currentAppGroupId == newGroupURL]"><a href="#/application-groups/newGroup" role="tab" ><span class="glyphicon glyphicon-plus"></span>
-    New Group
-  </a></li>
   <li ng-repeat="appGroup in allAppGroups"
       ng-class="{true: 'active'}[currentAppGroupId == appGroup.id]"
       >
     <a href="#/application-groups/{{appGroup.id}}" role="tab">
     {{appGroup.name}}
+    </a>
+  </li>
+  <li ng-class="{true: 'active'}[currentAppGroupId == newGroupURL]">
+    <a href="#/application-groups/newGroup" role="tab" >
+      <span class="glyphicon glyphicon-plus"></span>
+      New Group
     </a>
   </li>
 </ul>

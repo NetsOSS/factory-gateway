@@ -1,10 +1,9 @@
 package eu.nets.factory.gateway.web;
 
-import java.nio.charset.Charset;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.nets.factory.gateway.web.jackson.GatewayObjectMapper;
+import java.nio.charset.Charset;
+import java.util.List;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;

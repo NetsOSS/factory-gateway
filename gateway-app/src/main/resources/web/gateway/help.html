@@ -3,22 +3,27 @@
 <h2>Overview</h2>
 
 <p>
-  Grandiosa is an application to set up and control other applications running through <a href="http://www.haproxy.org/">HAProxy</a>. Grandiosa has four central configurable entities:
+  Grandiosa is an application to set up and control other applications running through
+  <a href="http://www.haproxy.org/">HAProxy</a>. Grandiosa has four central configurable entities:
   application groups, applications, application instances and load balancers. All entities are persisted in a database.
 </p>
 
 <p>
-  An application group is a way to organise applications. Applications can be organised according to company departments, or in all other desirable
+  An application group is a way to organise applications. Applications can be organised according to company
+  departments, or in all other desirable
   ways.
 </p>
 
 <p>
-  An application may have several application instances, which HAProxy can set up in a loadbalanced mode (balance between instances) and/or in a failover mode (use one or more instances as primary
-  instances, and one or more instances as backup instances). An application instance is used to point to a server hosting the application.
+  An application may have several application instances, which HAProxy can set up in a loadbalanced mode (balance
+  between instances) and/or in a failover mode (use one or more instances as primary
+  instances, and one or more instances as backup instances). An application instance is used to point to a server
+  hosting the application.
 </p>
 
 <p>
-  A load balancer in Grandiosa is an entity representing a configuration for an HAProxy instance. A load balancer can be associated with several applications, and an application can be set up
+  A load balancer in Grandiosa is an entity representing a configuration for an HAProxy instance. A load balancer can be
+  associated with several applications, and an application can be set up
   in several load balancers.
 </p>
 
@@ -27,7 +32,8 @@
 <h2>Setting up</h2>
 
 <p>
-  To make a useful configuration for a load balancer, at least one of each entity must be set up. All entities can be configured on the front page. At the top of the page application groups,
+  To make a useful configuration for a load balancer, at least one of each entity must be set up. All entities can be
+  configured on the front page. At the top of the page application groups,
   applications and application instances are configured, while new load balancers are set up at the bottom of the page.
 </p>
 
@@ -36,7 +42,8 @@
 <img src="/web/images/app-group.png" class="img-thumbnail"><br/><br/>
 
 <p>
-  Application groups must be given a name and a port. The port is the port HAProxy listens to when routing traffic to the applications belonging to the group.
+  Application groups must be given a name and a port. The port is the port HAProxy listens to when routing traffic to
+  the applications belonging to the group.
 </p>
 
 <br/><br/>
@@ -48,15 +55,20 @@
 <ul>
   <li><strong>Public path</strong> is the path which will forward traffic to this application.</li>
   <li>
-    <strong>Private path</strong> is the path where the application instances are running, and to which the load balancer should route the traffic. The load balancer will replace the public path
+    <strong>Private path</strong> is the path where the application instances are running, and to which the load
+    balancer should route the traffic. The load balancer will replace the public path
     with the private path in its configuration to manage the routing.
   </li>
   <li>
-    <strong>Check path</strong> should point to a page in the application, and is used by the load balancer to check if the application instances for this application are running. The
-    applications may control this page themselves, and set the HTTP status code to something other than 2xx or 3xx to indicate that the server has some issues and should be set to DOWN by the load
+    <strong>Check path</strong> should point to a page in the application, and is used by the load balancer to check if
+    the application instances for this application are running. The
+    applications may control this page themselves, and set the HTTP status code to something other than 2xx or 3xx to
+    indicate that the server has some issues and should be set to DOWN by the load
     balancer.
   </li>
-  <li><strong>Emails</strong> are sent to all configured addresses for the application, when the status (UP/DOWN/MAINT) of an application instance changes.</li>
+  <li><strong>Emails</strong> are sent to all configured addresses for the application, when the status (UP/DOWN/MAINT)
+    of an application instance changes.
+  </li>
 </ul>
 
 <br/><br/>
@@ -66,10 +78,14 @@
 <img src="/web/images/app-instances.png" class="img-thumbnail"><br/><br/>
 
 <p>
-  Application instances must be set up for each application. The instances must be given a name and a server address (host:port) indicating where the instances should be running. Each instance
-  can be set up as primary or backup. The load balancer will do load balancing between the primary instances, and use one of the backup instances if all primary instances are down or under
-  maintenance. The application can be set up to use sticky sessions or not. Sticky sessions ensures that a user will come to the same application instance each time, as long as the instance is up
+  Application instances must be set up for each application. The instances must be given a name and a server address
+  (host:port) indicating where the instances should be running. Each instance
+  can be set up as primary or backup. The load balancer will do load balancing between the primary instances, and use
+  one of the backup instances if all primary instances are down or under
+  maintenance. The application can be set up to use sticky sessions or not. Sticky sessions ensures that a user will
+  come to the same application instance each time, as long as the instance is up
   and the cookie exists.
+</p>
 <dl>
   <dt>Sticky</dt>
   <dd>will insert a prefix into a cookie named JSESSIONID.</dd>
@@ -77,26 +93,32 @@
   <dt>Sticky New Cookie</dt>
   <dd>will create a new cookie</dd>
 </dl>
-</p>
 
 <br/><br/>
 
 <img src="/web/images/new-loadbalancer.png" class="img-thumbnail"><br/><br/>
 
 <p>
-  When setting up a new load balancer entity, it must point to a host machine where HAProxy is installed. It must be given a unique name and an absolute path to an existing working directory on
-  the host machine, where Grandiosa will put a configuration file for the load balancer, a pid-file with the process id of the running load balancer process, and scripts to start and stop the load
-  balancer. A username to a user on the host machine, and the private part of an SSH key pair, matching the public part in 'authorized_keys' for that user, must be given, to allow Grandiosa to
+  When setting up a new load balancer entity, it must point to a host machine where HAProxy is installed. It must be
+  given a unique name and an absolute path to an existing working directory on
+  the host machine, where Grandiosa will put a configuration file for the load balancer, a pid-file with the process id
+  of the running load balancer process, and scripts to start and stop the load
+  balancer. A username to a user on the host machine, and the private part of an SSH key pair, matching the public part
+  in 'authorized_keys' for that user, must be given, to allow Grandiosa to
   control the load balancer on that machine.
 </p>
 <dl>
   <dt>Timeouts</dt>
   <dd>
-  Different timeouts can also be set. The check timeout tells the load balancer how long it should wait when it's checking if an instance is up. The server timeout tells the load balancer how long
-  it should wait for application instances to respond to requests. The client timeout tells the load balancer how long it should wait for clients to acknowledge or send data, if they are expected
-  to do so. The connect timeout sets the maximum time to wait for a connection attempt to an application instance to succeed. Retries sets the number of retries to perform on an application
-  instance after a connection failure. Since the load balancer is set to continuously check if the instances are up and set them to DOWN if the check is unsuccessful, the connect timeout and
-  number of retries isn't that useful.
+    Different timeouts can also be set. The check timeout tells the load balancer how long it should wait when it's
+    checking if an instance is up. The server timeout tells the load balancer how long
+    it should wait for application instances to respond to requests. The client timeout tells the load balancer how long
+    it should wait for clients to acknowledge or send data, if they are expected
+    to do so. The connect timeout sets the maximum time to wait for a connection attempt to an application instance to
+    succeed. Retries sets the number of retries to perform on an application
+    instance after a connection failure. Since the load balancer is set to continuously check if the instances are up
+    and set them to DOWN if the check is unsuccessful, the connect timeout and
+    number of retries isn't that useful.
   </dd>
 </dl>
 
@@ -105,15 +127,21 @@
 <h2>Routing to specific instances based on header rules</h2>
 
 <p>
-  Each application can be set up with a set of rules to route specific users to a specific set of instances. This can be used to allow a selected set of users to test a new application version.
-  The way to accomplish this is to create a new application entity with the instances to test, and add rules to this application entity. The rules must be set up to test if the values of specified
-  HTTP header fields match an entered regular expression. Rules for an application is set up by clicking this button: <img src="/web/images/header-icon.png">
+  Each application can be set up with a set of rules to route specific users to a specific set of instances. This can be
+  used to allow a selected set of users to test a new application version.
+  The way to accomplish this is to create a new application entity with the instances to test, and add rules to this
+  application entity. The rules must be set up to test if the values of specified
+  HTTP header fields match an entered regular expression. Rules for an application is set up by clicking this button:
+  <img src="/web/images/header-icon.png">
 </p>
 
 <img src="/web/images/header_rules.png" class="img-thumbnail"><br/><br/>
 
 <p>
-  In the example above, users with a header 'iv-user'=1234 will be sent to Finch-Systemtest, users with 'iv-user' beginning with 0 will be sent to Finch-Kundetest and all others will be sent to
-  Finch-Prod. Since rules may overlap, the order of the applications matters. The first rules to match will be used. In the example, if Finch-Prod had been at the top, it would take all the
-  traffic, not considering the other rules. The order of the applications under an application group, can be set by drag-and-drop.
+  In the example above, users with a header 'iv-user'=1234 will be sent to Finch-Systemtest, users with 'iv-user'
+  beginning with 0 will be sent to Finch-Kundetest and all others will be sent to
+  Finch-Prod. Since rules may overlap, the order of the applications matters. The first rules to match will be used. In
+  the example, if Finch-Prod had been at the top, it would take all the
+  traffic, not considering the other rules. The order of the applications under an application group, can be set by
+  drag-and-drop.
 </p>

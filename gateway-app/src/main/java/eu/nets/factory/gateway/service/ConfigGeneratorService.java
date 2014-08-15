@@ -6,14 +6,13 @@ import eu.nets.factory.gateway.model.HeaderRule;
 import eu.nets.factory.gateway.model.LoadBalancer;
 import eu.nets.factory.gateway.web.AppGroupModel;
 import eu.nets.factory.gateway.web.ApplicationGroupController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ConfigGeneratorService {
@@ -40,9 +39,9 @@ public class ConfigGeneratorService {
 
             StringWriter stringWriter = new StringWriter();
             PrintWriter printWriter = new PrintWriter(stringWriter);
-            String frontendKey = application.getApplicationGroup().getName()+"_"+application.getApplicationGroup().getId();
+            String frontendKey = application.getApplicationGroup().getName() + "_" + application.getApplicationGroup().getId();
             //frontend
-            if(frontends.containsKey(frontendKey)) {
+            if (frontends.containsKey(frontendKey)) {
                 List<String> values = frontends.remove(frontendKey);
                 StringBuilder aclRules = new StringBuilder();
                 aclRules.append("{ path_beg " + application.getPublicUrl() + " } ");
@@ -50,7 +49,7 @@ public class ConfigGeneratorService {
                     aclRules.append("{ hdr_reg(" + headerRule.getName() + ") " + headerRule.getPrefixMatch() + " } ");
                 }
 
-                values.add("use_backend " + application.getName() + "_" +application.getId() + " if " + aclRules.toString());
+                values.add("use_backend " + application.getName() + "_" + application.getId() + " if " + aclRules.toString());
                 frontends.put(frontendKey, values);
 
             } else {
@@ -63,18 +62,18 @@ public class ConfigGeneratorService {
                     aclRules.append("{ hdr_reg(" + headerRule.getName() + ") " + headerRule.getPrefixMatch() + " } ");
                 }
 
-                values.add("use_backend " + application.getName() + "_" +application.getId() + " if " + aclRules.toString());
+                values.add("use_backend " + application.getName() + "_" + application.getId() + " if " + aclRules.toString());
                 frontends.put(frontendKey, values);
             }
 
 
             // backend
             printWriter.println();
-            printWriter.println(TAB + "backend " +  application.getName() + "_" +application.getId());
+            printWriter.println(TAB + "backend " + application.getName() + "_" + application.getId());
             printWriter.println(TAB2 + "option httpchk GET " + application.getCheckPath());
 
             //reqrep ^([^\ ]*)\ /lang/blog/(.*) \1\ /blog/lang/\2
-            printWriter.println(TAB2 + "reqrep ^([^\\ ]*)\\ "+application.getPublicUrl()+"(.*) \\1\\ "+application.getPrivatePath()+"\\2");
+            printWriter.println(TAB2 + "reqrep ^([^\\ ]*)\\ " + application.getPublicUrl() + "(.*) \\1\\ " + application.getPrivatePath() + "\\2");
 
             //debug, adding headers to see which was chosen.
             /// reqadd X-CustomHeader:\ debugMode
@@ -92,7 +91,7 @@ public class ConfigGeneratorService {
             for (int i = 0; i < application.getApplicationInstances().size(); i++) {
                 ApplicationInstance applicationInstance = application.getApplicationInstances().get(i);
 
-                String serverConfigLine = TAB2 + "server " +  applicationInstance.getName() + "_" +applicationInstance.getId() +  " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check";
+                String serverConfigLine = TAB2 + "server " + applicationInstance.getName() + "_" + applicationInstance.getId() + " " + applicationInstance.getHost() + ":" + applicationInstance.getPort() + applicationInstance.getPath() + " check";
 
                 if (applicationInstance.getWeight() != 0)
                     serverConfigLine += " weight " + applicationInstance.getWeight();
@@ -100,11 +99,11 @@ public class ConfigGeneratorService {
                 if (applicationInstance.getHaProxyState().name().equals("MAINT"))
                     serverConfigLine += " disabled";
 
-                if(applicationInstance.isBackup())
+                if (applicationInstance.isBackup())
                     serverConfigLine += " backup";
 
                 if (application.getStickySession().name().equals("STICKY") || application.getStickySession().name().equals("STICKY_NEW_COOKIE"))
-                    serverConfigLine += " cookie " + applicationInstance.getName() + "_" +applicationInstance.getId();
+                    serverConfigLine += " cookie " + applicationInstance.getName() + "_" + applicationInstance.getId();
 
                 printWriter.println(serverConfigLine);
             }
@@ -117,20 +116,20 @@ public class ConfigGeneratorService {
         return buildString(frontends, backends, loadBalancer);
     }
 
-    private String buildString(HashMap<String ,List<String>> frontends, List<String> backends, LoadBalancer loadBalancer) {
+    private String buildString(HashMap<String, List<String>> frontends, List<String> backends, LoadBalancer loadBalancer) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         writeDefaultsStart(printWriter, loadBalancer);
 
         //write frontend
-        for(String key: frontends.keySet()) {
+        for (String key : frontends.keySet()) {
             printWriter.println();
 
             printWriter.println(TAB + "frontend " + key);
             int port = 0;
             List<AppGroupModel> groups = applicationGroupController.listAllAppGroups();
-            for(AppGroupModel a: groups) {
-                if(key.equals(a.getName()+"_"+a.getId())) {
+            for (AppGroupModel a : groups) {
+                if (key.equals(a.getName() + "_" + a.getId())) {
                     port = a.getPort();
                     break;
                 }
@@ -138,7 +137,7 @@ public class ConfigGeneratorService {
             printWriter.println(TAB2 + "bind *:" + port);
 
             List<String> values = frontends.get(key);
-            for(String line: values) {
+            for (String line : values) {
                 printWriter.println(TAB2 + line);
             }
         }

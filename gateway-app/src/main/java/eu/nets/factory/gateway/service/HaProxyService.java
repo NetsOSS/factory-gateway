@@ -3,12 +3,11 @@ package eu.nets.factory.gateway.service;
 import eu.nets.factory.gateway.GatewayException;
 import eu.nets.factory.gateway.model.GatewaySettings;
 import eu.nets.factory.gateway.model.LoadBalancer;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.misc.IOUtils;
-
-import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

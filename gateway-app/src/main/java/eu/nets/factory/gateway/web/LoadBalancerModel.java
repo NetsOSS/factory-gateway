@@ -1,9 +1,9 @@
 package eu.nets.factory.gateway.web;
 
 import eu.nets.factory.gateway.model.LoadBalancer;
-
 import java.util.ArrayList;
 import java.util.List;
+
 import static java.util.stream.Collectors.toList;
 
 public class LoadBalancerModel {
@@ -22,7 +22,8 @@ public class LoadBalancerModel {
     public int clientTimeout;
     public int retries;
 
-    public LoadBalancerModel() { }
+    public LoadBalancerModel() {
+    }
 
     public LoadBalancerModel(LoadBalancer loadBalancer) {
         this(loadBalancer, false);
@@ -31,7 +32,7 @@ public class LoadBalancerModel {
     private LoadBalancerModel(LoadBalancer loadBalancer, Boolean summary) {
         this(loadBalancer.getId(), loadBalancer.getName(), loadBalancer.getHost(), loadBalancer.getInstallationPath(), loadBalancer.getSshKey(), loadBalancer.getStatsPort(), loadBalancer.getUserName(),
                 loadBalancer.getCheckTimeout(), loadBalancer.getConnectTimeout(), loadBalancer.getServerTimeout(), loadBalancer.getClientTimeout(), loadBalancer.getRetries());
-        if(!summary) {
+        if (!summary) {
             this.applications = loadBalancer.getApplications().stream().map(AppModel::summary).collect(toList());
         }
     }
@@ -55,19 +56,35 @@ public class LoadBalancerModel {
         return new LoadBalancerModel(loadBalancer, true);
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getInstallationPath() { return installationPath; }
+    public String getInstallationPath() {
+        return installationPath;
+    }
 
-    public String getHost() { return host; }
+    public String getHost() {
+        return host;
+    }
 
-    public String getSshKey() { return sshKey; }
+    public String getSshKey() {
+        return sshKey;
+    }
 
-    public String getUserName() { return userName; }
+    public String getUserName() {
+        return userName;
+    }
 
-    public int getStatsPort() {return statsPort; }
+    public int getStatsPort() {
+        return statsPort;
+    }
 
-    public List<AppModel> getApplications() { return applications; }
+    public List<AppModel> getApplications() {
+        return applications;
+    }
 }
